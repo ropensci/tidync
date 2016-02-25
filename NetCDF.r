@@ -38,12 +38,13 @@ NetCDF <- function(x) {
   if (any(dims$unlim)) unlimdims <- do.call(dplyr::bind_rows, lapply( nc$dim[dims$unlim], function(x) as_data_frame(x[names(x) %in% c("id", "units", "calendar")])))
   ## do we care that some dims are degenerate 1D?
   ##lapply(nc$dim, function(x) dim(x$vals))
-  dimvals <- do.call(bind_rows, lapply(nc$dim, function(x) data_frame(id = rep(x$id, length(x$vals)), vals = x$vals)))
+  dimvals <- do.call(dplyr::bind_rows, lapply(nc$dim, function(x) dplyr::data_frame(id = rep(x$id, length(x$vals)), vals = x$vals)))
   ## the dimids are in the dims table above
-  groups <- do.call(bind_rows, lapply(nc$groups, function(x) as_data_frame(x[!names(x) %in% "dimid"]))) #as_data_frame[x[!names(x) %in% "dimid"]]))
+  groups <- do.call(dplyr::bind_rows, lapply(nc$groups, function(x) dplyr::as_data_frame(x[!names(x) %in% "dimid"]))) #as_data_frame[x[!names(x) %in% "dimid"]]))
   ## leave the fqgn2Rindex for now
-  file <- as_data_frame(nc[!names(nc) %in% c("dim", "var", "groups", "fqgn2Rindex")])
-  var <- do.call(bind_rows, lapply(nc$var, function(x) as_data_frame(x[!names(x) %in% c("id", "dims", "dim", "varsize", "size", "dimids")])))
+  file <- dplyr::as_data_frame(nc[!names(nc) %in% c("dim", "var", "groups", "fqgn2Rindex")])
+  ## when we drop these, how do we track keeping them elsewhere?
+  var <- do.call(dplyr::bind_rows, lapply(nc$var, function(x) dplyr::as_data_frame(x[!names(x) %in% c("chunksizes", "id", "dims", "dim", "varsize", "size", "dimids")])))
   var$id <- sapply(nc$var, function(x) x$id$id)
   vardim <- do.call(bind_rows, lapply(nc$var, function(x) data_frame(id = rep(x$id$id, length(x$dimids)), dimids = x$dimids)))
   ## read attributes, should be made optional (?) to avoid long read time
