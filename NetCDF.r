@@ -95,14 +95,38 @@ dims.NetCDF <- function(x, ...) {
 
 #' @rdname vars
 #' @export
-atts <- function(x, ...) {
-  UseMethod("atts")
+dimvars <- function(x, ...) UseMethod("dims")
+
+#' @rdname vars
+#' @export
+dimvars.NetCDF <- function(x, ...) {
+  dimvars <- (dims(x) %>% filter(create_dimvar) %>% select(name))$name
+  ndv <- length(dimvars)
+  data_frame(name = dimvars, 
+             ndims = rep(0, ndv), natts = ndims) 
+             ## todo, how much is create_dimvar ncdf4 only?
+             # prec = rep("float", ndv), 
+             # units = rep("", ndv), 
+             # longname = units, group_index = 
+             # 
 }
 
 #' @rdname vars
 #' @export
-atts.NetCDF <- function(x, ...) {
-  x$attribute
+atts <- function(x, ...) {
+  UseMethod("atts")
+}
+
+
+#' @rdname vars
+#' @export
+atts.NetCDF <- function(x, varname = "globalatts", ...) {
+  if (varname == "globalatts") {
+    x$attribute$global 
+  } else {
+    stopifnot(varname %in% vars(x)$name)
+    x$attribute$var[[varname]]
+  }
 }
 
 "[[.NetCDF" <- function(x,i,j,...,drop=TRUE) {
