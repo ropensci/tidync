@@ -95,14 +95,14 @@ dims.NetCDF <- function(x, ...) {
 
 #' @rdname vars
 #' @export
-dimvars <- function(x, ...) UseMethod("dims")
+dimvars <- function(x, ...) UseMethod("dimvars")
 
 #' @rdname vars
 #' @export
 dimvars.NetCDF <- function(x, ...) {
-  dimvars <- (dims(x) %>% filter(create_dimvar) %>% select(name))$name
-  ndv <- length(dimvars)
-  data_frame(name = dimvars, 
+  dmv <- (dims(x) %>% filter_("create_dimvar") %>% select(name))$name
+  ndv <- length(dmv)
+  data_frame(name = dmv, 
              ndims = rep(0, ndv), natts = ndims) 
              ## todo, how much is create_dimvar ncdf4 only?
              # prec = rep("float", ndv), 
