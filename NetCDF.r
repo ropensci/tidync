@@ -17,11 +17,25 @@
 #' @importFrom ncdf4 ncatt_get
 ncatts <- function(x) {
   on.exit(nc_close(ncf))
-  ncf <- nc_open(x)
-  global <- as_data_frame(ncatt_get(ncf, 0))
-  var <- lapply(names(ncf$var), function(vname) as_data_frame(ncatt_get(ncf, vname)))
-  names(var) <- names(ncf$var)
-  list(global = global, var = var)
+  ncf <- ncdf4::nc_open(x)
+  global <- as_data_frame(ncdf4::ncatt_get(ncf, 0))
+  var <- setNames(vector('list', length(ncf$var)), names(ncf$var))
+  childvar <- var
+  #lapply(names(ncf$var), 
+  #              function(vname) as_data_frame(ncatt_get(ncf, vname)))
+  for (vname in names(ncf$var)) {
+    aaa <- ncatt_get(ncf, vname)
+    lts <- lengths(aaa)
+    if (length(unique(lts)) > 1) {
+      tabs <- lapply(split(aaa, lts), as_data_frame)
+      var[[vname]] <- tabs[[1]]
+      childvar[[vname]] <- tabs[-1]
+    } 
+    
+  }
+  ## childvar just a leftover for now
+  ## drop all NULL
+  list(global = global, var = var[!unlist(lapply(var, is.null))], childvar = childvar)
 }
 
 
