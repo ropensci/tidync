@@ -14,7 +14,7 @@
   names(nc$dim[nc$var[[varname]]$dimids])
 }
 
-dimlabs <- function(x, varname) {
+varcoords <- function(x, varname) {
   x <- NetCDF(x)
    arrange_(inner_join(select_(inner_join(dplyr::filter(x$variable, name == varname), x$vardim), "id", "dimids"), x$dimension, c("dimids" = "id")), "dimids")$name
 }
