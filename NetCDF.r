@@ -14,14 +14,34 @@
   names(nc$dim[nc$var[[varname]]$dimids])
 }
 
+varcoords <- function(x, varname) {
+  x <- NetCDF(x)
+   arrange_(inner_join(select_(inner_join(dplyr::filter(x$variable, .dots = list(~name == varname)), x$vardim), "id", "dimids"), x$dimension, c("dimids" = "id")), "dimids")$name
+}
+
 #' @importFrom ncdf4 ncatt_get
+#' @importFrom stats setNames
 ncatts <- function(x) {
   on.exit(nc_close(ncf))
-  ncf <- nc_open(x)
-  global <- as_data_frame(ncatt_get(ncf, 0))
-  var <- lapply(names(ncf$var), function(vname) as_data_frame(ncatt_get(ncf, vname)))
-  names(var) <- names(ncf$var)
-  list(global = global, var = var)
+  ncf <- ncdf4::nc_open(x)
+  global <- as_data_frame(ncdf4::ncatt_get(ncf, 0))
+  var <- setNames(vector('list', length(ncf$var)), names(ncf$var))
+  childvar <- var
+  #lapply(names(ncf$var), 
+  #              function(vname) as_data_frame(ncatt_get(ncf, vname)))
+  for (vname in names(ncf$var)) {
+    aaa <- ncatt_get(ncf, vname)
+    lts <- lengths(aaa)
+    if (length(unique(lts)) > 1) {
+      tabs <- lapply(split(aaa, lts), as_data_frame)
+      var[[vname]] <- tabs[[1]]
+      childvar[[vname]] <- tabs[-1]
+    } 
+    
+  }
+  ## childvar just a leftover for now
+  ## drop all NULL
+  list(global = global, var = var[!unlist(lapply(var, is.null))], childvar = childvar)
 }
 
 
@@ -59,7 +79,7 @@ NetCDF <- function(x) {
   class(x) <- c("NetCDF", "list")
   x
 }
-
+#' @importFrom utils head
 longlistformat <- function(x, n = 8) {
   if (length(x) <= n) return(x)
   paste(paste(head(x, n), collapse = ", "),  "...",  length(x) - n, "more ...")
@@ -79,6 +99,8 @@ print.NetCDF_attributes <- function(x, ...) {
 #' @param x NetCDF metadata object
 #' @param ... ignored
 #' @rdname vars
+#' @param x NetCDF metadata object
+#' @param ... ignored
 #' @export
 vars <- function(x, ...) UseMethod("vars")
 
@@ -100,19 +122,54 @@ dims.NetCDF <- function(x, ...) {
 
 #' @rdname vars
 #' @export
+dimvars <- function(x, ...) UseMethod("dimvars")
+
+#' @rdname vars
+#' @export
+#' @importFrom dplyr %>% arrange_ filter filter_  inner_join select select_
+dimvars.NetCDF <- function(x, ...) {
+  dmv <- (dims(x) %>% filter_("create_dimvar") %>% select_("name"))$name
+  ndv <- length(dmv)
+  ndims <- rep(0, ndv)
+  data_frame(name = dmv, 
+             ndims = ndims, natts = ndims) 
+             ## todo, how much is create_dimvar ncdf4 only?
+             # prec = rep("float", ndv), 
+             # units = rep("", ndv), 
+             # longname = units, group_index = 
+             # 
+}
+
+
+#' @param varname name of variable to get atts of (not yet implemented)
+#'
+#' @rdname vars
+#' @export
 atts <- function(x, ...) {
   UseMethod("atts")
 }
 
+
 #' @rdname vars
 #' @export
-atts.NetCDF <- function(x, ...) {
-  x$attribute
+atts.NetCDF <- function(x, varname = "globalatts", ...) {
+  if (varname == "globalatts") {
+    x$attribute$global 
+  } else {
+    ## TODO, this needs thought given that childvar
+    ## can be recursive and possible NULL
+    stopifnot(varname %in% vars(x)$name)
+    x$attribute$var[[varname]]
+  }
 }
 
 #' @importFrom dplyr filter_
 "[[.NetCDF" <- function(x,i,j,...,drop=TRUE) {
+<<<<<<< HEAD
   var <-    filter_(x$variable, quote(name == i))
+=======
+  var <-  x$variable %>% filter_(.dots = list(~name == i))
+>>>>>>> b974da98dda5a997d37a5b9ce4b649d0086bcbf8
   class(var) <- c("NetCDFVariable", class(var))
   var
 }
