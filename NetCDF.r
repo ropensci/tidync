@@ -165,12 +165,8 @@ atts.NetCDF <- function(x, varname = "globalatts", ...) {
 
 #' @importFrom dplyr filter_
 "[[.NetCDF" <- function(x,i,j,...,drop=TRUE) {
-<<<<<<< HEAD
-  var <-    filter_(x$variable, quote(name == i))
-=======
-  var <-  x$variable %>% filter_(.dots = list(~name == i))
->>>>>>> b974da98dda5a997d37a5b9ce4b649d0086bcbf8
-  class(var) <- c("NetCDFVariable", class(var))
+  var <-  filter_(x$variable, .dots = list(~name == i))
+ class(var) <- c("NetCDFVariable", class(var))
   var
 }
 
