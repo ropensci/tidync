@@ -98,9 +98,6 @@ print.NetCDF_attributes <- function(x, ...) {
 #' NetCDF file description functions. 
 #' @param x NetCDF metadata object
 #' @param ... ignored
-#' @rdname vars
-#' @param x NetCDF metadata object
-#' @param ... ignored
 #' @export
 vars <- function(x, ...) UseMethod("vars")
 
