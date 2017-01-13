@@ -1,6 +1,6 @@
-#' nc.
+#' ncdump.
 #'
-#' @name nc
+#' @name ncdump
 #' @docType package
 #' @importFrom utils head
 NULL
