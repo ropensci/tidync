@@ -49,7 +49,14 @@ ncatts <- function(x) {
 #'
 #' [NetCDF] scans all the metadata provided by the [ncdf4::nc_open] function, and organizes it by the entities in the file. 
 #' 
-#' A NetCDF file contains the following entities, and each gets a data frame int the resulting object:  
+#' Users of 'NetCDF' files might be familiar with the command line tool 'ncdump
+#' -h' noting that the "header" argument is crucial for giving a compact summary
+#' of the contents of a file.  This package aims to provide that information
+#' as data, to be used for writing code to otherwise access and manipulate the
+#' contents of the files. This function doesn't do anything with the data, and
+#' it doesn't access any of the data.
+#' 
+#' A NetCDF file contains the following entities, and each gets a data frame in the resulting object:  
 #' \tabular{ll}{
 #'  \code{attribute} \tab 'attributes' are general metadata about the file and its variables and dimensions\cr
 #'  \code{dimension} \tab 'dimensions' are the axes defining the space of the data variables \cr
@@ -66,7 +73,10 @@ ncatts <- function(x) {
 #'  
 #'  }
 #'  
-#'  Currently 'file' is expected to and treated as having only one row, but future versions may treat a collection of files as a single entity. 
+#'  Currently 'file' is expected to and treated as having only one row, but future versions may treat a collection of files 
+#'  as a single entity. 
+#'  
+#'  The 'ncdump -h' print summary above is analogous to the print method [ncdf4::print.ncdf4] of the output of [ncdf4::nc_open]. 
 #' @param x path to NetCDF file
 #' @export
 #' @importFrom ncdf4 nc_open
