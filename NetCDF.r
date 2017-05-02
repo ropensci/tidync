@@ -47,6 +47,26 @@ ncatts <- function(x) {
 
 #' Information about a NetCDF file, in convenient form.
 #'
+#' `NetCDF` scans all the metadata provided by the `ncdf4::nc_open` function, and organizes it by the entities in the file. 
+#' 
+#' A `NetCDF` file contains the following entities, and each gets a data frame int the resulting object:  
+#' \tabular{ll}{
+#'  \code{attribute} \tab 'attributes' are general metadata about the file and its variables and dimensions\cr
+#'  \code{dimension} \tab 'dimensions' are the axes defining the space of the data variables \cr
+#'  \code{variable} \tab 'variables' are the actual data, the arrays containing data values \cr
+#'  \code{group} \tab 'groups' are an internal abstraction to behave as a collection, analogous to a file. \cr
+#'  }
+#'  
+#'  In addition to a data for each of the main entities above 'NetCDF' also creates:  
+#'  \tabular{ll}{
+#'  \code{unlimdims} \tab the unlimited dimensions identify those which are not a constant lenghth (i.e. spread over files) \cr
+#'  \code{dimvals} \tab a link table between dimensions and its coordinates \cr
+#'  \code{file} \tab information about the file itself \cr
+#'  \code{vardim} \tab a link table between variables and their dimensions \cr
+#'  
+#'  }
+#'  
+#'  Currently 'file' is expected to and treated as having only one row, but future versions may treat a collection of files as a single entity. 
 #' @param x path to NetCDF file
 #' @export
 #' @importFrom ncdf4 nc_open
@@ -98,31 +118,31 @@ print.NetCDF_attributes <- function(x, ...) {
 #' NetCDF file description functions. 
 #' @param x NetCDF metadata object
 #' @param ... ignored
-#' @export
+#' @noRd
 vars <- function(x, ...) UseMethod("vars")
 
 #' @rdname vars
-#' @export
+#' @noRd
 vars.NetCDF <- function(x, ...) {
   x$variable
 }
 
 #' @rdname vars
-#' @export
+#' @noRd
 dims <- function(x, ...) UseMethod("dims")
 
 #' @rdname vars
-#' @export
+#' @noRd
 dims.NetCDF <- function(x, ...) {
   x$dimension
 }
 
 #' @rdname vars
-#' @export
+#' @noRd
 dimvars <- function(x, ...) UseMethod("dimvars")
 
 #' @rdname vars
-#' @export
+#' @noRd
 #' @importFrom dplyr %>% arrange_ filter filter_  inner_join select select_
 dimvars.NetCDF <- function(x, ...) {
   dmv <- (dims(x) %>% filter_("create_dimvar") %>% select_("name"))$name
@@ -141,14 +161,14 @@ dimvars.NetCDF <- function(x, ...) {
 #' @param varname name of variable to get atts of (not yet implemented)
 #'
 #' @rdname vars
-#' @export
+#' @noRd
 atts <- function(x, ...) {
   UseMethod("atts")
 }
 
 
 #' @rdname vars
-#' @export
+#' @noRd
 atts.NetCDF <- function(x, varname = "globalatts", ...) {
   if (varname == "globalatts") {
     x$attribute$global 
