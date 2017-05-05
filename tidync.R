@@ -101,13 +101,19 @@ dimension_values.NetCDF <- function(x) {
 #' ## push sst to the front for an extraction
 #' x <- nctivate(x, "sst")
 #' hyper_slab <- filtrate(x, lon = lon > 100, lat = lat < 30)
-#' ## it's alive
+#' ## it's alive, test the extraction
 #' library(ncdf4)
 #' nc <- nc_open(f)
 #' library(dplyr)
-#' var <- ncvar_get(nc, "sst", start = bind_rows(a)$start, count = bind_rows(a)$count)
+#' var <- ncvar_get(nc, "sst", start = bind_rows(hyper_slab)$start, count = bind_rows(hyper_slab)$count)
 #' image(var)
-#' ## push 
+#' ## push a different var to the front
+#' x <- nctivate(x, "anom")
+#' hyper_slab <- filtrate(x, lon = between(lon, 147, 250), lat = between(lat, -42, 20))
+#' var <- ncvar_get(nc, "sst", start = bind_rows(hyper_slab)$start, count = bind_rows(hyper_slab)$count)
+#' image(var)
+#' 
+#' # 
 filtrate <- function(x, ...) {
   UseMethod("filtrate")
 }
