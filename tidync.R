@@ -93,11 +93,21 @@ dimension_values.NetCDF <- function(x) {
 #' @importFrom purrr map
 #' @importFrom dplyr group_by mutate summarize
 #' @examples
+#' library(ncdump)
 #' f <- "/rdsi/PRIVATE/raad/data/eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/2017/AVHRR/avhrr-only-v2.20170502_preliminary.nc"
 #' x <- NetCDF(f)
+#' x
 #' nctive(x)
+#' ## push sst to the front for an extraction
 #' x <- nctivate(x, "sst")
-#' filtrate(x, lon = lon > 100, lat = lat < 30)
+#' hyper_slab <- filtrate(x, lon = lon > 100, lat = lat < 30)
+#' ## it's alive
+#' library(ncdf4)
+#' nc <- nc_open(f)
+#' library(dplyr)
+#' var <- ncvar_get(nc, "sst", start = bind_rows(a)$start, count = bind_rows(a)$count)
+#' image(var)
+#' ## push 
 filtrate <- function(x, ...) {
   UseMethod("filtrate")
 }
