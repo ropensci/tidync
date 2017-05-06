@@ -4,7 +4,7 @@
 #' @param x 
 #' @param ... 
 #'
-#' @return
+#' @return names of variables available
 #' @export
 #'
 #' @examples
@@ -24,6 +24,8 @@ varnames.NetCDF <- function(x, ...) {
 
 #' Activate variable
 #'
+#' Stolen from tidygraph, we need this
+#' 
 #' @param .data 
 #' @param what 
 #'
@@ -31,18 +33,18 @@ varnames.NetCDF <- function(x, ...) {
 #' @export
 #'
 #' @examples
-nctivate <- function(.data, what) {
-  UseMethod('nctivate')
+activate <- function(.data, what) {
+  UseMethod('activate')
 }
 #' @export
-#' @rdname nctivate
-nctivate.NetCDF <- function(.data, what) {
+#' @rdname activate
+activate.NetCDF <- function(.data, what) {
   what_name <- deparse(substitute(what))
   if (what_name %in% varnames(.data)) what <- what_name
   nctive(.data) <- what
   .data
 }
-#' @rdname nctivate
+#' @rdname activate
 #' @export
 nctive <- function(x) {
   attr(x, 'nctive')
@@ -99,7 +101,7 @@ dimension_values.NetCDF <- function(x) {
 #' x
 #' nctive(x)
 #' ## push sst to the front for an extraction
-#' x <- nctivate(x, "sst")
+#' x <- activate(x, "sst")
 #' hyper_slab <- filtrate(x, lon = lon > 100, lat = lat < 30)
 #' ## it's alive, test the extraction
 #' library(ncdf4)
@@ -108,7 +110,7 @@ dimension_values.NetCDF <- function(x) {
 #' var <- ncvar_get(nc, "sst", start = bind_rows(hyper_slab)$start, count = bind_rows(hyper_slab)$count)
 #' image(var)
 #' ## push a different var to the front
-#' x <- nctivate(x, "anom")
+#' x <- activate(x, "anom")
 #' hyper_slab <- filtrate(x, lon = between(lon, 147, 250), lat = between(lat, -42, 20))
 #' var <- ncvar_get(nc, "sst", start = bind_rows(hyper_slab)$start, count = bind_rows(hyper_slab)$count)
 #' image(var)
@@ -160,14 +162,14 @@ filtrate.NetCDF <- function(x, ...) {
 
 
 
-#' @rdname nctivate
+#' @rdname activate
 #' @export
 #' @importFrom dplyr %>% arrange transmute
 #' @examples 
 #' f <- "/rdsi/PRIVATE/raad/data/eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/2017/AVHRR/avhrr-only-v2.20170502_preliminary.nc"
 #' x <- NetCDF(f)
 #' nctive(x)
-#' x <- nctivate(x, "sst") 
+#' x <- activate(x, "sst") 
 print.NetCDF <- function(x) {
   activ <- nctive(x)
   print(sprintf("Variable: %s", activ))
