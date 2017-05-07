@@ -1,6 +1,7 @@
 
 #' Variable names
-#'
+#' 
+#' 
 #' @param x 
 #' @param ... 
 #'
@@ -8,31 +9,64 @@
 #' @export
 #'
 #' @examples
-varnames <- function(x, ...) {
+#' example(NetCDF)
+#' var_names(rnc)
+var_names <- function(x, ...) {
   UseMethod("varnames")
 }
 #' @export
 #' @name varnames
-varnames.character <- function(x, ...) {
+var_names.character <- function(x, ...) {
   varnames(NetCDF(x))
 }
 #' @export
 #' @name varnames
-varnames.NetCDF <- function(x, ...) {
+var_names.NetCDF <- function(x, ...) {
   x$variable$name
 }
+
+#' Dimension names
+#' 
+#' 
+#' @param x 
+#' @param ... 
+#'
+#' @return names of available dimensions 
+#' @export
+#'
+#' @examples
+#' example(NetCDF)
+#' dim_names(rnc)
+dim_names <- function(x, ...) {
+  UseMethod("dim_names")
+}
+#' @export
+#' @name dim_names
+dim_names.character <- function(x, ...) {
+  varnames(NetCDF(x))
+}
+#' @export
+#' @name varnames
+dim_names.NetCDF <- function(x, ...) {
+  x$variable$name
+}
+
 
 #' Activate variable
 #'
 #' Stolen from tidygraph, we need this
 #' 
-#' @param .data 
-#' @param what 
+#' `activate` puts the named variable first
+#' `nctive` gets and sets the active variable
+#' @param .data NetCDF object
+#' @param what name of a variable
 #'
-#' @return
+#' @return NetCDF object
 #' @export
 #'
 #' @examples
+#' example(NetCDF)
+#' activate(rnc, "palette")
 activate <- function(.data, what) {
   UseMethod('activate')
 }
@@ -73,6 +107,12 @@ dimension_values <- function(x) {
 }
 #' @rdname dimension_values
 #' @export
+dimension_valus.character <- function(x) {
+  dimension_values(NetCDF(x))
+}
+#' @rdname dimension_values
+#' @export
+
 dimension_values.NetCDF <- function(x) {
   dimids <- x$variable %>% filter(name == nctive(x)) %>% select(name, id) %>% inner_join(x$vardim) %>% select(dimids)
   ## forcats means we maintain the right order
@@ -81,6 +121,26 @@ dimension_values.NetCDF <- function(x) {
     dplyr::inner_join(x$dimension %>% dplyr::select(id, name))  ##%>% split(forcats::as_factor(.$name))
 }
 
+#' Dimensions of a variable
+#' @export
+variable_dimensions <- function(x) {
+  UseMethod("variable_dimensions")
+}
+#' @rdname variable_dimensions
+#' @export
+variable_dimensions <- function(x) {
+  variable_dimensions(NetCDF(x))
+}
+#' @rdname variable_dimensions
+#' @export
+variable_dimensions <- function(x) {
+  dimids <- x$variable %>% 
+    filter(name == nctive(x)) %>% 
+    select(name, id) %>% 
+    inner_join(x$vardim) %>% 
+    dplyr::transmute(dimension = dimids)
+  dimids %>% dplyr::transmute(id = dimids) %>% inner_join(x$vardim) %>% inner_join(x$dimension)
+}
 
 #' Array subset by nse
 #'

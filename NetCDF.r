@@ -86,7 +86,6 @@ ncatts <- function(x) {
 #' data frame has class 'NetCDF_attributes', this is used with a custom print method to reduce the amount of output printed. 
 #' @examples 
 #' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
-#' rnc
 NetCDF <- function(x) {
   nc <- ncdf4::nc_open(x)
   dims <- do.call(dplyr::bind_rows, lapply(nc$dim, function(x) dplyr::as_data_frame(x[!names(x) %in% c("dimvarid", "vals", "units", "calendar")])))
