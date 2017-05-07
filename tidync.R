@@ -12,15 +12,15 @@
 #' example(NetCDF)
 #' var_names(rnc)
 var_names <- function(x, ...) {
-  UseMethod("varnames")
+  UseMethod("var_names")
 }
 #' @export
-#' @name varnames
+#' @name var_names
 var_names.character <- function(x, ...) {
-  varnames(NetCDF(x))
+  var_names(NetCDF(x))
 }
 #' @export
-#' @name varnames
+#' @name var_names
 var_names.NetCDF <- function(x, ...) {
   x$variable$name
 }
@@ -43,10 +43,10 @@ dim_names <- function(x, ...) {
 #' @export
 #' @name dim_names
 dim_names.character <- function(x, ...) {
-  varnames(NetCDF(x))
+  var_names(NetCDF(x))
 }
 #' @export
-#' @name varnames
+#' @name dim_names
 dim_names.NetCDF <- function(x, ...) {
   x$variable$name
 }
@@ -74,7 +74,7 @@ activate <- function(.data, what) {
 #' @rdname activate
 activate.NetCDF <- function(.data, what) {
   what_name <- deparse(substitute(what))
-  if (what_name %in% varnames(.data)) what <- what_name
+  if (what_name %in% var_names(.data)) what <- what_name
   nctive(.data) <- what
   .data
 }
@@ -84,7 +84,7 @@ nctive <- function(x) {
   attr(x, 'nctive')
 }
 `nctive<-` <- function(x, value) {
-  vn <- varnames(x)
+  vn <- var_names(x)
   if (!value %in% vn) {
     stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
   }
@@ -98,10 +98,12 @@ nctive <- function(x) {
 #'
 #' @param x 
 #'
-#' @return
+#' @return data frame of dimensions and their values
 #' @export
 #'
 #' @examples
+#' example(NetCDF)
+#' dimension_values(rnc)
 dimension_values <- function(x) {
   UseMethod("dimension_values")
 }
@@ -114,9 +116,9 @@ dimension_valus.character <- function(x) {
 #' @export
 
 dimension_values.NetCDF <- function(x) {
-  dimids <- x$variable %>% filter(name == nctive(x)) %>% select(name, id) %>% inner_join(x$vardim) %>% select(dimids)
+  dimids <- x$variable %>% filter(name == nctive(x)) %>% select(name, .variable_) %>% inner_join(x$vardim) %>% select(.dimension_)
   ## forcats means we maintain the right order
-  dimids %>% dplyr::transmute(id = dimids) %>%  
+  dimids %>% #dplyr::transmute(id = dimids) %>%  
     dplyr::inner_join(x$dimvals) %>% 
     dplyr::inner_join(x$dimension %>% dplyr::select(id, name))  ##%>% split(forcats::as_factor(.$name))
 }
@@ -150,7 +152,7 @@ variable_dimensions <- function(x) {
 #' @param x 
 #' @param ... 
 #'
-#' @return 
+#' @return data frame
 #' @export
 #' @importFrom purrr map
 #' @importFrom dplyr group_by mutate summarize
@@ -233,7 +235,7 @@ filtrate.NetCDF <- function(x, ...) {
 print.NetCDF <- function(x) {
   activ <- nctive(x)
   print(sprintf("Variable: %s", activ))
-  vn <- setdiff(varnames(x), activ)
+  vn <- setdiff(var_names(x), activ)
   if (length(vn)> 0) {
   print(sprintf("(%s)", paste(vn, collapse = ", ")))
   }
