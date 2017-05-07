@@ -89,9 +89,9 @@ ncatts <- function(x) {
 #' rnc
 NetCDF <- function(x) {
   nc <- ncdf4::nc_open(x)
-  dims <- do.call(dplyr::bind_rows, lapply(nc$dim, function(x) dplyr::as_data_frame(x[!names(x) %in% c("dimvarid", "vals", "units", "calendar")])))
+  dimension <- do.call(dplyr::bind_rows, lapply(nc$dim, function(x) dplyr::as_data_frame(x[!names(x) %in% c("dimvarid", "vals", "units", "calendar")])))
   unlimdims <- NULL
-  if (any(dims$unlim)) unlimdims <- do.call(dplyr::bind_rows, lapply( nc$dim[dims$unlim], function(x) as_data_frame(x[names(x) %in% c("id", "units", "calendar")])))
+  if (any(dimension$unlim)) unlimdims <- do.call(dplyr::bind_rows, lapply( nc$dim[dimension$unlim], function(x) as_data_frame(x[names(x) %in% c("id", "units", "calendar")])))
   ## do we care that some dims are degenerate 1D?
   ##lapply(nc$dim, function(x) dim(x$vals))
   dimvals <- do.call(dplyr::bind_rows, lapply(nc$dim, function(x) dplyr::data_frame(id = rep(x$id, length(x$vals)), vals = x$vals)))
@@ -100,14 +100,27 @@ NetCDF <- function(x) {
   ## leave the fqgn2Rindex for now
   file <- dplyr::as_data_frame(nc[!names(nc) %in% c("dim", "var", "groups", "fqgn2Rindex")])
   ## when we drop these, how do we track keeping them elsewhere?
-  var <- do.call(dplyr::bind_rows, lapply(nc$var, function(x) dplyr::as_data_frame(x[!names(x) %in% c("chunksizes", "id", "dims", "dim", "varsize", "size", "dimids")])))
-  var$id <- sapply(nc$var, function(x) x$id$id)
-  vardim <- do.call(bind_rows, lapply(nc$var, function(x) data_frame(id = rep(x$id$id, length(x$dimids)), dimids = x$dimids)))
+  variable <- do.call(dplyr::bind_rows, lapply(nc$var, function(x) dplyr::as_data_frame(x[!names(x) %in% c("chunksizes", "id", "dims", "dim", "varsize", "size", "dimids")])))
+  variable$.variable_ <- sapply(nc$var, function(x) x$id$id)
+  vardim <- do.call(bind_rows, lapply(nc$var, function(x) data_frame(.variable_ = rep(x$id$id, length(x$dimids)), .dimension_ = x$dimids)))
   ## read attributes, should be made optional (?) to avoid long read time
   atts <- ncatts(x)
   class(atts) <- c("NetCDF_attributes", "list")
-  nc_close(nc)
-  x <- list(dimension = dims, unlimdims = unlimdims, dimvals = dimvals, groups = groups, file = file, variable = var, 
+  ncdf4::nc_close(nc)
+  
+  ## create our IDs
+  dimension <- mutate(dimension, .dimension_  = id,  .group_ = group_id)
+  ## TODO unlimdims
+  dimvals  <- mutate(dimvals, .dimension_ = id)
+  groups  <- mutate(groups, .group_  = id)
+  file    <- mutate(file, .file_ = id) ##  (this should probably be replaced ?)
+  variable  <- mutate(variable, .variable_ = id, .group_ = group_id[group_index])
+  vardim    <- mutate(vardim, .variable_ = id, .dimension_ = dimids)
+  
+  
+  x <- list(dimension = dimension, 
+            unlimdims = unlimdims, 
+            dimvals = dimvals, groups = groups, file = file, variable = var, 
             vardim = vardim, attribute = atts)
   class(x) <- c("NetCDF", "list")
   x
