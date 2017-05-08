@@ -190,10 +190,10 @@ filtrate <- function(x, ...) {
 #' @importFrom forcats as_factor
 filtrate.NetCDF <- function(x, ...) {
 
-  dimvals <- dimension_values(x) %>% 
-    dplyr::group_by(.data$name) %>% 
-    dplyr::mutate(step = dplyr::row_number())
-  trans <-  dimvals %>% split(forcats::as_factor(.data$name)) 
+  dimvals <- dimension_values(x) #%>% 
+    #dplyr::group_by(.data$name)
+ dimvals$step <- unlist(lapply(split(dimvals, dimvals$name), function(x) seq_len(nrow(x))))
+  trans <-  split(dimvals, forcats::as_factor(dimvals$name)) 
   
   ## hack attack
   for (i in seq_along(trans)) names(trans[[i]]) <- c(".dimension_", "id", trans[[i]]$name[1], "name", "step")
@@ -205,9 +205,13 @@ filtrate.NetCDF <- function(x, ...) {
     iname <- names(quo_named)[i]
     trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
   }
-  trans %>% purrr::map(.f = function(x) x %>% dplyr::summarize(start = min(.data$step), count = dplyr::n()))
-  
+  #trans
+  ##trans %>% purrr::map(.f = function(x) x %>% dplyr::summarize(start = min(.data$step), count = dplyr::n()))
+  #lapply(trans, function(x) tibble(name = x$name[1], start = min(x$step), count = length(x$step)))
+  trans
 }
+
+
 
 
 
