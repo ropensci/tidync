@@ -116,11 +116,15 @@ dimension_valus.character <- function(x) {
 #' @export
 
 dimension_values.NetCDF <- function(x) {
-  dimids <- x$variable %>% filter(name == nctive(x)) %>% select(name, .variable_) %>% inner_join(x$vardim) %>% select(.dimension_)
+  dimids <- x$variable %>% filter(name == nctive(x)) %>% 
+    dplyr::select(name, .data$.variable_) %>% 
+    dplyr::inner_join(x$vardim) %>% select(.data$.dimension_)
   ## forcats means we maintain the right order
   dimids %>% #dplyr::transmute(id = dimids) %>%  
     dplyr::inner_join(x$dimension_values) %>% 
-    dplyr::inner_join(x$dimension %>% dplyr::select(id, name))  ##%>% split(forcats::as_factor(.$name))
+    dplyr::inner_join(x$dimension %>% 
+                        dplyr::select(.data$id, .data$name))  
+  
 }
 
 #' Dimensions of a variable
@@ -137,11 +141,11 @@ variable_dimensions <- function(x) {
 #' @export
 variable_dimensions <- function(x) {
   dimids <- x$variable %>% 
-    filter(name == nctive(x)) %>% 
-    select(name, id) %>% 
-    inner_join(x$vardim) %>% 
-    dplyr::transmute(dimension = dimids)
-  dimids %>% dplyr::transmute(id = dimids) %>% inner_join(x$vardim) %>% inner_join(x$dimension)
+    dplyr::filter(name == nctive(x)) %>% 
+    dplyr::select(name, .data$.variable_) %>% 
+    #dplyr::inner_join(x$vardim) %>% 
+    dplyr::inner_join(x$vardim, ".variable_") %>% 
+    inner_join(x$dimension, ".dimension_")
 }
 
 #' Array subset by nse
@@ -157,37 +161,15 @@ variable_dimensions <- function(x) {
 #' @importFrom purrr map
 #' @importFrom dplyr group_by mutate summarize
 #' @examples
-#' cls <- c("#440154FF", "#471164FF", "#482071FF", "#472E7CFF", "#443C84FF", 
-#' "#3F4889FF", "#39558CFF", "#34618DFF", "#2F6C8EFF", "#2A768EFF", 
-#' "#26818EFF", "#228B8DFF", "#1F958BFF", "#1FA088FF", "#24AA83FF", 
-#' "#30B47CFF", "#41BD72FF", "#57C666FF", "#6FCF57FF", "#8AD647FF", 
-#' "#A7DB35FF", "#C4E021FF", "#E2E418FF", "#FDE725FF")
-#' library(ncdump)
-#' f <- "/rdsi/PRIVATE/raad/data/eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/2017/AVHRR/avhrr-only-v2.20170502_preliminary.nc"
-#' x <- NetCDF(f)
-#' x
-#' nctive(x)
-#' ## push sst to the front for an extraction
-#' x <- activate(x, "sst")
-#' hyper_slab <- filtrate(x, lon = lon > 100, lat = lat < 30)
-#' ## it's alive, test the extraction
-#' library(ncdf4)
-#' nc <- nc_open(f)
-#' library(dplyr)
-#' sst <- ncvar_get(nc, "sst", start = bind_rows(hyper_slab)$start, count = bind_rows(hyper_slab)$count)
-#' image(sst, col = cls)
-#' ## push a different var to the front
-#' x <- activate(x, "anom")
-#' hyper_slab <- filtrate(x, lon = between(lon, 147, 250), lat = between(lat, -42, 20))
-#' anom <- ncvar_get(nc, "sst", start = bind_rows(hyper_slab)$start, count = bind_rows(hyper_slab)$count)
-#' image(anom, col = cls)
-#' 
+#' ## inst/dev/filtrate_early.R
+#' ##http://rpubs.com/cyclemumner/tidyslab
 #' # 
 filtrate <- function(x, ...) {
   UseMethod("filtrate")
 }
 #' @export
 #' @importFrom dplyr %>% mutate 
+#' @importFrom forcats as_factor
 filtrate.NetCDF <- function(x, ...) {
 
   dimvals <- dimension_values(x) %>% dplyr::group_by(name) %>% dplyr::mutate(step = row_number())
@@ -237,7 +219,7 @@ filtrate.NetCDF <- function(x, ...) {
 #' x <- NetCDF(f)
 #' nctive(x)
 #' x <- activate(x, "sst") 
-print.NetCDF <- function(x) {
+print.NetCDF <- function(x, ...) {
   activ <- nctive(x)
   print(sprintf("Variable: %s", activ))
   vn <- setdiff(var_names(x), activ)
