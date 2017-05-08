@@ -154,13 +154,13 @@ variable_dimensions <- function(x) {
   aa <- x$variable[x$variable$name == nctive(x), ]
   #bb <- aa %>% 
   #  dplyr::transmute(variable_name = .data$name, .data$.variable_) 
-  bb <- tibble(variable_name = aa$name, .variable = aa$.variabel_)
+  bb <- tibble(variable_name = aa$name, .variable_ = aa$.variable_)
   cc <- bb %>% 
     #dplyr::inner_join(x$vardim) %>% 
     dplyr::inner_join(x$vardim, ".variable_") %>% 
     inner_join(x$dimension, ".dimension_")
   dd <- tibble(variable_name = cc$variable_name, 
-               .variable_ = cc$.variable, 
+               .variable_ = cc$.variable_, 
                .dimension_ = cc$.dimension_, 
                dimension_name = cc$name)
 dd
@@ -247,17 +247,19 @@ filtrate.NetCDF <- function(x, ...) {
 #' @export
 #' @importFrom dplyr %>% arrange transmute
 print.NetCDF <- function(x, ...) {
-  activ <- nctive(x)
-  print(sprintf("Variable: %s", activ))
-  vn <- setdiff(var_names(x), activ)
-  if (length(vn)> 0) {
-  print(sprintf("(%s)", paste(vn, collapse = ", ")))
+  form <- nctive(x)
+  vn <- c(form, setdiff(var_names(x), form))
+  if (length(vn)> 1) {
+    form <- sprintf("%s, (%s)", vn[1L],  paste(vn[-1L], collapse = ", "))
   }
-  print(sprintf("Dimension:", ""))
-  print(x$dimension %>% 
-          dplyr::arrange(.data$id)  %>% 
-          transmute(.data$name, length = .data$len, 
-                    unlimited= .data$unlim ) %>% as.data.frame())
+  cat(sprintf("Variables: %s", form), "\n")
+  
+  cat(sprintf("Dimensions: \n", ""))
+  print(variable_dimensions(x))
+  # print(x$dimension %>% 
+  #         dplyr::arrange(.data$id)  %>% 
+  #         transmute(.data$name, length = .data$len, 
+  #                   unlimited= .data$unlim ) %>% as.data.frame())
   invisible(NULL)
 }
 
