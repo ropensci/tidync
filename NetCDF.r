@@ -32,14 +32,14 @@ ncatts <- function(x) {
 ncatts.character <- function(x) {
   on.exit(ncdf4::nc_close(ncf))
   ncf <- ncdf4::nc_open(x)
-  global <- dplyr::as_tibble(ncdf4::ncatt_get(ncf, 0))
+  global <- tibble::as_tibble(ncdf4::ncatt_get(ncf, 0))
   var <- setNames(vector('list', length(ncf$var)), names(ncf$var))
   childvar <- var
  for (vname in names(ncf$var)) {
     aaa <- ncatt_get(ncf, vname)
     lts <- lengths(aaa)
     if (length(unique(lts)) > 1) {
-      tabs <- lapply(split(aaa, lts), dplyr::as_tibble)
+      tabs <- lapply(split(aaa, lts), tibble::as_tibble)
       var[[vname]] <- tabs[[1]]
       childvar[[vname]] <- tabs[-1]
     } 
@@ -87,7 +87,8 @@ ncatts.character <- function(x) {
 #' @export
 #' @importFrom ncdf4 nc_open
 #' @importFrom rlang .data
-#' @importFrom dplyr as_tibble bind_rows mutate tibble
+#' @importFrom dplyr  bind_rows mutate 
+#' @importFrom tibble as_tibble tibble
 #' @seealso [ncdf4::nc_open] which is what this function uses to obtain the information 
 #' @return A list of data frames with an unused S3 class 'NetCDF', see details for a description of the data frames. The 'attribute' 
 #' data frame has class 'NetCDF_attributes', this is used with a custom print method to reduce the amount of output printed. 
@@ -95,18 +96,18 @@ ncatts.character <- function(x) {
 #' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 NetCDF <- function(x) {
   nc <- ncdf4::nc_open(x)
-  dimension <- do.call(dplyr::bind_rows, lapply(nc$dim, function(x) dplyr::as_tibble(x[!names(x) %in% c("dimvarid", "vals", "units", "calendar")])))
+  dimension <- do.call(dplyr::bind_rows, lapply(nc$dim, function(x) tibble::as_tibble(x[!names(x) %in% c("dimvarid", "vals", "units", "calendar")])))
   unlimdims <- NULL
   if (any(dimension$unlim)) unlimdims <- do.call(dplyr::bind_rows, lapply( nc$dim[dimension$unlim], function(x) dplyr::tibble(x[names(x) %in% c("id", "units", "calendar")])))
   ## do we care that some dims are degenerate 1D?
   ##lapply(nc$dim, function(x) dim(x$vals))
   dimension_values <- do.call(dplyr::bind_rows, lapply(nc$dim, function(x) dplyr::tibble(id = rep(x$id, length(x$vals)), vals = x$vals)))
   ## the dimids are in the dims table above
-  group <- do.call(dplyr::bind_rows, lapply(nc$groups, function(x) dplyr::as_tibble(x[!names(x) %in% "dimid"]))) 
+  group <- do.call(dplyr::bind_rows, lapply(nc$groups, function(x) tibble::as_tibble(x[!names(x) %in% "dimid"]))) 
   ## leave the fqgn2Rindex for now
-  file <- dplyr::as_tibble(nc[!names(nc) %in% c("dim", "var", "groups", "fqgn2Rindex")])
+  file <- tibble::as_tibble(nc[!names(nc) %in% c("dim", "var", "groups", "fqgn2Rindex")])
   ## when we drop these, how do we track keeping them elsewhere?
-  variable <- do.call(dplyr::bind_rows, lapply(nc$var, function(x) dplyr::as_tibble(x[!names(x) %in% c("chunksizes", "id", "dims", "dim", "varsize", "size", "dimids")])))
+  variable <- do.call(dplyr::bind_rows, lapply(nc$var, function(x) tibble::as_tibble(x[!names(x) %in% c("chunksizes", "id", "dims", "dim", "varsize", "size", "dimids")])))
   variable$.variable_ <- sapply(nc$var, function(x) x$id$id)
   variable_link_dimension <- do.call(bind_rows, lapply(nc$var, function(x) tibble(.variable_ = rep(x$id$id, length(x$dimids)), .dimension_ = x$dimids)))
   ## read attributes, should be made optional (?) to avoid long read time
