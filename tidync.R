@@ -192,11 +192,11 @@ filtrate.NetCDF <- function(x, ...) {
 
   dimvals <- dimension_values(x) #%>% 
     #dplyr::group_by(.data$name)
- dimvals$step <- unlist(lapply(split(dimvals, dimvals$name), function(x) seq_len(nrow(x))))
+ dimvals$step <- unlist(lapply(split(dimvals, forcats::as_factor(dimvals$name)), function(x) seq_len(nrow(x))))
   trans <-  split(dimvals, forcats::as_factor(dimvals$name)) 
   
   ## hack attack
-  for (i in seq_along(trans)) names(trans[[i]]) <- c(".dimension_", "id", trans[[i]]$name[1], "name", "step")
+  for (i in seq_along(trans)) names(trans[[i]]) <- gsub("^vals$", trans[[i]]$name[1], names(trans[[i]]))
 
   quo_named <- rlang::quos(...)
   if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100'")
@@ -255,7 +255,7 @@ print.NetCDF <- function(x, ...) {
   cat(sprintf("Variables: %s", form), "\n")
   
   cat(sprintf("Dimensions: \n", ""))
-  print(variable_dimensions(x))
+  print(variable_dimensions(x) %>% inner_join(dims(x) %>% dplyr::transmute(.dimension_, dimension_length = len)))
   # print(x$dimension %>% 
   #         dplyr::arrange(.data$id)  %>% 
   #         transmute(.data$name, length = .data$len, 
