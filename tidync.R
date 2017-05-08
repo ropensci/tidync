@@ -2,8 +2,8 @@
 #' Variable names
 #' 
 #' 
-#' @param x 
-#' @param ... 
+#' @param x NetCDF object
+#' @param ... currently ignored
 #'
 #' @return names of variables available
 #' @export
@@ -28,8 +28,8 @@ var_names.NetCDF <- function(x, ...) {
 #' Dimension names
 #' 
 #' 
-#' @param x 
-#' @param ... 
+#' @param x NetCDF object
+#' @param ... ignored
 #'
 #' @return names of available dimensions 
 #' @export
@@ -78,6 +78,8 @@ activate.NetCDF <- function(.data, what) {
   nctive(.data) <- what
   .data
 }
+#' @param x NetCDF object
+#'
 #' @rdname activate
 #' @export
 nctive <- function(x) {
@@ -96,7 +98,7 @@ nctive <- function(x) {
 #' 
 #' The dimension values are the coordinates, the positions along each axis. 
 #'
-#' @param x 
+#' @param x NetCDF object
 #'
 #' @return data frame of dimensions and their values
 #' @export
@@ -116,18 +118,25 @@ dimension_valus.character <- function(x) {
 #' @export
 
 dimension_values.NetCDF <- function(x) {
-  dimids <- x$variable %>% filter(name == nctive(x)) %>% 
-    dplyr::select(name, .data$.variable_) %>% 
-    dplyr::inner_join(x$vardim) %>% select(.data$.dimension_)
+  dimids <- x$variable[x$variable$name == nctive(x), ]
+    #dplyr::select(.data$name, .data$.variable_) %>% 
+  dimids <- dimids[, c("name", ".variable_")]
+  dimids <- dimids %>%  dplyr::inner_join(x$vardim) %>% select(.data$.dimension_)
+  
+  dim_names <- x$dimension[, c("name", ".dimension_")]
+  
   ## forcats means we maintain the right order
   dimids %>% #dplyr::transmute(id = dimids) %>%  
-    dplyr::inner_join(x$dimension_values) %>% 
-    dplyr::inner_join(x$dimension %>% 
-                        dplyr::select(.data$id, .data$name))  
+    dplyr::inner_join(x$dimension_values, ".dimension_") %>% 
+    dplyr::inner_join(dim_names, ".dimension_")
+  
   
 }
 
 #' Dimensions of a variable
+#'
+#' @param x NetCDF object
+#'
 #' @export
 variable_dimensions <- function(x) {
   UseMethod("variable_dimensions")
@@ -140,12 +149,21 @@ variable_dimensions <- function(x) {
 #' @rdname variable_dimensions
 #' @export
 variable_dimensions <- function(x) {
-  dimids <- x$variable %>% 
-    dplyr::filter(name == nctive(x)) %>% 
-    dplyr::select(name, .data$.variable_) %>% 
+  #aa <- x$variable %>% 
+  #  dplyr::filter(name == nctive(x))
+  aa <- x$variable[x$variable$name == nctive(x), ]
+  #bb <- aa %>% 
+  #  dplyr::transmute(variable_name = .data$name, .data$.variable_) 
+  bb <- tibble(variable_name = aa$name, .variable = aa$.variabel_)
+  cc <- bb %>% 
     #dplyr::inner_join(x$vardim) %>% 
     dplyr::inner_join(x$vardim, ".variable_") %>% 
     inner_join(x$dimension, ".dimension_")
+  dd <- tibble(variable_name = cc$variable_name, 
+               .variable_ = cc$.variable, 
+               .dimension_ = cc$.dimension_, 
+               dimension_name = cc$name)
+dd
 }
 
 #' Array subset by nse
@@ -153,8 +171,8 @@ variable_dimensions <- function(x) {
 #' NSE arguments must be named as per the dimensions in the variable. This is a restrictive variant of `dplyr::filter`, 
 #' with a syntax more like `dplyr::mutate`. This ensures that each element is named, so we know which dimension to 
 #' apply this to, but also that the expression evaluated against can do some extra work for a nuanced test. 
-#' @param x 
-#' @param ... 
+#' @param x NetCDF object
+#' @param ... currently ignored
 #'
 #' @return data frame
 #' @export
@@ -172,8 +190,10 @@ filtrate <- function(x, ...) {
 #' @importFrom forcats as_factor
 filtrate.NetCDF <- function(x, ...) {
 
-  dimvals <- dimension_values(x) %>% dplyr::group_by(name) %>% dplyr::mutate(step = row_number())
-  trans <-  dimvals %>% split(forcats::as_factor(.$name)) 
+  dimvals <- dimension_values(x) %>% 
+    dplyr::group_by(.data$name) %>% 
+    dplyr::mutate(step = dplyr::row_number())
+  trans <-  dimvals %>% split(forcats::as_factor(.data$name)) 
   
   ## hack attack
   for (i in seq_along(trans)) names(trans[[i]]) <- c(".dimension_", "id", trans[[i]]$name[1], "name", "step")
@@ -185,7 +205,7 @@ filtrate.NetCDF <- function(x, ...) {
     iname <- names(quo_named)[i]
     trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
   }
-  trans %>% purrr::map(.f = function(x) x %>% dplyr::summarize(start = min(step), count = n()))
+  trans %>% purrr::map(.f = function(x) x %>% dplyr::summarize(start = min(.data$step), count = dplyr::n()))
   
 }
 
@@ -210,15 +230,18 @@ filtrate.NetCDF <- function(x, ...) {
 
 
 
-
-#' @rdname activate
+#' Print NetCDF object
+#' 
+#' print S3 method
+#' 
+#' Prints a summary of variables and dimensions. 
+#' @param x NetCDF object
+#'
+#' @param ... reserved
+#'
+#' @rdname print-NetCDF
 #' @export
 #' @importFrom dplyr %>% arrange transmute
-#' @examples 
-#' f <- "/rdsi/PRIVATE/raad/data/eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/2017/AVHRR/avhrr-only-v2.20170502_preliminary.nc"
-#' x <- NetCDF(f)
-#' nctive(x)
-#' x <- activate(x, "sst") 
 print.NetCDF <- function(x, ...) {
   activ <- nctive(x)
   print(sprintf("Variable: %s", activ))
@@ -227,7 +250,10 @@ print.NetCDF <- function(x, ...) {
   print(sprintf("(%s)", paste(vn, collapse = ", ")))
   }
   print(sprintf("Dimension:", ""))
-  print(x$dimension %>% dplyr::arrange(id)  %>% transmute(name, length = len, unlimited= unlim ) %>% as.data.frame())
+  print(x$dimension %>% 
+          dplyr::arrange(.data$id)  %>% 
+          transmute(.data$name, length = .data$len, 
+                    unlimited= .data$unlim ) %>% as.data.frame())
   invisible(NULL)
 }
 
