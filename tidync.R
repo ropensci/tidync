@@ -255,7 +255,8 @@ print.NetCDF <- function(x, ...) {
   cat(sprintf("Variables: %s", form), "\n")
   
   cat(sprintf("Dimensions: \n", ""))
-  print(variable_dimensions(x) %>% inner_join(dims(x) %>% dplyr::transmute(.dimension_, dimension_length = len)))
+  print(variable_dimensions(x) %>% 
+          inner_join(dims(x) %>% dplyr::transmute(.data$.dimension_, dimension_length = .data$len)))
   # print(x$dimension %>% 
   #         dplyr::arrange(.data$id)  %>% 
   #         transmute(.data$name, length = .data$len, 
