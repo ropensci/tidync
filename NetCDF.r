@@ -92,7 +92,7 @@ ncatts.character <- function(x) {
 #' @seealso [ncdf4::nc_open] which is what this function uses to obtain the information 
 #' @return A list of data frames with an unused S3 class 'NetCDF', see details for a description of the data frames. The 'attribute' 
 #' data frame has class 'NetCDF_attributes', this is used with a custom print method to reduce the amount of output printed. 
-#' @examples 
+#' @examples
 #' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 NetCDF <- function(x) {
   nc <- ncdf4::nc_open(x)

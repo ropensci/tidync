@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-#' example(NetCDF)
+#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 #' var_names(rnc)
 var_names <- function(x, ...) {
   UseMethod("var_names")
@@ -35,7 +35,7 @@ var_names.NetCDF <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' example(NetCDF)
+#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 #' dim_names(rnc)
 dim_names <- function(x, ...) {
   UseMethod("dim_names")
@@ -52,45 +52,43 @@ dim_names.NetCDF <- function(x, ...) {
 }
 
 
-#' Activate variable
+#' Activate
 #'
-#' Stolen from tidygraph, we need this
+#' Set the context for subsequent manipulations. 
 #' 
 #' `activate` puts the named variable first
-#' `nctive` gets and sets the active variable
+#' `active` gets and sets the active variable
 #' @param .data NetCDF object
 #' @param what name of a variable
-#'
 #' @return NetCDF object
-#' @export
-#'
+#' @importFrom activate activate active active<- 
+#' @export active activate active<- 
+#' @rdname activate 
+#' @aliases active activate active<- 
 #' @examples
-#' example(NetCDF)
+#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 #' activate(rnc, "palette")
-activate <- function(.data, what) {
-  UseMethod('activate')
-}
-#' @export
-#' @rdname activate
 activate.NetCDF <- function(.data, what) {
   what_name <- deparse(substitute(what))
   if (what_name %in% var_names(.data)) what <- what_name
-  nctive(.data) <- what
+  active(.data) <- what
   .data
 }
 #' @param x NetCDF object
-#'
-#' @rdname activate
+#' @name activate
 #' @export
-nctive <- function(x) {
-  attr(x, 'nctive')
+active.NetCDF <- function(x) {
+  attr(x, 'active')
 }
-`nctive<-` <- function(x, value) {
+#' @param value name of variable to be active
+#' @name activate
+#' @export
+`active<-.NetCDF` <- function(x, value) {
   vn <- var_names(x)
   if (!value %in% vn) {
     stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
   }
-  attr(x, 'nctive') <- value
+  attr(x, 'active') <- value
   x
 }
 
@@ -104,7 +102,7 @@ nctive <- function(x) {
 #' @export
 #'
 #' @examples
-#' example(NetCDF)
+#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 #' dimension_values(rnc)
 dimension_values <- function(x) {
   UseMethod("dimension_values")
@@ -118,7 +116,7 @@ dimension_valus.character <- function(x) {
 #' @export
 
 dimension_values.NetCDF <- function(x) {
-  dimids <- x$variable[x$variable$name == nctive(x), ]
+  dimids <- x$variable[x$variable$name == active(x), ]
     #dplyr::select(.data$name, .data$.variable_) %>% 
   dimids <- dimids[, c("name", ".variable_")]
   dimids <- dimids %>%  dplyr::inner_join(x$vardim) %>% select(.data$.dimension_)
@@ -150,8 +148,7 @@ variable_dimensions <- function(x) {
 #' @export
 variable_dimensions <- function(x) {
   #aa <- x$variable %>% 
-  #  dplyr::filter(name == nctive(x))
-  aa <- x$variable[x$variable$name == nctive(x), ]
+ aa <- x$variable[x$variable$name == active(x), ]
   #bb <- aa %>% 
   #  dplyr::transmute(variable_name = .data$name, .data$.variable_) 
   bb <- tibble(variable_name = aa$name, .variable_ = aa$.variable_)
@@ -247,7 +244,7 @@ filtrate.NetCDF <- function(x, ...) {
 #' @export
 #' @importFrom dplyr %>% arrange transmute
 print.NetCDF <- function(x, ...) {
-  form <- nctive(x)
+  form <- active(x)
   vn <- c(form, setdiff(var_names(x), form))
   if (length(vn)> 1) {
     form <- sprintf("%s, (%s)", vn[1L],  paste(vn[-1L], collapse = ", "))
