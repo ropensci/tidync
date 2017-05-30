@@ -8,15 +8,47 @@ hyper_index <- function(x,  ...) {
 }
 #' @export
 #' @name hyper_index
+hyper_index.tbl_df <- function(x, ...) {
+  structure(x, class = c("hyperslab", class(x)))
+}
+#' @export
+#' @name hyper_index
 hyper_index.NetCDF <- function(x, ...) {
   trans <- x %>% filtrate(...)
   bind_rows(lapply(trans, 
-                   function(x) tibble(name = x$name[1], 
-                                      start = min(x$step), 
-                                      count = length(x$step))))
+                   function(sub_trans) tibble(name = sub_trans$name[1], 
+                                      start = min(sub_trans$step), 
+                                      count = length(sub_trans$step), 
+            variable = active(x), 
+            file = x$file$filename[1]))) %>% hyper_index()
 }
 hyper_index.character <- function(x, varname, ...) {
   NetCDF(x) %>% hyper_index(...)
+}
+
+#' hyper slice
+#' 
+#' @param x a hyper slab
+#' @param ... ignored
+#' @export
+hyper_slice <- function(x, ...) {
+  UseMethod("hyper_slice")
+}
+#' @name hyper_slice
+#' @export
+hyper_slice.hyperslab <- function(x, ...) {
+  ncdf4::ncvar_get(ncdf4::nc_open(x$file[1]), x$variable[1], 
+                   start = x$start, count = x$count)
+}
+#' @name hyper_slice
+#' @export
+hyper_slice.NetCDF <- function(x, ...) {
+  x %>% hyper_index(...) %>% hyper_slice()
+}
+#' @name hyper_slice
+#' @export
+hyper_slice.character <- function(x, ...) {
+  NetCDF(x) %>% hyper_index(...) %>% hyper_slice()
 }
 #' Variable names
 #' 
