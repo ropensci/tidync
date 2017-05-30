@@ -1,4 +1,23 @@
-
+#' hyper slab index
+#' 
+#' @param x
+#' @param ... expressions to `filtrate`
+#' @export
+hyper_index <- function(x,  ...) {
+  UseMethod("hyper_index")
+}
+#' @export
+#' @name hyper_index
+hyper_index.NetCDF <- function(x, ...) {
+  trans <- x %>% filtrate(...)
+  bind_rows(lapply(trans, 
+                   function(x) tibble(name = x$name[1], 
+                                      start = min(x$step), 
+                                      count = length(x$step))))
+}
+hyper_index.character <- function(x, varname, ...) {
+  NetCDF(x) %>% hyper_index(...)
+}
 #' Variable names
 #' 
 #' 
