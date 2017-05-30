@@ -1,3 +1,136 @@
+#' Array subset by nse
+#'
+#' NSE arguments must be named as per the dimensions in the variable. This is a restrictive variant of `dplyr::filter`, 
+#' with a syntax more like `dplyr::mutate`. This ensures that each element is named, so we know which dimension to 
+#' apply this to, but also that the expression evaluated against can do some extra work for a nuanced test. 
+#' @param x NetCDF object
+#' @param ... currently ignored
+#'
+#' @return data frame
+#' @export
+#' @importFrom purrr map
+#' @importFrom dplyr group_by mutate summarize
+#' @examples
+#' ## inst/dev/filtrate_early.R
+#' ##http://rpubs.com/cyclemumner/tidyslab
+#' # 
+hyper_filter <- function(x, ...) {
+  UseMethod("hyper_filter")
+}
+#' @name hyper_filter
+#' @export
+#' @importFrom dplyr %>% mutate 
+#' @importFrom forcats as_factor
+hyper_filter.NetCDF <- function(x, ...) {
+  
+  dimvals <- dimension_values(x) #%>% 
+  #dplyr::group_by(.data$name)
+  dimvals$step <- unlist(lapply(split(dimvals, forcats::as_factor(dimvals$name)), function(x) seq_len(nrow(x))))
+  trans <-  split(dimvals, forcats::as_factor(dimvals$name)) 
+  
+  ## hack attack
+  for (i in seq_along(trans)) names(trans[[i]]) <- gsub("^vals$", trans[[i]]$name[1], names(trans[[i]]))
+  
+  quo_named <- rlang::quos(...)
+  if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100'")
+  quo_noname <- unname(quo_named)
+  for (i in seq_along(quo_named)) {
+    iname <- names(quo_named)[i]
+    trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
+    
+  }
+  trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
+  #trans
+  ##trans %>% purrr::map(.f = function(x) x %>% dplyr::summarize(start = min(.data$step), count = dplyr::n()))
+  #lapply(trans, function(x) tibble(name = x$name[1], start = min(x$step), count = length(x$step)))
+   hyper_filter(trans) %>% activate(active(x))
+  
+}
+
+#' @name hyper_filter
+#' @export
+hyper_filter.default <- function(x, ...) {
+  structure(x, class = c("hyperfilter", class(x)))
+}
+#' @name hyper_filter
+#' @export
+hyper_filter.character <- function(x, ...) {
+  NetCDF(x) %>% hyper_filter(...)
+}
+#' @name hyper_filter
+#' @export
+print.hyperfilter <- function(x, ...) {
+  x <- bind_rows(lapply(x,  function(a) summarize_all(a %>% select(-filename, -.dimension_, -id, -step) %>% group_by(name), funs(min, max, length))))
+  print("filtered dimension summary: ")
+  print(x)
+  invisible(x)
+}
+
+
+#' Activate
+#'
+#' Set the context for subsequent manipulations. 
+#' 
+#' `activate` puts the named variable first
+#' `active` gets and sets the active variable
+#' @param .data NetCDF object
+#' @param what name of a variable
+#' @return NetCDF object
+#' @importFrom activate activate active active<- 
+#' @export active activate active<- 
+#' @rdname activate 
+#' @aliases active activate active<- 
+#' @examples
+#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' activate(rnc, "palette")
+#' @name activate
+#' @export
+activate <- function(.data, what) UseMethod("activate")
+#' @name activate
+#' @export
+activate.NetCDF <- function(.data, what) {
+  what_name <- deparse(substitute(what))
+  if (what_name %in% var_names(.data)) what <- what_name
+  active(.data) <- what
+  .data
+}
+#' @name activate
+#' @export
+activate.hyperfilter <- function(.data, what) {
+  what_name <- deparse(substitute(what))
+ # if (what_name %in% var_names(.data)) what <- what_name
+  active(.data) <- what
+  .data
+}
+#' @param x NetCDF object
+#' @name activate
+#' @export
+active.NetCDF <- function(x) {
+  attr(x, 'active')
+}
+#' @name activate
+#' @export
+active.hyperfilter <- active.NetCDF
+#' @param value name of variable to be active
+#' @name activate
+#' @export
+`active<-.NetCDF` <- function(x, value) {
+  vn <- var_names(x)
+  if (!value %in% vn) {
+    stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
+  }
+  attr(x, 'active') <- value
+  x
+}
+#' @param value name of variable to be active
+#' @name activate
+#' @export
+`active<-.hyperfilter` <- function(x, value) {
+
+  attr(x, 'active') <- value
+  x
+}
+
 #' hyper slab index
 #' 
 #' @param x
@@ -14,16 +147,23 @@ hyper_index.tbl_df <- function(x, ...) {
 #' @export
 #' @name hyper_index
 hyper_index.NetCDF <- function(x, ...) {
-  trans <- x %>% filtrate(...)
-  bind_rows(lapply(trans, 
-                   function(sub_trans) tibble(name = sub_trans$name[1], 
-                                      start = min(sub_trans$step), 
-                                      count = length(sub_trans$step), 
-            variable = active(x), 
-            file = x$file$filename[1]))) %>% hyper_index()
+  x %>% hyper_filter(...) %>% hyper_index()
+
 }
+#' @export
+#' @name hyper_index
 hyper_index.character <- function(x, varname, ...) {
-  NetCDF(x) %>% hyper_index(...)
+  NetCDF(x) %>% activate(varname) %>%  hyper_index(...)
+}
+#' @export
+#' @name hyper_index
+hyper_index.hyperfilter <- function(x, ...) {
+  bind_rows(lapply(x, 
+                   function(sub_trans) tibble(name = sub_trans$name[1], 
+                                              start = min(sub_trans$step), 
+                                              count = length(sub_trans$step), 
+                                              variable = active(x), 
+                                              file = sub_trans$filename[1L]))) %>% hyper_index()
 }
 
 #' hyper slice
@@ -50,6 +190,13 @@ hyper_slice.NetCDF <- function(x, ...) {
 hyper_slice.character <- function(x, ...) {
   NetCDF(x) %>% hyper_index(...) %>% hyper_slice()
 }
+
+
+
+
+
+
+
 #' Variable names
 #' 
 #' 
@@ -103,45 +250,6 @@ dim_names.NetCDF <- function(x, ...) {
 }
 
 
-#' Activate
-#'
-#' Set the context for subsequent manipulations. 
-#' 
-#' `activate` puts the named variable first
-#' `active` gets and sets the active variable
-#' @param .data NetCDF object
-#' @param what name of a variable
-#' @return NetCDF object
-#' @importFrom activate activate active active<- 
-#' @export active activate active<- 
-#' @rdname activate 
-#' @aliases active activate active<- 
-#' @examples
-#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
-#' activate(rnc, "palette")
-activate.NetCDF <- function(.data, what) {
-  what_name <- deparse(substitute(what))
-  if (what_name %in% var_names(.data)) what <- what_name
-  active(.data) <- what
-  .data
-}
-#' @param x NetCDF object
-#' @name activate
-#' @export
-active.NetCDF <- function(x) {
-  attr(x, 'active')
-}
-#' @param value name of variable to be active
-#' @name activate
-#' @export
-`active<-.NetCDF` <- function(x, value) {
-  vn <- var_names(x)
-  if (!value %in% vn) {
-    stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
-  }
-  attr(x, 'active') <- value
-  x
-}
 
 #' Dimension values
 #' 
@@ -160,7 +268,7 @@ dimension_values <- function(x) {
 }
 #' @rdname dimension_values
 #' @export
-dimension_valus.character <- function(x) {
+dimension_values.character <- function(x) {
   dimension_values(NetCDF(x))
 }
 #' @rdname dimension_values
@@ -214,51 +322,10 @@ variable_dimensions <- function(x) {
 dd
 }
 
-#' Array subset by nse
-#'
-#' NSE arguments must be named as per the dimensions in the variable. This is a restrictive variant of `dplyr::filter`, 
-#' with a syntax more like `dplyr::mutate`. This ensures that each element is named, so we know which dimension to 
-#' apply this to, but also that the expression evaluated against can do some extra work for a nuanced test. 
-#' @param x NetCDF object
-#' @param ... currently ignored
-#'
-#' @return data frame
+#' deprecated
+#' @name deprecated ncdump
 #' @export
-#' @importFrom purrr map
-#' @importFrom dplyr group_by mutate summarize
-#' @examples
-#' ## inst/dev/filtrate_early.R
-#' ##http://rpubs.com/cyclemumner/tidyslab
-#' # 
-filtrate <- function(x, ...) {
-  UseMethod("filtrate")
-}
-#' @export
-#' @importFrom dplyr %>% mutate 
-#' @importFrom forcats as_factor
-filtrate.NetCDF <- function(x, ...) {
-
-  dimvals <- dimension_values(x) #%>% 
-    #dplyr::group_by(.data$name)
- dimvals$step <- unlist(lapply(split(dimvals, forcats::as_factor(dimvals$name)), function(x) seq_len(nrow(x))))
-  trans <-  split(dimvals, forcats::as_factor(dimvals$name)) 
-  
-  ## hack attack
-  for (i in seq_along(trans)) names(trans[[i]]) <- gsub("^vals$", trans[[i]]$name[1], names(trans[[i]]))
-
-  quo_named <- rlang::quos(...)
-  if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100'")
-  quo_noname <- unname(quo_named)
-  for (i in seq_along(quo_named)) {
-    iname <- names(quo_named)[i]
-    trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
-  }
-  #trans
-  ##trans %>% purrr::map(.f = function(x) x %>% dplyr::summarize(start = min(.data$step), count = dplyr::n()))
-  #lapply(trans, function(x) tibble(name = x$name[1], start = min(x$step), count = length(x$step)))
-  trans
-}
-
+filtrate <- function(...) .Deprecated("hyper_filter")
 
 
 
