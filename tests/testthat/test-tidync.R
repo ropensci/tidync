@@ -1,0 +1,46 @@
+context("tidync")
+
+# export("active<-")
+# export(activate)
+# export(active)
+# export(dim_names)
+# export(dimension_values)
+# export(filtrate)
+# export(hyper_filter)
+# export(hyper_index)
+# export(hyper_slice)
+# export(hyper_tibble)
+# export(var_names)
+# export(variable_dimensions)
+gf <- function()  {
+  files <- raadtools:::.allfilelist()
+  sort(grep("nc$", files, value = TRUE) )
+}
+get_files <- memoise::memoise(gf)
+sample_file <- function() {
+  files <- get_files()
+  #   Error in ncvar_type_to_string(rv$precint) : 
+  #  Error, unrecognized type code of variable supplied: -1 
+  files <- files[-grep("L3BIN", files)]
+  sample(files, 1L)
+}
+
+ipackages <- as.data.frame(utils::installed.packages() , stringsAsFactors = FALSE)
+test_that("tidync works", {
+  skip_if_not("raadtools" %in% ipackages$Package)
+  afile <- "/rdsi/PRIVATE/raad/data/ftp.aviso.altimetry.fr/global/delayed-time/grids/madt/all-sat-merged/h/2009/dt_global_allsat_madt_h_20090104_20140106.nc"
+  afilter <- tidync(afile)  %>% expect_s3_class("tidync") %>% 
+    hyper_filter() %>% expect_s3_class("hyperfilter")  
+  afilter2 <- tidync(afile) %>%   hyper_filter(lat = lat > 60) %>% expect_s3_class("hyperfilter") 
+  expect_that(afilter %>% hyper_slice() %>% dim() , equals(c(2, 720)))
+  expect_that(afilter2 %>% hyper_slice() %>% dim() , equals(c(2, 120)))
+  afilter2 %>% hyper_tibble() %>% expect_s3_class("tbl_df") 
+})
+
+
+test_that("expected errors", {
+  #   Error in ncvar_type_to_string(rv$precint) : 
+  #  Error, unrecognized type code of variable supplied: -1 
+  l3bin <- "/rdsi/PRIVATE/raad/data/oceandata.sci.gsfc.nasa.gov/SeaWiFS/L3BIN/2005/206/S2005206.L3b_DAY_RRS.nc"
+  expect_error(tidync(l3bin), "Error, unrecognized type code of variable supplied: -1")
+})
