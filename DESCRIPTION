@@ -24,7 +24,8 @@ Suggests: ggplot2,
           knitr,
           memoise,
           rmarkdown,
-          testthat
+          testthat,
+    covr
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/r-gris/tidync
