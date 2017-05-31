@@ -1,13 +1,25 @@
 Package: tidync
-Title: A Systematic Approach to 'NetCDF' Data Extraction, Manipulation and Visualization. 
+Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
 Version: 0.0.0.9000
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
-             person("Tomas", "Remenyi", role = "ctb"))
+             person("Tomas", "Remenyi", role = "ctb"), 
+             person("Ben", "Raymond", role = "ctb"))
 Description: Tidy NetCDF. 
 Depends: R (>= 3.4.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: ncdump
+Imports: activate, 
+         dplyr, 
+         forcats,
+         ncdf4,
+         ncdump, 
+         purrr, 
+         rlang, 
+         tibble
 RoxygenNote: 6.0.1
+Suggests: testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
