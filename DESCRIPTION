@@ -1,10 +1,10 @@
 Package: tidync
-Title: What the Package Does (one line, title case)
+Title: A Systematic Approach to 'NetCDF' Data Extraction, Manipulation and Visualization. 
 Version: 0.0.0.9000
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"))
-Description: What the package does (one paragraph).
+Description: Tidy NetCDF. 
 Depends: R (>= 3.4.0)
 License: GPL-3
 Encoding: UTF-8
