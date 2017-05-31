@@ -1,3 +1,57 @@
+#' hyper tibble
+#'
+#' @param x object to tibbulate
+#' @param ... arguments to `hyper_filter``
+#'
+#' @return a `tbl_df`
+#' @export
+#'
+#' @examples
+#' f <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package = "ncdump")
+#' hyper_filter(f)
+#' library(dplyr)
+#' hyper_slice(f, lat = lat > 0) %>% dim()
+#' 
+#'   %>% filter(!is.na(chlor_a)) 
+#' ht   
+#' library(ggplot2)
+#' ggplot(ht %>% filter(!is.na(chlor_a)), 
+#' aes(x = lon, y = lat, fill = chlor_a)) + geom_pch()
+#' 
+hyper_tibble <- function(x, ...) {
+  UseMethod("hyper_tibble")
+}
+#' @name hyper_tibble
+#' @export
+hyper_tibble.character <- function(x, ...) {
+  NetCDF(x) %>% hyper_filter(...) %>% hyper_tibble()
+}
+#' @name hyper_tibble
+#' @export
+hyper_tibble.NetCDF <- function(x, ...) {
+  x %>% hyper_filter(...) %>% hyper_tibble()
+}
+#' @name hyper_tibble
+#' @export
+hyper_tibble.hyperfilter <- function(x, ...) {
+  slab <- hyper_slice(x, ...)
+  tib <- list()
+  tib[[active(x)]] <- as.vector(slab)
+  tib <- tibble::as_tibble(tib)
+  prod_dims <- 1
+  total_prod <- prod(dim(slab))
+  
+  
+  for (i in seq_along(x)) {
+    nm <- names(x)[i]
+    nr <- nrow(x[[i]])
+    tib[[nm]] <- rep(x[[nm]][[nm]], each = prod_dims, length.out = total_prod)
+    prod_dims <- prod_dims * nr
+  }
+  tib
+  
+}
+
 #' Array subset by nse
 #'
 #' NSE arguments must be named as per the dimensions in the variable. This is a restrictive variant of `dplyr::filter`, 
@@ -66,6 +120,16 @@ print.hyperfilter <- function(x, ...) {
   invisible(x)
 }
 
+#' #' @name hyper_filter
+#' #' @export
+#' hyper_filter_Spatial <- function(x, y, ...) {
+#'   warning("assuming first two dimensions are longitude-latitude ...")
+#'   dim_tabs <- hyper_filter(x)
+#'   xy_names <- names(dim_tabs)[1:2]
+#'   xy_grid <- as.matrix(expand.grid(x = dim_tabs[[1]][[xy_names[1]]], 
+#'                          y = dim_tabs[[1]][[xy_names[1]]]))
+#'   over(y, SpatialPoints(xy_grid, proj4string = crs(y)))
+#' }
 
 #' Activate
 #'
@@ -142,7 +206,7 @@ hyper_index <- function(x,  ...) {
 #' @export
 #' @name hyper_index
 hyper_index.tbl_df <- function(x, ...) {
-  structure(x, class = c("hyperslab", class(x)))
+  structure(x, class = c("hyperindex", class(x)))
 }
 #' @export
 #' @name hyper_index
@@ -168,7 +232,7 @@ hyper_index.hyperfilter <- function(x, ...) {
 
 #' hyper slice
 #' 
-#' @param x a hyper slab
+#' @param x a hyperindex-able thing
 #' @param ... ignored
 #' @export
 hyper_slice <- function(x, ...) {
@@ -176,19 +240,24 @@ hyper_slice <- function(x, ...) {
 }
 #' @name hyper_slice
 #' @export
-hyper_slice.hyperslab <- function(x, ...) {
+hyper_slice.hyperindex <- function(x, ...) {
   ncdf4::ncvar_get(ncdf4::nc_open(x$file[1]), x$variable[1], 
                    start = x$start, count = x$count)
 }
 #' @name hyper_slice
 #' @export
+hyper_slice.hyperfilter <- function(x, ...) {
+   hyper_index(x, ...) %>% hyper_slice()
+}
+#' @name hyper_slice
+#' @export
 hyper_slice.NetCDF <- function(x, ...) {
-  x %>% hyper_index(...) %>% hyper_slice()
+  x %>% hyper_filter(...) %>% hyper_index() %>% hyper_slice()
 }
 #' @name hyper_slice
 #' @export
 hyper_slice.character <- function(x, ...) {
-  NetCDF(x) %>% hyper_index(...) %>% hyper_slice()
+  NetCDF(x) %>% hyper_filter(...) %>%  hyper_index() %>% hyper_slice()
 }
 
 
