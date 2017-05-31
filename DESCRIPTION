@@ -1,6 +1,6 @@
 Package: tidync
 Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
@@ -11,21 +11,22 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: activate, 
-         dplyr, 
-         forcats,
-         magrittr,
-         ncdf4,
-         ncdump, 
-         purrr, 
-         rlang, 
-         tibble
+    dplyr, 
+    forcats,
+    magrittr,
+    ncdf4,
+    ncdump, 
+    purrr, 
+    rlang, 
+    tibble
 RoxygenNote: 6.0.1
 Suggests: ggplot2,
-          knitr,
-          memoise,
-          rmarkdown,
-          testthat,
+    knitr,
+    memoise,
+    rmarkdown,
+    testthat,
     covr
+Remotes: r-gris/activate
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/r-gris/tidync
