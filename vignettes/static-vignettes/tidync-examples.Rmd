@@ -10,7 +10,7 @@ vignette: >
 ---
 
 
-```{r, include = FALSE}
+```{r, include = FALSE, eval = FALSE}
 gf <- function()  {
   files <- raadtools:::.allfilelist()
   sort(grep("nc$", files, value = TRUE) )
@@ -28,10 +28,10 @@ sample_file <- function() {
 Find an arbitrary NetCDF file. 
 
 ```{r}
-set.seed(10)
-
-(f <- sample_file())
-
+#set.seed(10)
+#(f <- sample_file())
+#(f <- "/rdsi/PRIVATE/raad/data_local/amps/2013021900_WRF_d2_PCP_f009.nc")
+f <- "/rdsi/PRIVATE/raad/data/ftp.ifremer.fr/ifremer/cersat/products/gridded/psi-concentration/data/antarctic/daily/netcdf/2013/20130415.nc"
 ```
 
 NetCDF is a very widely use file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
@@ -56,7 +56,7 @@ library(tidync)
 tidync(f)
 
 ## activate another variable
-tidync(f) %>% activate("UGRD")
+tidync(f) %>% activate(concentration)
 ```
 
 The term "hyperslab" is sometimes used to mean an arbitrarily-dimensioned array, and tidync uses this pattern for its main functions. 
@@ -68,18 +68,27 @@ in coordinates and its length. For convenience we also assign the activate form 
 just chain the entire operation without this. 
 
 ```{r}
-UGRD <- tidync(f) %>% activate(UGRD) 
+concentration <- tidync(f) %>% activate(concentration) 
 
-UGRD %>% hyper_filter() %>% str()
+concentration %>% hyper_filter() 
 ```
 
 By specifying inequality expressions we see an *implicit* subsetting of the array. Everything so far is implicit to 
 delay any file-based computation required to actually interact with the file and read from it. 
 
+Notice that these are "name = expr" paired expressions, because the right hand side may be quite general we 
+need the left hand side name to be assured of the name of the dimension referred to. 
 
 ```{r}
-UGRD <- tidync(f) %>% activate(UGRD)
-  
-UGRD %>% hyper_filter(x = x < 30, y = y > 600)
+
+concentration %>% hyper_filter(nj = nj < 20)
+
+
+```
+
+We can also use the special internal variable 'step', which will test against position in the dimension elements '1:length' rather than the values. It's not different in this case because ni and nj are just position dimensions anyway. The special 'dplyr' adverbs like 'between' will work. 
+
+```{r}
+concentration %>% hyper_filter(ni = step < 20, nj = dplyr::between(step, 30, 100))
 
 ```
