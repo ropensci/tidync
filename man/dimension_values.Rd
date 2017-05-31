@@ -3,14 +3,14 @@
 \name{dimension_values}
 \alias{dimension_values}
 \alias{dimension_values.character}
-\alias{dimension_values.NetCDF}
+\alias{dimension_values.tidync}
 \title{Dimension values}
 \usage{
 dimension_values(x)
 
 \method{dimension_values}{character}(x)
 
-\method{dimension_values}{NetCDF}(x)
+\method{dimension_values}{tidync}(x)
 }
 \arguments{
 \item{x}{NetCDF object}

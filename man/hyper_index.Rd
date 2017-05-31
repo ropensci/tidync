@@ -5,7 +5,7 @@
 \alias{hyper_index}
 \alias{hyper_index.tbl_df}
 \alias{hyper_index}
-\alias{hyper_index.NetCDF}
+\alias{hyper_index.tidync}
 \alias{hyper_index}
 \alias{hyper_index.character}
 \alias{hyper_index}
@@ -16,7 +16,7 @@ hyper_index(x, ...)
 
 \method{hyper_index}{tbl_df}(x, ...)
 
-\method{hyper_index}{NetCDF}(x, ...)
+\method{hyper_index}{tidync}(x, ...)
 
 \method{hyper_index}{character}(x, varname, ...)
 

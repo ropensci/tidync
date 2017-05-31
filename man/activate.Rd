@@ -5,15 +5,15 @@
 \alias{active}
 \alias{active<-}
 \alias{activate}
-\alias{activate.NetCDF}
+\alias{activate.tidync}
 \alias{activate}
 \alias{activate.hyperfilter}
 \alias{activate}
-\alias{active.NetCDF}
+\alias{active.tidync}
 \alias{activate}
 \alias{active.hyperfilter}
 \alias{activate}
-\alias{active<-.NetCDF}
+\alias{active<-.tidync}
 \alias{activate}
 \alias{active<-.hyperfilter}
 \title{#' @name hyper_filter
@@ -30,15 +30,15 @@ Activate}
 \usage{
 activate(.data, what)
 
-\method{activate}{NetCDF}(.data, what)
+\method{activate}{tidync}(.data, what)
 
 \method{activate}{hyperfilter}(.data, what)
 
-\method{active}{NetCDF}(x)
+\method{active}{tidync}(x)
 
 \method{active}{hyperfilter}(x)
 
-\method{active}{NetCDF}(x) <- value
+\method{active}{tidync}(x) <- value
 
 \method{active}{hyperfilter}(x) <- value
 }

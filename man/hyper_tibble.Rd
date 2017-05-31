@@ -5,7 +5,7 @@
 \alias{hyper_tibble}
 \alias{hyper_tibble.character}
 \alias{hyper_tibble}
-\alias{hyper_tibble.NetCDF}
+\alias{hyper_tibble.tidync}
 \alias{hyper_tibble}
 \alias{hyper_tibble.hyperfilter}
 \title{hyper tibble}
@@ -14,7 +14,7 @@ hyper_tibble(x, ...)
 
 \method{hyper_tibble}{character}(x, ...)
 
-\method{hyper_tibble}{NetCDF}(x, ...)
+\method{hyper_tibble}{tidync}(x, ...)
 
 \method{hyper_tibble}{hyperfilter}(x, ...)
 }

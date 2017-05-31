@@ -5,14 +5,14 @@
 \alias{dim_names}
 \alias{dim_names.character}
 \alias{dim_names}
-\alias{dim_names.NetCDF}
+\alias{dim_names.tidync}
 \title{Dimension names}
 \usage{
 dim_names(x, ...)
 
 \method{dim_names}{character}(x, ...)
 
-\method{dim_names}{NetCDF}(x, ...)
+\method{dim_names}{tidync}(x, ...)
 }
 \arguments{
 \item{x}{NetCDF object}

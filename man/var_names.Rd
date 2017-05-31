@@ -5,14 +5,14 @@
 \alias{var_names}
 \alias{var_names.character}
 \alias{var_names}
-\alias{var_names.NetCDF}
+\alias{var_names.tidync}
 \title{Variable names}
 \usage{
 var_names(x, ...)
 
 \method{var_names}{character}(x, ...)
 
-\method{var_names}{NetCDF}(x, ...)
+\method{var_names}{tidync}(x, ...)
 }
 \arguments{
 \item{x}{NetCDF object}

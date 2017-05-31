@@ -3,7 +3,7 @@
 \name{hyper_filter}
 \alias{hyper_filter}
 \alias{hyper_filter}
-\alias{hyper_filter.NetCDF}
+\alias{hyper_filter.tidync}
 \alias{hyper_filter}
 \alias{hyper_filter.default}
 \alias{hyper_filter}
@@ -14,7 +14,7 @@
 \usage{
 hyper_filter(x, ...)
 
-\method{hyper_filter}{NetCDF}(x, ...)
+\method{hyper_filter}{tidync}(x, ...)
 
 \method{hyper_filter}{default}(x, ...)
 

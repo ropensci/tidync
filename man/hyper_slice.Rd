@@ -7,7 +7,7 @@
 \alias{hyper_slice}
 \alias{hyper_slice.hyperfilter}
 \alias{hyper_slice}
-\alias{hyper_slice.NetCDF}
+\alias{hyper_slice.tidync}
 \alias{hyper_slice}
 \alias{hyper_slice.character}
 \title{hyper slice}
@@ -18,7 +18,7 @@ hyper_slice(x, ...)
 
 \method{hyper_slice}{hyperfilter}(x, ...)
 
-\method{hyper_slice}{NetCDF}(x, ...)
+\method{hyper_slice}{tidync}(x, ...)
 
 \method{hyper_slice}{character}(x, ...)
 }

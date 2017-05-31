@@ -1,3 +1,15 @@
+#' tidy netcdf
+#' 
+#' Function to extract all metadata from a NetCDF, for use in subsequent operations. 
+#' 
+#' Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
+#' haven't explored HDF5 per se, so any feedback is appreciated. 
+#' @param x path to a NetCDF file
+#' @export
+tidync <- function(x, ...) {
+  structure(unclass(ncdump::NetCDF(x)), class = "tidync")
+}
+
 #' hyper tibble
 #'
 #' @param x object to tibbulate
@@ -5,7 +17,8 @@
 #'
 #' @return a `tbl_df`
 #' @export
-#'
+#' @importFrom dplyr %>% 
+#' @export %>% %>% 
 #' @examples
 #' f <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package = "ncdump")
 #' hyper_filter(f)
@@ -22,13 +35,14 @@ hyper_tibble <- function(x, ...) {
   UseMethod("hyper_tibble")
 }
 #' @name hyper_tibble
+#' @importFrom ncdump NetCDF
 #' @export
 hyper_tibble.character <- function(x, ...) {
   ncdump::NetCDF(x) %>% hyper_filter(...) %>% hyper_tibble()
 }
 #' @name hyper_tibble
 #' @export
-hyper_tibble.NetCDF <- function(x, ...) {
+hyper_tibble.tidync <- function(x, ...) {
   x %>% hyper_filter(...) %>% hyper_tibble()
 }
 #' @name hyper_tibble
@@ -75,10 +89,9 @@ hyper_filter <- function(x, ...) {
 #' @export
 #' @importFrom dplyr %>% mutate 
 #' @importFrom forcats as_factor
-hyper_filter.NetCDF <- function(x, ...) {
+hyper_filter.tidync <- function(x, ...) {
   
   dimvals <- dimension_values(x) #%>% 
-  #dplyr::group_by(.data$name)
   dimvals$step <- unlist(lapply(split(dimvals, forcats::as_factor(dimvals$name)), function(x) seq_len(nrow(x))))
   trans <-  split(dimvals, forcats::as_factor(dimvals$name)) 
   
@@ -112,9 +125,11 @@ hyper_filter.character <- function(x, ...) {
   ncdump::NetCDF(x) %>% hyper_filter(...)
 }
 #' @name hyper_filter
+#' @importFrom dplyr bind_rows funs group_by select summarize_all
 #' @export
 print.hyperfilter <- function(x, ...) {
-  x <- bind_rows(lapply(x,  function(a) summarize_all(a %>% select(-filename, -.dimension_, -id, -step) %>% group_by(name), funs(min, max, length))))
+  x <- dplyr::bind_rows(lapply(x,  function(a) dplyr::summarize_all(a %>% dplyr::select(-filename, -.dimension_, -id, -step) %>% 
+                                                        group_by(name), dplyr::funs(min, max, length))))
   print("filtered dimension summary: ")
   print(x)
   invisible(x)
@@ -152,7 +167,7 @@ print.hyperfilter <- function(x, ...) {
 activate <- function(.data, what) UseMethod("activate")
 #' @name activate
 #' @export
-activate.NetCDF <- function(.data, what) {
+activate.tidync <- function(.data, what) {
   what_name <- deparse(substitute(what))
   if (what_name %in% var_names(.data)) what <- what_name
   active(.data) <- what
@@ -169,16 +184,16 @@ activate.hyperfilter <- function(.data, what) {
 #' @param x NetCDF object
 #' @name activate
 #' @export
-active.NetCDF <- function(x) {
+active.tidync <- function(x) {
   attr(x, 'active')
 }
 #' @name activate
 #' @export
-active.hyperfilter <- active.NetCDF
+active.hyperfilter <- active.tidync
 #' @param value name of variable to be active
 #' @name activate
 #' @export
-`active<-.NetCDF` <- function(x, value) {
+`active<-.tidync` <- function(x, value) {
   vn <- var_names(x)
   if (!value %in% vn) {
     stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
@@ -210,7 +225,7 @@ hyper_index.tbl_df <- function(x, ...) {
 }
 #' @export
 #' @name hyper_index
-hyper_index.NetCDF <- function(x, ...) {
+hyper_index.tidync <- function(x, ...) {
   x %>% hyper_filter(...) %>% hyper_index()
 
 }
@@ -251,7 +266,7 @@ hyper_slice.hyperfilter <- function(x, ...) {
 }
 #' @name hyper_slice
 #' @export
-hyper_slice.NetCDF <- function(x, ...) {
+hyper_slice.tidync <- function(x, ...) {
   x %>% hyper_filter(...) %>% hyper_index() %>% hyper_slice()
 }
 #' @name hyper_slice
@@ -288,7 +303,7 @@ var_names.character <- function(x, ...) {
 }
 #' @export
 #' @name var_names
-var_names.NetCDF <- function(x, ...) {
+var_names.tidync <- function(x, ...) {
   x$variable$name
 }
 
@@ -314,7 +329,7 @@ dim_names.character <- function(x, ...) {
 }
 #' @export
 #' @name dim_names
-dim_names.NetCDF <- function(x, ...) {
+dim_names.tidync <- function(x, ...) {
   x$variable$name
 }
 
@@ -341,9 +356,9 @@ dimension_values.character <- function(x) {
   dimension_values(NetCDF(x))
 }
 #' @rdname dimension_values
+#' @importFrom rlang .data
 #' @export
-
-dimension_values.NetCDF <- function(x) {
+dimension_values.tidync <- function(x) {
   dimids <- x$variable[x$variable$name == active(x), ]
     #dplyr::select(.data$name, .data$.variable_) %>% 
   dimids <- dimids[, c("name", ".variable_")]
@@ -373,18 +388,19 @@ variable_dimensions <- function(x) {
   variable_dimensions(NetCDF(x))
 }
 #' @rdname variable_dimensions
+#' @importFrom dplyr inner_join
 #' @export
 variable_dimensions <- function(x) {
   #aa <- x$variable %>% 
  aa <- x$variable[x$variable$name == active(x), ]
   #bb <- aa %>% 
   #  dplyr::transmute(variable_name = .data$name, .data$.variable_) 
-  bb <- tibble(variable_name = aa$name, .variable_ = aa$.variable_)
+  bb <- tibble::tibble(variable_name = aa$name, .variable_ = aa$.variable_)
   cc <- bb %>% 
     #dplyr::inner_join(x$vardim) %>% 
     dplyr::inner_join(x$vardim, ".variable_") %>% 
-    inner_join(x$dimension, ".dimension_")
-  dd <- tibble(variable_name = cc$variable_name, 
+    dplyr::inner_join(x$dimension, ".dimension_")
+  dd <- tibble::tibble(variable_name = cc$variable_name, 
                .variable_ = cc$.variable_, 
                .dimension_ = cc$.dimension_, 
                dimension_name = cc$name)
@@ -430,7 +446,7 @@ filtrate <- function(...) .Deprecated("hyper_filter")
 #' @rdname print-NetCDF
 #' @export
 #' @importFrom dplyr %>% arrange transmute
-print.NetCDF <- function(x, ...) {
+print.tidync <- function(x, ...) {
   form <- active(x)
   vn <- c(form, setdiff(var_names(x), form))
   if (length(vn)> 1) {
@@ -440,7 +456,7 @@ print.NetCDF <- function(x, ...) {
   
   cat(sprintf("Dimensions: \n", ""))
   print(variable_dimensions(x) %>% 
-          inner_join(dims(x) %>% dplyr::transmute(.data$.dimension_, dimension_length = .data$len)))
+          inner_join(x$dimension %>% dplyr::transmute(.data$.dimension_, dimension_length = .data$len)))
   # print(x$dimension %>% 
   #         dplyr::arrange(.data$id)  %>% 
   #         transmute(.data$name, length = .data$len, 
