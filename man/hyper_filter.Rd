@@ -9,6 +9,8 @@
 \alias{hyper_filter}
 \alias{hyper_filter.character}
 \alias{hyper_filter}
+\alias{hyper_filter.hyperfilter}
+\alias{hyper_filter}
 \alias{print.hyperfilter}
 \title{Array subset by nse}
 \usage{
@@ -19,6 +21,8 @@ hyper_filter(x, ...)
 \method{hyper_filter}{default}(x, ...)
 
 \method{hyper_filter}{character}(x, ...)
+
+\method{hyper_filter}{hyperfilter}(x, ...)
 
 \method{print}{hyperfilter}(x, ...)
 }

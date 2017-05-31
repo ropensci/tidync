@@ -23,7 +23,9 @@ hyper_index(x, ...)
 \method{hyper_index}{hyperfilter}(x, ...)
 }
 \arguments{
-\item{...}{expressions to `filtrate`}
+\item{x}{tidync object}
+
+\item{...}{expressions to `hyper_filter`}
 }
 \description{
 hyper slab index

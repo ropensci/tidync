@@ -107,10 +107,7 @@ hyper_filter.tidync <- function(x, ...) {
     
   }
   trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
-  #trans
-  ##trans %>% purrr::map(.f = function(x) x %>% dplyr::summarize(start = min(.data$step), count = dplyr::n()))
-  #lapply(trans, function(x) tibble(name = x$name[1], start = min(x$step), count = length(x$step)))
-   hyper_filter(trans) %>% activate(active(x))
+  hyper_filter(trans) %>% activate(active(x))
   
 }
 
@@ -123,6 +120,11 @@ hyper_filter.default <- function(x, ...) {
 #' @export
 hyper_filter.character <- function(x, ...) {
   ncdump::NetCDF(x) %>% hyper_filter(...)
+}
+#' @name hyper_filter
+#' @export
+hyper_filter.hyperfilter <- function(x, ...) {
+  stop("too many filters in the chain, you can't (yet) 'hyper_filter' a hyperfilter")
 }
 #' @name hyper_filter
 #' @importFrom dplyr bind_rows funs group_by select summarize_all
@@ -212,8 +214,8 @@ active.hyperfilter <- active.tidync
 
 #' hyper slab index
 #' 
-#' @param x
-#' @param ... expressions to `filtrate`
+#' @param x tidync object
+#' @param ... expressions to `hyper_filter`
 #' @export
 hyper_index <- function(x,  ...) {
   UseMethod("hyper_index")
@@ -236,9 +238,10 @@ hyper_index.character <- function(x, varname, ...) {
 }
 #' @export
 #' @name hyper_index
+#' @importFrom tibble tibble
 hyper_index.hyperfilter <- function(x, ...) {
   bind_rows(lapply(x, 
-                   function(sub_trans) tibble(name = sub_trans$name[1], 
+                   function(sub_trans) tibble::tibble(name = sub_trans$name[1], 
                                               start = min(sub_trans$step), 
                                               count = length(sub_trans$step), 
                                               variable = active(x), 
