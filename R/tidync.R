@@ -24,7 +24,7 @@ hyper_tibble <- function(x, ...) {
 #' @name hyper_tibble
 #' @export
 hyper_tibble.character <- function(x, ...) {
-  NetCDF(x) %>% hyper_filter(...) %>% hyper_tibble()
+  ncdump::NetCDF(x) %>% hyper_filter(...) %>% hyper_tibble()
 }
 #' @name hyper_tibble
 #' @export
@@ -109,7 +109,7 @@ hyper_filter.default <- function(x, ...) {
 #' @name hyper_filter
 #' @export
 hyper_filter.character <- function(x, ...) {
-  NetCDF(x) %>% hyper_filter(...)
+  ncdump::NetCDF(x) %>% hyper_filter(...)
 }
 #' @name hyper_filter
 #' @export
@@ -145,7 +145,7 @@ print.hyperfilter <- function(x, ...) {
 #' @rdname activate 
 #' @aliases active activate active<- 
 #' @examples
-#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 #' activate(rnc, "palette")
 #' @name activate
 #' @export
@@ -217,7 +217,7 @@ hyper_index.NetCDF <- function(x, ...) {
 #' @export
 #' @name hyper_index
 hyper_index.character <- function(x, varname, ...) {
-  NetCDF(x) %>% activate(varname) %>%  hyper_index(...)
+  ncdump::NetCDF(x) %>% activate(varname) %>%  hyper_index(...)
 }
 #' @export
 #' @name hyper_index
@@ -257,7 +257,7 @@ hyper_slice.NetCDF <- function(x, ...) {
 #' @name hyper_slice
 #' @export
 hyper_slice.character <- function(x, ...) {
-  NetCDF(x) %>% hyper_filter(...) %>%  hyper_index() %>% hyper_slice()
+  ncdump::NetCDF(x) %>% hyper_filter(...) %>%  hyper_index() %>% hyper_slice()
 }
 
 
@@ -276,7 +276,7 @@ hyper_slice.character <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 #' var_names(rnc)
 var_names <- function(x, ...) {
   UseMethod("var_names")
@@ -284,7 +284,7 @@ var_names <- function(x, ...) {
 #' @export
 #' @name var_names
 var_names.character <- function(x, ...) {
-  var_names(NetCDF(x))
+  var_names(ncdump::NetCDF(x))
 }
 #' @export
 #' @name var_names
@@ -302,7 +302,7 @@ var_names.NetCDF <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 #' dim_names(rnc)
 dim_names <- function(x, ...) {
   UseMethod("dim_names")
@@ -310,7 +310,7 @@ dim_names <- function(x, ...) {
 #' @export
 #' @name dim_names
 dim_names.character <- function(x, ...) {
-  var_names(NetCDF(x))
+  var_names(ncdump::NetCDF(x))
 }
 #' @export
 #' @name dim_names
@@ -330,7 +330,7 @@ dim_names.NetCDF <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' rnc <- NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
 #' dimension_values(rnc)
 dimension_values <- function(x) {
   UseMethod("dimension_values")
