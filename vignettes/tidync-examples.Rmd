@@ -1,0 +1,85 @@
+---
+title: "Tidy NetCDF examples"
+author: "Michael D. Sumner"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tidy NetCDF examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+gf <- function()  {
+  files <- raadtools:::.allfilelist()
+  sort(grep("nc$", files, value = TRUE) )
+}
+get_files <- memoise::memoise(gf)
+sample_file <- function() {
+  files <- get_files()
+#   Error in ncvar_type_to_string(rv$precint) : 
+#  Error, unrecognized type code of variable supplied: -1 
+  files <- files[-grep("L3BIN", files)]
+  sample(files, 1L)
+}
+```
+
+Find an arbitrary NetCDF file. 
+
+```{r}
+set.seed(10)
+
+(f <- sample_file())
+
+```
+
+NetCDF is a very widely use file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
+
+Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are
+many, varied, and no particularly well adhered to in many contexts. 
+
+A NetCDF file is essentially a container for simple array based data structures. There is limited capacity in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes. (I.e. it's not possible to query a file for an arbitrary sparse set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set.)
+
+
+## tidync
+
+Tidync provides facilities to explore the contents of a NetCDF file and construct efficient queries to extract
+arbitrary hyperslabs. These can be used directly in array contexts, or in "long form" database contexts. 
+
+On first contact with the file, the available variables are reported (the first is made "active") and
+the dimensions of the active variable are described.  The "active" variable may be specified with the `activate` function. 
+
+
+```{r}
+library(tidync)
+tidync(f)
+
+## activate another variable
+tidync(f) %>% activate("UGRD")
+```
+
+The term "hyperslab" is sometimes used to mean an arbitrarily-dimensioned array, and tidync uses this pattern for its main functions. 
+
+The 'hyper_filter' function allows specification of expressions to subset a variable based on each dimension's coordinate values. 
+
+If no expressions are included we are presented with a table containing a row for each dimension, its extent
+in coordinates and its length. For convenience we also assign the activate form to an R variable, though we could
+just chain the entire operation without this. 
+
+```{r}
+UGRD <- tidync(f) %>% activate(UGRD) 
+
+UGRD %>% hyper_filter() %>% str()
+```
+
+By specifying inequality expressions we see an *implicit* subsetting of the array. Everything so far is implicit to 
+delay any file-based computation required to actually interact with the file and read from it. 
+
+
+```{r}
+UGRD <- tidync(f) %>% activate(UGRD)
+  
+UGRD %>% hyper_filter(x = x < 30, y = y > 600)
+
+```
