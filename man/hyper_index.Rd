@@ -25,7 +25,9 @@ hyper_index(x, ...)
 \arguments{
 \item{x}{tidync object}
 
-\item{...}{expressions to `hyper_filter`}
+\item{...}{expressions to \code{hyper_filter}}
+
+\item{varname}{variable to be activated}
 }
 \description{
 hyper slab index

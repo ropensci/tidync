@@ -1,3 +1,4 @@
+
 #' tidy netcdf
 #' 
 #' Function to extract all metadata from a NetCDF, for use in subsequent operations. 
@@ -5,6 +6,7 @@
 #' Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
 #' haven't explored HDF5 per se, so any feedback is appreciated. 
 #' @param x path to a NetCDF file
+#' @param ... unused argments
 #' @export
 tidync <- function(x, ...) {
   structure(unclass(ncdump::NetCDF(x)), class = "tidync")
@@ -18,18 +20,19 @@ tidync <- function(x, ...) {
 #' @return a `tbl_df`
 #' @export
 #' @importFrom dplyr %>% 
-#' @export %>% %>% 
+#' @export %>% 
 #' @examples
-#' f <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package = "ncdump")
-#' hyper_filter(f)
+#' l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
+#' rnc <- tidync(l3file)
+#' hyper_filter(rnc)
 #' library(dplyr)
-#' hyper_slice(f, lat = lat > 0) %>% dim()
+#' hyper_slice(l3file, lat = lat > 0) %>% dim()
 #' 
-#'   %>% filter(!is.na(chlor_a)) 
+#'  ht <- hyper_tibble(rnc) %>% filter(!is.na(chlor_a)) 
 #' ht   
 #' library(ggplot2)
 #' ggplot(ht %>% filter(!is.na(chlor_a)), 
-#' aes(x = lon, y = lat, fill = chlor_a)) + geom_pch()
+#' aes(x = lon, y = lat, fill = chlor_a)) + geom_point()
 #' 
 hyper_tibble <- function(x, ...) {
   UseMethod("hyper_tibble")
@@ -38,7 +41,7 @@ hyper_tibble <- function(x, ...) {
 #' @importFrom ncdump NetCDF
 #' @export
 hyper_tibble.character <- function(x, ...) {
-  ncdump::NetCDF(x) %>% hyper_filter(...) %>% hyper_tibble()
+  tidync(x) %>% hyper_filter(...) %>% hyper_tibble()
 }
 #' @name hyper_tibble
 #' @export
@@ -119,7 +122,7 @@ hyper_filter.default <- function(x, ...) {
 #' @name hyper_filter
 #' @export
 hyper_filter.character <- function(x, ...) {
-  ncdump::NetCDF(x) %>% hyper_filter(...)
+  tidync(x) %>% hyper_filter(...)
 }
 #' @name hyper_filter
 #' @export
@@ -130,23 +133,23 @@ hyper_filter.hyperfilter <- function(x, ...) {
 #' @importFrom dplyr bind_rows funs group_by select summarize_all
 #' @export
 print.hyperfilter <- function(x, ...) {
-  x <- dplyr::bind_rows(lapply(x,  function(a) dplyr::summarize_all(a %>% dplyr::select(-filename, -.dimension_, -id, -step) %>% 
-                                                        group_by(name), dplyr::funs(min, max, length))))
+  x <- dplyr::bind_rows(lapply(x,  function(a) dplyr::summarize_all(a %>% 
+     dplyr::select(-.data$filename, -.data$.dimension_, -.data$id, -.data$step) %>% 
+                                                        group_by(.data$name), dplyr::funs(min, max, length))))
   print("filtered dimension summary: ")
   print(x)
   invisible(x)
 }
 
-#' #' @name hyper_filter
-#' #' @export
-#' hyper_filter_Spatial <- function(x, y, ...) {
-#'   warning("assuming first two dimensions are longitude-latitude ...")
-#'   dim_tabs <- hyper_filter(x)
-#'   xy_names <- names(dim_tabs)[1:2]
-#'   xy_grid <- as.matrix(expand.grid(x = dim_tabs[[1]][[xy_names[1]]], 
-#'                          y = dim_tabs[[1]][[xy_names[1]]]))
-#'   over(y, SpatialPoints(xy_grid, proj4string = crs(y)))
-#' }
+ hyper_filter_Spatial <- function(x, y, ...) {
+   #stop("nothing to see here")
+   #warning("assuming first two dimensions are longitude-latitude ...")
+   #dim_tabs <- hyper_filter(x)
+   #xy_names <- names(dim_tabs)[1:2]
+   #xy_grid <- as.matrix(expand.grid(x = dim_tabs[[1]][[xy_names[1]]], 
+  #                        y = dim_tabs[[1]][[xy_names[1]]]))
+   #over(y, SpatialPoints(xy_grid, proj4string = crs(y)))
+ }
 
 #' Activate
 #'
@@ -162,7 +165,8 @@ print.hyperfilter <- function(x, ...) {
 #' @rdname activate 
 #' @aliases active activate active<- 
 #' @examples
-#' rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
+#' rnc <- tidync(l3file)
 #' activate(rnc, "palette")
 #' @name activate
 #' @export
@@ -203,7 +207,6 @@ active.hyperfilter <- active.tidync
   attr(x, 'active') <- value
   x
 }
-#' @param value name of variable to be active
 #' @name activate
 #' @export
 `active<-.hyperfilter` <- function(x, value) {
@@ -216,6 +219,7 @@ active.hyperfilter <- active.tidync
 #' 
 #' @param x tidync object
 #' @param ... expressions to `hyper_filter`
+#' @param varname variable to be activated
 #' @export
 hyper_index <- function(x,  ...) {
   UseMethod("hyper_index")
@@ -234,7 +238,9 @@ hyper_index.tidync <- function(x, ...) {
 #' @export
 #' @name hyper_index
 hyper_index.character <- function(x, varname, ...) {
-  ncdump::NetCDF(x) %>% activate(varname) %>%  hyper_index(...)
+  out <- tidync(x)
+  if (!missing(varname)) out <- activate(out, varname)
+  hyper_index(out, ...)
 }
 #' @export
 #' @name hyper_index
@@ -275,7 +281,7 @@ hyper_slice.tidync <- function(x, ...) {
 #' @name hyper_slice
 #' @export
 hyper_slice.character <- function(x, ...) {
-  ncdump::NetCDF(x) %>% hyper_filter(...) %>%  hyper_index() %>% hyper_slice()
+  tidync(x) %>% hyper_filter(...) %>%  hyper_index() %>% hyper_slice()
 }
 
 
@@ -294,7 +300,8 @@ hyper_slice.character <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
+#' rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
 #' var_names(rnc)
 var_names <- function(x, ...) {
   UseMethod("var_names")
@@ -302,7 +309,7 @@ var_names <- function(x, ...) {
 #' @export
 #' @name var_names
 var_names.character <- function(x, ...) {
-  var_names(ncdump::NetCDF(x))
+  var_names(tidync(x))
 }
 #' @export
 #' @name var_names
@@ -320,7 +327,8 @@ var_names.tidync <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
+#' rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
 #' dim_names(rnc)
 dim_names <- function(x, ...) {
   UseMethod("dim_names")
@@ -328,7 +336,7 @@ dim_names <- function(x, ...) {
 #' @export
 #' @name dim_names
 dim_names.character <- function(x, ...) {
-  var_names(ncdump::NetCDF(x))
+  var_names(tidync(x))
 }
 #' @export
 #' @name dim_names
@@ -348,7 +356,8 @@ dim_names.tidync <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+#' l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
+#' rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
 #' dimension_values(rnc)
 dimension_values <- function(x) {
   UseMethod("dimension_values")
@@ -410,29 +419,6 @@ variable_dimensions <- function(x) {
 dd
 }
 
-#' deprecated
-#' @name deprecated ncdump
-#' @export
-filtrate <- function(...) .Deprecated("hyper_filter")
-
-
-
-
-#importFrom dplyr filter
-#importFrom rlang quos
-# #filtrate(data.frame(d = 1:10), y = y > 2, z = z == 5, x = dplyr::between(x, 18, 22))
-# filtrate0 <-  function(df, ...) {
-#   trans <- list(y = data.frame(y = 1:10), 
-#                 x = data.frame(x = 4:50), 
-#                 z = data.frame(z = 1:19))
-#   quo_named <- rlang::quos(...)
-#   quo_noname <- unname(quo_named)
-#   for (i in seq_along(quo_named)) {
-#     iname <- names(quo_named)[i]
-#     trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
-#   }
-#  trans
-# }
 
 
 

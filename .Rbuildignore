@@ -1,3 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-vignettes/tidync-examples.Rmd  
+^vignettes$
+^vignettes/static-vignettes/.*$
+^README\.Rmd$
+^README-.*\.png$
+^docs$

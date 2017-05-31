@@ -16,17 +16,7 @@
 \alias{active<-.tidync}
 \alias{activate}
 \alias{active<-.hyperfilter}
-\title{#' @name hyper_filter
-#' @export
-hyper_filter_Spatial <- function(x, y, ...) {
-  warning("assuming first two dimensions are longitude-latitude ...")
-  dim_tabs <- hyper_filter(x)
-  xy_names <- names(dim_tabs)[1:2]
-  xy_grid <- as.matrix(expand.grid(x = dim_tabs[[1]][[xy_names[1]]], 
-                         y = dim_tabs[[1]][[xy_names[1]]]))
-  over(y, SpatialPoints(xy_grid, proj4string = crs(y)))
-}
-Activate}
+\title{Activate}
 \usage{
 activate(.data, what)
 
@@ -50,8 +40,6 @@ activate(.data, what)
 \item{x}{NetCDF object}
 
 \item{value}{name of variable to be active}
-
-\item{value}{name of variable to be active}
 }
 \value{
 NetCDF object
@@ -60,10 +48,11 @@ NetCDF object
 Set the context for subsequent manipulations.
 }
 \details{
-`activate` puts the named variable first
-`active` gets and sets the active variable
+\code{activate} puts the named variable first
+\code{active} gets and sets the active variable
 }
 \examples{
-rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
+rnc <- tidync(l3file)
 activate(rnc, "palette")
 }

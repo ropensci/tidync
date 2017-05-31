@@ -26,6 +26,7 @@ names of available dimensions
 Dimension names
 }
 \examples{
-rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
+rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
 dim_names(rnc)
 }

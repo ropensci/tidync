@@ -5,7 +5,7 @@ Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c(
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
              person("Ben", "Raymond", role = "ctb"))
-Description: Tidy NetCDF. 
+Description: Tidy 'NetCDF'. 
 Depends: R (>= 3.4.0)
 License: GPL-3
 Encoding: UTF-8
@@ -13,13 +13,19 @@ LazyData: true
 Imports: activate, 
          dplyr, 
          forcats,
+         magrittr,
          ncdf4,
          ncdump, 
          purrr, 
          rlang, 
          tibble
 RoxygenNote: 6.0.1
-Suggests: testthat,
-    knitr,
-    rmarkdown
+Suggests: ggplot2,
+          knitr,
+          memoise,
+          rmarkdown,
+          testthat
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+URL: https://github.com/r-gris/tidync
+BugReports: https://github.com/r-gris/tidync/issues

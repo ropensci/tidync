@@ -24,21 +24,22 @@ hyper_tibble(x, ...)
 \item{...}{arguments to `hyper_filter``}
 }
 \value{
-a `tbl_df`
+a \code{tbl_df}
 }
 \description{
 hyper tibble
 }
 \examples{
-f <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package = "ncdump")
-hyper_filter(f)
+l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
+rnc <- tidync(l3file)
+hyper_filter(rnc)
 library(dplyr)
-hyper_slice(f, lat = lat > 0) \%>\% dim()
+hyper_slice(l3file, lat = lat > 0) \%>\% dim()
 
-  \%>\% filter(!is.na(chlor_a)) 
+ ht <- hyper_tibble(rnc) \%>\% filter(!is.na(chlor_a)) 
 ht   
 library(ggplot2)
 ggplot(ht \%>\% filter(!is.na(chlor_a)), 
-aes(x = lon, y = lat, fill = chlor_a)) + geom_pch()
+aes(x = lon, y = lat, fill = chlor_a)) + geom_point()
 
 }

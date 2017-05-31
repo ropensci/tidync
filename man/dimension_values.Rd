@@ -22,6 +22,7 @@ data frame of dimensions and their values
 The dimension values are the coordinates, the positions along each axis.
 }
 \examples{
-rnc <- ncdump::NetCDF(system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump"))
+l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
+rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
 dimension_values(rnc)
 }
