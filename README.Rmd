@@ -36,14 +36,16 @@ devtools::install_github("r-gris/tidync")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to connect to a file. 
 
 ```{r}
 file <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
 library(tidync)
 tidync(file) 
 ```
-See this article for more: 
+See this article for more:  https://r-gris.github.io/tidync/articles/static-vignettes/tidync-examples.html
+
+Stay tuned. 
 
 
 ## Code of conduct
