@@ -123,14 +123,8 @@
 #&gt;    name        min       max length
 #&gt;   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;  &lt;int&gt;
 #&gt; 1   lon -179.95833 179.95836   4320
-#&gt; 2   lat  -89.95834  89.95834   2160</div><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:raster’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, select, union</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='hyper_slice.html'>hyper_slice</a></span>(<span class='no'>l3file</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='no'>lat</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>) <span class='kw'>%&gt;%</span> <span class='fu'>dim</span>()</div><div class='output co'>#&gt; <span class='message'>Joining, by = ".variable_"</span></div><div class='output co'>#&gt; [1] 4320 1080</div><div class='input'>
+#&gt; 2   lat  -89.95834  89.95834   2160</div><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='hyper_slice.html'>hyper_slice</a></span>(<span class='no'>l3file</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='no'>lat</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>) <span class='kw'>%&gt;%</span> <span class='fu'>dim</span>()</div><div class='output co'>#&gt; <span class='message'>Joining, by = ".variable_"</span></div><div class='output co'>#&gt; [1] 4320 1080</div><div class='input'>
  <span class='no'>ht</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tibble</span>(<span class='no'>rnc</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter</span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>))</div><div class='output co'>#&gt; <span class='message'>Joining, by = ".variable_"</span></div><div class='input'><span class='no'>ht</span></div><div class='output co'>#&gt; # A tibble: 9 x 3
 #&gt;    chlor_a      lon       lat
 #&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
@@ -142,9 +136,9 @@
 #&gt; 6 0.800647 165.2084 -77.37501
 #&gt; 7 0.800647 165.2917 -77.37501
 #&gt; 8 0.800647 165.3750 -77.37501
-#&gt; 9 0.800647 165.4584 -77.37501</div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='message'>Want to understand how all the pieces fit together? Buy the ggplot2</span>
-#&gt; <span class='message'>book: http://ggplot2.org/book/</span></div><div class='input'><span class='fu'>ggplot</span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'>filter</span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>)),
-<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>lon</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>lat</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>chlor_a</span>)) + <span class='fu'>geom_point</span>()</div><img src='hyper_tibble-19.png' alt='' width='540' height='400' /><div class='input'>
+#&gt; 9 0.800647 165.4584 -77.37501</div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+<span class='fu'>ggplot</span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'>filter</span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>)),
+<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>lon</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>lat</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>chlor_a</span>)) + <span class='fu'>geom_point</span>()</div><img src='hyper_tibble-12.png' alt='' width='540' height='400' /><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -86,19 +86,19 @@
     <p>hyper slice</p>
     
 
-    <pre class="usage"><span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>raw_datavals</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for hyperindex</span>
-<span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>raw_datavals</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for hyperfilter</span>
-<span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>raw_datavals</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for tidync</span>
-<span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>raw_datavals</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>hyper_slice</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>raw_datavals</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -110,6 +110,10 @@
     <tr>
       <th>...</th>
       <td><p>ignored</p></td>
+    </tr>
+    <tr>
+      <th>raw_datavals</th>
+      <td><p>logical to control whether scaling in the NetCDF is applied or not</p></td>
     </tr>
     </table>
     
