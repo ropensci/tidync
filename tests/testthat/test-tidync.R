@@ -39,6 +39,7 @@ test_that("tidync works", {
 
 context("expected errors")
 test_that("recorded failures", {
+  skip_if_not("raadtools" %in% ipackages$Package)
   #   Error in ncvar_type_to_string(rv$precint) : 
   #  Error, unrecognized type code of variable supplied: -1 
   l3bin <- "/rdsi/PRIVATE/raad/data/oceandata.sci.gsfc.nasa.gov/SeaWiFS/L3BIN/2005/206/S2005206.L3b_DAY_RRS.nc"

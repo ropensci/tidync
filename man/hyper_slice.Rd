@@ -12,20 +12,22 @@
 \alias{hyper_slice.character}
 \title{hyper slice}
 \usage{
-hyper_slice(x, ...)
+hyper_slice(x, ..., raw_datavals = FALSE)
 
-\method{hyper_slice}{hyperindex}(x, ...)
+\method{hyper_slice}{hyperindex}(x, ..., raw_datavals = FALSE)
 
-\method{hyper_slice}{hyperfilter}(x, ...)
+\method{hyper_slice}{hyperfilter}(x, ..., raw_datavals = FALSE)
 
-\method{hyper_slice}{tidync}(x, ...)
+\method{hyper_slice}{tidync}(x, ..., raw_datavals = FALSE)
 
-\method{hyper_slice}{character}(x, ...)
+\method{hyper_slice}{character}(x, ..., raw_datavals = FALSE)
 }
 \arguments{
 \item{x}{a hyperindex-able thing}
 
 \item{...}{ignored}
+
+\item{raw_datavals}{logical to control whether scaling in the NetCDF is applied or not}
 }
 \description{
 hyper slice
