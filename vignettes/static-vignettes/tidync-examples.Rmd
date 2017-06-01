@@ -73,6 +73,9 @@ concentration <- tidync(f) %>% activate(concentration)
 concentration %>% hyper_filter() 
 ```
 
+
+
+
 By specifying inequality expressions we see an *implicit* subsetting of the array. Everything so far is implicit to 
 delay any file-based computation required to actually interact with the file and read from it. 
 
@@ -92,3 +95,47 @@ We can also use the special internal variable 'step', which will test against po
 concentration %>% hyper_filter(ni = step < 20, nj = dplyr::between(step, 30, 100))
 
 ```
+
+## Data extraction
+
+How to use these idioms to extract actual data? 
+
+We can now exercise these variable choice and dimension filters to return actual data, either in by slicing out a  "slab" in array-form, or as a data frame. 
+
+```{r}
+hf <- concentration %>% hyper_filter(ni = step < 20, nj = dplyr::between(step, 30, 100))
+
+## as an array
+arr <- hf %>% hyper_slice()
+str(arr)
+
+## as a data frame
+
+concentration %>% hyper_tibble() %>% filter(!is.na(concentration))
+
+```
+
+
+## real world example  - ROMS ocean model data
+
+A ROMS file typically has many variables of large size. The geographic space is curvilinear, and so we can't use the usual affine tricks available to us with "rasters". But, ggplot2 has no problem taking our cell values with their multidimensional coordinate values, and plotting a raster from them in the grid space. 
+
+
+```{r}
+romsfile <- file.path(getOption("default.datadir"),"data_local/acecrc.org.au/ROMS/s_corney/cpolar/ocean_his_3307.nc")
+format(file.info(romsfile)$size, sci = TRUE)
+## this is a big file
+tidync(romsfile)
+
+tidync(romsfile) %>% activate(temp)
+tidync(romsfile) %>% hyper_filter()
+
+(tab <- tidync(romsfile) %>% activate(temp) %>% 
+  hyper_tibble(xi_rho = step > 1000, s_rho = s_rho > -0.2, ocean_time = step == 1))
+
+library(ggplot2)
+ggplot(tab, aes(xi_rho, eta_rho, fill = temp)) + geom_raster() + facet_wrap(~s_rho)
+
+```
+TBD: need a real example data set. we can use these extractions for very efficient and flexible ways to build other objects. The tibble is fairly obviously directly ready for use in `ggplot2`, and with a little more work we could generate `raster` bricks.  A major motivation for this work is to be able to extract data *flexibly*, and so not be bound by the geographic assumptions of the raster package - tidync can define and pull out any arbitrary slab from any NetCDF variable, no matter it's dimensions or purpose.  Initial experiments show that for many-slice extractions (10s or 100s) the tidync approach will also be faster than the current raster implementation. 
+
