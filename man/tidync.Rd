@@ -4,15 +4,16 @@
 \alias{tidync}
 \title{tidy netcdf}
 \usage{
-tidync(x, ...)
+tidync(x, what)
 }
 \arguments{
 \item{x}{path to a NetCDF file}
 
-\item{...}{unused argments}
+\item{what}{(optional) character or bare name of variable to \code{activate}}
 }
 \description{
-Function to extract all metadata from a NetCDF, for use in subsequent operations.
+Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
+the first variable encountered is  \code{activate}d.
 }
 \details{
 Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We

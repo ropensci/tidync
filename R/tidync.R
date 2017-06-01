@@ -1,15 +1,18 @@
 
 #' tidy netcdf
 #' 
-#' Function to extract all metadata from a NetCDF, for use in subsequent operations. 
+#' Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
+#' the first variable encountered is  `activate`d. 
 #' 
 #' Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
 #' haven't explored HDF5 per se, so any feedback is appreciated. 
 #' @param x path to a NetCDF file
-#' @param ... unused argments
+#' @param what (optional) character or bare name of variable to `activate`
 #' @export
-tidync <- function(x, ...) {
-  structure(unclass(ncdump::NetCDF(x)), class = "tidync")
+tidync <- function(x, what) {
+  x <- structure(unclass(ncdump::NetCDF(x)), class = "tidync")
+  if (missing(what)) what <- x$variable$name[1L]
+  activate(x, what)
 }
 
 #' hyper tibble
