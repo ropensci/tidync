@@ -15,7 +15,7 @@ Imports: activate,
     forcats,
     magrittr,
     ncdf4,
-    ncdump, 
+    ncdump (> 0.0.3), 
     purrr, 
     rlang, 
     tibble
@@ -26,7 +26,7 @@ Suggests: ggplot2,
     rmarkdown,
     testthat,
     covr
-Remotes: r-gris/activate
+Remotes: r-gris/activate, r-gris/ncdump
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/r-gris/tidync
