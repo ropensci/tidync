@@ -39,8 +39,9 @@ devtools::install_github("r-gris/tidync")
 This is a basic example which shows you how to solve a common problem:
 
 ```{r}
-file <- system.file("inst", "unidata", "madis-hydro.nc", package = "tidync")
-
+file <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
+library(tidync)
+tidync(file) 
 ```
 See this article for more: 
 

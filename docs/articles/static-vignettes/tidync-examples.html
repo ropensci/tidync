@@ -91,7 +91,7 @@ f &lt;-<span class="st"> "/rdsi/PRIVATE/raad/data/ftp.ifremer.fr/ifremer/cersat/
 ## 2 concentration          1           1             nj              664
 ## 3 concentration          1           2           time                1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## activate another variable
-<span class="kw"><a href="../../reference/tidync.html">tidync</a></span>(f) %&gt;%<span class="st"> </span><span class="kw"><a href="../../reference/activate.html">activate</a></span>(concentration)</code></pre></div>
+<span class="kw"><a href="../../reference/tidync.html">tidync</a></span>(f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../../reference/activate.html">activate</a></span>(concentration)</code></pre></div>
 <pre><code>## Variables: concentration, (quality_flag) 
 ## Dimensions:</code></pre>
 <pre><code>## Joining, by = ".dimension_"</code></pre>
@@ -104,9 +104,9 @@ f &lt;-<span class="st"> "/rdsi/PRIVATE/raad/data/ftp.ifremer.fr/ifremer/cersat/
 <p>The term “hyperslab” is sometimes used to mean an arbitrarily-dimensioned array, and tidync uses this pattern for its main functions.</p>
 <p>The ‘hyper_filter’ function allows specification of expressions to subset a variable based on each dimension’s coordinate values.</p>
 <p>If no expressions are included we are presented with a table containing a row for each dimension, its extent in coordinates and its length. For convenience we also assign the activate form to an R variable, though we could just chain the entire operation without this.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/tidync.html">tidync</a></span>(f) %&gt;%<span class="st"> </span><span class="kw"><a href="../../reference/activate.html">activate</a></span>(concentration) 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/tidync.html">tidync</a></span>(f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../../reference/activate.html">activate</a></span>(concentration) 
 
-concentration %&gt;%<span class="st"> </span><span class="kw"><a href="../../reference/hyper_filter.html">hyper_filter</a></span>() </code></pre></div>
+concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../../reference/hyper_filter.html">hyper_filter</a></span>() </code></pre></div>
 <pre><code>## Joining, by = ".variable_"</code></pre>
 <pre><code>## [1] "filtered dimension summary: "
 ## # A tibble: 3 x 4
@@ -117,7 +117,7 @@ concentration %&gt;%<span class="st"> </span><span class="kw"><a href="../../ref
 ## 3  time 993060 993060      1</code></pre>
 <p>By specifying inequality expressions we see an <em>implicit</em> subsetting of the array. Everything so far is implicit to delay any file-based computation required to actually interact with the file and read from it.</p>
 <p>Notice that these are “name = expr” paired expressions, because the right hand side may be quite general we need the left hand side name to be assured of the name of the dimension referred to.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration %&gt;%<span class="st"> </span><span class="kw"><a href="../../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">nj =</span> nj &lt;<span class="st"> </span><span class="dv">20</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">nj =</span> nj <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>)</code></pre></div>
 <pre><code>## Joining, by = ".variable_"</code></pre>
 <pre><code>## [1] "filtered dimension summary: "
 ## # A tibble: 3 x 4
@@ -127,7 +127,7 @@ concentration %&gt;%<span class="st"> </span><span class="kw"><a href="../../ref
 ## 2    nj      1     19     19
 ## 3  time 993060 993060      1</code></pre>
 <p>We can also use the special internal variable ‘step’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration %&gt;%<span class="st"> </span><span class="kw"><a href="../../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">ni =</span> step &lt;<span class="st"> </span><span class="dv">20</span>, <span class="dt">nj =</span> dplyr::<span class="kw">between</span>(step, <span class="dv">30</span>, <span class="dv">100</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">ni =</span> step <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw">between</span>(step, <span class="dv">30</span>, <span class="dv">100</span>))</code></pre></div>
 <pre><code>## Joining, by = ".variable_"</code></pre>
 <pre><code>## [1] "filtered dimension summary: "
 ## # A tibble: 3 x 4

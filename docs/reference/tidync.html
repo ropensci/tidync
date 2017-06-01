@@ -83,10 +83,11 @@
     </div>
 
     
-    <p>Function to extract all metadata from a NetCDF, for use in subsequent operations.</p>
+    <p>Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
+the first variable encountered is  <code>activate</code>d.</p>
     
 
-    <pre class="usage"><span class='fu'>tidync</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>tidync</span>(<span class='no'>x</span>, <span class='no'>what</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -96,8 +97,8 @@
       <td><p>path to a NetCDF file</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>unused argments</p></td>
+      <th>what</th>
+      <td><p>(optional) character or bare name of variable to <code>activate</code></p></td>
     </tr>
     </table>
     

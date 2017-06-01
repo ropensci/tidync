@@ -25,7 +25,17 @@ Example
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-file <- system.file("inst", "unidata", "madis-hydro.nc", package = "tidync")
+file <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
+library(tidync)
+tidync(file) 
+#> Variables: UTC_time, (mozaic_flight_2012030403540535_ascent/air_press, mozaic_flight_2012030403540535_ascent/CO, mozaic_flight_2012030403540535_ascent/O3, mozaic_flight_2012030403540535_ascent/altitude, mozaic_flight_2012030403540535_ascent/lat, mozaic_flight_2012030403540535_ascent/lon, mozaic_flight_2012030321335035_descent/CO, mozaic_flight_2012030321335035_descent/O3, mozaic_flight_2012030321335035_descent/altitude, mozaic_flight_2012030321335035_descent/UTC_time, mozaic_flight_2012030321335035_descent/lat, mozaic_flight_2012030321335035_descent/lon, mozaic_flight_2012030403540535_descent/CO, mozaic_flight_2012030403540535_descent/O3, mozaic_flight_2012030403540535_descent/altitude, mozaic_flight_2012030403540535_descent/UTC_time, mozaic_flight_2012030403540535_descent/lat, mozaic_flight_2012030403540535_descent/lon, mozaic_flight_2012030412545335_ascent/CO, mozaic_flight_2012030412545335_ascent/O3, mozaic_flight_2012030412545335_ascent/altitude, mozaic_flight_2012030412545335_ascent/UTC_time, mozaic_flight_2012030412545335_ascent/lat, mozaic_flight_2012030412545335_ascent/lon, mozaic_flight_2012030419144751_ascent/CO, mozaic_flight_2012030419144751_ascent/O3, mozaic_flight_2012030419144751_ascent/altitude, mozaic_flight_2012030419144751_ascent/UTC_time, mozaic_flight_2012030419144751_ascent/lat, mozaic_flight_2012030419144751_ascent/lon, mozaic_flight_2012030319051051_descent/CO, mozaic_flight_2012030319051051_descent/O3, mozaic_flight_2012030319051051_descent/altitude, mozaic_flight_2012030319051051_descent/UTC_time, mozaic_flight_2012030319051051_descent/lat, mozaic_flight_2012030319051051_descent/lon, mozaic_flight_2012030421382353_ascent/CO, mozaic_flight_2012030421382353_ascent/O3, mozaic_flight_2012030421382353_ascent/altitude, mozaic_flight_2012030421382353_ascent/UTC_time, mozaic_flight_2012030421382353_ascent/lat, mozaic_flight_2012030421382353_ascent/lon) 
+#> Dimensions:
+#> Joining, by = ".dimension_"
+#> # A tibble: 2 x 5
+#>   variable_name .variable_ .dimension_ dimension_name dimension_length
+#>           <chr>      <dbl>       <int>          <chr>            <int>
+#> 1      UTC_time          0           0         recNum               74
+#> 2      UTC_time          0           0         recNum               74
 ```
 
 See this article for more:
