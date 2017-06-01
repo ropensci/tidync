@@ -33,7 +33,7 @@ files <- sstf[1:30, ]
 xyex<- c(130, 226, -70, -20)
 library(rbenchmark)
 benchmark(raad_1 = readsst(files$date[1], inputfiles = sstf, lon180 = FALSE, xylim = extent(xyex)), 
-          fasst_1 = read_fasst(files$fullname[1], xyex),
+          fasst_1 = hyper_fasst(files$fullname[1], xyex),
           replications = 100)
 
 ## raadtools is faster for single file slurps
@@ -43,7 +43,7 @@ benchmark(raad_1 = readsst(files$date[1], inputfiles = sstf, lon180 = FALSE, xyl
 
 ## tidync wins for multiple file 
 benchmark(raad_b =  readsst(files$date, inputfiles = sstf, lon180 = FALSE, xylim = extent(xyex)), 
-          fasst_b =  read_fasst(files$fullname, xyex), 
+          fasst_b =  hyper_fasst(files$fullname, xyex), 
           replications = 12)
 # test replications elapsed relative user.self sys.self user.child sys.child
 # 2 fasst_b           12  30.459    1.000     9.224    1.040          0         0
