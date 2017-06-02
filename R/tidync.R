@@ -382,7 +382,7 @@ dimension_values.tidync <- function(x) {
   dimids <- x$variable[x$variable$name == active(x), ]
     #dplyr::select(.data$name, .data$.variable_) %>% 
   dimids <- dimids[, c("name", ".variable_")]
-  dimids <- dimids %>%  dplyr::inner_join(x$vardim) %>% 
+  dimids <- dimids %>%  dplyr::inner_join(x$vardim, ".variable_") %>% 
     dplyr::select(.data$.dimension_)
   
   dim_names <- x$dimension[, c("name", ".dimension_")]
@@ -418,7 +418,6 @@ variable_dimensions <- function(x) {
   #  dplyr::transmute(variable_name = .data$name, .data$.variable_) 
   bb <- tibble::tibble(variable_name = aa$name, .variable_ = aa$.variable_)
   cc <- bb %>% 
-    #dplyr::inner_join(x$vardim) %>% 
     dplyr::inner_join(x$vardim, ".variable_") %>% 
     dplyr::inner_join(x$dimension, ".dimension_")
   dd <- tibble::tibble(variable_name = cc$variable_name, 
