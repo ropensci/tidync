@@ -27,9 +27,10 @@ hyper_fasst <- function(filename, xyex, ...) {
 library(tidync)
 library(raadtools)
 
-sstf <- sstfiles()
+sstf <- ghrsstfiles()
 files <- sstf[1:30, ]
 
+hyper_fasst(files$fullname[1], extent(145, 146, -45, -44))
 xyex<- c(130, 226, -70, -20)
 library(rbenchmark)
 benchmark(raad_1 = readsst(files$date[1], inputfiles = sstf, lon180 = FALSE, xylim = extent(xyex)), 
