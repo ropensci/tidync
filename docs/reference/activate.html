@@ -141,7 +141,8 @@
     <pre class="examples"><div class='input'><span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"S2008001.L3m_DAY_CHL_chlor_a_9km.nc"</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"ncdump"</span>)
 <span class='no'>rnc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>)
 <span class='fu'>activate</span>(<span class='no'>rnc</span>, <span class='st'>"palette"</span>)</div><div class='output co'>#&gt; Variables: palette, (chlor_a) 
-#&gt; Dimensions: </div><div class='output co'>#&gt; <span class='message'>Joining, by = ".dimension_"</span></div><div class='output co'>#&gt; # A tibble: 2 x 5
+#&gt; Dimensions: 
+#&gt; # A tibble: 2 x 5
 #&gt;   variable_name .variable_ .dimension_ dimension_name dimension_length
 #&gt;           &lt;chr&gt;      &lt;dbl&gt;       &lt;int&gt;          &lt;chr&gt;            &lt;int&gt;
 #&gt; 1       palette          3           3  eightbitcolor              256

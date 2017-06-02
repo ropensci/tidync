@@ -111,7 +111,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='st'>"S2008001.L3m_DAY_CHL_chlor_a_9km.nc"</span>
 <span class='no'>rnc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='no'>l3file</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"ncdump"</span>))
-<span class='fu'>dimension_values</span>(<span class='no'>rnc</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = ".variable_"</span></div><div class='output co'>#&gt; # A tibble: 6,480 x 4
+<span class='fu'>dimension_values</span>(<span class='no'>rnc</span>)</div><div class='output co'>#&gt; # A tibble: 6,480 x 4
 #&gt;    .dimension_    id      vals  name
 #&gt;          &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;
 #&gt;  1           1     1 -179.9583   lon

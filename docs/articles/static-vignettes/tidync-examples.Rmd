@@ -2,7 +2,10 @@
 title: "Tidy NetCDF examples"
 author: "Michael D. Sumner"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    fig_width: 10
+    fig_height: 10
 vignette: >
   %\VignetteIndexEntry{Tidy NetCDF examples}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,28 +13,11 @@ vignette: >
 ---
 
 
-```{r, include = FALSE, eval = FALSE}
-gf <- function()  {
-  files <- raadtools:::.allfilelist()
-  sort(grep("nc$", files, value = TRUE) )
-}
-get_files <- memoise::memoise(gf)
-sample_file <- function() {
-  files <- get_files()
-#   Error in ncvar_type_to_string(rv$precint) : 
-#  Error, unrecognized type code of variable supplied: -1 
-  files <- files[-grep("L3BIN", files)]
-  sample(files, 1L)
-}
-```
 
 Find an arbitrary NetCDF file. 
 
 ```{r}
-#set.seed(10)
-#(f <- sample_file())
-#(f <- "/rdsi/PRIVATE/raad/data_local/amps/2013021900_WRF_d2_PCP_f009.nc")
-f <- "/rdsi/PRIVATE/raad/data/ftp.ifremer.fr/ifremer/cersat/products/gridded/psi-concentration/data/antarctic/daily/netcdf/2013/20130415.nc"
+f <- file.path(getOption("default.datadir"), "data/ftp.ifremer.fr/ifremer/cersat/products/gridded/psi-concentration/data/antarctic/daily/netcdf/2013/20130415.nc")
 ```
 
 NetCDF is a very widely use file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
@@ -111,7 +97,7 @@ str(arr)
 
 ## as a data frame
 
-concentration %>% hyper_tibble() %>% filter(!is.na(concentration))
+#concentration %>% hyper_tibble() %>% filter(!is.na(concentration))
 
 ```
 
@@ -131,11 +117,22 @@ tidync(romsfile) %>% activate(temp)
 tidync(romsfile) %>% hyper_filter()
 
 (tab <- tidync(romsfile) %>% activate(temp) %>% 
-  hyper_tibble(xi_rho = step > 1000, s_rho = s_rho > -0.2, ocean_time = step == 1))
+  hyper_tibble(xi_rho = step > 1000, s_rho = s_rho > -0.5, ocean_time = step == 1))
 
 library(ggplot2)
 ggplot(tab, aes(xi_rho, eta_rho, fill = temp)) + geom_raster() + facet_wrap(~s_rho)
 
 ```
-TBD: need a real example data set. we can use these extractions for very efficient and flexible ways to build other objects. The tibble is fairly obviously directly ready for use in `ggplot2`, and with a little more work we could generate `raster` bricks.  A major motivation for this work is to be able to extract data *flexibly*, and so not be bound by the geographic assumptions of the raster package - tidync can define and pull out any arbitrary slab from any NetCDF variable, no matter it's dimensions or purpose.  Initial experiments show that for many-slice extractions (10s or 100s) the tidync approach will also be faster than the current raster implementation. 
+
+Now for a different orientation, this time with only one longitude slice. This example really needs to map on the actual geographic depth here, so it will need to be points or a mesh, or perform resampling on a grid. 
+
+```{r}
+(tab <- tidync(romsfile) %>% activate(temp) %>% 
+  hyper_tibble(xi_rho = step == 1200,  ocean_time = step < 12))
+
+library(ggplot2)
+## model grid Y and model grid Z
+ggplot(tab, aes(eta_rho, s_rho, fill = temp)) + geom_raster() + facet_wrap(~ocean_time)
+```
+TBD: need some more real example data set. we can use these extractions for very efficient and flexible ways to build other objects. The tibble is fairly obviously directly ready for use in `ggplot2`, and with a little more work we could generate `raster` bricks.  A major motivation for this work is to be able to extract data *flexibly*, and so not be bound by the geographic assumptions of the raster package - tidync can define and pull out any arbitrary slab from any NetCDF variable, no matter it's dimensions or purpose.  Initial experiments show that for many-slice extractions (10s or 100s) the tidync approach will also be faster than the current raster implementation. 
 
