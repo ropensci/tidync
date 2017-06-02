@@ -13,10 +13,12 @@ knitr::opts_chunk$set(
 ```
 [![Travis-CI Build Status](https://travis-ci.org/r-gris/tidync.svg?branch=master)](https://travis-ci.org/r-gris/tidync)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-gris/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/r-gris/tidync) 
-[![Coverage Status](https://img.shields.io/codecov/c/github/r-gris/tidync/master.svg)](https://codecov.io/github/r-gris/tidync?branch=master)
+
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
 
 # tidync
+
+**NOTE:** this package is development and subject to change. 
 
 The goal of tidync is to ease exploring the contents of a NetCDF file and constructing efficient queries to extract
 arbitrary hyperslabs. 
@@ -24,6 +26,59 @@ arbitrary hyperslabs.
 The data extracted can be used directly in array contexts, or in "long form" form "tidy" analysis and
 visualization contexts. 
 
+There are two main ways of using tidync. 
+
+These examples are for illustration only, see the vignettes for more details, and please try on your own files!
+
+## Interactive
+
+Use `tidync()` and `hyper_filter()` to discern what variables and dimensions are available, and to craft axis-filtering
+expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `step` to filter it by index). 
+
+```{r interactive,eval=FALSE}
+## discover the variables, and the active variable's dimensions
+tidync(filename)
+
+## activate a different variable
+tidync(filename) %>% activate(varname)
+
+## get a dimension-focus on the space occupied by the variable
+tidync(filename) %>% hyper_filter()
+
+## pass named expressions to subset dimension by value or index (step)
+tidync(filename) %>% hyper_filter(lat = lat < -30, time = time == 20)
+```
+
+## Extractive
+
+Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form. It's important to not actual request the data extraction until the expressions above would result in an efficient size (don't try a data frame version of a 20Gb ROMs variable ...). 
+
+```{r extraction, eval=FALSE}
+## we'll see a column for sst, lat, time, and whatever other dimensions sst has
+tidync(filename) %>% activate(sst) %>% 
+  hyper_filter(lat = lat < -30, time = time == 20) %>% 
+  hyper_tibble()
+
+
+## raw array form, we'll see an R array with a dimension for each seen by tidync(filename) %>% activate(sst)
+tidync(filename) %>% activate(sst) %>% 
+  hyper_filter(lat = lat < -30, time = time == 20) %>% 
+  hyper_slice()
+
+```
+
+There is another function `hyper_index` that build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each `hyper_*` function can take the filtering expressions, but it's not obvious if this is a good idea or not. 
+
+# Development
+
+Wishlist. Submit your own to the [Issues tab](https://github.com/r-gris/tidync)
+
+* install useful example files, and steps to download good files
+* figure out whether "activate" is the right function, how to use that name (sorry Thomas)
+* wrappers for returning raster brick
+* helpers for dimension values as lists of coordinates for the slice form
+* delayed extraction to show the tibble you would get after collect()
+* consider better function names like `hyper_df`, `hyper_dbl` and `hyper_int` (differentiate scaled and unscaled?)
 
 ## Installation
 
@@ -43,6 +98,8 @@ file <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
 library(tidync)
 tidync(file) 
 ```
+
+
 See this article for more:  https://r-gris.github.io/tidync/articles/static-vignettes/tidync-examples.html
 
 Stay tuned. 
