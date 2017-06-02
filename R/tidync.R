@@ -10,6 +10,10 @@
 #' @param what (optional) character or bare name of variable to `activate`
 #' @export
 tidync <- function(x, what) {
+  ## TODO support NetCDF, ncdf4, RNetCDF, raster, anything with a file behind it
+  if (!is.character(x)) stop("'x' must be a file")
+  fexists <- file.exists(x)
+  if (!fexists) stop(sprintf("cannot find file: \n%s", x))
   x <- structure(unclass(ncdump::NetCDF(x)), class = "tidync")
   if (missing(what)) what <- x$variable$name[1L]
   activate(x, what)
@@ -378,7 +382,8 @@ dimension_values.tidync <- function(x) {
   dimids <- x$variable[x$variable$name == active(x), ]
     #dplyr::select(.data$name, .data$.variable_) %>% 
   dimids <- dimids[, c("name", ".variable_")]
-  dimids <- dimids %>%  dplyr::inner_join(x$vardim) %>% select(.data$.dimension_)
+  dimids <- dimids %>%  dplyr::inner_join(x$vardim) %>% 
+    dplyr::select(.data$.dimension_)
   
   dim_names <- x$dimension[, c("name", ".dimension_")]
   
@@ -449,7 +454,7 @@ print.tidync <- function(x, ...) {
   
   cat(sprintf("Dimensions: \n", ""))
   print(variable_dimensions(x) %>% 
-          inner_join(x$dimension %>% dplyr::transmute(.data$.dimension_, dimension_length = .data$len)))
+          inner_join(x$dimension %>% dplyr::transmute(.data$.dimension_, dimension_length = .data$len), ".dimension_"))
   # print(x$dimension %>% 
   #         dplyr::arrange(.data$id)  %>% 
   #         transmute(.data$name, length = .data$len, 
