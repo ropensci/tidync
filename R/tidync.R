@@ -114,7 +114,8 @@ hyper_filter.tidync <- function(x, ...) {
   for (i in seq_along(quo_named)) {
     iname <- names(quo_named)[i]
     trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
-    
+    if (nrow(trans[[iname]]) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 
+                                                iname))
   }
   trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
   hyper_filter(trans) %>% activate(active(x))
