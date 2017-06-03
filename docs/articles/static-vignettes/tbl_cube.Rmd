@@ -1,0 +1,40 @@
+---
+title: "NetCDF tbl_cube"
+author: "Michael D. Sumner and Stuart Corney"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    fig_width: 10
+    fig_height: 10
+vignette: >
+  %\VignetteIndexEntry{NetCDF tbl_cube}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+Use tidync to subset into a 4D ocean model, here in model index space. 
+
+We hone in on an x y range ("xi_ho" is meridional in the domain, "eta_rho" is zonal), use the "step" index to get a strided level index ("s_rho" is model sigma coordinate), and a single time slice. 
+
+At the end we must as_tibble for ggplot2, but future work will remove the need for this total expansion. 
+
+
+```{r}
+romsfile <- file.path(getOption("default.datadir"),"data_local/acecrc.org.au/ROMS/s_corney/cpolar/ocean_his_3307.nc")
+
+library(tidync)
+library(tibble)
+roms_cube <- tidync(romsfile) %>% activate(temp) %>% 
+  hyper_filter(xi_rho = xi_rho > 1000, 
+               eta_rho = eta_rho > 200, 
+#               s_rho = step == 1,
+               s_rho = step %% 4 == 0,
+               ocean_time = step == 15) %>% 
+  hyper_tbl_cube()
+
+library(ggplot2)
+ggplot(roms_cube %>% as_tibble(), aes(xi_rho, eta_rho, fill = temp)) + geom_raster() + facet_wrap(~s_rho)
+
+```
