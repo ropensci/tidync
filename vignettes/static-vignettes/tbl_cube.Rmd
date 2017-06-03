@@ -7,7 +7,7 @@ output:
     fig_width: 10
     fig_height: 10
 vignette: >
-  %\VignetteIndexEntry{NetCDF tbl_cube}
+  %\VignetteIndexEntry{NetCDF-tbl_cube}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
