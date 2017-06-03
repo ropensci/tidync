@@ -68,6 +68,25 @@ Wishlist. Submit your own to the [Issues tab](https://github.com/r-gris/tidync)
 -   delayed extraction to show the tibble you would get after collect()
 -   consider better function names like `hyper_df`, `hyper_dbl` and `hyper_int` (differentiate scaled and unscaled?)
 
+Support for tbl\_cube is in bare-bones form
+
+    f <- "eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/avhrr-only-v2.19810901.nc"
+    tidync(f) %>% hyper_tbl_cube(lat = lat > -30)
+    Source: local array [691,200 x 4]
+    D: lon [dbl, 1440]
+    D: lat [dbl, 480]
+    D: zlev [dbl, 1]
+    D: time [dbl, 1]
+    M: sst [dbl]
+
+    tidync(f) %>% activate(anom) %>% hyper_tbl_cube(lat = lat > -30)
+    Source: local array [691,200 x 4]
+    D: lon [dbl, 1440]
+    D: lat [dbl, 480]
+    D: zlev [dbl, 1]
+    D: time [dbl, 1]
+    M: anom [dbl]
+
 Installation
 ------------
 
