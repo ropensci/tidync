@@ -24,6 +24,7 @@ Suggests: ggplot2,
     knitr,
     memoise,
     rmarkdown,
+    raster,
     testthat,
     covr
 Remotes: r-gris/activate, r-gris/ncdump, tidyverse/dplyr

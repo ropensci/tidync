@@ -1,3 +1,4 @@
+
 context("speed")
 library(raster)
 u <- "ftp://ftp.cdc.noaa.gov/Datasets/noaa.oisst.v2/sst.wkmean.1990-present.nc"
@@ -40,27 +41,28 @@ hyper_read  <- function(filename, ...) {
   }
 }
 xyex <- extent(100, 160, -30, 60)
+library(dplyr)
 test_that("tidync is faster", {
 
   ## all xy, few time slices
- (hr0_time <- system.time({hr <- hyper_read(filename, time = between(step, 50, 60))}))
- (rs0_time <- system.time({rs <- subset(brick(filename), 50:60)}))
+ (hr0_time <- system.time({hr <- hyper_read(tfile, time = between(step, 50, 60))}))
+ (rs0_time <- system.time({rs <- raster::subset(brick(tfile), 50:60)}))
   
   ## few time slices
-  (hr_time <- system.time({hr <- hyper_read(filename, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = between(step, 50, 60))}))
-  (rs_time <- system.time({rs <- crop(subset(brick(filename), 50:60), xyex)}))
+  (hr_time <- system.time({hr <- hyper_read(tfile, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = between(step, 50, 60))}))
+  (rs_time <- system.time({rs <- crop(raster::subset(brick(tfile), 50:60), xyex)}))
   
   
   ## many time slices
-  (hr1_time <- system.time({hr <- hyper_read(filename, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = between(step, 50, 460))}))
-  (rs1_time <- system.time({rs <- crop(subset(brick(filename), 50:460), xyex)}))
-  (rs1_time <- system.time({rs <- subset(crop(brick(filename), xyex), 50:460)}))
+  (hr1_time <- system.time({hr <- hyper_read(tfile, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = between(step, 50, 460))}))
+  (rs1_time <- system.time({rs <- crop(raster::subset(brick(tfile), 50:460), xyex)}))
+  (rs1_time <- system.time({rs <- raster::subset(crop(brick(tfile), xyex), 50:460)}))
   
   
   ## arbitrary time slices
   time_step <- sort(sample(1:1430, 100))
-  (hr2_time <- system.time({hr <- hyper_read(filename, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = step %in% time_step)}))
-  (rs2_time <- system.time({rs <- crop(subset(brick(filename), time_step), xyex)}))
+  (hr2_time <- system.time({hr <- hyper_read(tfile, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = step %in% time_step)}))
+  (rs2_time <- system.time({rs <- crop(raster::subset(brick(tfile), time_step), xyex)}))
   
   
 })
