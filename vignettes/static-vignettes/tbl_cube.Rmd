@@ -35,6 +35,6 @@ roms_cube <- tidync(romsfile) %>% activate(temp) %>%
   hyper_tbl_cube()
 
 library(ggplot2)
-ggplot(roms_cube %>% as_tibble(), aes(xi_rho, eta_rho, fill = temp)) + geom_raster() + facet_wrap(~s_rho)
+ggplot(roms_cube, aes(xi_rho, eta_rho, fill = temp)) + geom_raster() + facet_wrap(~s_rho)
 
 ```
