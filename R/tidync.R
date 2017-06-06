@@ -15,9 +15,22 @@ tidync <- function(x, what) {
   fexists <- file.exists(x)
   if (!fexists) stop(sprintf("cannot find file: \n%s", x))
   x <- structure(unclass(ncdump::NetCDF(x)), class = "tidync")
+  x$variable$shape <- shapes(x)
   if (missing(what)) what <- x$variable$name[1L]
   activate(x, what)
 }
+
+
+shapes <- function(x) {
+  shape_instances_byvar <- x$vardim %>% #dplyr::filter(!is.na(.dimension_)) %>%
+    dplyr::group_by(.variable_) %>%
+    split(.$.variable_) %>%
+    purrr::map(function(xa) xa$.dimension_)
+  
+  shape_classify_byvar <- factor(unlist(lapply(shape_instances_byvar, function(xb) paste(xb, collapse = "-"))))
+  levels(shape_classify_byvar)[shape_classify_byvar]
+}
+
 
 #' hyper tibble
 #'
@@ -461,4 +474,18 @@ print.tidync <- function(x, ...) {
   #                   unlimited= .data$unlim ) %>% as.data.frame())
   invisible(NULL)
 }
+
+print_ <- function(x, ...) {
+  ushapes <- unique(x$variable$shape)
+  ord <- order(nchar(ushapes), decreasing = TRUE)
+  cat(sprintf("Shapes (%i): \n", length(ushapes)))
+  for (ishape in seq_along(ushapes)) {
+    ii <- ord[ishape]
+    cat(sprintf("[%s]", ushapes[ii]), ": ")
+    cat(paste(x$variable$name[x$variable$shape == ushapes[ii]], collapse = ", "), "\n")
+  }
+  
+}
+
+print_(nc)
 
