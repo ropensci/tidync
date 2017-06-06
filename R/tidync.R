@@ -487,5 +487,7 @@ print_ <- function(x, ...) {
   
 }
 
-print_(nc)
+# cf <- raadtools::cpolarfiles()$fullname[1]
+## nc <- tydync(cf)
+## print_(nc)
 
