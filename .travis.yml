@@ -3,7 +3,7 @@
 language: R
 sudo: required
 cache: packages
-
+latex: false
 dist: trusty
 
 before_install:
