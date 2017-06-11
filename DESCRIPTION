@@ -11,7 +11,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: activate, 
-    dplyr, 
+    dplyr (>= 0.7.0), 
     forcats,
     magrittr,
     ncdf4,
@@ -27,7 +27,7 @@ Suggests: ggplot2,
     raster,
     testthat,
     covr
-Remotes: r-gris/activate, r-gris/ncdump, tidyverse/dplyr
+Remotes: r-gris/activate, r-gris/ncdump
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/r-gris/tidync
