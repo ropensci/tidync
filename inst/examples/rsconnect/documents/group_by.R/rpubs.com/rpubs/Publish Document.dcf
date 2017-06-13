@@ -1,0 +1,8 @@
+name: Publish Document
+title:
+account: rpubs
+server: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/284383/8488c87144d246f4af252b47ab339e05
+bundleId: https://api.rpubs.com/api/v1/document/284383/8488c87144d246f4af252b47ab339e05
+url: http://rpubs.com/cyclemumner/284383
+when: 1497341453.77276

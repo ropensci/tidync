@@ -71,18 +71,24 @@ hyper_tibble.tidync <- function(x, ...) {
 #' @name hyper_tibble
 #' @export
 hyper_tibble.hyperfilter <- function(x, ...) {
-  slab <- hyper_slice(x, ...)
+  nomin_space <- x$nominal_space
+  x$nominal_space <- NULL
+  
+    slab <- hyper_slice(x, ...)
+    total_prod <- prod(dim(slab))
+    
   tib <- list()
-  tib[[active(x)]] <- as.vector(slab)
+  okfilter <- rep(nomin_space$ok, length = total_prod)
+  
+  tib[[active(x)]] <- as.vector(slab)[okfilter]
   tib <- tibble::as_tibble(tib)
   prod_dims <- 1
-  total_prod <- prod(dim(slab))
-  
-  
+
   for (i in seq_along(x)) {
+#    if (names(x)[i] == "nominal_space") next;
     nm <- names(x)[i]
     nr <- nrow(x[[i]])
-    tib[[nm]] <- rep(x[[nm]][[nm]], each = prod_dims, length.out = total_prod)
+    tib[[nm]] <- rep(x[[nm]][[nm]], each = prod_dims, length.out = total_prod)[okfilter]
     prod_dims <- prod_dims * nr
   }
   tib
