@@ -126,6 +126,37 @@ See this article for more:  https://r-gris.github.io/tidync/articles/static-vign
 
 Stay tuned. 
 
+## Terminology
+
+ I think of "slab" as a generalized "array" (in the R sense) that we can request from a NetCDF.  We must provide the NetCDF API with a "slab index", i.e. a start and a count vector -  and that's the only way to query them. 
+
+In R terms a 3D array would be indexed like
+
+arr[1:10, 2:12, 3:5]
+
+and that would be analogous to 
+
+ncvar_get(con, start = c(1, 2, 3), count = c(10, 11, 3))
+
+If we only wanted a "sparse trace" through the array in R we can do 
+
+arr[cbind(c(2, 4), c(5, 6), c(3, 4)]
+
+which would pull out 2-values from 2 arbitrary positions. The API doesn't allow that (at least not in an efficient way that I can understand). 
+
+We either have to get the whole "slab" that encompases those 2 cells, or request a degenerate 1-cell slab for each: 
+
+ncvar_get(con, start = c(2, 5, 3), count = c(1, 1, 1))
+ncvar_get(con, start = c(4, 6, 4), count = c(1, 1, 1))
+
+I've used the term "hyperslab" and "slab" since I realized this basic limitation during my PhD. Unidata use the term but it's not in the API afaik: 
+
+http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html
+
+Another term like this is "shape" which is a particular set of dimensions used by 1 or more variables in a file. tidync aims to allow "activation" of a given shape, so that any subsequent extraction gets all the variables that live in that space/shape. (It's a database table interpretation of a set of variables). 
+
+In R we can determine those indexes really easily for any given query, tracks over time through XYZ, polygons, boxes and so on - but we are ultimately limited by the API to these "slab" requests, so you see a lot of disparate approaches across packages to optimizing this. 
+
 
 ## Code of conduct
 
