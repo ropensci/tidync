@@ -2,7 +2,7 @@
 #' tidy netcdf
 #' 
 #' Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
-#' the first variable encountered is  `activate`d. 
+#' the first *shape* encountered is  `activate`d. 
 #' 
 #' Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
 #' haven't explored HDF5 per se, so any feedback is appreciated. 
@@ -24,6 +24,16 @@ out
 tidync.data.frame <- function(x, ...) {
   tidync(tidyfile(x))
 }
+#' @name tidync
+#' @export
+tidync.character <- function(x, ...) {
+  tidync(tidyfile(x))
+}
+
+## TBD we need
+#tidync.NetCDF
+#tidync.ncdf4
+# xtractomatic, rerddap?
 
 #' Print NetCDF object
 #' 

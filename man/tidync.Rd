@@ -3,10 +3,22 @@
 \name{tidync}
 \alias{tidync}
 \alias{tidync}
+\alias{tidync.tidyfile}
+\alias{tidync}
+\alias{tidync.data.frame}
+\alias{tidync}
+\alias{tidync.character}
+\alias{tidync}
 \alias{print.tidync}
 \title{tidy netcdf}
 \usage{
 tidync(x, ...)
+
+\method{tidync}{tidyfile}(x, ...)
+
+\method{tidync}{data.frame}(x, ...)
+
+\method{tidync}{character}(x, ...)
 
 \method{print}{tidync}(x, ...)
 }
@@ -21,7 +33,7 @@ tidync(x, ...)
 }
 \description{
 Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
-the first variable encountered is  \code{activate}d.
+the first \emph{shape} encountered is  \code{activate}d.
 
 print S3 method
 }
@@ -29,5 +41,12 @@ print S3 method
 Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
 haven't explored HDF5 per se, so any feedback is appreciated.
 
-Prints a summary of variables and dimensions.
+Prints a summary of variables and dimensions, organized by their 'shape'. Shape is
+an instance of a particular set of dimensions, which can be shared by more than one
+variable. This is not the 'rank' of a variable (the number of dimensions) since a single
+data set may have many 3D variables composed of different sets of axes/dimensions. There's no
+formality around the concept of 'shape', as far as we know.
+
+A dimension may have length zero, but this is a special case for a "measure" dimension, we think. (It
+doesn't mean the product of the dimensions is zero, for example).
 }
