@@ -27,7 +27,11 @@ sample_file <- function() {
 
 ipackages <- as.data.frame(utils::installed.packages() , stringsAsFactors = FALSE)
 test_that("tidync works", {
-  skip_if_not("raadtools" %in% ipackages$Package)
+  dd <-getOption("default.datadir")
+  nodir <- is.null(dd)
+  skip_if_not(("raadtools" %in% ipackages$Package) && !nodir)
+  if (!is.null(dd)) skip_if_not(file.exists(dd))
+  
   afile <- "/rdsi/PRIVATE/raad/data/ftp.aviso.altimetry.fr/global/delayed-time/grids/madt/all-sat-merged/h/2009/dt_global_allsat_madt_h_20090104_20140106.nc"
   afilter <- tidync(afile)  %>% expect_s3_class("tidync") %>% 
     hyper_filter() %>% expect_s3_class("hyperfilter")  
@@ -39,7 +43,10 @@ test_that("tidync works", {
 
 context("expected errors")
 test_that("recorded failures", {
-  skip_if_not("raadtools" %in% ipackages$Package)
+  dd <-getOption("default.datadir")
+  nodir <- is.null(dd)
+  skip_if_not(("raadtools" %in% ipackages$Package) && !nodir)
+  if (!is.null(dd)) skip_if_not(file.exists(dd))
   #   Error in ncvar_type_to_string(rv$precint) : 
   #  Error, unrecognized type code of variable supplied: -1 
   l3bin <- "/rdsi/PRIVATE/raad/data/oceandata.sci.gsfc.nasa.gov/SeaWiFS/L3BIN/2005/206/S2005206.L3b_DAY_RRS.nc"

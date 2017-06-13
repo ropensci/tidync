@@ -11,10 +11,12 @@
 #' @export
 tidync <- function(x, what) {
   ## TODO support NetCDF, ncdf4, RNetCDF, raster, anything with a file behind it
-  if (!is.character(x)) stop("'x' must be a file")
-  fexists <- file.exists(x)
-  if (!fexists) stop(sprintf("cannot find file: \n%s", x))
-  x <- structure(unclass(ncdump::NetCDF(x)), class = "tidync")
+#  if (!is.character(x)) stop("'x' must be a file")
+ # fexists <- file.exists(x)
+  #if (!fexists) stop(sprintf("cannot find file: \n%s", x))
+  ncd <- try(ncdump::NetCDF(x))
+  if (inherits(ncd, "try-error")) stop("cannot read from ", x)
+  x <- structure(unclass(ncd), class = "tidync")
   x$variable$shape <- shapes(x)
   if (missing(what)) what <- x$variable$name[1L]
   activate(x, what)
