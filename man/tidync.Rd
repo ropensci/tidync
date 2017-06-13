@@ -2,20 +2,32 @@
 % Please edit documentation in R/tidync.R
 \name{tidync}
 \alias{tidync}
+\alias{tidync}
+\alias{print.tidync}
 \title{tidy netcdf}
 \usage{
-tidync(x, what)
+tidync(x, ...)
+
+\method{print}{tidync}(x, ...)
 }
 \arguments{
 \item{x}{path to a NetCDF file}
 
+\item{...}{reserved}
+
 \item{what}{(optional) character or bare name of variable to \code{activate}}
+
+\item{x}{NetCDF object}
 }
 \description{
 Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
 the first variable encountered is  \code{activate}d.
+
+print S3 method
 }
 \details{
 Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
 haven't explored HDF5 per se, so any feedback is appreciated.
+
+Prints a summary of variables and dimensions.
 }
