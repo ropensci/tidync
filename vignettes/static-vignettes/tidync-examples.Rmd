@@ -108,7 +108,7 @@ A ROMS file typically has many variables of large size. The geographic space is 
 
 
 ```{r}
-romsfile <- file.path(getOption("default.datadir"),"data_local/acecrc.org.au/ROMS/s_corney/cpolar/ocean_his_3307.nc")
+romsfile <- file.path("/rdsi/PRIVATE/raad","data_local/acecrc.org.au/ROMS/s_corney/cpolar/ocean_his_3307.nc")
 format(file.info(romsfile)$size, sci = TRUE)
 ## this is a big file
 tidync(romsfile)

@@ -22,7 +22,7 @@ At the end we must as_tibble for ggplot2, but future work will remove the need f
 
 
 ```{r}
-romsfile <- file.path(getOption("default.datadir"),"data_local/acecrc.org.au/ROMS/s_corney/cpolar/ocean_his_3307.nc")
+romsfile <- file.path("/rdsi/PRIVATE/raad","data_local/acecrc.org.au/ROMS/s_corney/cpolar/ocean_his_3307.nc")
 
 library(tidync)
 library(tibble)
@@ -35,6 +35,6 @@ roms_cube <- tidync(romsfile) %>% activate(temp) %>%
   hyper_tbl_cube()
 
 library(ggplot2)
-ggplot(roms_cube, aes(xi_rho, eta_rho, fill = temp)) + geom_raster() + facet_wrap(~s_rho)
+ggplot(roms_cube %>% as_tibble(), aes(xi_rho, eta_rho, fill = temp)) + geom_raster() + facet_wrap(~s_rho)
 
 ```
