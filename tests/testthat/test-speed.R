@@ -42,27 +42,31 @@ hyper_read  <- function(filename, ...) {
 }
 xyex <- extent(100, 160, -30, 60)
 library(dplyr)
-test_that("tidync is faster", {
+test_that("tidync is sometimes faster", {
 
+  context("tidync is slower for small requests")
   ## all xy, few time slices
- (hr0_time <- system.time({hr <- hyper_read(tfile, time = between(step, 50, 60))}))
- (rs0_time <- system.time({rs <- raster::subset(brick(tfile), 50:60)}))
-  
-  ## few time slices
-  (hr_time <- system.time({hr <- hyper_read(tfile, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = between(step, 50, 60))}))
-  (rs_time <- system.time({rs <- crop(raster::subset(brick(tfile), 50:60), xyex)}))
-  
+  (hr0_time <- system.time({hr <- hyper_read(tfile, time = between(step, 50, 60))}))
+  (rs0_time <- system.time({rs <- raster::subset(brick(tfile), 50:60)}))
+  expect_true( hr0_time["elapsed"] > rs0_time["elapsed"])
+  ## few time slices 
+  context("tidync gets faster for larger requests")
+  (hr_time <- system.time({hr <- hyper_read(tfile, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = between(step, 50, 70))}))
+  (rs_time <- system.time({rs <- crop(raster::subset(brick(tfile), 50:70), xyex)}))
+  expect_true(hr_time["elapsed"] < rs_time["elapsed"])
   
   ## many time slices
   (hr1_time <- system.time({hr <- hyper_read(tfile, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = between(step, 50, 460))}))
   (rs1_time <- system.time({rs <- crop(raster::subset(brick(tfile), 50:460), xyex)}))
-  (rs1_time <- system.time({rs <- raster::subset(crop(brick(tfile), xyex), 50:460)}))
-  
+  (rs2_time <- system.time({rs <- raster::subset(crop(brick(tfile), xyex), 50:460)}))
+  expect_true(hr1_time["elapsed"] < rs1_time["elapsed"])
+  expect_true(hr1_time["elapsed"] < rs2_time["elapsed"])
   
   ## arbitrary time slices
-  time_step <- sort(sample(1:1430, 100))
+  time_step <- sort(sample(1:1430, 200))
   (hr2_time <- system.time({hr <- hyper_read(tfile, lon = between(lon, 100, 160), lat = between(lat, -30, 60), time = step %in% time_step)}))
-  (rs2_time <- system.time({rs <- crop(raster::subset(brick(tfile), time_step), xyex)}))
+  (rs3_time <- system.time({rs <- crop(raster::subset(brick(tfile), time_step), xyex)}))
+  expect_true(hr2_time["elapsed"] < rs2_time["elapsed"])
   
   
 })

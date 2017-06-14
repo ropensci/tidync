@@ -50,12 +50,13 @@ test_that("recorded failures", {
   #   Error in ncvar_type_to_string(rv$precint) : 
   #  Error, unrecognized type code of variable supplied: -1 
   l3bin <- "/rdsi/PRIVATE/raad/data/oceandata.sci.gsfc.nasa.gov/SeaWiFS/L3BIN/2005/206/S2005206.L3b_DAY_RRS.nc"
-  expect_error(tidync(l3bin), "Error, unrecognized type code of variable supplied: -1")
+  #expect_error(tidync(l3bin), "Error, unrecognized type code of variable supplied: -1")
+  expect_error(tidync(l3bin), "cannot read from")
   
   # Error in hyper_filter(., x = x < 30) : object 'x' not found
   (f <- "/rdsi/PRIVATE/raad/data_local/amps/2013021900_WRF_d2_PCP_f009.nc")
   PCP <- tidync(f) %>% activate(PCP)
   PCP %>% hyper_filter()
-  expect_error(PCP %>% hyper_filter(x = x < 30), "object 'x' not found")
-  
+ # expect_error(PCP %>% hyper_filter(x = x < 30), "object 'x' not found")
+  expect_error(PCP %>% hyper_filter(x = x > 1), "\\(list\\) object cannot be coerced to type 'double'")
 })

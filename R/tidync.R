@@ -24,9 +24,9 @@ tidync <- function(x, what) {
 
 
 shapes <- function(x) {
-  shape_instances_byvar <- x$vardim %>% #dplyr::filter(!is.na(.dimension_)) %>%
-    dplyr::group_by(.variable_) %>%
-    split(.$.variable_) %>%
+  siby <- x$vardim %>% #dplyr::filter(!is.na(.dimension_)) %>%
+    dplyr::group_by(.data$.variable_)
+  shape_instances_byvar <-  split(siby, siby$.variable_) %>%
     purrr::map(function(xa) xa$.dimension_)
   
   shape_classify_byvar <- factor(unlist(lapply(shape_instances_byvar, function(xb) paste(xb, collapse = "-"))))
