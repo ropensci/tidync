@@ -12,7 +12,7 @@
 
 <meta name="author" content="Michael D. Sumner" />
 
-<meta name="date" content="2017-06-02" />
+<meta name="date" content="2017-06-14" />
 
 <title>Tidy NetCDF examples</title>
 
@@ -70,12 +70,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Tidy NetCDF examples</h1>
 <h4 class="author"><em>Michael D. Sumner</em></h4>
-<h4 class="date"><em>2017-06-02</em></h4>
+<h4 class="date"><em>2017-06-14</em></h4>
 
 
 
 <p>Find an arbitrary NetCDF file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="kw">getOption</span>(<span class="st">&quot;default.datadir&quot;</span>), <span class="st">&quot;data/ftp.ifremer.fr/ifremer/cersat/products/gridded/psi-concentration/data/antarctic/daily/netcdf/2013/20130415.nc&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;/rdsi/PRIVATE/raad&quot;</span>, <span class="st">&quot;data/ftp.ifremer.fr/ifremer/cersat/products/gridded/psi-concentration/data/antarctic/daily/netcdf/2013/20130415.nc&quot;</span>)</code></pre></div>
 <p>NetCDF is a very widely use file format for storing array-based data as <em>variables</em>. The <strong>variable’s</strong> space is defined by its <strong>dimensions</strong> and their metadata. Dimensions are by definition “one-dimensional” consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The <strong>space</strong> of a variable is defined as one or more of the dimensions in the file, but a variable won’t necessarily use all the available dimensions and no dimensions are mandatory or particularly special.</p>
 <p>Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many, varied, and no particularly well adhered to in many contexts.</p>
 <p>A NetCDF file is essentially a container for simple array based data structures. There is limited capacity in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes. (I.e. it’s not possible to query a file for an arbitrary sparse set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set.)</p>
@@ -86,9 +86,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidync)
 <span class="kw">tidync</span>(f)</code></pre></div>
 <pre><code>## Variables: concentration, (quality_flag) 
-## Dimensions:</code></pre>
-<pre><code>## Joining, by = &quot;.dimension_&quot;</code></pre>
-<pre><code>## # A tibble: 3 x 5
+## Dimensions: 
+## # A tibble: 3 x 5
 ##   variable_name .variable_ .dimension_ dimension_name dimension_length
 ##           &lt;chr&gt;      &lt;dbl&gt;       &lt;int&gt;          &lt;chr&gt;            &lt;int&gt;
 ## 1 concentration          1           0             ni              632
@@ -97,9 +96,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## activate another variable
 <span class="kw">tidync</span>(f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(concentration)</code></pre></div>
 <pre><code>## Variables: concentration, (quality_flag) 
-## Dimensions:</code></pre>
-<pre><code>## Joining, by = &quot;.dimension_&quot;</code></pre>
-<pre><code>## # A tibble: 3 x 5
+## Dimensions: 
+## # A tibble: 3 x 5
 ##   variable_name .variable_ .dimension_ dimension_name dimension_length
 ##           &lt;chr&gt;      &lt;dbl&gt;       &lt;int&gt;          &lt;chr&gt;            &lt;int&gt;
 ## 1 concentration          1           0             ni              632
@@ -111,7 +109,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration &lt;-<span class="st"> </span><span class="kw">tidync</span>(f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(concentration) 
 
 concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>() </code></pre></div>
-<pre><code>## Joining, by = &quot;.variable_&quot;</code></pre>
 <pre><code>## [1] &quot;filtered dimension summary: &quot;
 ## # A tibble: 3 x 4
 ##    name    min    max length
@@ -122,7 +119,6 @@ concentration <span class="op">%&gt;%</span><span class="st"> </span><span class
 <p>By specifying inequality expressions we see an <em>implicit</em> subsetting of the array. Everything so far is implicit to delay any file-based computation required to actually interact with the file and read from it.</p>
 <p>Notice that these are “name = expr” paired expressions, because the right hand side may be quite general we need the left hand side name to be assured of the name of the dimension referred to.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">nj =</span> nj <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>)</code></pre></div>
-<pre><code>## Joining, by = &quot;.variable_&quot;</code></pre>
 <pre><code>## [1] &quot;filtered dimension summary: &quot;
 ## # A tibble: 3 x 4
 ##    name    min    max length
@@ -132,7 +128,6 @@ concentration <span class="op">%&gt;%</span><span class="st"> </span><span class
 ## 3  time 993060 993060      1</code></pre>
 <p>We can also use the special internal variable ‘step’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">ni =</span> step <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw">between</span>(step, <span class="dv">30</span>, <span class="dv">100</span>))</code></pre></div>
-<pre><code>## Joining, by = &quot;.variable_&quot;</code></pre>
 <pre><code>## [1] &quot;filtered dimension summary: &quot;
 ## # A tibble: 3 x 4
 ##    name    min    max length
@@ -145,9 +140,9 @@ concentration <span class="op">%&gt;%</span><span class="st"> </span><span class
 <h2>Data extraction</h2>
 <p>How to use these idioms to extract actual data?</p>
 <p>We can now exercise these variable choice and dimension filters to return actual data, either in by slicing out a “slab” in array-form, or as a data frame.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hf &lt;-<span class="st"> </span>concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">ni =</span> step <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw">between</span>(step, <span class="dv">30</span>, <span class="dv">100</span>))</code></pre></div>
-<pre><code>## Joining, by = &quot;.variable_&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## as an array
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hf &lt;-<span class="st"> </span>concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">ni =</span> step <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw">between</span>(step, <span class="dv">30</span>, <span class="dv">100</span>))
+
+## as an array
 arr &lt;-<span class="st"> </span>hf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_slice</span>()
 <span class="kw">str</span>(arr)</code></pre></div>
 <pre><code>##  int [1:19, 1:71] NA NA NA NA NA NA NA NA NA NA ...</code></pre>
@@ -164,9 +159,8 @@ arr &lt;-<span class="st"> </span>hf <span class="op">%&gt;%</span><span class="
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## this is a big file
 <span class="kw">tidync</span>(romsfile)</code></pre></div>
 <pre><code>## Variables: AKs, (AKt, AKv, Akt_bak, Akv_bak, Cs_r, Cs_w, FSobc_in, FSobc_out, Falpha, Fbeta, Fgamma, Hsbl, M2nudg, M2obc_in, M2obc_out, M3nudg, M3obc_in, M3obc_out, Tcline, Tnudg, Tobc_in, Tobc_out, Vstretching, Vtransform, Znudg, Zob, Zos, angle, bustr, bvstr, dstart, dt, dtfast, el, f, gamma2, h, hc, lat_psi, lat_rho, lat_u, lat_v, lon_psi, lon_rho, lon_u, lon_v, mask_psi, mask_rho, mask_u, mask_v, nHIS, nRST, ndefHIS, ndtfast, nl_tnu2, nl_visc2, ntimes, pm, pn, rdrg, rdrg2, rho, rho0, salt, shflux, spherical, ssflux, sustr, svstr, swrad, temp, theta_b, theta_s, u, ubar, v, vbar, w, xl, zeta, zice) 
-## Dimensions:</code></pre>
-<pre><code>## Joining, by = &quot;.dimension_&quot;</code></pre>
-<pre><code>## # A tibble: 4 x 5
+## Dimensions: 
+## # A tibble: 4 x 5
 ##   variable_name .variable_ .dimension_ dimension_name dimension_length
 ##           &lt;chr&gt;      &lt;dbl&gt;       &lt;int&gt;          &lt;chr&gt;            &lt;int&gt;
 ## 1           AKs          0           3         xi_rho             1443
@@ -175,9 +169,8 @@ arr &lt;-<span class="st"> </span>hf <span class="op">%&gt;%</span><span class="
 ## 4           AKs          0           0     ocean_time               31</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tidync</span>(romsfile) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(temp)</code></pre></div>
 <pre><code>## Variables: temp, (AKs, AKt, AKv, Akt_bak, Akv_bak, Cs_r, Cs_w, FSobc_in, FSobc_out, Falpha, Fbeta, Fgamma, Hsbl, M2nudg, M2obc_in, M2obc_out, M3nudg, M3obc_in, M3obc_out, Tcline, Tnudg, Tobc_in, Tobc_out, Vstretching, Vtransform, Znudg, Zob, Zos, angle, bustr, bvstr, dstart, dt, dtfast, el, f, gamma2, h, hc, lat_psi, lat_rho, lat_u, lat_v, lon_psi, lon_rho, lon_u, lon_v, mask_psi, mask_rho, mask_u, mask_v, nHIS, nRST, ndefHIS, ndtfast, nl_tnu2, nl_visc2, ntimes, pm, pn, rdrg, rdrg2, rho, rho0, salt, shflux, spherical, ssflux, sustr, svstr, swrad, theta_b, theta_s, u, ubar, v, vbar, w, xl, zeta, zice) 
-## Dimensions:</code></pre>
-<pre><code>## Joining, by = &quot;.dimension_&quot;</code></pre>
-<pre><code>## # A tibble: 4 x 5
+## Dimensions: 
+## # A tibble: 4 x 5
 ##   variable_name .variable_ .dimension_ dimension_name dimension_length
 ##           &lt;chr&gt;      &lt;dbl&gt;       &lt;int&gt;          &lt;chr&gt;            &lt;int&gt;
 ## 1          temp         74           3         xi_rho             1443
@@ -185,7 +178,6 @@ arr &lt;-<span class="st"> </span>hf <span class="op">%&gt;%</span><span class="
 ## 3          temp         74           5          s_rho               31
 ## 4          temp         74           0     ocean_time               31</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tidync</span>(romsfile) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>()</code></pre></div>
-<pre><code>## Joining, by = &quot;.variable_&quot;</code></pre>
 <pre><code>## [1] &quot;filtered dimension summary: &quot;
 ## # A tibble: 4 x 4
 ##         name        min        max length
@@ -196,7 +188,6 @@ arr &lt;-<span class="st"> </span>hf <span class="op">%&gt;%</span><span class="
 ## 4 ocean_time 1009756800 1012348800     31</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(tab &lt;-<span class="st"> </span><span class="kw">tidync</span>(romsfile) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(temp) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">hyper_tibble</span>(<span class="dt">xi_rho =</span> step <span class="op">&gt;</span><span class="st"> </span><span class="dv">1000</span>, <span class="dt">s_rho =</span> s_rho <span class="op">&gt;</span><span class="st"> </span><span class="op">-</span><span class="fl">0.5</span>, <span class="dt">ocean_time =</span> step <span class="op">==</span><span class="st"> </span><span class="dv">1</span>))</code></pre></div>
-<pre><code>## Joining, by = &quot;.variable_&quot;</code></pre>
 <pre><code>## # A tibble: 2,604,840 x 5
 ##     temp xi_rho eta_rho      s_rho ocean_time
 ##    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
@@ -217,7 +208,6 @@ arr &lt;-<span class="st"> </span>hf <span class="op">%&gt;%</span><span class="
 <p>Now for a different orientation, this time with only one longitude slice. This example really needs to map on the actual geographic depth here, so it will need to be points or a mesh, or perform resampling on a grid.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(tab &lt;-<span class="st"> </span><span class="kw">tidync</span>(romsfile) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(temp) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">hyper_tibble</span>(<span class="dt">xi_rho =</span> step <span class="op">==</span><span class="st"> </span><span class="dv">1200</span>,  <span class="dt">ocean_time =</span> step <span class="op">&lt;</span><span class="st"> </span><span class="dv">12</span>))</code></pre></div>
-<pre><code>## Joining, by = &quot;.variable_&quot;</code></pre>
 <pre><code>## # A tibble: 133,672 x 5
 ##     temp xi_rho eta_rho     s_rho ocean_time
 ##    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;

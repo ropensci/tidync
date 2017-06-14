@@ -40,7 +40,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-gris/tidync">
+  <a href="https://github.com/hypertidy/tidync">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -108,7 +108,7 @@
 <div id="development" class="section level1">
 <h1 class="hasAnchor">
 <a href="#development" class="anchor"></a>Development</h1>
-<p>Wishlist. Submit your own to the <a href="https://github.com/r-gris/tidync">Issues tab</a></p>
+<p>Wishlist. Submit your own to the <a href="https://github.com/hypertidy/tidync">Issues tab</a></p>
 <ul>
 <li>install useful example files, and steps to download good files</li>
 <li>figure out whether “activate” is the right function, how to use that name (sorry Thomas)</li>
@@ -117,7 +117,7 @@
 <li>delayed extraction to show the tibble you would get after collect()</li>
 <li>consider better function names like <code>hyper_df</code>, <code>hyper_dbl</code> and <code>hyper_int</code> (differentiate scaled and unscaled?)</li>
 </ul>
-<p>Support for tbl_cube is in bare-bones form</p>
+<p>Support for tbl_cube is in bare-bones form. See here for an example: <a href="http://rpubs.com/cyclemumner/281801" class="uri">http://rpubs.com/cyclemumner/281801</a></p>
 <pre><code>f &lt;- "eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/avhrr-only-v2.19810901.nc"
 tidync(f) %&gt;% hyper_tbl_cube(lat = lat &gt; -30)
 Source: local array [691,200 x 4]
@@ -139,23 +139,23 @@ M: anom [dbl]</code></pre>
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install tidync from github with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"r-gris/tidync"</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"hypertidy/tidync"</span>)</code></pre></div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
 <p>This is a basic example which shows you how to connect to a file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"unidata"</span>, <span class="st">"test_hgroups.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="st">"S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
 <span class="kw">library</span>(tidync)
 <span class="kw"><a href="reference/tidync.html">tidync</a></span>(file) 
-<span class="co">#&gt; Variables: UTC_time, (mozaic_flight_2012030403540535_ascent/air_press, mozaic_flight_2012030403540535_ascent/CO, mozaic_flight_2012030403540535_ascent/O3, mozaic_flight_2012030403540535_ascent/altitude, mozaic_flight_2012030403540535_ascent/lat, mozaic_flight_2012030403540535_ascent/lon, mozaic_flight_2012030321335035_descent/CO, mozaic_flight_2012030321335035_descent/O3, mozaic_flight_2012030321335035_descent/altitude, mozaic_flight_2012030321335035_descent/UTC_time, mozaic_flight_2012030321335035_descent/lat, mozaic_flight_2012030321335035_descent/lon, mozaic_flight_2012030403540535_descent/CO, mozaic_flight_2012030403540535_descent/O3, mozaic_flight_2012030403540535_descent/altitude, mozaic_flight_2012030403540535_descent/UTC_time, mozaic_flight_2012030403540535_descent/lat, mozaic_flight_2012030403540535_descent/lon, mozaic_flight_2012030412545335_ascent/CO, mozaic_flight_2012030412545335_ascent/O3, mozaic_flight_2012030412545335_ascent/altitude, mozaic_flight_2012030412545335_ascent/UTC_time, mozaic_flight_2012030412545335_ascent/lat, mozaic_flight_2012030412545335_ascent/lon, mozaic_flight_2012030419144751_ascent/CO, mozaic_flight_2012030419144751_ascent/O3, mozaic_flight_2012030419144751_ascent/altitude, mozaic_flight_2012030419144751_ascent/UTC_time, mozaic_flight_2012030419144751_ascent/lat, mozaic_flight_2012030419144751_ascent/lon, mozaic_flight_2012030319051051_descent/CO, mozaic_flight_2012030319051051_descent/O3, mozaic_flight_2012030319051051_descent/altitude, mozaic_flight_2012030319051051_descent/UTC_time, mozaic_flight_2012030319051051_descent/lat, mozaic_flight_2012030319051051_descent/lon, mozaic_flight_2012030421382353_ascent/CO, mozaic_flight_2012030421382353_ascent/O3, mozaic_flight_2012030421382353_ascent/altitude, mozaic_flight_2012030421382353_ascent/UTC_time, mozaic_flight_2012030421382353_ascent/lat, mozaic_flight_2012030421382353_ascent/lon) </span>
+<span class="co">#&gt; Variables: chlor_a, (palette) </span>
 <span class="co">#&gt; Dimensions: </span>
 <span class="co">#&gt; # A tibble: 2 x 5</span>
 <span class="co">#&gt;   variable_name .variable_ .dimension_ dimension_name dimension_length</span>
 <span class="co">#&gt;           &lt;chr&gt;      &lt;dbl&gt;       &lt;int&gt;          &lt;chr&gt;            &lt;int&gt;</span>
-<span class="co">#&gt; 1      UTC_time          0           0         recNum               74</span>
-<span class="co">#&gt; 2      UTC_time          0           0         recNum               74</span></code></pre></div>
-<p>See this article for more: <a href="https://r-gris.github.io/tidync/articles/static-vignettes/tidync-examples.html" class="uri">https://r-gris.github.io/tidync/articles/static-vignettes/tidync-examples.html</a></p>
+<span class="co">#&gt; 1       chlor_a          0           1            lon             4320</span>
+<span class="co">#&gt; 2       chlor_a          0           0            lat             2160</span></code></pre></div>
+<p>See this article for more: <a href="https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html" class="uri">https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html</a></p>
 <p>Stay tuned.</p>
 </div>
 <div id="code-of-conduct" class="section level2">
@@ -170,9 +170,9 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/r-gris/tidync">https://​github.com/​r-gris/​tidync</a>
+<li>Browse source code at <br><a href="https://github.com/hypertidy/tidync">https://​github.com/​hypertidy/​tidync</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/r-gris/tidync/issues">https://​github.com/​r-gris/​tidync/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/r-gris/hypertidy/issues">https://​github.com/​r-gris/​hypertidy/​issues</a>
 </li>
 </ul>
 <h2>License</h2>
@@ -184,8 +184,8 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
 </ul>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/r-gris/tidync"><img src="https://travis-ci.org/r-gris/tidync.svg?branch=master" alt="Travis-CI Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/r-gris/tidync"><img src="https://ci.appveyor.com/api/projects/status/github/r-gris/tidync?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
+<li><a href="https://travis-ci.org/hypertidy/tidync"><img src="https://travis-ci.org/hypertidy/tidync.svg?branch=master" alt="Travis-CI Build Status"></a></li>
+<li><a href="https://ci.appveyor.com/project/hypertidy/tidync"><img src="https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
 </ul>
 </div>
 

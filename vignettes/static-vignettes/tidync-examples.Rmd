@@ -17,7 +17,7 @@ vignette: >
 Find an arbitrary NetCDF file. 
 
 ```{r}
-f <- file.path(getOption("default.datadir"), "data/ftp.ifremer.fr/ifremer/cersat/products/gridded/psi-concentration/data/antarctic/daily/netcdf/2013/20130415.nc")
+f <- file.path("/rdsi/PRIVATE/raad", "data/ftp.ifremer.fr/ifremer/cersat/products/gridded/psi-concentration/data/antarctic/daily/netcdf/2013/20130415.nc")
 ```
 
 NetCDF is a very widely use file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
