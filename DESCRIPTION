@@ -32,4 +32,4 @@ Remotes: r-gris/activate, hypertidy/ncdump
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/hypertidy/tidync
-BugReports: https://github.com/r-gris/hypertidy/issues
+BugReports: https://github.com/hypertidy/tidync/issues
