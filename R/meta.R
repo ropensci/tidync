@@ -22,7 +22,7 @@ var_names.character <- function(x, ...) {
 #' @export
 #' @name var_names
 var_names.tidync <- function(x, ...) {
-  x$variable$name
+  x$shape$variable
 }
 
 #' Dimension names

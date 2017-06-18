@@ -10,13 +10,13 @@
 \alias{tidyfile.character}
 \title{Tidy file collection}
 \usage{
-tidyfile(x, all = TRUE, ...)
+tidyfile(x, all = FALSE, ...)
 
-\method{tidyfile}{data.frame}(x, all = TRUE, ...)
+\method{tidyfile}{data.frame}(x, all = FALSE, ...)
 
-\method{tidyfile}{raadfiles}(x, all = TRUE, ...)
+\method{tidyfile}{raadfiles}(x, all = FALSE, ...)
 
-\method{tidyfile}{character}(x, all = TRUE, ...)
+\method{tidyfile}{character}(x, all = FALSE, ...)
 }
 \arguments{
 \item{x}{raadfiles, data frame with "fullname", or character vector}
@@ -29,7 +29,14 @@ tidyfile(x, all = TRUE, ...)
 data frame of filename "fullname" and "meta" in a list-col
 }
 \description{
-Tidy file collection
+Tidy files include a trick to only store the full metadata of the
+first file in the collection. This is extracted using \code{ncmeta::nc_meta} in
+a form that may changed substantially. The current plan is to always
+have an \emph{estimable} set of metadata using the first file as a sample,
+but to be able to scan the full metadata as required.
+This is based on the model where a set of files \emph{do match} or can be expected
+to match in every shape other than the \emph{unlimited} dimension, the one
+that is dispersed over files (usually "time").
 }
 \examples{
 #library(dplyr)

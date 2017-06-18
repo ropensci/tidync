@@ -16,6 +16,7 @@ Imports: activate,
     magrittr,
     ncdf4,
     ncdump (> 0.0.3), 
+    ncmeta, 
     purrr, 
     rlang, 
     tibble
@@ -27,8 +28,8 @@ Suggests: ggplot2,
     raster,
     testthat,
     covr
-Remotes: r-gris/activate, r-gris/ncdump
+Remotes: r-gris/activate, hypertidy/ncdump, hypertidy/ncmeta
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-URL: https://github.com/r-gris/tidync
-BugReports: https://github.com/r-gris/tidync/issues
+URL: https://github.com/hypertidy/tidync
+BugReports: https://github.com/hypertidy/tidync/issues

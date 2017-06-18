@@ -48,9 +48,12 @@ active.hyperfilter <- active.tidync
 #' @name activate
 #' @export
 `active<-.tidync` <- function(x, value) {
-  vn <- var_names(x)
-  if (!value %in% vn) {
-    stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
+  #vn <- var_names(x)
+  sn <- unique(shapes(x)$shape)
+  if (!value %in% sn) {
+    #stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
+     
+   stop(sprintf('Only possible to activate shapes: %s', paste(sn, collapse = ", ")), call. = FALSE)
   }
   attr(x, 'active') <- value
   x

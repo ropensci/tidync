@@ -15,9 +15,13 @@ tidync <- function(x, ...) {
 #' @name tidync
 #' @export
 tidync.tidyfile <- function(x, ...) {
-  out <- structure(list(file = x, shape = shapes(x$meta[[1]])), class = "tidync")
-  attr(out, "active_shape") <- out$shape$shape[1]
-out
+  meta <- ncmeta::nc_meta(x$fullname[1L])
+  out <- structure(list(file = x, 
+                        shape = shapes(meta), 
+                        dimension = dimensions(meta)),
+                   
+                   class = "tidync")
+  activate(out, shapes(meta)$shape[1])
 }
 #' @name tidync
 #' @export
@@ -57,8 +61,9 @@ tidync.character <- function(x, ...) {
 print.tidync <- function(x, ...) {
   ushapes <- distinct(x$shape, shape) %>% arrange(desc(nchar(shape)))
   nshapes <- nrow(ushapes)
-  cat(sprintf("Shapes (%i): \n", nshapes))
-  active_sh <- attr(x, "active_shape")
+  cat(sprintf("Files (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$fullname), 2), collapse = ", ")))
+  cat(sprintf("Shapes (%i) [ ... ]: \n", nshapes))
+  active_sh <- active(x)
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
     cat(sprintf("[%s]", ushapes$shape[ishape]), ": ")
@@ -67,6 +72,9 @@ print.tidync <- function(x, ...) {
     if ( ushapes$shape[ishape] == active_sh) cat("    **ACTIVE SHAPE**")
     cat("\n")
   }
+  dims <- x$dimension
+  cat(sprintf("Dimensions (%i): \n", nrow(dims)))
+  print(dims)
   invisible(NULL)
 }
 
