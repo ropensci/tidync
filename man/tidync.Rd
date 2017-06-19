@@ -3,10 +3,6 @@
 \name{tidync}
 \alias{tidync}
 \alias{tidync}
-\alias{tidync.tidyfile}
-\alias{tidync}
-\alias{tidync.data.frame}
-\alias{tidync}
 \alias{tidync.character}
 \alias{tidync}
 \alias{print.tidync}
@@ -14,11 +10,7 @@
 \usage{
 tidync(x, ...)
 
-\method{tidync}{tidyfile}(x, ...)
-
-\method{tidync}{data.frame}(x, ...)
-
-\method{tidync}{character}(x, ...)
+\method{tidync}{character}(x, what)
 
 \method{print}{tidync}(x, ...)
 }
@@ -49,4 +41,9 @@ formality around the concept of 'shape', as far as we know.
 
 A dimension may have length zero, but this is a special case for a "measure" dimension, we think. (It
 doesn't mean the product of the dimensions is zero, for example).
+}
+\examples{
+cf <- raadtools::cpolarfiles()
+nc <- tidync(cf$fullname[1])
+print(nc)
 }

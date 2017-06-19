@@ -1,4 +1,3 @@
-
 #' tidy netcdf
 #' 
 #' Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
@@ -12,29 +11,36 @@
 tidync <- function(x, ...) {
   UseMethod("tidync")
 }
+
+#' @examples
+#' cf <- raadtools::cpolarfiles()
+#' nc <- tidync(cf$fullname[1])
+#' print(nc)
 #' @name tidync
 #' @export
-tidync.tidyfile <- function(x, ...) {
-  meta <- ncmeta::nc_meta(x$fullname[1L])
-  out <- structure(list(file = x, 
-                        shape = shapes(meta), 
-                        dimension = dimensions(meta)),
-                   
-                   class = "tidync")
-  activate(out, shapes(meta)$shape[1])
-}
-#' @name tidync
-#' @export
-tidync.data.frame <- function(x, ...) {
-  tidync(tidyfile(x))
-}
-#' @name tidync
-#' @export
-tidync.character <- function(x, ...) {
-  tidync(tidyfile(x))
+tidync.character <- function(x, what) {
+    fexists <- file.exists(x)
+   if (!fexists) warning(sprintf("cannot find file: \n%s", x))
+       meta <- ncmeta::nc_meta(x)
+       out <- structure(list(file = tibble::tibble(dsn = x), 
+                             shape = shapes(meta), 
+                             dimension = dimensions(meta)),
+                        
+                        class = "tidync")
+       ## we can't activate nothing
+       if (nrow(out$shape) < 1) return(out)
+       activate(out, out$shape$shape[1])
 }
 
+#   x <- structure(unclass(ncdump::NetCDF(x)), class = "tidync")
+#   x$variable$shape <- shapes(x)
+#   if (missing(what)) what <- x$variable$name[1L]
+#   activate(x, what)
+# }
+
+
 ## TBD we need
+## support NetCDF, ncdf4, RNetCDF, raster, anything with a file behind it
 #tidync.NetCDF
 #tidync.ncdf4
 # xtractomatic, rerddap?
@@ -61,7 +67,7 @@ tidync.character <- function(x, ...) {
 print.tidync <- function(x, ...) {
   ushapes <- distinct(x$shape, shape) %>% arrange(desc(nchar(shape)))
   nshapes <- nrow(ushapes)
-  cat(sprintf("Files (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$fullname), 2), collapse = ", ")))
+  cat(sprintf("Files (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
   cat(sprintf("Shapes (%i) [ ... ]: \n", nshapes))
   active_sh <- active(x)
   for (ishape in seq_len(nshapes)) {
@@ -78,22 +84,24 @@ print.tidync <- function(x, ...) {
   invisible(NULL)
 }
 
-# cf <- raadtools::cpolarfiles()
-# nc <- tidync(cf)
-# print_(nc)
 
-
-# tidync <- function(x, what) {
-#   ## TODO support NetCDF, ncdf4, RNetCDF, raster, anything with a file behind it
-#   if (!is.character(x)) stop("'x' must be a file")
-#   fexists <- file.exists(x)
-#   if (!fexists) stop(sprintf("cannot find file: \n%s", x))
-#   x <- structure(unclass(ncdump::NetCDF(x)), class = "tidync")
-#   x$variable$shape <- shapes(x)
-#   if (missing(what)) what <- x$variable$name[1L]
-#   activate(x, what)
+# 
+# # @name tidync
+# # @export
+# tidync.tidyfile <- function(x, ...) {
+#   meta <- ncmeta::nc_meta(x$fullname[1L])
+#   out <- structure(list(file = x, 
+#                         shape = shapes(meta), 
+#                         dimension = dimensions(meta)),
+#                    
+#                    class = "tidync")
+#   activate(out, shapes(meta)$shape[1])
 # }
-
+# # @name tidync
+# # @export
+# tidync.data.frame <- function(x, ...) {
+#   tidync(tidyfile(x))
+# }
 
 
 # print.tidync <- function(x, ...) {

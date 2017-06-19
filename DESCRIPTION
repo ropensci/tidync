@@ -1,6 +1,6 @@
 Package: tidync
 Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.0.1
+Version: 0.0.1.9001
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 

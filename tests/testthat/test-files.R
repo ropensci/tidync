@@ -5,7 +5,18 @@ test_that("file not found is friendly", {
   expect_error(tidync(fname), "No such file or directory")
 })
 
+fp <- getOption("default.datadir")
+we_are_raady <- FALSE
+if (!is.null(fp) & file.exists(file.path(fp, "data")))
 test_that("files and sets of files are handled", {
-  fname <- raadtools::sstfiles()$fullname[1]
-  tidync(fname)
-})
+  skip_if_not(we_are_raady)
+  oisst_dayfile <- raadtools::sstfiles()$fullname[1]
+  tidync(oisst_dayfile)
+  oisst_monfile <- raadtools::sstfiles(time.resolution = "monthly")$fullname[1]
+  tidync(oisst_monfile)
+  roms_file <- raadtools::cpolarfiles()$fullname[1]
+  tidync(roms_file)
+  
+  l3_file <- raadtools::ocfiles()$fullname[1]  
+   tidync(l3_file)
+   })

@@ -22,6 +22,7 @@ activate <- function(.data, what) UseMethod("activate")
 #' @name activate
 #' @export
 activate.tidync <- function(.data, what) {
+  if (is.null(what)) return(.data)
   what_name <- deparse(substitute(what))
   if (what_name %in% var_names(.data)) what <- what_name
   active(.data) <- what

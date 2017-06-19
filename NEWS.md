@@ -1,3 +1,7 @@
+# tidync dev
+
+* files without recognizable variables now gracefully handled, with help from ncmeta
+
 # tidync 0.0.1
 
 * imports ncdump > 0.0.3
