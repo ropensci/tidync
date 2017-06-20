@@ -98,17 +98,7 @@ dimension_values.tidync <- function(x) {
   
   
 }
-nc_get <- function(x, v) {
-  UseMethod("nc_get")
-}
-nc_get.character <- function(x, v) {
-  on.exit(RNetCDF::close.nc(con), add = TRUE)
-  con <- RNetCDF::open.nc(x)
-  nc_get(con, v)
-}
-nc_get.NetCDF <- function(x, v) {
-  RNetCDF::var.get.nc(x, v)
-}
+
 grid_dimension <- function(x) UseMethod("grid_dimension")
 grid_dimension.tidync <- function(x) {
   x$grid %>% dplyr::filter(grid == active(x)) %>% 

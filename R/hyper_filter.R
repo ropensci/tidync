@@ -35,12 +35,18 @@ hyper_filter <- function(x, ...) {
 #' @importFrom forcats as_factor
 hyper_filter.tidync <- function(x, ...) {
   
-  dimvals <- dimension_values(x) #%>% 
-  dimvals$step <- unlist(lapply(split(dimvals, forcats::as_factor(dimvals$name)), function(x) seq_len(nrow(x))))
-  trans <-  split(dimvals, forcats::as_factor(dimvals$name)) 
-  
-  ## hack attack
-  for (i in seq_along(trans)) names(trans[[i]]) <- gsub("^vals$", trans[[i]]$name[1], names(trans[[i]]))
+  dims <- x$grid %>% filter(grid == active(x)) %>% 
+    inner_join(x$variable, c("variable" = "name")) %>%
+    distinct(dimids) %>% rename(id = dimids) %>% 
+   inner_join(x$dimension) %>% arrange(id)
+  trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$file$dsn, .)), dims$name), as_tibble)
+  for (i in seq_along(dims$name)) {
+    names(trans[[i]]) <- dims$name[i]
+    trans[[i]]$index <- seq_len(nrow(trans[[i]])) 
+    trans[[i]]$id <- dims$id[i]
+    trans[[i]]$name <- dims$name[i]
+    trans[[i]]$filename <- x$file$dsn
+  }
   
   quo_named <- rlang::quos(...)
   if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100'")
@@ -51,7 +57,7 @@ hyper_filter.tidync <- function(x, ...) {
     if (nrow(trans[[iname]]) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 
                                                 iname))
   }
-  trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
+  #trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
   hyper_filter(trans) %>% activate(active(x))
   
 }
@@ -73,12 +79,28 @@ hyper_filter.hyperfilter <- function(x, ...) {
 }
 #' @name hyper_filter
 #' @importFrom dplyr bind_rows funs group_by select summarize_all
+#' @importFrom rlang .data
 #' @export
 print.hyperfilter <- function(x, ...) {
   x <- dplyr::bind_rows(lapply(x,  function(a) dplyr::summarize_all(a %>% 
-                                                                      dplyr::select(-.data$filename, -.data$.dimension_, -.data$id, -.data$step) %>% 
-                                                                      group_by(.data$name), dplyr::funs(min, max, length))))
+            dplyr::select(-.data$filename, -.data$id, -.data$index) %>% 
+            group_by(.data$name), dplyr::funs(min, max, length))))
   print("filtered dimension summary: ")
   print(x)
   invisible(x)
 }
+
+
+nc_get <- function(x, v) {
+  UseMethod("nc_get")
+}
+nc_get.character <- function(x, v) {
+  on.exit(RNetCDF::close.nc(con), add = TRUE)
+  con <- RNetCDF::open.nc(x)
+  nc_get(con, v)
+}
+nc_get.NetCDF <- function(x, v) {
+  RNetCDF::var.get.nc(x, v)
+}
+
+

@@ -1,32 +1,3 @@
-if (FALSE) {
-context("tidync")
-
-
-# export("active<-")
-# export(activate)
-# export(active)
-# export(dim_names)
-# export(dimension_values)
-# export(filtrate)
-# export(hyper_filter)
-# export(hyper_index)
-# export(hyper_slice)
-# export(hyper_tibble)
-# export(var_names)
-# export(variable_dimensions)
-gf <- function()  {
-  files <- raadtools:::.allfilelist()
-  sort(grep("nc$", files, value = TRUE) )
-}
-get_files <- memoise::memoise(gf)
-sample_file <- function() {
-  files <- get_files()
-  #   Error in ncvar_type_to_string(rv$precint) : 
-  #  Error, unrecognized type code of variable supplied: -1 
-  files <- files[-grep("L3BIN", files)]
-  sample(files, 1L)
-}
-
 test_that("tidync works", {
   skip_if_not(we_are_raady())
   afile <- "/rdsi/PRIVATE/raad/data/ftp.aviso.altimetry.fr/global/delayed-time/grids/madt/all-sat-merged/h/2009/dt_global_allsat_madt_h_20090104_20140106.nc"
@@ -53,4 +24,3 @@ test_that("recorded failures", {
   expect_error(PCP %>% hyper_filter(x = x < 30), "object 'x' not found")
   
 })
-}

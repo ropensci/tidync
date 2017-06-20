@@ -23,6 +23,14 @@ hyper_tbl_cube(x, ...)
 
 \item{...}{arguments for \code{hyper_filter}}
 }
+\value{
+tbl_cube
+}
 \description{
 dplyr tbl cube from NetCDF
+}
+\examples{
+ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+tidync(ufile)
+#hyper_tbl_cube(tidync(ufile))
 }
