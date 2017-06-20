@@ -17,3 +17,4 @@ test_that("files and sets of files are handled", {
   l3_file <- raadtools::ocfiles()$fullname[1]  
    tidync(l3_file)
    })
+

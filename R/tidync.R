@@ -70,24 +70,35 @@ print.tidync <- function(x, ...) {
   ushapes <- dplyr::distinct(x$grid, grid) %>% 
     dplyr::arrange(desc(nchar(grid)))
   nshapes <- nrow(ushapes)
-  cat(sprintf("\nFiles (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
+  cat(sprintf("\nData Source (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
   cat(sprintf("\nGrids (%i) [ ... ]: \n\n", nshapes))
   active_sh <- active(x)
-  longest <- sprintf("[%%i]   %%%is", -max(nchar(ushapes$grid)))
+  stop()
+  nms <- if(!is.null(ushapes$grid)) nchar(ushapes$grid) else 0
+  longest <- sprintf("[%%i]   %%%is", -max(nms))
+  estimatebigtime <- structure(x$grid %>% 
+    dplyr::filter(grid == active(x)) %>% 
+    dplyr::inner_join(x$variable, c("variable" = "name")) %>% 
+    dplyr::distinct(dimids) %>% 
+    dplyr::inner_join(x$dimension, c("dimids" = "id")) %>% 
+    dplyr::pull(length) %>% prod() %>% as.integer(), class = "bytes")
+  estimatebigtime <- print_bytes(estimatebigtime)
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
 
     cat(paste((x$grid %>% inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
-    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID**")
+    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID**", estimatebigtime, "double")
     cat("\n")
   }
   dims <- x$dimension
   cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
-  dimension_print <- 
+  dimension_print <- if (nrow(dims) > 0) {
     format(dims %>% dplyr::mutate(dimension = paste0("D", id)) %>% 
              dplyr::select(dimension, id, name, length, unlim), n = Inf)
-    
+  } else {
+  ""
+}
   #dp <- gsub("^ ?[0-9]?", "", dimension_print)  
   #dp <- gsub("^  ", "", dp)
   
