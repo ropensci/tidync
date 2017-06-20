@@ -73,7 +73,6 @@ print.tidync <- function(x, ...) {
   cat(sprintf("\nData Source (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
   cat(sprintf("\nGrids (%i) [ ... ]: \n\n", nshapes))
   active_sh <- active(x)
-  stop()
   nms <- if(!is.null(ushapes$grid)) nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
   estimatebigtime <- structure(x$grid %>% 
