@@ -75,13 +75,13 @@ print.tidync <- function(x, ...) {
   active_sh <- active(x)
   nms <- if(!is.null(ushapes$grid)) nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
-  estimatebigtime <- structure(x$grid %>% 
+  estimatebigtime <- x$grid %>% 
     dplyr::filter(grid == active(x)) %>% 
     dplyr::inner_join(x$variable, c("variable" = "name")) %>% 
     dplyr::distinct(dimids) %>% 
-    dplyr::inner_join(x$dimension, c("dimids" = "id")) %>% 
-    dplyr::pull(length) %>% prod() %>% as.integer(), class = "bytes")
-  estimatebigtime <- print_bytes(estimatebigtime)
+    dplyr::inner_join(x$dimension, c("dimids" = "id"))
+
+  estimatebigtime <- print_bytes(prod(estimatebigtime$length))
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
