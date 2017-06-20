@@ -10,7 +10,7 @@
 # }
 
 shapes <- function(x) UseMethod("shapes")
-shapes.tidync <- function(x) x$shape
+shapes.tidync <- function(x) x$grid
 shapes.list <- function(x) {
   if (nrow(x$variable) < 1 & nrow(x$dimension) < 1) return(tibble())
   shape_instances_byvar <- x$variable %>% 
@@ -22,6 +22,8 @@ shapes.list <- function(x) {
     arrange(desc(nchar(shape)), shape, variable)
   ## catch the NA shapes (the scalars) and set to "-"
   out$shape[is.na(out$shape) | out$shape == "NA"] <- "-"
+  out$grid <- out$shape
+  out$shape <- NULL
   out
   }
 

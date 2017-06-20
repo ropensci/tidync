@@ -23,13 +23,14 @@ tidync.character <- function(x, what) {
    if (!fexists) warning(sprintf("cannot find file: \n%s", x))
        meta <- ncmeta::nc_meta(x)
        out <- structure(list(file = tibble::tibble(dsn = x), 
-                             shape = shapes(meta), 
+                             grid = shapes(meta) , 
                              dimension = dimensions(meta)),
                         
                         class = "tidync")
        ## we can't activate nothing
-       if (nrow(out$shape) < 1) return(out)
-       activate(out, out$shape$shape[1])
+       if (nrow(out$grid) < 1) return(out)
+       if (nrow(out$grid > 0L)) out <- activate(out, out$grid$grid[1])
+  out
 }
 
 #   x <- structure(unclass(ncdump::NetCDF(x)), class = "tidync")
@@ -49,8 +50,8 @@ tidync.character <- function(x, what) {
 #' 
 #' print S3 method
 #' 
-#' Prints a summary of variables and dimensions, organized by their 'shape'. Shape is
-#' an instance of a particular set of dimensions, which can be shared by more than one
+#' Prints a summary of variables and dimensions, organized by their 'shape' - "same shape" means "same grid". 
+#' Shape is an instance of a particular set of dimensions, which can be shared by more than one
 #' variable. This is not the 'rank' of a variable (the number of dimensions) since a single
 #' data set may have many 3D variables composed of different sets of axes/dimensions. There's no
 #' formality around the concept of 'shape', as far as we know. 
@@ -65,17 +66,17 @@ tidync.character <- function(x, what) {
 #' @export
 #' @importFrom dplyr %>% arrange distinct inner_join
 print.tidync <- function(x, ...) {
-  ushapes <- distinct(x$shape, shape) %>% arrange(desc(nchar(shape)))
+  ushapes <- dplyr::distinct(x$grid, grid) %>% dplyr::arrange(desc(nchar(grid)))
   nshapes <- nrow(ushapes)
   cat(sprintf("Files (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
-  cat(sprintf("Shapes (%i) [ ... ]: \n", nshapes))
+  cat(sprintf("Grids (%i) [ ... ]: \n", nshapes))
   active_sh <- active(x)
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
-    cat(sprintf("[%s]", ushapes$shape[ishape]), ": ")
+    cat(sprintf("[%s]", ushapes$grid[ishape]), ": ")
 
-    cat(paste((x$shape %>% inner_join(ushapes[ishape, ], "shape"))$variable, collapse = ", "))
-    if ( ushapes$shape[ishape] == active_sh) cat("    **ACTIVE SHAPE**")
+    cat(paste((x$grid %>% inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
+    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID**")
     cat("\n")
   }
   dims <- x$dimension

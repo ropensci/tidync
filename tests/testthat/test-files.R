@@ -7,7 +7,7 @@ test_that("file not found is friendly", {
 
 fp <- getOption("default.datadir")
 we_are_raady <- FALSE
-if (!is.null(fp) & file.exists(file.path(fp, "data")))
+if (!is.null(fp) & file.exists(file.path(fp, "data"))) we_are_raady <- TRUE
 test_that("files and sets of files are handled", {
   skip_if_not(we_are_raady)
   oisst_dayfile <- raadtools::sstfiles()$fullname[1]

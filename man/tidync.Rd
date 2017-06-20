@@ -33,8 +33,8 @@ print S3 method
 Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
 haven't explored HDF5 per se, so any feedback is appreciated.
 
-Prints a summary of variables and dimensions, organized by their 'shape'. Shape is
-an instance of a particular set of dimensions, which can be shared by more than one
+Prints a summary of variables and dimensions, organized by their 'shape' - "same shape" means "same grid".
+Shape is an instance of a particular set of dimensions, which can be shared by more than one
 variable. This is not the 'rank' of a variable (the number of dimensions) since a single
 data set may have many 3D variables composed of different sets of axes/dimensions. There's no
 formality around the concept of 'shape', as far as we know.
