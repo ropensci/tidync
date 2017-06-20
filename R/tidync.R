@@ -30,7 +30,8 @@ tidync.character <- function(x, what) {
                         class = "tidync")
        ## we can't activate nothing
        if (nrow(out$grid) < 1) return(out)
-       if (nrow(out$grid > 0L)) out <- activate(out, out$grid$grid[1])
+       if (missing(what)) what <- 1
+       out <- activate(out, what)
   out
 }
 
@@ -71,7 +72,7 @@ print.tidync <- function(x, ...) {
     dplyr::arrange(desc(nchar(grid)))
   nshapes <- nrow(ushapes)
   cat(sprintf("\nData Source (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
-  cat(sprintf("\nGrids (%i) [ ... ]: \n\n", nshapes))
+  cat(sprintf("\nGrids (%i) <dimension family> : <associated variables> \n\n", nshapes))
   active_sh <- active(x)
   nms <- if(!is.null(ushapes$grid)) nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
@@ -90,7 +91,8 @@ print.tidync <- function(x, ...) {
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
 
     cat(paste((x$grid %>% inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
-    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", estimatebigtime, " values per variable)")
+    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", estimatebigtime, 
+                                                sprintf(" value%s per variable)", ifelse(estimatebigtime > 1, "s", "")))
     cat("\n")
   }
   dims <- x$dimension

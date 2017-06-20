@@ -3,10 +3,13 @@
 #' @param x filename
 #' @param ... arguments for `hyper_filter`
 #'
-#' @return
+#' @return tbl_cube
 #' @export
 #'
 #' @examples
+#' ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+#' tidync(ufile)
+#' #hyper_tbl_cube(tidync(ufile))
 hyper_tbl_cube <- function(x, ...) {
   UseMethod("hyper_tbl_cube")
 }

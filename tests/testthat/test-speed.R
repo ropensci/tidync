@@ -1,5 +1,5 @@
-
-context("speed")
+if (FALSE) {
+  context("speed")
 library(raster)
 u <- "ftp://ftp.cdc.noaa.gov/Datasets/noaa.oisst.v2/sst.wkmean.1990-present.nc"
 tfile <- file.path(tempdir(), basename(u))
@@ -66,3 +66,4 @@ test_that("tidync is faster", {
   
   
 })
+}

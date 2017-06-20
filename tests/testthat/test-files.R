@@ -5,8 +5,8 @@ test_that("file not found is friendly", {
   expect_error(tidync(fname), "No such file or directory")
 })
 
-test_that("files and sets of files are handled", {
-  skip_if_not(we_are_raady())
+test_that("files and bad files are handled", {
+  #skip_if_not(we_are_raady())
   oisst_dayfile <- raadtools::sstfiles()$fullname[1]
   tidync(oisst_dayfile)
   oisst_monfile <- raadtools::sstfiles(time.resolution = "monthly")$fullname[1]

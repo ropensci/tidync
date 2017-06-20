@@ -22,9 +22,26 @@ activate <- function(.data, what) UseMethod("activate")
 #' @name activate
 #' @export
 activate.tidync <- function(.data, what) {
-  if (is.null(what)) return(.data)
+  if (missing(what)) return(.data)
   what_name <- deparse(substitute(what))
-  if (what_name %in% var_names(.data)) what <- what_name
+  #print(what_name)
+  #if (what_name %in% var_names(.data)) what <- what_name
+  if (what_name %in% .data$grid$variable) {
+    ## use the variable to find the grid
+    what <- .data$grid$grid[.data$grid$variable == what_name]
+  } else if (what %in% .data$grid$variable){
+    what <- .data$grid$grid[.data$grid$variable == what]
+  }
+
+  if (is.numeric(what)) {
+    ## this pattern is copied from print
+    ushapes <- dplyr::distinct(.data$grid, grid) %>% 
+      dplyr::arrange(desc(nchar(grid)))
+    ## otherwise pick the what-th grid
+    stopifnot(what >= 1 && what <= nrow(.data$grid))
+    what <- ushapes$grid[as.integer(what)]
+  
+  }
   active(.data) <- what
   .data
 }
@@ -54,7 +71,7 @@ active.hyperfilter <- active.tidync
   if (!value %in% sn) {
     #stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
      
-   stop(sprintf('Only possible to activate shapes: %s', paste(sn, collapse = ", ")), call. = FALSE)
+   stop(sprintf('Only possible to activate grids by name (or number, or by nominated variable): \n%s', paste(sn, collapse = "\n")), call. = FALSE)
   }
   attr(x, 'active') <- value
   x
