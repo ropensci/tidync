@@ -79,9 +79,13 @@ dimension_values.character <- function(x) {
 #' @importFrom rlang .data
 #' @export
 dimension_values.tidync <- function(x) {
-  dimids <- x$variable[x$variable$name == active(x), ]
+  dimids <- x$grid[x$grid$grid == active(x), ] %>% inner_join(x$variable, c("variable" = "name"))
   #dplyr::select(.data$name, .data$.variable_) %>% 
-  dimids <- dimids[, c("name", ".variable_")]
+  dimids <- dimids %>% inner_join(x$dimension,c("dimids" = "id")) %>% 
+    arrange(dimids)
+  
+  purrr::map(setNames(purrr::map(dimids$name, ~nc_get(x$file$dsn, .)), dimids$name), as_tibble)
+  
   dimids <- dimids %>%  dplyr::inner_join(x$vardim, ".variable_") %>% 
     dplyr::select(.data$.dimension_)
   
@@ -94,7 +98,17 @@ dimension_values.tidync <- function(x) {
   
   
 }
-
+nc_get <- function(x, v) {
+  UseMethod("nc_get")
+}
+nc_get.character <- function(x, v) {
+  on.exit(RNetCDF::close.nc(con), add = TRUE)
+  con <- RNetCDF::open.nc(x)
+  nc_get(con, v)
+}
+nc_get.NetCDF <- function(x, v) {
+  RNetCDF::var.get.nc(x, v)
+}
 grid_dimension <- function(x) UseMethod("grid_dimension")
 grid_dimension.tidync <- function(x) {
   x$grid %>% dplyr::filter(grid == active(x)) %>% 

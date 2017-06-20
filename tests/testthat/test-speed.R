@@ -1,8 +1,9 @@
-if (FALSE) {
+
   context("speed")
 library(raster)
 u <- "ftp://ftp.cdc.noaa.gov/Datasets/noaa.oisst.v2/sst.wkmean.1990-present.nc"
-tfile <- file.path(tempdir(), basename(u))
+#tfile <- file.path(tempdir(), basename(u))
+tfile <-  "/mnt/temp/Rtmprdlg8R/sst.wkmean.1990-present.nc"
 if (!file.exists(tfile)) curl::curl_download(u, tfile, mode = "wb")
 
 
@@ -42,6 +43,7 @@ hyper_read  <- function(filename, ...) {
 }
 xyex <- extent(100, 160, -30, 60)
 library(dplyr)
+tidync(tfile) %>% hyper_filter()
 test_that("tidync is faster", {
 
   ## all xy, few time slices
