@@ -67,22 +67,35 @@ tidync.character <- function(x, what) {
 #' @export
 #' @importFrom dplyr %>% arrange distinct inner_join
 print.tidync <- function(x, ...) {
-  ushapes <- dplyr::distinct(x$grid, grid) %>% dplyr::arrange(desc(nchar(grid)))
+  ushapes <- dplyr::distinct(x$grid, grid) %>% 
+    dplyr::arrange(desc(nchar(grid)))
   nshapes <- nrow(ushapes)
-  cat(sprintf("Files (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
-  cat(sprintf("Grids (%i) [ ... ]: \n", nshapes))
+  cat(sprintf("\nFiles (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
+  cat(sprintf("\nGrids (%i) [ ... ]: \n\n", nshapes))
   active_sh <- active(x)
+  longest <- sprintf("[%%i]   %%%is", -max(nchar(ushapes$grid)))
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
-    cat(sprintf("[%s]", ushapes$grid[ishape]), ": ")
+    cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
 
     cat(paste((x$grid %>% inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
     if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID**")
     cat("\n")
   }
   dims <- x$dimension
-  cat(sprintf("Dimensions (%i): \n", nrow(dims)))
-  print(dims)
+  cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
+  dimension_print <- 
+    format(dims %>% dplyr::mutate(dimension = paste0("D", id)) %>% 
+             dplyr::select(dimension, id, name, length, unlim), n = Inf)
+    
+  #dp <- gsub("^ ?[0-9]?", "", dimension_print)  
+  #dp <- gsub("^  ", "", dp)
+  
+ dp <- dimension_print[-grep("# A tibble:", dimension_print)]
+ cat(" ", "\n")
+  for (i in seq_along(dp)) cat(dp[i], "\n")
+  #rownames(dims) <- paste0("D", dims$id)
+  #print(dims)
   invisible(NULL)
 }
 
