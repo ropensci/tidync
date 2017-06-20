@@ -25,9 +25,8 @@ sample_file <- function() {
   sample(files, 1L)
 }
 
-ipackages <- as.data.frame(utils::installed.packages() , stringsAsFactors = FALSE)
 test_that("tidync works", {
-  skip_if_not("raadtools" %in% ipackages$Package)
+  skip_if_not(we_are_raady())
   afile <- "/rdsi/PRIVATE/raad/data/ftp.aviso.altimetry.fr/global/delayed-time/grids/madt/all-sat-merged/h/2009/dt_global_allsat_madt_h_20090104_20140106.nc"
   afilter <- tidync(afile)  %>% expect_s3_class("tidync") %>% 
     hyper_filter() %>% expect_s3_class("hyperfilter")  

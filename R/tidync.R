@@ -24,7 +24,8 @@ tidync.character <- function(x, what) {
        meta <- ncmeta::nc_meta(x)
        out <- structure(list(file = tibble::tibble(dsn = x), 
                              grid = shapes(meta) , 
-                             dimension = dimensions(meta)),
+                             dimension = dimensions(meta), 
+                             variable = meta$variable),
                         
                         class = "tidync")
        ## we can't activate nothing

@@ -95,6 +95,11 @@ dimension_values.tidync <- function(x) {
   
 }
 
+grid_dimension <- function(x) UseMethod("grid_dimension")
+grid_dimension.tidync <- function(x) {
+  x$grid %>% dplyr::filter(grid == active(x)) %>% 
+    inner_join(x$variable, c("variable" = "name"))
+}
 #' Dimensions of a variable
 #'
 #' @param x NetCDF object
