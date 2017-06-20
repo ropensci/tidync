@@ -81,13 +81,16 @@ print.tidync <- function(x, ...) {
     dplyr::distinct(dimids) %>% 
     dplyr::inner_join(x$dimension, c("dimids" = "id"))
 
-  estimatebigtime <- print_bytes(prod(estimatebigtime$length))
+  ## hack to assume always double numeric 
+  ## TODO because could be integer after load
+  estimatebigtime <- format(prod(estimatebigtime$length))
+  ##print_bytes(            * 8)
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
 
     cat(paste((x$grid %>% inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
-    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID**", estimatebigtime, "double")
+    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", estimatebigtime, " values per variable)")
     cat("\n")
   }
   dims <- x$dimension
