@@ -67,7 +67,7 @@ active.hyperfilter <- active.tidync
 #' @export
 `active<-.tidync` <- function(x, value) {
   #vn <- var_names(x)
-  sn <- unique(shapes(x)$grid)
+  sn <- unique(x$grid$grid)
   if (!value %in% sn) {
     #stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
      

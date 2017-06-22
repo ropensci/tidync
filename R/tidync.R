@@ -18,18 +18,20 @@ tidync <- function(x, ...) {
 #' print(nc)
 #' @name tidync
 #' @export
+#' @importFrom ncmeta nc_meta
 tidync.character <- function(x, what) {
     fexists <- file.exists(x)
-   if (!fexists) warning(sprintf("cannot find file: \n%s", x))
+   if (!fexists) warning(sprintf("cannot connect: \n%s", x))
        meta <- ncmeta::nc_meta(x)
-       out <- structure(list(file = tibble::tibble(dsn = x), 
-                             grid = shapes(meta) , 
-                             dimension = dimensions(meta), 
+       out <- structure(list(source = meta$source, 
+                             axis = meta$axis, 
+                             grid = meta$grid,
+                             dimension = meta$dimension, 
                              variable = meta$variable),
                         
                         class = "tidync")
        ## we can't activate nothing
-       if (nrow(out$grid) < 1) return(out)
+       if (nrow(out$axis) < 1) return(out)
        if (missing(what)) what <- 1
        out <- activate(out, what)
   out
@@ -71,16 +73,18 @@ print.tidync <- function(x, ...) {
   ushapes <- dplyr::distinct(x$grid, grid) %>% 
     dplyr::arrange(desc(nchar(grid)))
   nshapes <- nrow(ushapes)
-  cat(sprintf("\nData Source (%i): %s ...\n", nrow(x$file), paste(head(basename(x$file$dsn), 2), collapse = ", ")))
+  cat(sprintf("\nData Source (%i): %s ...\n", 
+              nrow(x$source), 
+              paste(head(basename(x$source$source), 2), collapse = ", ")))
   cat(sprintf("\nGrids (%i) <dimension family> : <associated variables> \n\n", nshapes))
   active_sh <- active(x)
   nms <- if(!is.null(ushapes$grid)) nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
   estimatebigtime <- x$grid %>% 
     dplyr::filter(grid == active(x)) %>% 
-    dplyr::inner_join(x$variable, c("variable" = "name")) %>% 
-    dplyr::distinct(dimids) %>% 
-    dplyr::inner_join(x$dimension, c("dimids" = "id"))
+    dplyr::inner_join(x$axis, "variable") %>% 
+    #dplyr::distinct(dimids) %>% 
+    dplyr::inner_join(x$dimension, c("dimension" = "id"))
 
   ## hack to assume always double numeric 
   ## TODO because could be integer after load
@@ -90,7 +94,7 @@ print.tidync <- function(x, ...) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
 
-    cat(paste((x$grid %>% inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
+    cat(paste((x$grid %>% dplyr::inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
     if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", estimatebigtime, 
                                                 sprintf(" value%s per variable)", ifelse(estimatebigtime > 1, "s", "")))
     cat("\n")
