@@ -21,6 +21,7 @@ test_that("recorded failures", {
   (f <- "/rdsi/PRIVATE/raad/data_local/amps/2013021900_WRF_d2_PCP_f009.nc")
   PCP <- tidync(f) %>% activate(PCP)
   PCP %>% hyper_filter()
-  expect_error(PCP %>% hyper_filter(x = x < 30), "object 'x' not found")
-  
+  #expect_error(PCP %>% hyper_filter(x = x < 30), "object 'x' not found")
+ # expect_error(PCP %>% hyper_filter(x = x < 30), "(list) object cannot be coerced to type 'double'")
+  expect_error(PCP %>% hyper_filter(x = x < 30))
 })

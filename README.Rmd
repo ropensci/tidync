@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 # tidync
 
-**NOTE:** this package is development and subject to change. 
+**NOTE:** this package is development and subject to change.  See Limitations below. 
 
 The goal of tidync is to ease exploring the contents of a NetCDF file and constructing efficient queries to extract
 arbitrary hyperslabs. 
@@ -125,6 +125,17 @@ tidync(file)
 See this article for more:  https://r-gris.github.io/tidync/articles/static-vignettes/tidync-examples.html
 
 Stay tuned. 
+
+
+## Limitations
+
+* we can't filter on multidimensional values (yet)
+* compound types are not supported
+* groups are not exposed as entities
+* dims without variables are not handled currently, they should at least work in "index" form
+
+https://github.com/hypertidy/tidync/issues/30
+
 
 ## Terminology
 

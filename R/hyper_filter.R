@@ -105,17 +105,28 @@ print.hyperfilter <- function(x, ...) {
   invisible(summ)
 }
 
-
+#' @importFrom ncdf4 nc_open nc_close ncvar_get
+#' @importFrom RNetCDF open.nc close.nc var.get.nc
 nc_get <- function(x, v) {
   UseMethod("nc_get")
 }
 nc_get.character <- function(x, v) {
   on.exit(RNetCDF::close.nc(con), add = TRUE)
   con <- RNetCDF::open.nc(x)
-  nc_get(con, v)
+  safe_get <- safely(nc_get)
+  val <- safe_get(con, v)
+  if (!is.null(val$result)) return(val$result)
+  on.exit(ncdf4::nc_close(con4), add = TRUE)
+  con4 <- ncdf4::nc_open(x, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
+  val <- safe_get(con4, v)
+  if (!is.null(val$result)) return(val$result) else return(val$error)
+  
 }
 nc_get.NetCDF <- function(x, v) {
   RNetCDF::var.get.nc(x, v)
 }
 
 
+nc_get.ncdf4 <- function(x, v) {
+  ncdf4::ncvar_get(con4, v)
+}
