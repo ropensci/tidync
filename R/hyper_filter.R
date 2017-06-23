@@ -42,6 +42,9 @@ hyper_filter.tidync <- function(x, ...) {
     distinct(name, dimension) %>% 
    arrange(dimension)
 #  print("doom")
+  ## dimensions don't necessarily have variables
+  ## FIXME
+if (!all(dims$name %in% x$variable$name)) warning("dims don't have values...we are going to error...")
   trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$source$source, .)), dims$name), as_tibble)
 #  print("gloom")
   for (i in seq_along(dims$name)) {
