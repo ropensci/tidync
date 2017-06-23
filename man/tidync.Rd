@@ -19,7 +19,7 @@ tidync(x, ...)
 
 \item{...}{reserved}
 
-\item{what}{(optional) character or bare name of variable to \code{activate}}
+\item{what}{(optional) character name of grid (see \code{ncmeta::nc_grids}) or (bare) name of variable (see \code{ncmeta::nc_vars}) or index of grid to \code{activate}}
 
 \item{x}{NetCDF object}
 }
@@ -30,8 +30,10 @@ the first \emph{shape} encountered is  \code{activate}d.
 print S3 method
 }
 \details{
-Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
-haven't explored HDF5 per se, so any feedback is appreciated.
+Any NetCDF with variable arrays should work. Files with compound types are not yet supported and
+should fail gracefully.
+
+We haven't yest explored HDF5 per se, so any feedback is appreciated.
 
 Prints a summary of variables and dimensions, organized by their 'shape' - "same shape" means "same grid".
 Shape is an instance of a particular set of dimensions, which can be shared by more than one

@@ -35,15 +35,19 @@ hyper_filter <- function(x, ...) {
 #' @importFrom forcats as_factor
 hyper_filter.tidync <- function(x, ...) {
   
-  dims <- x$grid %>% filter(grid == active(x)) %>% 
-    inner_join(x$variable, c("variable" = "name")) %>%
-    distinct(dimids) %>% rename(id = dimids) %>% 
-   inner_join(x$dimension) %>% arrange(id)
-  trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$file$dsn, .)), dims$name), as_tibble)
+  dims <- x$grid %>% 
+    filter(grid == active(x)) %>% 
+    inner_join(x$axis, "variable") %>% 
+    inner_join(x$dimension, c("dimension" = "id")) %>% 
+    distinct(name, dimension) %>% 
+   arrange(dimension)
+#  print("doom")
+  trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$source$source, .)), dims$name), as_tibble)
+#  print("gloom")
   for (i in seq_along(dims$name)) {
     names(trans[[i]]) <- dims$name[i]
     trans[[i]]$index <- seq_len(nrow(trans[[i]])) 
-    trans[[i]]$id <- dims$id[i]
+    trans[[i]]$id <- dims$dimension[i]
     trans[[i]]$name <- dims$name[i]
     trans[[i]]$filename <- x$file$dsn
   }
@@ -58,8 +62,10 @@ hyper_filter.tidync <- function(x, ...) {
                                                 iname))
   }
   #trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
-  hyper_filter(trans) %>% activate(active(x))
-  
+  out <- hyper_filter(trans) %>% activate(active(x))
+  ## FIXME: using attributes is a hack
+  attr(out, "source") <- x$source
+  out
 }
 
 #' @name hyper_filter
@@ -82,12 +88,18 @@ hyper_filter.hyperfilter <- function(x, ...) {
 #' @importFrom rlang .data
 #' @export
 print.hyperfilter <- function(x, ...) {
-  x <- dplyr::bind_rows(lapply(x,  function(a) dplyr::summarize_all(a %>% 
-            dplyr::select(-.data$filename, -.data$id, -.data$index) %>% 
-            group_by(.data$name), dplyr::funs(min, max, length))))
-  print("filtered dimension summary: ")
-  print(x)
-  invisible(x)
+  source <- attr(x, "source")
+  ## FIXME: hack on the first source available
+  sourcename <- source$source[1L]
+  summ <- dplyr::bind_rows(
+    lapply(x,  function(a) dplyr::summarize_all(a %>% 
+            dplyr::select(-.data$index, -.data$id) %>% group_by(.data$name)
+            , dplyr::funs(min, max, length)))
+            )
+  print(source)
+  cat("filtered dimension summary: \n")
+  print(summ)
+  invisible(summ)
 }
 
 

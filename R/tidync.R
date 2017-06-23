@@ -3,10 +3,12 @@
 #' Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
 #' the first *shape* encountered is  `activate`d. 
 #' 
-#' Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
-#' haven't explored HDF5 per se, so any feedback is appreciated. 
+#' Any NetCDF with variable arrays should work. Files with compound types are not yet supported and
+#' should fail gracefully. 
+#' 
+#' We haven't yest explored HDF5 per se, so any feedback is appreciated. 
 #' @param x path to a NetCDF file
-#' @param what (optional) character or bare name of variable to `activate`
+#' @param what (optional) character name of grid (see `ncmeta::nc_grids`) or (bare) name of variable (see `ncmeta::nc_vars`) or index of grid to `activate`
 #' @export
 tidync <- function(x, ...) {
   UseMethod("tidync")
