@@ -31,8 +31,9 @@ hyper_index.character <- function(x, varname, ...) {
 hyper_index.hyperfilter <- function(x, ...) {
   bind_rows(lapply(x, 
                    function(sub_trans) tibble::tibble(name = sub_trans$name[1], 
-                                                      start = min(sub_trans$step), 
-                                                      count = length(sub_trans$step), 
-                                                      variable = active(x), 
-                                                      file = sub_trans$filename[1L]))) %>% hyper_index()
+                                                      start = min(sub_trans$index), 
+                                                      count = length(sub_trans$index), 
+                                                      grid = active(x), 
+                                                      file =  attr(x, "source")$source[1]))) %>% 
+              hyper_index()
 }
