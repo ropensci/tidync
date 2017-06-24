@@ -66,8 +66,9 @@ if (!all(dims$name %in% x$variable$name)) warning("dims don't have values...we a
   }
   #trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
   out <- hyper_filter(trans) %>% activate(active(x))
-  ## FIXME: using attributes is a hack
+  ## FIXME: using attributes is a hack  https://github.com/hypertidy/tidync/issues/33
   attr(out, "source") <- x$source
+  attr(out, "grid") <- x$grid
   out
 }
 

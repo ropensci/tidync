@@ -12,9 +12,13 @@ hyper_slice <- function(x, ..., raw_datavals = FALSE) {
 hyper_slice.hyperindex <- function(x, ..., raw_datavals = FALSE) {
   ## FIXME: the change to grid means we get x$grid[1] not variable, we have
   ## to slice over all variables in this space
-  ncdf4::ncvar_get(ncdf4::nc_open(x$file[1]), x$variable[1], 
-                   start = x$start, count = x$count, raw_datavals = raw_datavals)
-}
+  ## https://github.com/hypertidy/tidync/issues/33
+  lapply(x$variable[[1]], function(vara)  
+    ncdf4::ncvar_get(ncdf4::nc_open(x$file[1]), vara, 
+                     start = x$start, count = x$count, 
+                     raw_datavals = raw_datavals)
+  )
+ }
 #' @name hyper_slice
 #' @export
 hyper_slice.hyperfilter <- function(x, ..., raw_datavals = FALSE) {
@@ -30,4 +34,5 @@ hyper_slice.tidync <- function(x, ..., raw_datavals = FALSE) {
 hyper_slice.character <- function(x, ..., raw_datavals = FALSE) {
   tidync(x) %>% hyper_filter(...) %>%  hyper_index() %>% hyper_slice(raw_datavals = raw_datavals)
 }
+
 
