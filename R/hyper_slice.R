@@ -13,11 +13,12 @@ hyper_slice.hyperindex <- function(x, ..., raw_datavals = FALSE) {
   ## FIXME: the change to grid means we get x$grid[1] not variable, we have
   ## to slice over all variables in this space
   ## https://github.com/hypertidy/tidync/issues/33
-  lapply(x$variable[[1]], function(vara)  
+  varnames <- x$variable[[1]]
+  stats::setNames(lapply(varnames, function(vara)  
     ncdf4::ncvar_get(ncdf4::nc_open(x$file[1]), vara, 
                      start = x$start, count = x$count, 
                      raw_datavals = raw_datavals)
-  )
+  ), varnames)
  }
 #' @name hyper_slice
 #' @export

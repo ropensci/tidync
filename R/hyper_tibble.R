@@ -37,17 +37,18 @@ hyper_tibble.tidync <- function(x, ...) {
 #' @name hyper_tibble
 #' @export
 hyper_tibble.hyperfilter <- function(x, ...) {
-  nomin_space <- x$nominal_space
-  x$nominal_space <- NULL
+  #nomin_space <- x$nominal_space
+  #x$nominal_space <- NULL
   
   slab <- hyper_slice(x, ...)
-  total_prod <- prod(dim(slab))
+  total_prod <- prod(dim(slab[[1]]))
   
   tib <- list()
-  okfilter <- rep(nomin_space$ok, length = total_prod)
-  
-  tib[[active(x)]] <- as.vector(slab)[okfilter]
-  tib <- tibble::as_tibble(tib)
+  #okfilter <- rep(nomin_space$ok, length = total_prod)
+  okfilter <- rep(TRUE, total_prod)  ## hack for now
+  #tib[[active(x)]] <- as.vector(slab)[okfilter]
+  tib <- tibble::as_tibble(lapply(slab, as.vector))[okfilter, ]
+  #tib <- tibble::as_tibble(tib)
   prod_dims <- 1
   
   for (i in seq_along(x)) {

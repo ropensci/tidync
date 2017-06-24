@@ -27,10 +27,10 @@ hyper_tbl_cube.character <- function(x, ...) {
 #' @name hyper_tbl_cube
 #' @export
 hyper_tbl_cube.hyperfilter <- function(x, ...) {
-  varname <- active(x)
+  ##varname <- active(x)
  # hf <- hyper_filter(x, ...)
   dim_names <- names(x)
-  structure(list(mets = stats::setNames(list(hyper_slice(x, ...)), varname), 
+  structure(list(mets = hyper_slice(x, ...), 
             dims = stats::setNames(  lapply(dim_names, function(inm) x[[inm]][[inm]]), 
                               dim_names)), 
             class = "tbl_cube")
