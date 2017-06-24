@@ -36,16 +36,16 @@ hyper_filter <- function(x, ...) {
 hyper_filter.tidync <- function(x, ...) {
   
   dims <- x$grid %>% 
-    filter(grid == active(x)) %>% 
-    inner_join(x$axis, "variable") %>% 
-    inner_join(x$dimension, c("dimension" = "id")) %>% 
-    distinct(name, dimension) %>% 
-   arrange(dimension)
+    dplyr::filter(grid == active(x)) %>% 
+    dplyr::inner_join(x$axis, "variable") %>% 
+    dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
+    dplyr::distinct(name, dimension) %>% 
+    dplyr::arrange(dimension)
 #  print("doom")
   ## dimensions don't necessarily have variables
   ## FIXME
 if (!all(dims$name %in% x$variable$name)) warning("dims don't have values...we are going to error...")
-  trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$source$source, .)), dims$name), as_tibble)
+  trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$source$source, .)), dims$name), tibble::as_tibble)
 #  print("gloom")
   for (i in seq_along(dims$name)) {
     names(trans[[i]]) <- dims$name[i]
@@ -107,20 +107,25 @@ print.hyperfilter <- function(x, ...) {
 
 #' @importFrom ncdf4 nc_open nc_close ncvar_get
 #' @importFrom RNetCDF open.nc close.nc var.get.nc
+#' @importFrom purrr safely
 nc_get <- function(x, v) {
   UseMethod("nc_get")
 }
 nc_get.character <- function(x, v) {
   on.exit(RNetCDF::close.nc(con), add = TRUE)
   con <- RNetCDF::open.nc(x)
-  safe_get <- safely(nc_get)
+  safe_get <- purrr::safely(nc_get.NetCDF)
   val <- safe_get(con, v)
   if (!is.null(val$result)) return(val$result)
   on.exit(ncdf4::nc_close(con4), add = TRUE)
   con4 <- ncdf4::nc_open(x, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
-  val <- safe_get(con4, v)
-  if (!is.null(val$result)) return(val$result) else return(val$error)
-  
+  safe_get <- purrr::safely(nc_get.ncdf4)
+    val <- safe_get(con4, v)
+  if (!is.null(val$result)) {
+    return(val$result)
+    } else {
+      stop("error")
+    }
 }
 nc_get.NetCDF <- function(x, v) {
   RNetCDF::var.get.nc(x, v)
