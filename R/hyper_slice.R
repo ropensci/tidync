@@ -10,6 +10,8 @@ hyper_slice <- function(x, ..., raw_datavals = FALSE) {
 #' @name hyper_slice
 #' @export
 hyper_slice.hyperindex <- function(x, ..., raw_datavals = FALSE) {
+  ## FIXME: the change to grid means we get x$grid[1] not variable, we have
+  ## to slice over all variables in this space
   ncdf4::ncvar_get(ncdf4::nc_open(x$file[1]), x$variable[1], 
                    start = x$start, count = x$count, raw_datavals = raw_datavals)
 }
