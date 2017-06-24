@@ -39,8 +39,13 @@ hyper_filter.tidync <- function(x, ...) {
     dplyr::filter(grid == active(x)) %>% 
     dplyr::inner_join(x$axis, "variable") %>% 
     dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
-    dplyr::distinct(name, dimension) %>% 
-    dplyr::arrange(dimension)
+    dplyr::distinct(name, dimension) 
+  ## potentially flaky here because the dimension-order is not
+  ## necessarily the way the variable uses them, i.e. l3file
+  ## is lon, lat but lat is 0 and lon is 1
+  ## it appears that native order is correct, but this needs to come
+  ## from ncmeta
+  ##%>%  dplyr::arrange(dimension)
 #  print("doom")
   ## dimensions don't necessarily have variables
   ## FIXME
