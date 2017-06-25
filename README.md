@@ -7,7 +7,7 @@
 tidync
 ======
 
-**NOTE:** this package is development and subject to change.
+**NOTE:** this package is development and subject to change. See Limitations below. Active design discussed here: <https://github.com/hypertidy/tidync/issues/33>
 
 The goal of tidync is to ease exploring the contents of a NetCDF file and constructing efficient queries to extract arbitrary hyperslabs.
 
@@ -20,21 +20,23 @@ These examples are for illustration only, see the vignettes for more details, an
 Interactive
 -----------
 
-Use `tidync()` and `hyper_filter()` to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `step` to filter it by index).
+Use `tidync()` and `hyper_filter()` to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `index` to filter it by it's 'step' index).
 
 ``` r
-## discover the variables, and the active variable's dimensions
+## discover the available entities, and the active grid's dimensions and variables
 tidync(filename)
 
-## activate a different variable
-tidync(filename) %>% activate(varname)
+## activate a different grid
+tidync(filename) %>% activate(grid_identifier)
 
-## get a dimension-focus on the space occupied by the variable
+## get a dimension-focus on the space occupied within a grid
 tidync(filename) %>% hyper_filter()
 
 ## pass named expressions to subset dimension by value or index (step)
 tidync(filename) %>% hyper_filter(lat = lat < -30, time = time == 20)
 ```
+
+Note, an earlier version of this package worked by activating "variables by name". This still works but effectively activates the grid that this variable exists within, so all variables in the space are available by default. Grids have identifiers based on which dimensions they use i.e. "D1,D0" and can otherwise be activated by their count identifier (starting at 1).
 
 Extractive
 ----------
@@ -43,13 +45,14 @@ Use what we learned interactively to extract the data, either in data frame or r
 
 ``` r
 ## we'll see a column for sst, lat, time, and whatever other dimensions sst has
-tidync(filename) %>% activate(sst) %>% 
+## and whatever other variable's the grid has
+tidync(filename) %>% activate("sst"") %>% 
   hyper_filter(lat = lat < -30, time = time == 20) %>% 
   hyper_tibble()
 
 
-## raw array form, we'll see an R array with a dimension for each seen by tidync(filename) %>% activate(sst)
-tidync(filename) %>% activate(sst) %>% 
+## raw array form, we'll see a (list of) R arrays with a dimension for each seen by tidync(filename) %>% activate("sst"")
+tidync(filename) %>% activate("sst"") %>% 
   hyper_filter(lat = lat < -30, time = time == 20) %>% 
   hyper_slice()
 ```
@@ -79,7 +82,7 @@ Support for tbl\_cube is in bare-bones form. See here for an example: <http://rp
     D: time [dbl, 1]
     M: sst [dbl]
 
-    tidync(f) %>% activate(anom) %>% hyper_tbl_cube(lat = lat > -30)
+    tidync(f) %>% activate("anom"") %>% hyper_tbl_cube(lat = lat > -30)
     Source: local array [691,200 x 4]
     D: lon [dbl, 1440]
     D: lat [dbl, 480]
@@ -106,18 +109,71 @@ This is a basic example which shows you how to connect to a file.
 file <- system.file("extdata", "oceandata", "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
 library(tidync)
 tidync(file) 
-#> Variables: chlor_a, (palette) 
-#> Dimensions: 
-#> # A tibble: 2 x 5
-#>   variable_name .variable_ .dimension_ dimension_name dimension_length
-#>           <chr>      <dbl>       <int>          <chr>            <int>
-#> 1       chlor_a          0           1            lon             4320
-#> 2       chlor_a          0           0            lat             2160
+#> 
+#> Data Source (1): S20092742009304.L3m_MO_CHL_chlor_a_9km.nc ...
+#> 
+#> Grids (4) <dimension family> : <associated variables> 
+#> 
+#> [1]   D1,D0 : chlor_a    **ACTIVE GRID** ( 9331200  values per variable)
+#> [2]   D3,D2 : palette
+#> [3]   D0    : lat
+#> [4]   D1    : lon
+#> 
+#> Dimensions (4): 
+#>   
+#>   dimension    id          name length unlim 
+#>       <chr> <dbl>         <chr>  <dbl> <lgl> 
+#> 1        D0     0           lat   2160 FALSE 
+#> 2        D1     1           lon   4320 FALSE 
+#> 3        D2     2           rgb      3 FALSE 
+#> 4        D3     3 eightbitcolor    256 FALSE
 ```
 
 See this article for more: <https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html>
 
 Stay tuned.
+
+Limitations
+-----------
+
+-   we can't filter on multidimensional values (yet)
+-   compound types are not supported
+-   groups are not exposed as entities
+-   dims without variables are not handled currently, they should at least work in "index" form but don't yet <https://github.com/hypertidy/tidync/issues/30>
+-   testing has so far been minimal, and things will change
+
+Terminology
+-----------
+
+I think of "slab" as a generalized "array" (in the R sense) that we can request from a NetCDF. We must provide the NetCDF API with a "slab index", i.e. a start and a count vector - and that's the only way to query them.
+
+In R terms a 3D array would be indexed like
+
+arr\[1:10, 2:12, 3:5\]
+
+and that would be analogous to
+
+ncvar\_get(con, start = c(1, 2, 3), count = c(10, 11, 3))
+
+If we only wanted a "sparse trace" through the array in R we can do
+
+arr\[cbind(c(2, 4), c(5, 6), c(3, 4)\]
+
+which would pull out 2-values from 2 arbitrary positions. The API doesn't allow that (at least not in an efficient way that I can understand).
+
+We either have to get the whole "slab" that encompases those 2 cells, or request a degenerate 1-cell slab for each:
+
+ncvar\_get(con, start = c(2, 5, 3), count = c(1, 1, 1)) ncvar\_get(con, start = c(4, 6, 4), count = c(1, 1, 1))
+
+I've used the term "hyperslab" and "slab" since I realized this basic limitation during my PhD. Unidata use the term but it's not in the API afaik:
+
+<http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html>
+
+Another term like this is "shape" which is a particular set of dimensions used by 1 or more variables in a file. tidync aims to allow "activation" of a given shape, so that any subsequent extraction gets all the variables that live in that space/shape. (It's a database table interpretation of a set of variables).
+
+In R we can determine those indexes really easily for any given query, tracks over time through XYZ, polygons, boxes and so on - but we are ultimately limited by the API to these "slab" requests, so you see a lot of disparate approaches across packages to optimizing this.
+
+We have decided to use the term "grid" rather than "shape", and so a grid is a specific ordered set of dimensions. An "axis" is a particular instance of a dimension within a variable. At times we need to know what grids we have, what variables use those grids, and what axes belong to a variable and in what order. Currently all the facility for determining this information is in package ncmeta.
 
 Code of conduct
 ---------------
