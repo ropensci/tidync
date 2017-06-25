@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tidy tools for NetCDF data. — tidync-package • tidync</title>
+<title>Tidy file collection — tidyfile • tidync</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,44 +80,68 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tidy tools for NetCDF data.</h1>
+    <h1>Tidy file collection</h1>
     </div>
 
     
-    <p>Provides easy to use idioms for working with NetCDF data for
-extraction, manipulation and visualization.
-NetCDF is Network Common Data Form <a href = 'https://www.unidata.ucar.edu/software/netcdf/'>https://www.unidata.ucar.edu/software/netcdf/</a>.</p>
+    <p>Tidy files include a trick to only store the full metadata of the
+first file in the collection. This is extracted using <code>ncmeta::nc_meta</code> in
+a form that may changed substantially. The current plan is to always
+have an <em>estimable</em> set of metadata using the first file as a sample,
+but to be able to scan the full metadata as required.
+This is based on the model where a set of files <em>do match</em> or can be expected
+to match in every shape other than the <em>unlimited</em> dimension, the one
+that is dispersed over files (usually "time").</p>
     
 
-        
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <pre class="usage"><span class='fu'>tidyfile</span>(<span class='no'>x</span>, <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
-    <p>There is a family of functions "hyper_verb" around exploring and
-extracting data.</p><table><tr><td>
-<code><a href='tidync.html'>tidync</a></code> </td>
-<td> extracts all file metadata in an object useable by other tidync functions</td>
-</tr><tr><td>
-<code><a href='hyper_filter.html'>hyper_filter</a></code> </td>
-<td> processes user-driven expressions to filter based on NetCDF dimensions </td>
-</tr><tr><td>
-<code><a href='hyper_index.html'>hyper_index</a></code> </td>
-<td> processes dimension filters into NetCDF extraction indexes </td>
-</tr><tr><td>
-<code><a href='hyper_slice.html'>hyper_slice</a></code> </td>
-<td> extracts a raw data array based on a NetCDF index </td>
-</tr><tr><td>
-<code><a href='hyper_tibble.html'>hyper_tibble</a></code> </td>
-<td> extracts the slice as a data frame with all dimension values </td>
-</tr></table>
+<span class='co'># S3 method for data.frame</span>
+<span class='fu'>tidyfile</span>(<span class='no'>x</span>, <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for raadfiles</span>
+<span class='fu'>tidyfile</span>(<span class='no'>x</span>, <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for character</span>
+<span class='fu'>tidyfile</span>(<span class='no'>x</span>, <span class='kw'>all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>raadfiles, data frame with "fullname", or character vector</p></td>
+    </tr>
+    <tr>
+      <th>all</th>
+      <td><p>scan metadata from all files?</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>ignored</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>data frame of filename "fullname" and "meta" in a list-col</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>#library(dplyr)
+#files <- raadfiles::oisst_daily_files() %>% dplyr::filter(as.Date(date) > (Sys.Date() - 40))
+#f <- tidyfile(files, all = FALSE)
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#details">Details</a></li>
-          </ul>
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

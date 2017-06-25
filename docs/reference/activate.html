@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -140,13 +141,24 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"S2008001.L3m_DAY_CHL_chlor_a_9km.nc"</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"ncdump"</span>)
 <span class='no'>rnc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>)
-<span class='fu'>activate</span>(<span class='no'>rnc</span>, <span class='st'>"palette"</span>)</div><div class='output co'>#&gt; Variables: palette, (chlor_a) 
-#&gt; Dimensions: 
-#&gt; # A tibble: 2 x 5
-#&gt;   variable_name .variable_ .dimension_ dimension_name dimension_length
-#&gt;           &lt;chr&gt;      &lt;dbl&gt;       &lt;int&gt;          &lt;chr&gt;            &lt;int&gt;
-#&gt; 1       palette          3           3  eightbitcolor              256
-#&gt; 2       palette          3           2            rgb                3</div></pre>
+<span class='fu'>activate</span>(<span class='no'>rnc</span>, <span class='st'>"palette"</span>)</div><div class='output co'>#&gt; 
+#&gt; Data Source (1): S2008001.L3m_DAY_CHL_chlor_a_9km.nc ...
+#&gt; 
+#&gt; Grids (4) &lt;dimension family&gt; : &lt;associated variables&gt; 
+#&gt; 
+#&gt; [1]   D1,D0 : chlor_a
+#&gt; [2]   D3,D2 : palette    **ACTIVE GRID** ( 768  values per variable)
+#&gt; [3]   D0    : lat
+#&gt; [4]   D1    : lon
+#&gt; 
+#&gt; Dimensions (4): 
+#&gt;   
+#&gt;   dimension    id          name length unlim 
+#&gt;       &lt;chr&gt; &lt;dbl&gt;         &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt; 
+#&gt; 1        D0     0           lat   2160 FALSE 
+#&gt; 2        D1     1           lon   4320 FALSE 
+#&gt; 3        D2     2           rgb      3 FALSE 
+#&gt; 4        D3     3 eightbitcolor    256 FALSE </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

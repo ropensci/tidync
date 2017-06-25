@@ -60,15 +60,16 @@
       <h1>NetCDF tbl_cube</h1>
                         <h4 class="author">Michael D. Sumner and Stuart Corney</h4>
             
-            <h4 class="date">2017-06-15</h4>
+            <h4 class="date">2017-06-25</h4>
           </div>
 
     
     
 <div class="contents">
 <p>Use tidync to subset into a 4D ocean model, here in model index space.</p>
-<p>We hone in on an x y range (“xi_ho” is meridional in the domain, “eta_rho” is zonal), use the “step” index to get a strided level index (“s_rho” is model sigma coordinate), and a single time slice.</p>
+<p>We hone in on an x y range (“xi_ho” is meridional in the domain, “eta_rho” is zonal), use the “index” index to get a strided level index (“s_rho” is model sigma coordinate), and a single time slice.</p>
 <p>At the end we must as_tibble for ggplot2, but future work will remove the need for this total expansion.</p>
+<p>FIXME: can’t work until we have variable-less dimensions again</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">romsfile &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">"/rdsi/PRIVATE/raad"</span>,<span class="st">"data_local/acecrc.org.au/ROMS/s_corney/cpolar/ocean_his_3307.nc"</span>)
 
 <span class="kw">library</span>(tidync)
@@ -76,14 +77,14 @@
 roms_cube &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/tidync.html">tidync</a></span>(romsfile) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../../reference/activate.html">activate</a></span>(temp) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="../../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">xi_rho =</span> xi_rho <span class="op">&gt;</span><span class="st"> </span><span class="dv">1000</span>, 
                <span class="dt">eta_rho =</span> eta_rho <span class="op">&gt;</span><span class="st"> </span><span class="dv">200</span>, 
-<span class="co">#               s_rho = step == 1,</span>
-               <span class="dt">s_rho =</span> step <span class="op">%%</span><span class="st"> </span><span class="dv">4</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>,
-               <span class="dt">ocean_time =</span> step <span class="op">==</span><span class="st"> </span><span class="dv">15</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="../../reference/hyper_tbl_cube.html">hyper_tbl_cube</a></span>()
+<span class="co">#               s_rho = index == 1,</span>
+               <span class="dt">s_rho =</span> index <span class="op">%%</span><span class="st"> </span><span class="dv">4</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>,
+               <span class="dt">ocean_time =</span> index <span class="op">==</span><span class="st"> </span><span class="dv">15</span>) 
+<span class="co">#%&gt;% </span>
+<span class="co">#  hyper_tbl_cube()</span>
 
 <span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(roms_cube <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>(), <span class="kw">aes</span>(xi_rho, eta_rho, <span class="dt">fill =</span> temp)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_raster</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>s_rho)</code></pre></div>
-<p><img src="tbl_cube_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
 </div>
   </div>
 

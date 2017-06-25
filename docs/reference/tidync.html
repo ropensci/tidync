@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -84,10 +85,13 @@
 
     
     <p>Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
-the first variable encountered is  <code>activate</code>d.</p>
+the first <em>shape</em> encountered is  <code>activate</code>d.</p>
     
 
-    <pre class="usage"><span class='fu'>tidync</span>(<span class='no'>x</span>, <span class='no'>what</span>)</pre>
+    <pre class="usage"><span class='fu'>tidync</span>(<span class='no'>x</span>, <span class='no'>what</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for character</span>
+<span class='fu'>tidync</span>(<span class='no'>x</span>, <span class='no'>what</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -98,16 +102,27 @@ the first variable encountered is  <code>activate</code>d.</p>
     </tr>
     <tr>
       <th>what</th>
-      <td><p>(optional) character or bare name of variable to <code>activate</code></p></td>
+      <td><p>(optional) character name of grid (see <code>ncmeta::nc_grids</code>) or (bare) name of variable (see <code>ncmeta::nc_vars</code>) or index of grid to <code>activate</code></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>reserved for arguments to methods, currently ignored</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Any NetCDF with variable arrays should work. Files with compound types are not yet supported. We
-haven't explored HDF5 per se, so any feedback is appreciated.</p>
+    <p>Any NetCDF with variable arrays should work. Files with compound types are not yet supported and
+should fail gracefully.</p>
+<p>We haven't yet explored HDF5 per se, so any feedback is appreciated. Major
+use of compound types is made by https://github.com/mdsumner/roc</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>#cf <- raadtools::cpolarfiles()
+#nc <- tidync(cf$fullname[1])
+#print(nc)
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -115,7 +130,9 @@ haven't explored HDF5 per se, so any feedback is appreciated.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tidy tools for NetCDF data. — tidync-package • tidync</title>
+<title>Print NetCDF object — print.tidync • tidync</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -80,41 +80,45 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tidy tools for NetCDF data.</h1>
+    <h1>Print NetCDF object</h1>
     </div>
 
     
-    <p>Provides easy to use idioms for working with NetCDF data for
-extraction, manipulation and visualization.
-NetCDF is Network Common Data Form <a href = 'https://www.unidata.ucar.edu/software/netcdf/'>https://www.unidata.ucar.edu/software/netcdf/</a>.</p>
+    <p>print S3 method</p>
     
 
-        
+    <pre class="usage"><span class='co'># S3 method for tidync</span>
+<span class='fu'>print</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>NetCDF object</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>reserved</p></td>
+    </tr>
+    </table>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There is a family of functions "hyper_verb" around exploring and
-extracting data.</p><table><tr><td>
-<code><a href='tidync.html'>tidync</a></code> </td>
-<td> extracts all file metadata in an object useable by other tidync functions</td>
-</tr><tr><td>
-<code><a href='hyper_filter.html'>hyper_filter</a></code> </td>
-<td> processes user-driven expressions to filter based on NetCDF dimensions </td>
-</tr><tr><td>
-<code><a href='hyper_index.html'>hyper_index</a></code> </td>
-<td> processes dimension filters into NetCDF extraction indexes </td>
-</tr><tr><td>
-<code><a href='hyper_slice.html'>hyper_slice</a></code> </td>
-<td> extracts a raw data array based on a NetCDF index </td>
-</tr><tr><td>
-<code><a href='hyper_tibble.html'>hyper_tibble</a></code> </td>
-<td> extracts the slice as a data frame with all dimension values </td>
-</tr></table>
+    <p>Prints a summary of variables and dimensions, organized by their 'shape' - "same shape" means "same grid".
+Shape is an instance of a particular set of dimensions, which can be shared by more than one
+variable. This is not the 'rank' of a variable (the number of dimensions) since a single
+data set may have many 3D variables composed of different sets of axes/dimensions. There's no
+formality around the concept of 'shape', as far as we know.</p>
+<p>A dimension may have length zero, but this is a special case for a "measure" dimension, we think. (It
+doesn't mean the product of the dimensions is zero, for example).</p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
           </ul>

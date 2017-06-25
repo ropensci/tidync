@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -118,13 +119,18 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"S2008001.L3m_DAY_CHL_chlor_a_9km.nc"</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"ncdump"</span>)
 <span class='no'>rnc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>)
-<span class='fu'><a href='hyper_filter.html'>hyper_filter</a></span>(<span class='no'>rnc</span>)</div><div class='output co'>#&gt; [1] "filtered dimension summary: "
+<span class='fu'><a href='hyper_filter.html'>hyper_filter</a></span>(<span class='no'>rnc</span>)</div><div class='output co'>#&gt; # A tibble: 1 x 2
+#&gt;                access
+#&gt;                &lt;dttm&gt;
+#&gt; 1 2017-06-25 14:59:37
+#&gt; # ... with 1 more variables: source &lt;chr&gt;
+#&gt; filtered dimension summary: 
 #&gt; # A tibble: 2 x 4
 #&gt;    name        min       max length
 #&gt;   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;  &lt;int&gt;
 #&gt; 1   lon -179.95833 179.95836   4320
 #&gt; 2   lat  -89.95834  89.95834   2160</div><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='hyper_slice.html'>hyper_slice</a></span>(<span class='no'>l3file</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='no'>lat</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>) <span class='kw'>%&gt;%</span> <span class='fu'>dim</span>()</div><div class='output co'>#&gt; [1] 4320 1080</div><div class='input'>
+<span class='fu'><a href='hyper_slice.html'>hyper_slice</a></span>(<span class='no'>l3file</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='no'>lat</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>) <span class='kw'>%&gt;%</span> <span class='fu'>dim</span>()</div><div class='output co'>#&gt; NULL</div><div class='input'>
  <span class='no'>ht</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tibble</span>(<span class='no'>rnc</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter</span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>))
 <span class='no'>ht</span></div><div class='output co'>#&gt; # A tibble: 9 x 3
 #&gt;    chlor_a      lon       lat
