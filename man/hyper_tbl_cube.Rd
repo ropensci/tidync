@@ -25,6 +25,8 @@ hyper_tbl_cube(x, ...)
 }
 \value{
 tbl_cube
+
+\code{dplyr::tbl_cube}
 }
 \description{
 dplyr tbl cube from NetCDF
