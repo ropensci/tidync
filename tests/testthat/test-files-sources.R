@@ -18,3 +18,15 @@ test_that("files and bad files are handled", {
    tidync(l3_file)
    })
 
+
+## FIXME: we need a lot more examples!  
+test_that("non-local sources work", {
+  u <- "http://coastwatch.pfeg.noaa.gov/erddap/griddap/erdQSwind3day"
+  (unc <- tidync(u))
+  
+  unc %>% activate("D2")
+  
+  uhf <- unc %>% hyper_filter(longitude = abs(index - 100) < 10, latitude = latitude > 60, time = index == 1)
+  
+  res_uv_wind <- hyper_tibble(uhf) 
+})

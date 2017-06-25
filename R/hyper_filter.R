@@ -50,8 +50,15 @@ hyper_filter.tidync <- function(x, ...) {
   ## dimensions don't necessarily have variables
   ## FIXME
 if (!all(dims$name %in% x$variable$name)) warning("dims don't have values...we are going to error...")
-  trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$source$source, .)), dims$name), tibble::as_tibble)
-#  print("gloom")
+# trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$source$source, .)), dims$name), tibble::as_tibble)
+ 
+  ## FIXME: this is slow, and possibly redundant if we use the ncdf4 con anyway, ncmeta should provide
+  ## this as a an upfront resource
+  trans0 <- setNames(lapply(dims$name, function(vname) tibble::as_tibble(list(value = nc_get(x$source$source, vname)) )), 
+                     dims$name)
+  
+  trans <- trans0
+#  still debugging here, so live with a copy
   for (i in seq_along(dims$name)) {
     names(trans[[i]]) <- dims$name[i]
     trans[[i]]$index <- seq_len(nrow(trans[[i]])) 
@@ -125,8 +132,8 @@ nc_get.character <- function(x, v) {
   if (!is.null(val$result)) return(val$result)
   on.exit(ncdf4::nc_close(con4), add = TRUE)
   con4 <- ncdf4::nc_open(x, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
-  safe_get <- purrr::safely(nc_get.ncdf4)
-    val <- safe_get(con4, v)
+  safe_get4 <- purrr::safely(nc_get.ncdf4)
+    val <- safe_get4(con4, v)
   if (!is.null(val$result)) {
     return(val$result)
     } else {
