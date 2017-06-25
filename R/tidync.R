@@ -83,8 +83,14 @@ print.tidync <- function(x, ...) {
               nrow(x$source), 
               paste(head(basename(x$source$source), 2), collapse = ", ")))
   cat(sprintf("\nGrids (%i) <dimension family> : <associated variables> \n\n", nshapes))
+  if (nrow(ushapes) < 1L) {
+    cat("No recognizable dimensions or variables \n(... maybe HDF5? Consider 'rhdf5' package from Bioconductor.)\n")
+    cat("\nStandard ncdump -h output follows for reference: \n\n")
+    RNetCDF::print.nc(RNetCDF::open.nc(x$source$source))
+    return(invisible(NULL))  
+  }
   active_sh <- active(x)
-  nms <- if(!is.null(ushapes$grid)) nchar(ushapes$grid) else 0
+  nms <- if(nrow(ushapes) > 0)  nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
   estimatebigtime <- x$grid %>% 
     dplyr::filter(grid == active(x)) %>% 

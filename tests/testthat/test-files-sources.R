@@ -6,7 +6,7 @@ test_that("file not found is friendly", {
 })
 
 test_that("files and bad files are handled", {
-  #skip_if_not(we_are_raady())
+  skip_if_not(we_are_raady())
   oisst_dayfile <- raadtools::sstfiles()$fullname[1]
   tidync(oisst_dayfile)
   oisst_monfile <- raadtools::sstfiles(time.resolution = "monthly")$fullname[1]
@@ -16,7 +16,7 @@ test_that("files and bad files are handled", {
   
   l3_file <- raadtools::ocfiles()$fullname[1]  
    tidync(l3_file)
-   })
+})
 
 
 ## FIXME: we need a lot more examples!  

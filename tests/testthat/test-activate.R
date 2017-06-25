@@ -7,7 +7,7 @@ tidync(ufile)
 tidync(ufile) %>% activate("D3,D12")
 
 
-test_that("multiplication works", {
+test_that("various access and activation works", {
   tidync(ufile) %>% active() %>% expect_equal("D0,D12")
   
   ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
