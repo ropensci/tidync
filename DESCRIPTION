@@ -19,6 +19,7 @@ Imports: activate,
     ncmeta, 
     purrr, 
     RNetCDF,
+    raster,
     rlang, 
     tibble
 RoxygenNote: 6.0.1
@@ -26,7 +27,6 @@ Suggests: ggplot2,
     knitr,
     memoise,
     rmarkdown,
-    raster,
     testthat,
     covr
 Remotes: r-gris/activate, hypertidy/ncdump, hypertidy/ncmeta

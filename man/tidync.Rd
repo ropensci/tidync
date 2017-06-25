@@ -4,48 +4,32 @@
 \alias{tidync}
 \alias{tidync}
 \alias{tidync.character}
-\alias{tidync}
-\alias{print.tidync}
 \title{tidy netcdf}
 \usage{
-tidync(x, ...)
+tidync(x, what, ...)
 
-\method{tidync}{character}(x, what)
-
-\method{print}{tidync}(x, ...)
+\method{tidync}{character}(x, what, ...)
 }
 \arguments{
 \item{x}{path to a NetCDF file}
 
-\item{...}{reserved}
-
 \item{what}{(optional) character name of grid (see \code{ncmeta::nc_grids}) or (bare) name of variable (see \code{ncmeta::nc_vars}) or index of grid to \code{activate}}
 
-\item{x}{NetCDF object}
+\item{...}{reserved for arguments to methods, currently ignored}
 }
 \description{
 Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
 the first \emph{shape} encountered is  \code{activate}d.
-
-print S3 method
 }
 \details{
 Any NetCDF with variable arrays should work. Files with compound types are not yet supported and
 should fail gracefully.
 
-We haven't yest explored HDF5 per se, so any feedback is appreciated.
-
-Prints a summary of variables and dimensions, organized by their 'shape' - "same shape" means "same grid".
-Shape is an instance of a particular set of dimensions, which can be shared by more than one
-variable. This is not the 'rank' of a variable (the number of dimensions) since a single
-data set may have many 3D variables composed of different sets of axes/dimensions. There's no
-formality around the concept of 'shape', as far as we know.
-
-A dimension may have length zero, but this is a special case for a "measure" dimension, we think. (It
-doesn't mean the product of the dimensions is zero, for example).
+We haven't yet explored HDF5 per se, so any feedback is appreciated. Major
+use of compound types is made by https://github.com/mdsumner/roc
 }
 \examples{
-cf <- raadtools::cpolarfiles()
-nc <- tidync(cf$fullname[1])
-print(nc)
+#cf <- raadtools::cpolarfiles()
+#nc <- tidync(cf$fullname[1])
+#print(nc)
 }

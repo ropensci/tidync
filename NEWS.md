@@ -1,5 +1,9 @@
 # tidync dev
 
+* hyper_slice and hyper_tibble now return all variables that exist within a grid
+
+* This version sees a new model is applied where activation is on 'grids', effectively a 'space' composed of dimensions. In addition to the variables, dimension, attributes we add "grid" defined by a set of dimensions, and "axis" which is an instance of a particular dimension as used by a variable. 
+
 * files without recognizable variables now gracefully handled, with help from ncmeta
 
 # tidync 0.0.1

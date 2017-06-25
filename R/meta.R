@@ -66,8 +66,9 @@ dim_names.tidync <- function(x, ...) {
 #' @examples
 #' l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
 #' rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
-#' dimension_values(rnc)
+#' ##dimension_values(rnc)
 dimension_values <- function(x) {
+  .Defunct()
   UseMethod("dimension_values")
 }
 #' @rdname dimension_values
@@ -101,7 +102,7 @@ dimension_values.tidync <- function(x) {
 
 grid_dimension <- function(x) UseMethod("grid_dimension")
 grid_dimension.tidync <- function(x) {
-  x$grid %>% dplyr::filter(grid == active(x)) %>% 
+  x$grid %>% dplyr::filter(.data$grid == active(x)) %>% 
     inner_join(x$variable, c("variable" = "name"))
 }
 #' Dimensions of a variable

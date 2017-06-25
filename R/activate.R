@@ -35,8 +35,8 @@ activate.tidync <- function(.data, what) {
 
   if (is.numeric(what)) {
     ## this pattern is copied from print
-    ushapes <- dplyr::distinct(.data$grid, grid) %>% 
-      dplyr::arrange(desc(nchar(grid)))
+    ushapes <- dplyr::distinct(.data$grid) %>% 
+      dplyr::arrange(desc(nchar(.data$grid)))
     ## otherwise pick the what-th grid
     stopifnot(what >= 1 && what <= nrow(.data$grid))
     what <- ushapes$grid[as.integer(what)]

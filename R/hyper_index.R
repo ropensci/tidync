@@ -41,5 +41,5 @@ hyper_index.hyperfilter <- function(x, ...) {
                 hyper_index(out)
 }
 variables_from_grid <- function(grids, agrid) {
-  dplyr::filter(grids, grid == agrid)$variable
+  dplyr::filter(grids, .data$grid == agrid)$variable
 }

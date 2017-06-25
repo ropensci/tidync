@@ -4,8 +4,8 @@ test_that("tidync works", {
   afilter <- tidync(afile)  %>% expect_s3_class("tidync") %>% 
     hyper_filter() %>% expect_s3_class("hyperfilter")  
   afilter2 <- tidync(afile) %>%   hyper_filter(lat = lat > 60) %>% expect_s3_class("hyperfilter") 
-  expect_that(afilter %>% hyper_slice() %>% dim() , equals(c(2, 720)))
-  expect_that(afilter2 %>% hyper_slice() %>% dim() , equals(c(2, 120)))
+  expect_that(afilter %>% hyper_slice() %>% `[[`(1) %>% dim() , equals(c(1440, 720)))
+  expect_that(afilter2 %>% hyper_slice() %>% `[[`(1) %>% dim() , equals(c(1440, 120)))
   afilter2 %>% hyper_tibble() %>% expect_s3_class("tbl_df") 
 })
 
@@ -22,8 +22,8 @@ test_that("recorded failures", {
   PCP <- tidync(f) %>% activate(PCP)
   
   ## FIXME: https://github.com/hypertidy/tidync/issues/30
-  expect_error(PCP %>% hyper_filter())
+  #expect_weirdass_non_error(print(PCP %>% hyper_filter()))
   #expect_error(PCP %>% hyper_filter(x = x < 30), "object 'x' not found")
  # expect_error(PCP %>% hyper_filter(x = x < 30), "(list) object cannot be coerced to type 'double'")
-  expect_error(PCP %>% hyper_filter(x = x < 30))
+  ##expect_error(PCP %>% hyper_filter(x = x < 30))
 })

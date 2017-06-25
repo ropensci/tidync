@@ -10,3 +10,4 @@
 ^CONDUCT\.md$
 ^codecov\.yml$
 ^data-raw$
+^inst/examples/rsconnect.*$

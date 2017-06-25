@@ -33,13 +33,14 @@ hyper_filter <- function(x, ...) {
 #' @export
 #' @importFrom dplyr %>% mutate 
 #' @importFrom forcats as_factor
+#' @importFrom tibble as_tibble
 hyper_filter.tidync <- function(x, ...) {
   
   dims <- x$grid %>% 
-    dplyr::filter(grid == active(x)) %>% 
+    dplyr::filter(.data$grid == active(x)) %>% 
     dplyr::inner_join(x$axis, "variable") %>% 
     dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
-    dplyr::distinct(name, dimension) 
+    dplyr::distinct(.data$name, .data$dimension) 
   ## potentially flaky here because the dimension-order is not
   ## necessarily the way the variable uses them, i.e. l3file
   ## is lon, lat but lat is 0 and lon is 1
@@ -125,13 +126,15 @@ nc_get <- function(x, v) {
   UseMethod("nc_get")
 }
 nc_get.character <- function(x, v) {
-  on.exit(RNetCDF::close.nc(con), add = TRUE)
   con <- RNetCDF::open.nc(x)
+  on.exit(RNetCDF::close.nc(con), add = TRUE)
+  
   safe_get <- purrr::safely(nc_get.NetCDF)
   val <- safe_get(con, v)
   if (!is.null(val$result)) return(val$result)
-  on.exit(ncdf4::nc_close(con4), add = TRUE)
+  con4 <- NULL
   con4 <- ncdf4::nc_open(x, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
+  on.exit(ncdf4::nc_close(con4), add = TRUE)
   safe_get4 <- purrr::safely(ncdf4::ncvar_get)
     val <- safe_get4(con4, v)
   if (!is.null(val$result)) {
@@ -146,5 +149,5 @@ nc_get.NetCDF <- function(x, v) {
 
 
 nc_get.ncdf4 <- function(x, v) {
-  ncdf4::ncvar_get(con4, v)
+  ncdf4::ncvar_get(x, v)
 }

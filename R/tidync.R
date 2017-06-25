@@ -6,22 +6,24 @@
 #' Any NetCDF with variable arrays should work. Files with compound types are not yet supported and
 #' should fail gracefully. 
 #' 
-#' We haven't yest explored HDF5 per se, so any feedback is appreciated. 
+#' We haven't yet explored HDF5 per se, so any feedback is appreciated. Major 
+#' use of compound types is made by https://github.com/mdsumner/roc
 #' @param x path to a NetCDF file
+#' @param ... reserved for arguments to methods, currently ignored
 #' @param what (optional) character name of grid (see `ncmeta::nc_grids`) or (bare) name of variable (see `ncmeta::nc_vars`) or index of grid to `activate`
 #' @export
-tidync <- function(x, ...) {
+tidync <- function(x, what, ...) {
   UseMethod("tidync")
 }
 
 #' @examples
-#' cf <- raadtools::cpolarfiles()
-#' nc <- tidync(cf$fullname[1])
-#' print(nc)
+#' #cf <- raadtools::cpolarfiles()
+#' #nc <- tidync(cf$fullname[1])
+#' #print(nc)
 #' @name tidync
 #' @export
 #' @importFrom ncmeta nc_meta
-tidync.character <- function(x, what) {
+tidync.character <- function(x, what, ...) {
     fexists <- file.exists(x)
 
    if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection", x))
@@ -72,16 +74,18 @@ tidync.character <- function(x, what) {
 #'
 #' @param ... reserved
 #'
-#' @name tidync
+#' @name print.tidync
 #' @export
-#' @importFrom dplyr %>% arrange distinct inner_join
+#' @importFrom dplyr %>% arrange distinct inner_join desc
+#' @importFrom utils head
+#' @importFrom rlang .data
 print.tidync <- function(x, ...) {
-  ushapes <- dplyr::distinct(x$grid, grid) %>% 
-    dplyr::arrange(desc(nchar(grid)))
+  ushapes <- dplyr::distinct(x$grid, .data$grid) %>% 
+    dplyr::arrange(desc(nchar(.data$grid)))
   nshapes <- nrow(ushapes)
   cat(sprintf("\nData Source (%i): %s ...\n", 
               nrow(x$source), 
-              paste(head(basename(x$source$source), 2), collapse = ", ")))
+              paste(utils::head(basename(x$source$source), 2), collapse = ", ")))
   cat(sprintf("\nGrids (%i) <dimension family> : <associated variables> \n\n", nshapes))
   if (nrow(ushapes) < 1L) {
     cat("No recognizable dimensions or variables \n(... maybe HDF5? Consider 'rhdf5' package from Bioconductor.)\n")
@@ -93,7 +97,7 @@ print.tidync <- function(x, ...) {
   nms <- if(nrow(ushapes) > 0)  nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
   estimatebigtime <- x$grid %>% 
-    dplyr::filter(grid == active(x)) %>% 
+    dplyr::filter(.data$grid == active(x)) %>% 
     dplyr::inner_join(x$axis, "variable") %>% 
     #dplyr::distinct(dimids) %>% 
     dplyr::inner_join(x$dimension, c("dimension" = "id"))
@@ -114,8 +118,8 @@ print.tidync <- function(x, ...) {
   dims <- x$dimension
   cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
   dimension_print <- if (nrow(dims) > 0) {
-    format(dims %>% dplyr::mutate(dimension = paste0("D", id)) %>% 
-             dplyr::select(dimension, id, name, length, unlim), n = Inf)
+    format(dims %>% dplyr::mutate(dimension = paste0("D", .data$id)) %>% 
+             dplyr::select(.data$dimension, .data$id, .data$name, .data$length, .data$unlim), n = Inf)
   } else {
   ""
 }

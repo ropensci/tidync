@@ -24,5 +24,5 @@ The dimension values are the coordinates, the positions along each axis.
 \examples{
 l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
 rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
-dimension_values(rnc)
+##dimension_values(rnc)
 }

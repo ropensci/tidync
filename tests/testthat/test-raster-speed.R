@@ -47,6 +47,7 @@ a <- tidync(tfile) %>% hyper_filter()
 
 
 if (FALSE) {
+  ## FIXME: raw_fun can't work with the list returned by hyperslice
 test_that("tidync is faster", {
 
   ## all xy, few time slices
