@@ -58,6 +58,7 @@ hyper_tibble.hyperfilter <- function(x, ...) {
     tib[[nm]] <- rep(x[[nm]][[nm]], each = prod_dims, length.out = total_prod)[okfilter]
     prod_dims <- prod_dims * nr
   }
-  tib
+  structure(tib, class = c("hyper_tbl", "tbl_df", "tbl", "data.frame"), 
+            dims = names(x))
   
 }

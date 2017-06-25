@@ -23,8 +23,12 @@ tidync <- function(x, ...) {
 #' @importFrom ncmeta nc_meta
 tidync.character <- function(x, what) {
     fexists <- file.exists(x)
-   if (!fexists) warning(sprintf("cannot connect: \n%s", x))
-       meta <- ncmeta::nc_meta(x)
+
+   if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection", x))
+      safemeta <- purrr::safely(ncmeta::nc_meta)
+      meta <- safemeta(x)
+       if (is.null(meta$result)) stop(meta$error)
+       meta <- meta$result
        out <- structure(list(source = meta$source, 
                              axis = meta$axis, 
                              grid = meta$grid,
