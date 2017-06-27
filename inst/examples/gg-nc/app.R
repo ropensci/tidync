@@ -10,6 +10,7 @@ library(ggplot2)
 ui <- fluidPage(
    
    titlePanel("ggplot2 for netcdf"),
+   bookmarkButton(),
    sidebarLayout(
       textInput("regex", "file name search", value = "nc$"), 
       shiny::selectInput("method", "file choice method", choices = c("first", "last", "random"))
@@ -17,22 +18,36 @@ ui <- fluidPage(
       
       # Show a plot of the generated distribution
       mainPanel(
-        tabPanel("file",
-         textOutput("tidy_summary"),
-         textOutput("filter_summary"),
-         DT::dataTableOutput("nctable"))
+        DT::dataTableOutput("nctable"),
+        verbatimTextOutput("tidy_summary"),
+        verbatimTextOutput("filter_summary"),
+        tabsetPanel( 
+        tabPanel("plot", 
+                 textInput("filter_exps", "hyper_filter(...)", value = ""),
+                 textInput("aes_exps", "aes(...)", value = ""),
+                 plotOutput("ggplot")),
+        tabPanel("help", verbatimTextOutput("help_text"))
       )
    
-)
+))
 
-# Define server logic required to draw a histogram
+
 server <- function(input, output) {
-   cat <- message
+   output$help_text <- renderPrint({
+     writeLines(c(
+       "1. Enter regex searches to hone in on files/paths.", 
+       "2. See set of matching files in table below, explore them.",
+       "3. Modify method to resolve final (single) file choice from available matches.", 
+       "4. Found a problem? Get in touch: https://github.com/hypertidy/tidync/issues", 
+       "", "", 
+       "Powered by raadsync, raadtools, tidync, RNetCDF, ncdf4, shiny and the tidyverse.",
+       "Michael Sumner, Australian Antarctic Division, Antarctic Climate and Ecosystems CRC, Hobart."))
+   })
    output$tidy_summary <- renderPrint({
-    print(get_tidync())
+     print(get_tidync())
    })
     output$filter_summary <- renderPrint({
-    print(get_filter())
+      print(get_filter())
     })
    get_files <- reactive({
       files %>% dplyr::filter(stringr::str_detect(basename(fullname), input$regex))
