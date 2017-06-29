@@ -50,11 +50,11 @@ server <- function(input, output) {
     s_tab <- get_summary_table()
     ndims <- nrow(s_tab)
     ord <- c(t(matrix(seq_len(nrow(s_tab) * 2), 2)))
-  c(  lapply(seq_len(ndims), function(i) 
+  list(  lapply(seq_len(ndims), function(i) 
        numericInput(sprintf("%sminval", s_tab$name[i]), sprintf("%s min",  s_tab$name[i]), 
                                              value =  s_tab$min[i], min = s_tab$min[i], max = s_tab$max[i]))
     ,
-    lapply(seq_along(nms), function(i) 
+    lapply(seq_len(ndims), function(i) 
       numericInput(sprintf("%smaxval",  s_tab$name[i]), sprintf("%s max",  s_tab$name[i]), 
                    value = s_tab$max[i], min = s_tab$min[i], max = s_tab$max[i]))
   )[ord]  
