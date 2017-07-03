@@ -84,7 +84,7 @@ hyper_filter.tidync <- function(x, ...) {
   quo_noname <- unname(quo_named)
   for (i in seq_along(quo_named)) {
     iname <- names(quo_named)[i]
-    trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
+    trans[[iname]] <- filter(trans[[iname]], !!!quo_noname[i])
     if (nrow(trans[[iname]]) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 
                                                 iname))
   }
@@ -119,11 +119,20 @@ print.hyperfilter <- function(x, ...) {
   source <- attr(x, "source")
   ## FIXME: hack on the first source available
   sourcename <- source$source[1L]
-  summ <- dplyr::bind_rows(
-    lapply(x,  function(a) dplyr::summarize_all(a %>% 
-            dplyr::select(-.data$index, -.data$id) %>% group_by(.data$name, .data$coord_dim)
-            , dplyr::funs(min, max, length)))
-            )
+ # summ <- dplyr::bind_rows(
+#    lapply(x,  function(a) dplyr::summarize_all(a %>% 
+#            dplyr::select(-.data$index, -.data$id) %>% group_by(.data$name, .data$coord_dim)
+#            , dplyr::funs(min, max, length)))
+#            )
+  summ <- vector("list", length(x))
+  for (i in seq_along(x)) {
+    if (is.numeric(x[[i]][[1]])) {
+      summ[[i]] <- tibble(name = names(x[[i]])[1], coord_dim = x[[i]]$coord_dim[1], min = min(x[[i]][[1]]), max = max(x[[i]][[1]]), length = nrow(x[[i]]))
+    } else {
+      summ[[i]] <- tibble(name = names(x[[i]])[1], coord_dim = x[[i]]$coord_dim[1], min = NA_real_, max = NA_real_, length = nrow(x[[i]]))
+    }
+  }
+  summ <- dplyr::bind_rows(summ)
   print(source)
   cat("filtered dimension summary: \n")
   print(summ)
