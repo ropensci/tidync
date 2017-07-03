@@ -100,18 +100,18 @@ print.tidync <- function(x, ...) {
     dplyr::filter(.data$grid == active(x)) %>% 
     dplyr::inner_join(x$axis, "variable") %>% 
     #dplyr::distinct(dimids) %>% 
-    dplyr::inner_join(x$dimension, c("dimension" = "id"))
-
+    dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
+    distinct(.data$dimension, .data$length)
   ## hack to assume always double numeric 
   ## TODO because could be integer after load
-  estimatebigtime <- format(prod(estimatebigtime$length))
+  estimatebigtime <- prod(estimatebigtime$length)
   ##print_bytes(            * 8)
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
 
     cat(paste((x$grid %>% dplyr::inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
-    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", estimatebigtime, 
+    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", format(estimatebigtime), 
                                                 sprintf(" value%s per variable)", ifelse(estimatebigtime > 1, "s", "")))
     cat("\n")
   }
@@ -119,7 +119,7 @@ print.tidync <- function(x, ...) {
   cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
   dimension_print <- if (nrow(dims) > 0) {
     format(dims %>% dplyr::mutate(dimension = paste0("D", .data$id)) %>% 
-             dplyr::select(.data$dimension, .data$id, .data$name, .data$length, .data$unlim), n = Inf)
+             dplyr::select(.data$dimension, .data$id, .data$name, .data$length, .data$unlim, .data$coord_dim), n = Inf)
   } else {
   ""
 }

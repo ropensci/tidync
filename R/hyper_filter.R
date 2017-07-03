@@ -40,7 +40,8 @@ hyper_filter.tidync <- function(x, ...) {
     dplyr::filter(.data$grid == active(x)) %>% 
     dplyr::inner_join(x$axis, "variable") %>% 
     dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
-    dplyr::distinct(.data$name, .data$dimension) 
+    dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
+    dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim)
   ## potentially flaky here because the dimension-order is not
   ## necessarily the way the variable uses them, i.e. l3file
   ## is lon, lat but lat is 0 and lon is 1
@@ -50,13 +51,22 @@ hyper_filter.tidync <- function(x, ...) {
 #  print("doom")
   ## dimensions don't necessarily have variables
   ## FIXME
-if (!all(dims$name %in% x$variable$name)) warning("dims don't have values...we are going to error...")
+#if (!all(dims$name %in% x$variable$name)) warning("dims don't have values...we are going to error...")
 # trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$source$source, .)), dims$name), tibble::as_tibble)
  
   ## FIXME: this is slow, and possibly redundant if we use the ncdf4 con anyway, ncmeta should provide
   ## this as a an upfront resource
-  trans0 <- setNames(lapply(dims$name, function(vname) tibble::as_tibble(list(value = nc_get(x$source$source, vname)) )), 
-                     dims$name)
+ # trans0 <- setNames(lapply(seq_len(nrow(dims)), function(vindex) tibble::as_tibble(list(value = nc_get(x$source$source, vname, len = )) )), 
+#                     dims$name)
+  
+  trans0 <- vector("list", nrow(dims))
+  for (i in seq_along(trans0)) {
+    if (dims$coord_dim[i]) {
+      trans0[[i]] <- tibble::as_tibble(list(value = nc_get(x$source$source, dims$name[i] )))
+    } else {
+      trans0[[i]] <- tibble::as_tibble(list(value = seq_len(dims$length[i])))
+    }
+  }
   
   trans <- trans0
 #  still debugging here, so live with a copy
@@ -66,6 +76,7 @@ if (!all(dims$name %in% x$variable$name)) warning("dims don't have values...we a
     trans[[i]]$id <- dims$dimension[i]
     trans[[i]]$name <- dims$name[i]
     trans[[i]]$filename <- x$file$dsn
+    trans[[i]]$coord_dim <- dims$coord_dim[i]
   }
   
   quo_named <- rlang::quos(...)
@@ -110,7 +121,7 @@ print.hyperfilter <- function(x, ...) {
   sourcename <- source$source[1L]
   summ <- dplyr::bind_rows(
     lapply(x,  function(a) dplyr::summarize_all(a %>% 
-            dplyr::select(-.data$index, -.data$id) %>% group_by(.data$name)
+            dplyr::select(-.data$index, -.data$id) %>% group_by(.data$name, .data$coord_dim)
             , dplyr::funs(min, max, length)))
             )
   print(source)
@@ -140,7 +151,9 @@ nc_get.character <- function(x, v) {
   if (!is.null(val$result)) {
     return(val$result)
     } else {
-      stop("error")
+      #stop("error")
+      warning("dimension has no coordinates, returning index")
+      return()
     }
 }
 nc_get.NetCDF <- function(x, v) {
