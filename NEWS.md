@@ -1,5 +1,7 @@
 # tidync dev
 
+* hyper filter print now handles the case of char-type coordinate values by setting the min and max to NA_real_
+
 * various improvements and fixes for the print method for tidync
 
 * support coordinate-less dimensions has been added, there is new information in the print summary about which dimensions are a "coord_dim" and this results in the axis transform tables using the index as the 'coordinate value' 
