@@ -129,9 +129,9 @@ print.hyperfilter <- function(x, ...) {
   summ <- vector("list", length(x))
   for (i in seq_along(x)) {
     if (is.numeric(x[[i]][[1]])) {
-      summ[[i]] <- tibble(name = names(x[[i]])[1], coord_dim = x[[i]]$coord_dim[1], min = min(x[[i]][[1]]), max = max(x[[i]][[1]]), length = nrow(x[[i]]))
+      summ[[i]] <- tibble(name = x[[i]]$name[1], coord_dim = x[[i]]$coord_dim[1], min = min(x[[i]][[1]]), max = max(x[[i]][[1]]), length = nrow(x[[i]]))
     } else {
-      summ[[i]] <- tibble(name = names(x[[i]])[1], coord_dim = x[[i]]$coord_dim[1], min = NA_real_, max = NA_real_, length = nrow(x[[i]]))
+      summ[[i]] <- tibble(name = x[[i]]$name[1], coord_dim = x[[i]]$coord_dim[1], min = NA_real_, max = NA_real_, length = nrow(x[[i]]))
     }
   }
   summ <- dplyr::bind_rows(summ)
