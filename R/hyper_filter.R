@@ -71,20 +71,22 @@ hyper_filter.tidync <- function(x, ...) {
   trans <- trans0
 #  still debugging here, so live with a copy
   for (i in seq_along(dims$name)) {
-    names(trans[[i]]) <- dims$name[i]
+    #names(trans[[i]]) <- dims$name[i]
     trans[[i]]$index <- seq_len(nrow(trans[[i]])) 
     trans[[i]]$id <- dims$dimension[i]
     trans[[i]]$name <- dims$name[i]
     trans[[i]]$filename <- x$file$dsn
     trans[[i]]$coord_dim <- dims$coord_dim[i]
   }
-  
+  names(trans) <- dims$name
   quo_named <- rlang::quos(...)
   if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100'")
   quo_noname <- unname(quo_named)
   for (i in seq_along(quo_named)) {
-    iname <- names(quo_named)[i]
-    trans[[iname]] <- filter(trans[[iname]], !!!quo_noname[i])
+    iname <- names(quo_named)
+    #print(quo_noname)
+    
+    trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
     if (nrow(trans[[iname]]) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 
                                                 iname))
   }
