@@ -15,7 +15,7 @@ hyper_filter_Spatial <- function(x, y, ...) {
 #' NSE arguments must be named as per the dimensions in the variable. This is a restrictive variant of `dplyr::filter`, 
 #' with a syntax more like `dplyr::mutate`. This ensures that each element is named, so we know which dimension to 
 #' apply this to, but also that the expression evaluated against can do some extra work for a nuanced test. 
-#' @param x NetCDF object
+#' @param .x NetCDF file, connection object, or `tidync` object
 #' @param ... currently ignored
 #'
 #' @return data frame
@@ -26,7 +26,7 @@ hyper_filter_Spatial <- function(x, y, ...) {
 #' ## inst/dev/filtrate_early.R
 #' ##http://rpubs.com/cyclemumner/tidyslab
 #' # 
-hyper_filter <- function(x, ...) {
+hyper_filter <- function(.x, ...) {
   UseMethod("hyper_filter")
 }
 #' @name hyper_filter

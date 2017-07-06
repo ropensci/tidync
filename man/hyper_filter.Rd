@@ -14,7 +14,7 @@
 \alias{print.hyperfilter}
 \title{Array subset by nse}
 \usage{
-hyper_filter(x, ...)
+hyper_filter(.x, ...)
 
 \method{hyper_filter}{tidync}(.x, ...)
 
@@ -27,7 +27,7 @@ hyper_filter(x, ...)
 \method{print}{hyperfilter}(x, ...)
 }
 \arguments{
-\item{x}{NetCDF object}
+\item{.x}{NetCDF file, connection object, or \code{tidync} object}
 
 \item{...}{currently ignored}
 }
