@@ -18,11 +18,11 @@ hyper_filter(.x, ...)
 
 \method{hyper_filter}{tidync}(.x, ...)
 
-\method{hyper_filter}{default}(x, ...)
+\method{hyper_filter}{default}(.x, ...)
 
-\method{hyper_filter}{character}(x, ...)
+\method{hyper_filter}{character}(.x, ...)
 
-\method{hyper_filter}{hyperfilter}(x, ...)
+\method{hyper_filter}{hyperfilter}(.x, ...)
 
 \method{print}{hyperfilter}(x, ...)
 }

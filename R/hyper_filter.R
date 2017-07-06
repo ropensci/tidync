@@ -83,17 +83,17 @@ hyper_filter.tidync <- function(.x, ...) {
 
 #' @name hyper_filter
 #' @export
-hyper_filter.default <- function(x, ...) {
+hyper_filter.default <- function(.x, ...) {
   structure(x, class = c("hyperfilter", class(x)))
 }
 #' @name hyper_filter
 #' @export
-hyper_filter.character <- function(x, ...) {
+hyper_filter.character <- function(.x, ...) {
   tidync(x) %>% hyper_filter(...)
 }
 #' @name hyper_filter
 #' @export
-hyper_filter.hyperfilter <- function(x, ...) {
+hyper_filter.hyperfilter <- function(.x, ...) {
   stop("too many filters in the chain, you can't (yet) 'hyper_filter' a hyperfilter")
 }
 #' @name hyper_filter
