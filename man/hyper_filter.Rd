@@ -16,7 +16,7 @@
 \usage{
 hyper_filter(x, ...)
 
-\method{hyper_filter}{tidync}(xdata, ...)
+\method{hyper_filter}{tidync}(.x, ...)
 
 \method{hyper_filter}{default}(x, ...)
 

@@ -27,10 +27,15 @@ tidync.character <- function(x, what, ...) {
   if (length(x) > 1) warning("multiple sources: only one source name allowed, ignoring all but the first")
     fexists <- file.exists(x)
 
-   if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection", x))
+   if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", x))
       safemeta <- purrr::safely(ncmeta::nc_meta)
       meta <- safemeta(x)
-       if (is.null(meta$result)) stop(meta$error)
+       if (is.null(meta$result)) {
+         cat("Oops, connection to source failed. \n")
+         print(x)
+         stop(meta$error)
+       }
+      if (!fexists) cat("Connection succeeded. \n")      
        meta <- meta$result
        out <- structure(list(source = meta$source, 
                              axis = meta$axis, 

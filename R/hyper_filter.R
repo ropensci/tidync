@@ -34,48 +34,50 @@ hyper_filter <- function(x, ...) {
 #' @importFrom dplyr %>% mutate 
 #' @importFrom forcats as_factor
 #' @importFrom tibble as_tibble
-hyper_filter.tidync <- function(xdata, ...) {
+hyper_filter.tidync <- function(.x, ...) {
+  grid <- .x$grid
+  axis <- .x$axis
+  dimension <- .x$dimension
+  source <- .x$source
+  active_x <- active(.x)
+  
   quo_named <- rlang::quos(...)
-  return(quo_named)
-  dims <- xdata$grid %>% 
-    dplyr::filter(.data$grid == active(xdata)) %>% 
-    dplyr::inner_join(xdata$axis, "variable") %>% 
-    dplyr::inner_join(xdata$dimension, c("dimension" = "id")) %>% 
+  dims <- grid %>% 
+    dplyr::filter(.data$grid == active_x) %>% 
+    dplyr::inner_join(axis, "variable") %>% 
+    dplyr::inner_join(dimension, c("dimension" = "id")) %>% 
     dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
     dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim)
 
   trans0 <- vector("list", nrow(dims))
   names(trans0) <- dims$name
-
+  
   for (i in seq_along(trans0)) {
     if (dims$coord_dim[i]) {
-      trans0[[i]] <- tibble::as_tibble(list(value = nc_get(xdata$source$source, dims$name[i] )))
+      trans0[[i]] <- tibble::as_tibble(list(value = nc_get(source$source, dims$name[i] )))
     } else {
       trans0[[i]] <- tibble::as_tibble(list(value = seq_len(dims$length[i])))
     }
-    names(trans[[i]]) <- gsub("^value$", dims$name[i], names(trans[[i]]))
-    trans[[i]]$index <- seq_len(nrow(trans[[i]])) 
-    trans[[i]]$id <- dims$dimension[i]
-    trans[[i]]$name <- dims$name[i]
-   # trans[[i]]$filename <- xdata$source$source
-    trans[[i]]$coord_dim <- dims$coord_dim[i]
-  }
+    names(trans0[[i]]) <- gsub("^value$", dims$name[i], names(trans0[[i]]))
+    trans0[[i]]$index <- seq_len(nrow(trans0[[i]])) 
+    trans0[[i]]$id <- dims$dimension[i]
+    trans0[[i]]$name <- dims$name[i]
 
+    trans0[[i]]$coord_dim <- dims$coord_dim[i]
+  }
   if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100'")
   quo_noname <- unname(quo_named)
   for (i in seq_along(quo_named)) {
     iname <- names(quo_named)[i]
-    trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
-    if (nrow(trans[[iname]]) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 
+    trans0[[iname]] <- dplyr::filter(trans0[[iname]], !!!quo_noname[i])
+    if (nrow(trans0[[iname]]) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 
                                                 iname))
   }
-  return(trans)
-  #trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
- out <- setNames(hyper_filter(trans) %>% activate(active(xdata)), dims$name)
-#  out <- structure(trans, class = c("hyperfilter", class(trans)))
+
+ out <- setNames(hyper_filter(trans0) %>% activate(active_x), dims$name)
   ## FIXME: using attributes is a hack  https://github.com/hypertidy/tidync/issues/33
-  attr(out, "source") <- xdata$source
-  attr(out, "grid") <- xdata$grid
+  attr(out, "source") <- source
+  attr(out, "grid") <- grid
   out
 }
 
