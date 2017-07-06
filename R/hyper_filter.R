@@ -34,67 +34,48 @@ hyper_filter <- function(x, ...) {
 #' @importFrom dplyr %>% mutate 
 #' @importFrom forcats as_factor
 #' @importFrom tibble as_tibble
-hyper_filter.tidync <- function(x, ...) {
-  
-  dims <- x$grid %>% 
-    dplyr::filter(.data$grid == active(x)) %>% 
-    dplyr::inner_join(x$axis, "variable") %>% 
-    dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
+hyper_filter.tidync <- function(xdata, ...) {
+  quo_named <- rlang::quos(...)
+  return(quo_named)
+  dims <- xdata$grid %>% 
+    dplyr::filter(.data$grid == active(xdata)) %>% 
+    dplyr::inner_join(xdata$axis, "variable") %>% 
+    dplyr::inner_join(xdata$dimension, c("dimension" = "id")) %>% 
     dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
     dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim)
-  ## potentially flaky here because the dimension-order is not
-  ## necessarily the way the variable uses them, i.e. l3file
-  ## is lon, lat but lat is 0 and lon is 1
-  ## it appears that native order is correct, but this needs to come
-  ## from ncmeta
-  ##%>%  dplyr::arrange(dimension)
-#  print("doom")
-  ## dimensions don't necessarily have variables
-  ## FIXME
-#if (!all(dims$name %in% x$variable$name)) warning("dims don't have values...we are going to error...")
-# trans <- lapply(setNames(purrr::map(dims$name, ~nc_get(x$source$source, .)), dims$name), tibble::as_tibble)
- 
-  ## FIXME: this is slow, and possibly redundant if we use the ncdf4 con anyway, ncmeta should provide
-  ## this as a an upfront resource
- # trans0 <- setNames(lapply(seq_len(nrow(dims)), function(vindex) tibble::as_tibble(list(value = nc_get(x$source$source, vname, len = )) )), 
-#                     dims$name)
-  
+
   trans0 <- vector("list", nrow(dims))
+  names(trans0) <- dims$name
+
   for (i in seq_along(trans0)) {
     if (dims$coord_dim[i]) {
-      trans0[[i]] <- tibble::as_tibble(list(value = nc_get(x$source$source, dims$name[i] )))
+      trans0[[i]] <- tibble::as_tibble(list(value = nc_get(xdata$source$source, dims$name[i] )))
     } else {
       trans0[[i]] <- tibble::as_tibble(list(value = seq_len(dims$length[i])))
     }
-  }
-  
-  trans <- trans0
-#  still debugging here, so live with a copy
-  for (i in seq_along(dims$name)) {
-    #names(trans[[i]]) <- dims$name[i]
+    names(trans[[i]]) <- gsub("^value$", dims$name[i], names(trans[[i]]))
     trans[[i]]$index <- seq_len(nrow(trans[[i]])) 
     trans[[i]]$id <- dims$dimension[i]
     trans[[i]]$name <- dims$name[i]
-    trans[[i]]$filename <- x$file$dsn
+   # trans[[i]]$filename <- xdata$source$source
     trans[[i]]$coord_dim <- dims$coord_dim[i]
   }
-  names(trans) <- dims$name
-  quo_named <- rlang::quos(...)
+
   if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100'")
   quo_noname <- unname(quo_named)
   for (i in seq_along(quo_named)) {
-    iname <- names(quo_named)
-    #print(quo_noname)
-    
+    iname <- names(quo_named)[i]
     trans[[iname]] <- dplyr::filter(trans[[iname]], !!!quo_noname[i])
     if (nrow(trans[[iname]]) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 
                                                 iname))
   }
+  return(trans)
   #trans <- lapply(trans, function(ax) {ax$filename <- x$file$filename; ax})
-  out <- hyper_filter(trans) %>% activate(active(x))
+ out <- setNames(hyper_filter(trans) %>% activate(active(xdata)), dims$name)
+#  out <- structure(trans, class = c("hyperfilter", class(trans)))
   ## FIXME: using attributes is a hack  https://github.com/hypertidy/tidync/issues/33
-  attr(out, "source") <- x$source
-  attr(out, "grid") <- x$grid
+  attr(out, "source") <- xdata$source
+  attr(out, "grid") <- xdata$grid
   out
 }
 

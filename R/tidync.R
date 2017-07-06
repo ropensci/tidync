@@ -24,6 +24,7 @@ tidync <- function(x, what, ...) {
 #' @export
 #' @importFrom ncmeta nc_meta
 tidync.character <- function(x, what, ...) {
+  if (length(x) > 1) warning("multiple sources: only one source name allowed, ignoring all but the first")
     fexists <- file.exists(x)
 
    if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection", x))
