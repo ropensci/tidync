@@ -16,7 +16,7 @@ test_that("standard mapped", {
     dplyr::mutate(fullname = file.path(root, file)) %>% dplyr::pull(fullname)
   tidync(f2) %>% hyper_filter()
   # https://github.com/hypertidy/tidync/issues/13
- expect_error( tidync(f2) %>% hyper_filter(y = index < 10,x = index < 5), "object 'index' not found")
+ tidync(f2) %>% hyper_filter(y = index < 10,x = index < 5)
   
   })
 

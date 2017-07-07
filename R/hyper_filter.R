@@ -84,12 +84,12 @@ hyper_filter.tidync <- function(.x, ...) {
 #' @name hyper_filter
 #' @export
 hyper_filter.default <- function(.x, ...) {
-  structure(x, class = c("hyperfilter", class(x)))
+  structure(.x, class = c("hyperfilter", class(.x)))
 }
 #' @name hyper_filter
 #' @export
 hyper_filter.character <- function(.x, ...) {
-  tidync(x) %>% hyper_filter(...)
+  tidync(.x) %>% hyper_filter(...)
 }
 #' @name hyper_filter
 #' @export
