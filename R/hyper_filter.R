@@ -1,14 +1,4 @@
 
-hyper_filter_Spatial <- function(x, y, ...) {
-  #stop("nothing to see here")
-  #warning("assuming first two dimensions are longitude-latitude ...")
-  #dim_tabs <- hyper_filter(x)
-  #xy_names <- names(dim_tabs)[1:2]
-  #xy_grid <- as.matrix(expand.grid(x = dim_tabs[[1]][[xy_names[1]]], 
-  #                        y = dim_tabs[[1]][[xy_names[1]]]))
-  #over(y, SpatialPoints(xy_grid, proj4string = crs(y)))
-}
-
 
 #' Array subset by nse
 #'
@@ -97,6 +87,7 @@ hyper_filter.hyperfilter <- function(.x, ...) {
   stop("too many filters in the chain, you can't (yet) 'hyper_filter' a hyperfilter")
 }
 #' @name hyper_filter
+#' @param x tidync object to print
 #' @importFrom dplyr bind_rows funs group_by select summarize_all
 #' @importFrom rlang .data
 #' @export

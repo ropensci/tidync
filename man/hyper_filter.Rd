@@ -30,6 +30,8 @@ hyper_filter(.x, ...)
 \item{.x}{NetCDF file, connection object, or \code{tidync} object}
 
 \item{...}{currently ignored}
+
+\item{x}{tidync object to print}
 }
 \value{
 data frame
