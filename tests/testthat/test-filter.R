@@ -23,6 +23,7 @@ test_that("standard mapped", {
 
 ## FIXME: we need a lot more examples!  
 test_that("non-local sources work", {
+  skip_on_travis()
   u <- "http://coastwatch.pfeg.noaa.gov/erddap/griddap/erdQSwind3day"
   tidync(u) %>% hyper_filter()
   ht <- tidync(u) %>% hyper_filter(longitude = longitude > 150 & longitude < 180, 
