@@ -30,11 +30,28 @@ hyper_index.character <- function(x, varname, ...) {
 #' @importFrom tibble tibble
 hyper_index.hyperfilter <- function(x, ...) {
   out <- bind_rows(lapply(x, 
-                   function(sub_trans) tibble::tibble(name = sub_trans$name[1], 
-                                                      start = min(sub_trans$index), 
-                                                      count = length(sub_trans$index), 
+                   function(sub_trans) {
+                     
+                     selection_index <- which(sub_trans$selected)
+                     start <- min(selection_index)
+                     end <- max(selection_index)
+                    
+                     index <- seq(start, end, by = 1L)
+                     if (length(index) > length(selection_index)) {
+                       mss <- "Please use <future in-dev group-by, align_shape> capability for arbitrary extraction... :)"
+                       
+                       warning(sprintf("subset logic for slice on axis '%s' is not contiguous\n%s", sub_trans$name[1], mss), .call = FALSE)
+                     }
+                     ## Todo handle zero selected
+                     tibble::tibble(name = sub_trans$name[1], 
+                                                      ## transition to selected idiom
+                                                      #start = min(sub_trans$index), 
+                                                      start = start, 
+                                                      count = length(index), 
                                                       grid = active(x), 
-                                                      file =  attr(x, "source")$source[1])))
+                                                      file =  attr(x, "source")$source[1])
+                   }
+                   ))
   ## FIXME: hack we shouldn't need https://github.com/hypertidy/tidync/issues/33
   out$variable <- lapply(seq_len(nrow(out)), function(a) variables_from_grid(attr(x, "grid"), active(x)))
 
