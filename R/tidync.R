@@ -37,13 +37,14 @@ tidync.character <- function(x, what, ...) {
        }
       if (!fexists) cat("Connection succeeded. \n")      
        meta <- meta$result
-       out <- structure(list(source = meta$source, 
+       out <- list(source = meta$source, 
                              axis = meta$axis, 
                              grid = meta$grid,
                              dimension = meta$dimension, 
-                             variable = meta$variable),
-                        
-                        class = "tidync")
+                             variable = meta$variable)
+       out$transforms <- axis_transforms(out)
+       out <- structure(out,           class = "tidync")
+       
        ## we can't activate nothing
        if (nrow(out$axis) < 1) return(out)
        if (missing(what)) what <- 1

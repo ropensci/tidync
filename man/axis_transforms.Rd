@@ -4,11 +4,15 @@
 \alias{axis_transforms}
 \alias{axis_transforms}
 \alias{axis_transforms.tidync}
+\alias{axis_transforms}
+\alias{axis_transforms.default}
 \title{Axis transforms}
 \usage{
 axis_transforms(x, ...)
 
 \method{axis_transforms}{tidync}(x, ...)
+
+\method{axis_transforms}{default}(x, ...)
 }
 \arguments{
 \item{x}{tidync object}

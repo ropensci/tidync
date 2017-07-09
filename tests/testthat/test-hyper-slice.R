@@ -10,7 +10,9 @@ test_that("slicing works", {
   library(dplyr)
   tidync(l3file) %>% hyper_filter(lat = between(lat, -45, -42), 
                                   lon = lon > 170) %>% hyper_slice()
-  expect_error(tidync(l3file) %>% hyper_filter(lat = between(lat, -42, -45), 
+  expect_error(
+    ## 
+    tidync(l3file) %>% hyper_filter(lat = between(lat, -42, -45), 
                                                lon = lon > 170) %>% hyper_slice()
   )
 })

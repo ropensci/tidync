@@ -9,14 +9,18 @@ axis_transforms <- function(x, ...) {
 }
 #' @name axis_transforms
 axis_transforms.tidync <- function(x, ...) {
+  x$transforms
+}
+#' @name axis_transforms
+axis_transforms.default <- function(x, ...) {
   grid <- x$grid
   axis <- x$axis
   dimension <- x$dimension
   source <- x$source
-  active_x <- active(x)
-  
+  ## ignore activation, just do all
+  #active_x <- active(x)
   dims <- grid %>% 
-    dplyr::filter(.data$grid == active_x) %>% 
+   # dplyr::filter(.data$grid == active_x) %>% 
     dplyr::inner_join(axis, "variable") %>% 
     dplyr::inner_join(dimension, c("dimension" = "id")) %>% 
     dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
