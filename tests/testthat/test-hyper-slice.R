@@ -4,7 +4,6 @@ test_that("slicing works", {
   l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
   tidync(l3file) %>% hyper_index() %>% hyper_slice()
   
-  
   a <- tidync(l3file) %>% hyper_filter(lon = index == 100) %>% hyper_slice()
   tidync(l3file) %>% hyper_filter(lon = index == 100)
   library(dplyr)

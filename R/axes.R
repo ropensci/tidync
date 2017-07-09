@@ -1,6 +1,7 @@
 #' Axis transforms
 #'
 #' @param x tidync object
+#' @param active_only return all axes (default) or only the ones in the active grid
 #' @param ... ignored
 #'
 #' @return list of axis transforms
@@ -8,9 +9,20 @@ axis_transforms <- function(x, ...) {
   UseMethod("axis_transforms")
 }
 #' @name axis_transforms
-axis_transforms.tidync <- function(x, ...) {
-  x$transforms
+active_axis_transforms <- function(x, ...) {
+  grid <- x$grid
+  axis <- x$axis
+  dimension <- x$dimension
+  active_x <- active(x)
+  dims <- grid %>% 
+    dplyr::filter(.data$grid == active_x) %>% 
+    dplyr::inner_join(axis, "variable") %>% 
+    dplyr::inner_join(dimension, c("dimension" = "id")) %>% 
+    dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
+    dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim)
+  x$transforms[dims$name]
 }
+
 #' @name axis_transforms
 axis_transforms.default <- function(x, ...) {
   grid <- x$grid
@@ -44,6 +56,7 @@ axis_transforms.default <- function(x, ...) {
 
   }
   
+
   transforms
   
 }

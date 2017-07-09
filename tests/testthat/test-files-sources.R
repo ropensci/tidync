@@ -15,7 +15,7 @@ test_that("files and bad files are handled", {
   tidync(roms_file)
   
   l3_file <- raadtools::ocfiles()$fullname[1]  
-   tidync(l3_file)
+  tidync(l3_file) %>% expect_warning() %>% expect_error() 
 })
 
 

@@ -35,6 +35,15 @@ tidync.character <- function(x, what, ...) {
          print(x)
          stop(meta$error)
        }
+      bad_dim <- nrow(meta$result$dimension) < 1
+      bad_var <- nrow(meta$result$variable) < 1
+      if (bad_dim) {
+        warning("no dimensions found")
+      }
+      if (bad_dim) {
+        warning("no variables found")
+      }
+      if (bad_dim & bad_var) stop("no variables or dimension recognizable (is this a source with compound-types?)")
       if (!fexists) cat("Connection succeeded. \n")      
        meta <- meta$result
        out <- list(source = meta$source, 

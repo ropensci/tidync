@@ -9,3 +9,4 @@ test_that("building the index  works", {
   fnc %>% hyper_index()
   nc %>% hyper_filter(lon = lon > 170, lat = index > 2000) %>% hyper_index()
 })
+

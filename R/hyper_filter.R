@@ -26,7 +26,7 @@ hyper_filter <- function(.x, ...) {
 #' @importFrom tibble as_tibble
 hyper_filter.tidync <- function(.x, ...) {
   quo_named <- rlang::quos(...)
-  trans0 <- axis_transforms(.x)
+  trans0 <- active_axis_transforms(.x)
   if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100'")
   quo_noname <- unname(quo_named)
   for (i in seq_along(quo_named)) {

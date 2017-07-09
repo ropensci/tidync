@@ -3,14 +3,14 @@
 \name{axis_transforms}
 \alias{axis_transforms}
 \alias{axis_transforms}
-\alias{axis_transforms.tidync}
+\alias{active_axis_transforms}
 \alias{axis_transforms}
 \alias{axis_transforms.default}
 \title{Axis transforms}
 \usage{
 axis_transforms(x, ...)
 
-\method{axis_transforms}{tidync}(x, ...)
+active_axis_transforms(x, ...)
 
 \method{axis_transforms}{default}(x, ...)
 }
@@ -18,6 +18,8 @@ axis_transforms(x, ...)
 \item{x}{tidync object}
 
 \item{...}{ignored}
+
+\item{active_only}{return all axes (default) or only the ones in the active grid}
 }
 \value{
 list of axis transforms
