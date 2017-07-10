@@ -12,23 +12,29 @@
 \alias{hyper_slice.character}
 \title{hyper slice}
 \usage{
-hyper_slice(x, ..., raw_datavals = FALSE)
+hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE)
 
-\method{hyper_slice}{hyperindex}(x, ..., raw_datavals = FALSE)
+\method{hyper_slice}{hyperindex}(x, select_var = NULL, ...,
+  raw_datavals = FALSE)
 
-\method{hyper_slice}{hyperfilter}(x, ..., raw_datavals = FALSE)
+\method{hyper_slice}{hyperfilter}(x, select_var = NULL, ...,
+  raw_datavals = FALSE)
 
-\method{hyper_slice}{tidync}(x, ..., raw_datavals = FALSE)
+\method{hyper_slice}{tidync}(x, select_var = NULL, ...,
+  raw_datavals = FALSE)
 
-\method{hyper_slice}{character}(x, ..., raw_datavals = FALSE)
+\method{hyper_slice}{character}(x, select_var = NULL, ...,
+  raw_datavals = FALSE)
 }
 \arguments{
 \item{x}{a hyperindex-able thing}
+
+\item{select_var}{optional vector of variable names to select}
 
 \item{...}{ignored}
 
 \item{raw_datavals}{logical to control whether scaling in the NetCDF is applied or not}
 }
 \description{
-hyper slice
+By default all variables in the active grid are returned, use \code{select_var} to limit.
 }
