@@ -54,7 +54,7 @@ hyper_tibble.hyperfilter <- function(x, ...) {
   for (i in seq_along(x)) {
     #    if (names(x)[i] == "nominal_space") next;
     nm <- names(x)[i]
-    nr <- nrow(x[[i]])
+    nr <- sum(x[[i]]$selected)
     tib[[nm]] <- rep(dplyr::filter(x[[nm]], selected)[[nm]], each = prod_dims, length.out = total_prod)[okfilter]
     prod_dims <- prod_dims * nr
   }
