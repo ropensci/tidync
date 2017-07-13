@@ -133,11 +133,9 @@ Stay tuned.
 
 ## Limitations
 
-* we can't filter on multidimensional values (yet)
+* we can't do grouped filters (i.e. polygon-overlay extraction), but it works
 * compound types are not supported
-* groups are not exposed as entities
-* dims without variables are not handled currently, they should at least work in "index" form but don't yet https://github.com/hypertidy/tidync/issues/30
-* testing has so far been minimal, and things will change
+* groups are not exposed
 
 ## Terminology
 

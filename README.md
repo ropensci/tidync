@@ -121,12 +121,12 @@ tidync(file)
 #> 
 #> Dimensions (4): 
 #>   
-#>   dimension    id          name length unlim 
-#>       <chr> <dbl>         <chr>  <dbl> <lgl> 
-#> 1        D0     0           lat   2160 FALSE 
-#> 2        D1     1           lon   4320 FALSE 
-#> 3        D2     2           rgb      3 FALSE 
-#> 4        D3     3 eightbitcolor    256 FALSE
+#>   dimension    id          name length unlim coord_dim 
+#>       <chr> <dbl>         <chr>  <dbl> <lgl>     <lgl> 
+#> 1        D0     0           lat   2160 FALSE      TRUE 
+#> 2        D1     1           lon   4320 FALSE      TRUE 
+#> 3        D2     2           rgb      3 FALSE     FALSE 
+#> 4        D3     3 eightbitcolor    256 FALSE     FALSE
 ```
 
 See this article for more: <https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html>
