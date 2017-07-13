@@ -21,6 +21,7 @@ hyper_slice.hyperindex <- function(x, select_var = NULL, ..., raw_datavals = FAL
       print(paste(x$variable[[1]], collapse = ", "))
       stop(sprintf("some select_var variables not found %s", select_var))
     }
+    ## todo, make this quosic?
     varnames <- select_var
   }
   get_vara <- function(vara)  {
@@ -29,7 +30,17 @@ hyper_slice.hyperindex <- function(x, select_var = NULL, ..., raw_datavals = FAL
     ncdf4::ncvar_get(con, vara, 
                      start = x$start, count = x$count, 
                      raw_datavals = raw_datavals)
-}
+  }
+  mess <- sprintf("pretty big extraction here with (%i*%i values [%s]*%i", 
+                  prod(x$count), length(varnames), 
+                  paste(x$count, collapse = ", "), 
+                  length(varnames))
+  #if (prod(x$count) > 1e8) warning(mess)
+  if ((prod(x$count) * length(varnames)) > 1.2e8 & interactive()) {
+    yes <- yesno::yesno(mess, "\nProceed?")
+    if (!yes) return(invisible(NULL))
+  }
+
   stats::setNames(lapply(varnames, get_vara), varnames)
  }
 #' @name hyper_slice

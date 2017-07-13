@@ -15,3 +15,10 @@ test_that("slicing works", {
                                                lon = lon > 170) %>% hyper_slice()
   )
 })
+
+test_that("warn/confirm on crazy big", {
+  stopifnot(we_are_raady())
+  f <- raadtools::cpolarfiles()$fullname[1]
+  a <- hyper_filter(f, xi_rho = index < 400) %>% hyper_slice(select_var = "salt")
+
+})

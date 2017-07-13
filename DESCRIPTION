@@ -22,7 +22,8 @@ Imports: activate,
     RNetCDF,
     raster,
     rlang, 
-    tibble
+    tibble,
+    yesno
 RoxygenNote: 6.0.1
 Suggests: ggplot2,
     knitr,
