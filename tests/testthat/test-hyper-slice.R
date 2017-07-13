@@ -19,6 +19,6 @@ test_that("slicing works", {
 test_that("warn/confirm on crazy big", {
   stopifnot(we_are_raady())
   f <- raadtools::cpolarfiles()$fullname[1]
-  a <- hyper_filter(f, xi_rho = index < 400) %>% hyper_slice(select_var = "salt")
+  #a <- hyper_filter(f, xi_rho = index < 400) %>% hyper_slice(select_var = "salt")
 
 })
