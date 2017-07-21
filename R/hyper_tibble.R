@@ -12,9 +12,10 @@
 #' rnc <- tidync(l3file)
 #' hyper_filter(rnc)
 #' library(dplyr)
-#' hyper_slice(l3file, lat = lat > 0) %>% dim()
+#' lapply(hyper_slice(l3file, lat = lat > 0, lon = index > 3000), dim)
 #' 
-#'  ht <- hyper_tibble(rnc) %>% filter(!is.na(chlor_a)) 
+#'  ht <- hyper_tibble(rnc) %>% 
+#'  filter(!is.na(chlor_a)) 
 #' ht   
 #' library(ggplot2)
 #' ggplot(ht %>% filter(!is.na(chlor_a)), 
@@ -37,8 +38,6 @@ hyper_tibble.tidync <- function(x, ...) {
 #' @name hyper_tibble
 #' @export
 hyper_tibble.hyperfilter <- function(x, ...) {
-  #nomin_space <- x$nominal_space
-  #x$nominal_space <- NULL
   
   slab <- hyper_slice(x, ...)
   total_prod <- prod(dim(slab[[1]]))
