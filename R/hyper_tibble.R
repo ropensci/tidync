@@ -44,7 +44,8 @@ hyper_tibble.hyperfilter <- function(x, ...) {
   
   tib <- list()
   #okfilter <- rep(nomin_space$ok, length = total_prod)
-  okfilter <- rep(TRUE, total_prod)  ## hack for now
+  #okfilter <- rep(TRUE, total_prod)  ## hack for now
+  apply_okfilter <- FALSE
   #tib[[active(x)]] <- as.vector(slab)[okfilter]
   tib <- tibble::as_tibble(lapply(slab, as.vector))[okfilter, ]
   #tib <- tibble::as_tibble(tib)
@@ -54,7 +55,13 @@ hyper_tibble.hyperfilter <- function(x, ...) {
     #    if (names(x)[i] == "nominal_space") next;
     nm <- names(x)[i]
     nr <- sum(x[[i]]$selected)
+    if (apply_okfilter) {
+      ## this is a slow down so don't do it if it's not needed
     tib[[nm]] <- rep(dplyr::filter(x[[nm]], .data$selected)[[nm]], each = prod_dims, length.out = total_prod)[okfilter]
+    } else {
+      tib[[nm]] <- rep(dplyr::filter(x[[nm]], .data$selected)[[nm]], each = prod_dims, length.out = total_prod)
+      
+    }
     prod_dims <- prod_dims * nr
   }
   structure(tib, class = c("hyper_tbl", "tbl_df", "tbl", "data.frame"), 
