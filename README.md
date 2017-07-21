@@ -7,20 +7,18 @@
 tidync
 ======
 
-**NOTE:** this package is development and subject to change. See Limitations below. Active design discussed here: <https://github.com/hypertidy/tidync/issues/33>
-
 The goal of tidync is to ease exploring the contents of a NetCDF file and constructing efficient queries to extract arbitrary hyperslabs.
 
-The data extracted can be used directly in array contexts, or in "long form" form "tidy" analysis and visualization contexts.
+The data extracted can be used directly as an array, or in "long form" form as a data frame for "tidy" analysis and visualization contexts.
+
+These examples are for illustration, see the vignettes for more details, and please try on your own sources!
 
 There are two main ways of using tidync.
-
-These examples are for illustration only, see the vignettes for more details, and please try on your own files!
 
 Interactive
 -----------
 
-Use `tidync()` and `hyper_filter()` to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `index` to filter it by it's 'step' index).
+Use `tidync()` and `hyper_filter()` to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `index` to filter it by its 'step' index).
 
 ``` r
 ## discover the available entities, and the active grid's dimensions and variables
@@ -36,12 +34,12 @@ tidync(filename) %>% hyper_filter()
 tidync(filename) %>% hyper_filter(lat = lat < -30, time = time == 20)
 ```
 
-Note, an earlier version of this package worked by activating "variables by name". This still works but effectively activates the grid that this variable exists within, so all variables in the space are available by default. Grids have identifiers based on which dimensions they use i.e. "D1,D0" and can otherwise be activated by their count identifier (starting at 1).
+A grid is a "virtual table" in the sense of a database source. It's possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. "D1,D0" and can otherwise be activated by their count identifier (starting at 1). The "D0" is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself.
 
 Extractive
 ----------
 
-Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form. It's important to not actual request the data extraction until the expressions above would result in an efficient size (don't try a data frame version of a 20Gb ROMs variable ...).
+Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form.
 
 ``` r
 ## we'll see a column for sst, lat, time, and whatever other dimensions sst has
@@ -57,17 +55,16 @@ tidync(filename) %>% activate("sst"") %>%
   hyper_slice()
 ```
 
+It's important to not actual request the data extraction until the expressions above would result in an efficient size (don't try a data frame version of a 20Gb ROMs variable ...). Use the interactive modes to determine the likely size of the output you will receive.
+
 There is another function `hyper_index` that build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each `hyper_*` function can take the filtering expressions, but it's not obvious if this is a good idea or not.
 
 Development
 ===========
 
-Wishlist. Submit your own to the [Issues tab](https://github.com/hypertidy/tidync)
+Wishlist items here. Submit your own to the [Issues tab](https://github.com/hypertidy/tidync)
 
--   install useful example files, and steps to download good files
--   figure out whether "activate" is the right function, how to use that name (sorry Thomas)
--   wrappers for returning raster brick
--   helpers for dimension values as lists of coordinates for the slice form
+-   wrappers for returning various formats, like raster brick, simple features, rgl quad mesh forms, etc.
 -   delayed extraction to show the tibble you would get after collect()
 -   consider better function names like `hyper_df`, `hyper_dbl` and `hyper_int` (differentiate scaled and unscaled?)
 
@@ -108,6 +105,8 @@ This is a basic example which shows you how to connect to a file.
 ``` r
 file <- system.file("extdata", "oceandata", "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
 library(tidync)
+#> Warning: Installed Rcpp (0.12.12) different from Rcpp used to build dplyr (0.12.11).
+#> Please reinstall dplyr to avoid random crashes or undefined behavior.
 tidync(file) 
 #> 
 #> Data Source (1): S20092742009304.L3m_MO_CHL_chlor_a_9km.nc ...
@@ -131,16 +130,12 @@ tidync(file)
 
 See this article for more: <https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html>
 
-Stay tuned.
-
 Limitations
 -----------
 
--   we can't filter on multidimensional values (yet)
--   compound types are not supported
--   groups are not exposed as entities
--   dims without variables are not handled currently, they should at least work in "index" form but don't yet <https://github.com/hypertidy/tidync/issues/30>
--   testing has so far been minimal, and things will change
+-   we can't do grouped filters (i.e. polygon-overlay extraction), but it's in the works
+-   compound types are not supported, though see the "rhdf5" branch on Github
+-   groups are not exposed
 
 Terminology
 -----------
@@ -149,21 +144,30 @@ I think of "slab" as a generalized "array" (in the R sense) that we can request 
 
 In R terms a 3D array would be indexed like
 
-arr\[1:10, 2:12, 3:5\]
+``` r
+arr[1:10, 2:12, 3:5]
+```
 
 and that would be analogous to
 
-ncvar\_get(con, start = c(1, 2, 3), count = c(10, 11, 3))
+``` r
+ncvar_get(con, start = c(1, 2, 3), count = c(10, 11, 3))
+```
 
 If we only wanted a "sparse trace" through the array in R we can do
 
-arr\[cbind(c(2, 4), c(5, 6), c(3, 4)\]
+``` r
+arr[cbind(c(2, 4), c(5, 6), c(3, 4)]
+```
 
 which would pull out 2-values from 2 arbitrary positions. The API doesn't allow that (at least not in an efficient way that I can understand).
 
 We either have to get the whole "slab" that encompases those 2 cells, or request a degenerate 1-cell slab for each:
 
-ncvar\_get(con, start = c(2, 5, 3), count = c(1, 1, 1)) ncvar\_get(con, start = c(4, 6, 4), count = c(1, 1, 1))
+``` r
+ncvar_get(con, start = c(2, 5, 3), count = c(1, 1, 1))
+ncvar_get(con, start = c(4, 6, 4), count = c(1, 1, 1))
+```
 
 I've used the term "hyperslab" and "slab" since I realized this basic limitation during my PhD. Unidata use the term but it's not in the API afaik:
 

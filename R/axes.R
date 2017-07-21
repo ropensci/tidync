@@ -1,7 +1,6 @@
 #' Axis transforms
 #'
 #' @param x tidync object
-#' @param active_only return all axes (default) or only the ones in the active grid
 #' @param ... ignored
 #'
 #' @return list of axis transforms
@@ -24,6 +23,7 @@ active_axis_transforms <- function(x, ...) {
 }
 
 #' @name axis_transforms
+#' @importFrom dplyr row_number
 axis_transforms.default <- function(x, ...) {
   grid <- x$grid
   axis <- x$axis

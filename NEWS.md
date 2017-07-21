@@ -1,4 +1,4 @@
-# tidync dev
+# tidync 0.0.2
 
 * hyper_filter now uses a selection idiom, to record the state of the axis rather than expicitly
  filter it. This means we can have more flexibility on what the axis transform tables can 

@@ -75,7 +75,7 @@ print.hyperfilter <- function(x, ...) {
   #            )
   summ <- vector("list", length(x))
   for (i in seq_along(x)) {
-    x[[i]] <- x[[i]] %>% dplyr::filter(selected)
+    x[[i]] <- x[[i]] %>% dplyr::filter(.data$selected)
     if (is.numeric(x[[i]][[1]])) {
       summ[[i]] <- tibble::tibble(name = x[[i]]$name[1], coord_dim = x[[i]]$coord_dim[1], min = min(x[[i]][[1]]), max = max(x[[i]][[1]]), length = nrow(x[[i]]))
     } else {

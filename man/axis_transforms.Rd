@@ -18,8 +18,6 @@ active_axis_transforms(x, ...)
 \item{x}{tidync object}
 
 \item{...}{ignored}
-
-\item{active_only}{return all axes (default) or only the ones in the active grid}
 }
 \value{
 list of axis transforms
