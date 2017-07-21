@@ -130,13 +130,15 @@ See this article for more:  https://hypertidy.github.io/tidync/articles/static-v
 
 ## Limitations
 
-* we can't do grouped filters (i.e. polygon-overlay extraction), but it's in the works
+Plesase get in touch if you have specfic workflows that `tidync` is not providing. There's a lot of room for improvement!
+
+* we can't do "grouped filters"" (i.e. polygon-overlay extraction), but it's in the works
 * compound types are not supported, though see the "rhdf5" branch on Github
-* groups are not exposed
+* NetCDF groups are not exposed (groups are like a "files within a file", analogous to a file system directory)
 
 ## Terminology
 
- I think of "slab" as a generalized "array" (in the R sense) that we can request from a NetCDF.  We must provide the NetCDF API with a "slab index", i.e. a start and a count vector -  and that's the only way to query them. 
+Here I use the term "slab" as a generalized "array" (in the R sense) that may be read from a NetCDF.  We must provide the NetCDF API with a "slab index", i.e. both a start and a count vector each the same length (the same as the number of dimensions as the array variable),  that is the only way to read them. 
 
 In R terms a 3D array would be indexed like
 
@@ -163,7 +165,7 @@ ncvar_get(con, start = c(2, 5, 3), count = c(1, 1, 1))
 ncvar_get(con, start = c(4, 6, 4), count = c(1, 1, 1))
 ```
 
-I've used the term "hyperslab" and "slab" since I realized this basic limitation during my PhD. Unidata use the term but it's not in the API afaik: 
+I've used the term "hyperslab" and "slab" since I realized this basic limitation during earlier work. Unidata use the term but it's not in the API afaik: 
 
 http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html
 
@@ -171,7 +173,9 @@ Another term like this is "shape" which is a particular set of dimensions used b
 
 In R we can determine those indexes really easily for any given query, tracks over time through XYZ, polygons, boxes and so on - but we are ultimately limited by the API to these "slab" requests, so you see a lot of disparate approaches across packages to optimizing this. 
 
-We have decided to use the term "grid" rather than "shape", and so a grid is a specific ordered set of dimensions. An "axis" is a particular instance of a dimension within a variable. At times we need to know what grids we have, what variables use those grids, and what axes belong to a variable and in what order. Currently all the facility for determining this information is in package ncmeta. 
+For `tidync` we decided to use the term "grid" rather than "shape", and so a grid is the space defined by specific ordered set of dimensions. An "axis" is a particular instance of a dimension within a variable. At times we need to know what grids we have, what variables use those grids, and what axes belong to a variable and in what order. Currently all the facility for determining this information is in package `ncmeta`. 
+
+The `ncmeta` package uses a mix of background packages `ncdf4`, `RNetCDF` because each has facilities and limitations and both are needed. For closer to full support we can also use `rhdf5` or `rgdal` which have indpendent wrappers around the core NetCDF library. Groups and compound types are particular challenges, and tidync and ncmeta don't yet exploit all of the currently available facilities. It would still be good to have a single authoratative wrapper, but the details of that aren't widely discussed. 
 
 
 

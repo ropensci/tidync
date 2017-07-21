@@ -11,3 +11,4 @@
 ^codecov\.yml$
 ^data-raw$
 ^inst/examples/rsconnect.*$
+^inst/examples\.html$

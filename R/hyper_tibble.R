@@ -45,9 +45,10 @@ hyper_tibble.hyperfilter <- function(x, ...) {
   tib <- list()
   #okfilter <- rep(nomin_space$ok, length = total_prod)
   #okfilter <- rep(TRUE, total_prod)  ## hack for now
+  okfilter <- TRUE
   apply_okfilter <- FALSE
   #tib[[active(x)]] <- as.vector(slab)[okfilter]
-  tib <- tibble::as_tibble(lapply(slab, as.vector))[okfilter, ]
+  tib <- tibble::as_tibble(lapply(slab, as.vector))
   #tib <- tibble::as_tibble(tib)
   prod_dims <- 1
   
