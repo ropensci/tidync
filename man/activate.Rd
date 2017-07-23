@@ -16,6 +16,10 @@
 \alias{active<-.tidync}
 \alias{activate}
 \alias{active<-.hyperfilter}
+\alias{active}
+\alias{active.default}
+\alias{active<-}
+\alias{active<-.default}
 \title{Activate}
 \usage{
 activate(.data, what)
@@ -31,6 +35,14 @@ activate(.data, what)
 \method{active}{tidync}(x) <- value
 
 \method{active}{hyperfilter}(x) <- value
+
+active(x)
+
+\method{active}{default}(x)
+
+active(x) <- value
+
+\method{active}{default}(x) <- value
 }
 \arguments{
 \item{.data}{NetCDF object}

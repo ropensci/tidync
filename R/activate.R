@@ -8,7 +8,6 @@
 #' @param .data NetCDF object
 #' @param what name of a variable
 #' @return NetCDF object
-#' @importFrom activate activate active active<- 
 #' @export active activate active<- 
 #' @rdname activate 
 #' @aliases active activate active<- 
@@ -80,6 +79,39 @@ active.hyperfilter <- active.tidync
 #' @export
 `active<-.hyperfilter` <- function(x, value) {
   
+  attr(x, 'active') <- value
+  x
+}
+
+
+#' @export
+activate.default <- function(.data, what) {
+  what_name <- deparse(substitute(what))
+  if (what_name %in% names(.data)) what <- what_name
+  active(.data) <- what
+  .data
+}
+
+#' @rdname activate
+#' @export
+active <- function(x) {
+  UseMethod("active")
+}
+#' @rdname activate
+#' @export
+active.default <- function(x) {
+  warning("determining active status of object not recognized as activatable")
+  val <- attr(x, 'active')
+}
+#' @rdname activate
+#' @export
+`active<-` <- function(x, value) {
+  UseMethod("active<-")
+}
+#' @rdname activate
+#' @export
+`active<-.default` <- function(x, value) {
+  warning("activating as a default, this object not recognized as activatable")
   attr(x, 'active') <- value
   x
 }
