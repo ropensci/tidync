@@ -53,32 +53,13 @@ dim_names.tidync <- function(x, ...) {
 }
 
 
-
-#' Dimension values
-#' 
-#' The dimension values are the coordinates, the positions along each axis. 
-#'
-#' @param x NetCDF object
-#'
-#' @return data frame of dimensions and their values
-#' @export
-#'
-#' @examples
-#' l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
-#' rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
-#' ##dimension_values(rnc)
 dimension_values <- function(x) {
   .Defunct()
   UseMethod("dimension_values")
 }
-#' @rdname dimension_values
-#' @export
-dimension_values.character <- function(x) {
-  dimension_values(NetCDF(x))
-}
-#' @rdname dimension_values
-#' @importFrom rlang .data
-#' @export
+# dimension_values.character <- function(x) {
+#   dimension_values(ncdump::NetCDF(x))
+# }
 dimension_values.tidync <- function(x) {
   dimids <- x$grid[x$grid$grid == active(x), ] %>% inner_join(x$variable, c("variable" = "name"))
   #dplyr::select(.data$name, .data$.variable_) %>% 
@@ -105,22 +86,7 @@ grid_dimension.tidync <- function(x) {
   x$grid %>% dplyr::filter(.data$grid == active(x)) %>% 
     inner_join(x$variable, c("variable" = "name"))
 }
-#' Dimensions of a variable
-#'
-#' @param x NetCDF object
-#'
-#' @export
-variable_dimensions <- function(x) {
-  UseMethod("variable_dimensions")
-}
-#' @rdname variable_dimensions
-#' @export
-variable_dimensions <- function(x) {
-  variable_dimensions(NetCDF(x))
-}
-#' @rdname variable_dimensions
-#' @importFrom dplyr inner_join
-#' @export
+
 variable_dimensions <- function(x) {
   #aa <- x$variable %>% 
   aa <- x$variable[x$variable$name == active(x), ]

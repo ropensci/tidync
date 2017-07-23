@@ -61,11 +61,6 @@ tidync.character <- function(x, what, ...) {
   out
 }
 
-#   x <- structure(unclass(ncdump::NetCDF(x)), class = "tidync")
-#   x$variable$shape <- shapes(x)
-#   if (missing(what)) what <- x$variable$name[1L]
-#   activate(x, what)
-# }
 
 
 ## TBD we need

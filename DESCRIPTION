@@ -16,7 +16,6 @@ Imports:
     forcats,
     magrittr,
     ncdf4,
-    ncdump (> 0.0.3), 
     ncmeta, 
     purrr, 
     RNetCDF,
@@ -31,7 +30,8 @@ Suggests: ggplot2,
     palr,
     rmarkdown,
     testthat,
-    covr
+    covr, 
+    ncdump (> 0.0.3)
 Remotes:  hypertidy/ncdump, hypertidy/ncmeta
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
