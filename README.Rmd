@@ -111,12 +111,12 @@ You can install tidync from github with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("hypertidy/tidync")
+devtools::install_github("hypertidy/tidync", dependencies = TRUE)
 ```
 
 ## Example
 
-This is a basic example which shows you how to connect to a file. 
+This is a basic example which shows how to connect to a file. 
 
 ```{r}
 file <- system.file("extdata", "oceandata", "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")

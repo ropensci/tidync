@@ -94,7 +94,7 @@ You can install tidync from github with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("hypertidy/tidync")
+devtools::install_github("hypertidy/tidync", dependencies = TRUE)
 ```
 
 Example

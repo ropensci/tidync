@@ -5,7 +5,7 @@ Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c(
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
              person("Ben", "Raymond", role = "ctb"))
-Description: Tidy 'NetCDF'. 
+Description: Putting the data frame in 'NetCDF'. 
 Depends: R (>= 3.3.0)
 License: GPL-3
 Encoding: UTF-8
