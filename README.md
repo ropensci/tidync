@@ -33,7 +33,7 @@ tidync(filename) %>% hyper_filter()
 ## pass named expressions to subset dimension by value or index (step)
 tidync(filename) %>% hyper_filter(lat = lat < -30, time = time == 20)
 
-## select a single variable from a multi-variable file and store this in ggplot compatible format
+## select a single variable from a multi-variable file and store this in tidyr compatible format (i.e. long format table)
 tidync(filename) %>% hyper_tibble(select_vars = c("varname"))
 ```
 
