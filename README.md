@@ -32,6 +32,9 @@ tidync(filename) %>% hyper_filter()
 
 ## pass named expressions to subset dimension by value or index (step)
 tidync(filename) %>% hyper_filter(lat = lat < -30, time = time == 20)
+
+## select a single variable from a multi-variable file and store this in ggplot compatible format
+tidync(filename) %>% hyper_tibble(select_vars = c("varname"))
 ```
 
 A grid is a "virtual table" in the sense of a database source. It's possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. "D1,D0" and can otherwise be activated by their count identifier (starting at 1). The "D0" is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself.
