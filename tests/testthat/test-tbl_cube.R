@@ -6,5 +6,13 @@ test_that("tbl_cube works", {
   f <- raadtools::sstfiles()$fullname[10000]
   tidync(f) %>% hyper_tbl_cube(lat = lat > -30)
   
+  # raadfiles:::get_raw_raad_filenames() %>% dplyr::filter(grepl("wkmean", file))
+  f <- "/rdsi/PUBLIC/raad/data/ftp.cdc.noaa.gov/Datasets/noaa.oisst.v2/sst.wkmean.1990-present.nc"
   
+  library(dplyr)
+  htc <- tidync(f) %>% hyper_filter(time = index < 10) %>% 
+    hyper_tbl_cube() 
+  
+  expect_true(all(dim(htc$mets$sst) == lengths(htc$dims)))
 })
+
