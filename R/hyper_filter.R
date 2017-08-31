@@ -41,6 +41,7 @@ hyper_filter.tidync <- function(.x, ...) {
   ## FIXME: using attributes is a hack  https://github.com/hypertidy/tidync/issues/33
   attr(out, "source") <- .x$source
   attr(out, "grid") <- .x$grid
+  attr(out, "nominal_space") <- NULL
   out
 }
 

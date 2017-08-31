@@ -1,0 +1,84 @@
+---
+title: "TRAC data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Accessing the TRAC NetCDF files on RStudio server. 
+
+A new package `tidync` gives very general access to the multi-dimensional data in a NetCDF
+file. 
+
+
+```{r}
+library(tidync)
+
+dp <- "/rdsi/PRIVATE/raad/data_local/acecrc.org.au/TRAC/andreas"
+
+## find the big data files
+dfiles <- file.path(dp, list.files(dp, pattern = "^TRAC"))
+
+(data_connection <- tidync(dfiles[1]))
+
+```
+
+The data connection object is now ready for exploration, and subsequent extractions. 
+
+
+See how X, Y range [57, 128], [-69, -35] and depth (Zmd000150) is [1,150] metres. 
+
+```{r}
+data_connection %>% hyper_filter()
+```
+
+
+
+Also see how we have four transformation axes, these are 1-D axes for lon, lat, Z, and Time, but they have specific names here X, Y, Zmd000150, T. 
+
+```{r}
+names(data_connection$transforms)
+
+## we use these to hone in on what we want
+## which is an index for a given longitude
+data_connection$transforms$X %>% dplyr::filter(X > 70)
+```
+
+The data grid is masssive 1440\*700\*150\*12 so let's grab one slice in X,Y. 
+
+```{r}
+xy <- tidync(dfiles[1]) %>% 
+  ## this strange syntax idenfies an axis (e.g. "T")
+  ## and permits inequality expressions that desribe a
+  ## window in that axis  e.g. X = X > 120, "index" is
+  ## a special token that equals 1:L (where L is length of axis)
+  hyper_filter(Zmd000150 = index == 1, T = index == 10) %>% 
+  hyper_tibble()
+
+```
+
+Also pull out a slice in lat-depth - we can choose other alternatives, here slice in X (260 is ~70Longitude, essentialy the transform tables hold these indexes). 
+
+```{r}
+## use the axis transforms to find a given index
+yz <- tidync(dfiles[1]) %>% 
+  hyper_filter(X = index == 260, T = index == 1) %>% 
+  hyper_tibble()
+```
+
+`ggplot` allows us to plot in any dimension. Generally here we assume we got an extraction
+of one orthogonal 2D slice from any pair of axes from the 4D data grid. 
+
+
+```{r plots}
+library(ggplot2)
+
+ggplot(xy, aes(X, Y, fill = TRAC01)) + ggtitle("lon-lat at surface") + 
+  geom_raster() + scale_fill_gradient2()
+
+
+ggplot(data = yz, aes(Y, -Zmd000150, fill = TRAC01)) + ggtitle("lat-depth at 70E") + geom_raster() + scale_fill_gradient2()
+```
