@@ -50,7 +50,7 @@ hyper_tbl_cube.hyperfilter <- function(x, ...) {
   dim_names <- names(x)
   structure(list(mets = hyper_slice(x, ...), 
             dims = stats::setNames(  lapply(dim_names, 
-                                            function(inm) x[[inm]] %>% dplyr::select(inm) %>% dplyr::filter(selected)), 
+                                            function(inm) x[[inm]] %>% dplyr::filter(selected) %>% dplyr::pull(inm) ), 
                               dim_names)), 
             class = "tbl_cube")
 }
