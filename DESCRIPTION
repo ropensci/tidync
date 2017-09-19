@@ -16,6 +16,7 @@ Imports:
     forcats,
     magrittr,
     ncdf4,
+    ncdump,
     ncmeta, 
     purrr, 
     RNetCDF,
