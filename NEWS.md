@@ -1,3 +1,9 @@
+# tidync dev
+
+* removed hyper_index and incorporated that into hyper_filter, there's now 
+only one delay-capable class which is "tidync"
+
+
 # tidync 0.0.2
 
 * hyper_filter now uses a selection idiom, to record the state of the axis rather than expicitly
