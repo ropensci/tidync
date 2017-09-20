@@ -6,8 +6,6 @@
 \alias{hyper_tbl_cube.tidync}
 \alias{hyper_tbl_cube}
 \alias{hyper_tbl_cube.character}
-\alias{hyper_tbl_cube}
-\alias{hyper_tbl_cube.hyperfilter}
 \title{dplyr tbl cube from NetCDF}
 \usage{
 hyper_tbl_cube(x, ...)
@@ -15,8 +13,6 @@ hyper_tbl_cube(x, ...)
 \method{hyper_tbl_cube}{tidync}(x, ...)
 
 \method{hyper_tbl_cube}{character}(x, ...)
-
-\method{hyper_tbl_cube}{hyperfilter}(x, ...)
 }
 \arguments{
 \item{x}{filename}
@@ -34,5 +30,20 @@ dplyr tbl cube from NetCDF
 \examples{
 ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
 tidync(ufile)
-#hyper_tbl_cube(tidync(ufile))
+hyper_tbl_cube(tidync(ufile))
+f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+l3file <- system.file("extdata/oceandata", f, package= "tidync")
+(cube <- hyper_tbl_cube(tidync(l3file) \%>\%
+activate(chlor_a), lon = lon > 107, lat = abs(lat) < 30))
+# library(ggplot2)
+# scl <- function(x) {rng <- range(x, na.rm = TRUE); (x - rng[1])/diff(rng)}
+# library(palr)
+# pal <- chlPal(palette = TRUE)
+# sfg <- scale_fill_gradientn(values = scl(head(pal$breaks, -1)),
+     colours = pal$cols)
+ggplot(tibble::as_tibble(cube) \%>\% dplyr::filter(!is.na(chlor_a))) +
+#geom_raster(aes(lon, lat, fill = chlor_a)) + sfg  + coord_equal() #+
+#geom_polygon(data = ggplot2::map_data("world",
+#xlim = c(100, 180),
+#ylim = c(-30, 30)), aes(long, lat, group = group, fill = NULL))
 }

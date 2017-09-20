@@ -6,22 +6,20 @@
 \alias{hyper_tibble.character}
 \alias{hyper_tibble}
 \alias{hyper_tibble.tidync}
-\alias{hyper_tibble}
-\alias{hyper_tibble.hyperfilter}
 \title{hyper tibble}
 \usage{
-hyper_tibble(x, ...)
+hyper_tibble(x, ..., na.rm = TRUE)
 
-\method{hyper_tibble}{character}(x, ...)
+\method{hyper_tibble}{character}(x, ..., na.rm = TRUE)
 
-\method{hyper_tibble}{tidync}(x, ...)
-
-\method{hyper_tibble}{hyperfilter}(x, ...)
+\method{hyper_tibble}{tidync}(x, ..., na.rm = TRUE)
 }
 \arguments{
 \item{x}{object to tibbulate}
 
 \item{...}{arguments to `hyper_filter``}
+
+\item{na.rm}{if \code{TRUE} these rows are not included in the output when all variables are \code{NA}}
 }
 \value{
 a \code{tbl_df}

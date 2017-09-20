@@ -132,7 +132,7 @@ print.tidync <- function(x, ...) {
   cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
   dimension_print <- if (nrow(dims) > 0) {
     format(dims %>% dplyr::mutate(dimension = paste0("D", .data$id)) %>% 
-             dplyr::select(.data$dimension, .data$id, .data$name, .data$length, .data$unlim, .data$coord_dim, .data$active) %>% 
+             dplyr::select(.data$dimension, .data$id, .data$name, .data$length, .data$unlim, .data$coord_dim, .data$active, .data$start, .data$count) %>% 
              dplyr::arrange(desc(.data$active), .data$id), n = Inf)
       
   } else {

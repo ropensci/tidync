@@ -4,34 +4,16 @@
 \alias{hyper_filter}
 \alias{hyper_filter}
 \alias{hyper_filter.tidync}
-\alias{hyper_filter}
-\alias{hyper_filter.default}
-\alias{hyper_filter}
-\alias{hyper_filter.character}
-\alias{hyper_filter}
-\alias{hyper_filter.hyperfilter}
-\alias{hyper_filter}
-\alias{print.hyperfilter}
 \title{Array subset by nse}
 \usage{
 hyper_filter(.x, ...)
 
 \method{hyper_filter}{tidync}(.x, ...)
-
-\method{hyper_filter}{default}(.x, ...)
-
-\method{hyper_filter}{character}(.x, ...)
-
-\method{hyper_filter}{hyperfilter}(.x, ...)
-
-\method{print}{hyperfilter}(x, ...)
 }
 \arguments{
 \item{.x}{NetCDF file, connection object, or \code{tidync} object}
 
 \item{...}{currently ignored}
-
-\item{x}{tidync object to print}
 }
 \value{
 data frame

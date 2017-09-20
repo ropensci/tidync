@@ -2,8 +2,8 @@ context("hyper-slice")
 
 test_that("slicing works", {
   l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
-  tidync(l3file) %>% hyper_index() %>% hyper_slice()
-  
+  tidync(l3file) %>% hyper_filter() %>% hyper_slice()
+  tidync(l3file) %>% hyper_filter() %>% hyper_tibble()
   a <- tidync(l3file) %>% hyper_filter(lon = index == 100) %>% hyper_slice()
   tidync(l3file) %>% hyper_filter(lon = index == 100)
   library(dplyr)
@@ -16,9 +16,3 @@ test_that("slicing works", {
   )
 })
 
-#test_that("warn/confirm on crazy big", {
-#  stopifnot(we_are_raady())
-#  f <- raadtools::cpolarfiles()$fullname[1]
-#  #a <- hyper_filter(f, xi_rho = index < 400) %>% hyper_slice(select_var = "salt")
-#
-#})

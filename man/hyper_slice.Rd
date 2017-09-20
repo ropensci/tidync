@@ -3,22 +3,12 @@
 \name{hyper_slice}
 \alias{hyper_slice}
 \alias{hyper_slice}
-\alias{hyper_slice.hyperindex}
-\alias{hyper_slice}
-\alias{hyper_slice.hyperfilter}
-\alias{hyper_slice}
 \alias{hyper_slice.tidync}
 \alias{hyper_slice}
 \alias{hyper_slice.character}
 \title{hyper slice}
 \usage{
 hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE)
-
-\method{hyper_slice}{hyperindex}(x, select_var = NULL, ...,
-  raw_datavals = FALSE)
-
-\method{hyper_slice}{hyperfilter}(x, select_var = NULL, ...,
-  raw_datavals = FALSE)
 
 \method{hyper_slice}{tidync}(x, select_var = NULL, ...,
   raw_datavals = FALSE)
@@ -27,7 +17,7 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE)
   raw_datavals = FALSE)
 }
 \arguments{
-\item{x}{a hyperindex-able thing}
+\item{x}{tidync object}
 
 \item{select_var}{optional vector of variable names to select}
 

@@ -15,6 +15,7 @@ test_that("thredds works", {
   
   (nc <- tidync(uri))
   
+  
 })
 
 

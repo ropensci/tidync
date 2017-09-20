@@ -49,7 +49,7 @@ activate.tidync <- function(.data, what) {
   .data$dimension$active <- rep(FALSE, nrow(.data$dimension))
   .data$dimension$active[active_dimensions + 1] <- TRUE
   .data[["variable"]] <-  mutate(.data[["variable"]], active = name %in% active_variables$variable)
-  
+  .data <- update_slices(.data)
   .data
 }
 #' @name activate

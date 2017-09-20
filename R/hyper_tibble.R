@@ -2,7 +2,7 @@
 #'
 #' @param x object to tibbulate
 #' @param ... arguments to `hyper_filter``
-#'
+#' @param na.rm if `TRUE` these rows are not included in the output when all variables are `NA`
 #' @return a `tbl_df`
 #' @export
 #' @importFrom dplyr %>% 
@@ -21,53 +21,37 @@
 #' ggplot(ht %>% filter(!is.na(chlor_a)), 
 #' aes(x = lon, y = lat, fill = chlor_a)) + geom_point()
 #' 
-hyper_tibble <- function(x, ...) {
+hyper_tibble <- function(x, ..., na.rm = TRUE) {
   UseMethod("hyper_tibble")
 }
 #' @name hyper_tibble
 #' @importFrom ncdump NetCDF
 #' @export
-hyper_tibble.character <- function(x, ...) {
+hyper_tibble.character <- function(x, ..., na.rm = TRUE) {
   tidync(x) %>% hyper_filter(...) %>% hyper_tibble()
 }
 #' @name hyper_tibble
 #' @export
-hyper_tibble.tidync <- function(x, ...) {
-  x %>% hyper_filter(...) %>% hyper_tibble()
-}
-#' @name hyper_tibble
-#' @export
-hyper_tibble.hyperfilter <- function(x, ...) {
+hyper_tibble.tidync<- function(x, ..., na.rm = TRUE) {
   
-  slab <- hyper_slice(x, ...)
-  total_prod <- prod(dim(slab[[1]]))
-  
-  tib <- list()
-  #okfilter <- rep(nomin_space$ok, length = total_prod)
-  #okfilter <- rep(TRUE, total_prod)  ## hack for now
-  okfilter <- TRUE
-  ns <- attr(x, "nominal_space")
-  apply_okfilter <- !is.null(ns)
-  if (apply_okfilter) okfilter <- ns$ok
+  slabs <- hyper_slice(x, ...)
+  if (na.rm) all_na <- Reduce(`&`, lapply(slabs, function(a) is.na(as.vector(a))))
+  total_prod <- prod(dim(slabs[[1]]))
+  #okfilter <- TRUE
+  #ns <- attr(x, "nominal_space")
+  #apply_okfilter <- !is.null(ns)
+  #if (apply_okfilter) okfilter <- ns$ok
   #tib[[active(x)]] <- as.vector(slab)[okfilter]
-  tib <- tibble::as_tibble(lapply(slab, as.vector))
-  #tib <- tibble::as_tibble(tib)
-  prod_dims <- 1
+  out <- tibble::as_tibble(lapply(slabs, as.vector))
   
-  for (i in seq_along(x)) {
-    #    if (names(x)[i] == "nominal_space") next;
-    nm <- names(x)[i]
-    nr <- sum(x[[i]]$selected)
-    if (apply_okfilter) {
-      ## this is a slow down so don't do it if it's not needed
-    tib[[nm]] <- rep(x[[nm]][[nm]], each = prod_dims, length.out = total_prod)[okfilter]
-    } else {
-      tib[[nm]] <- rep(dplyr::filter(x[[nm]], .data$selected)[[nm]], each = prod_dims, length.out = total_prod)
-      
-    }
+  prod_dims <- 1
+  trans <- x[["transforms"]][x[["dimension"]][["active"]]]
+  for (i in seq_along(trans)) {
+    nm <- names(trans)[i]
+    nr <- sum(trans[[i]]$selected)
+    out[[nm]] <- rep(dplyr::filter(trans[[nm]], .data$selected)[[nm]], each = prod_dims, length.out = total_prod)
     prod_dims <- prod_dims * nr
   }
-  structure(tib, class = c("hyper_tbl", "tbl_df", "tbl", "data.frame"), 
-            dims = names(x))
-  
+  if (na.rm) out <- dplyr::filter(out, !all_na)
+ out
 }

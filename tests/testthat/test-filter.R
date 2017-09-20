@@ -16,20 +16,20 @@ test_that("standard mapped", {
     dplyr::mutate(fullname = file.path(root, file)) %>% dplyr::pull(fullname)
   tidync(f2) %>% hyper_filter()
   # https://github.com/hypertidy/tidync/issues/13
- tidync(f2) %>% hyper_filter(y = index < 10,x = index < 5)
+hf <-  tidync(f2) %>% hyper_filter(y = index < 10,x = index < 5)
+hf %>% hyper_slice()
   
   })
 
-
-## FIXME: we need a lot more examples!  
-test_that("non-local sources work", {
-  skip_on_travis()
-  u <- "http://coastwatch.pfeg.noaa.gov/erddap/griddap/erdQSwind3day"
-  tidync(u) %>% hyper_filter()
-  ht <- tidync(u) %>% hyper_filter(longitude = longitude > 150 & longitude < 180, 
-                             latitude = latitude > -10 & latitude < 10, 
-                             time = index < 2) %>% 
-    hyper_tibble()
+test_that("indexing works", {
+  l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
+  ind0 <- tidync(l3file) %>% hyper_filter()
+  expect_that(ind0$dimension$count[ind0$dimension$active], equals(c(2160L, 4320L)))
   
+  ind1 <- tidync(l3file) %>% hyper_filter(lon = index == 100) 
+  
+  expect_that(ind1$dimension$count[ind0$dimension$active], equals(c(2160L, 1L)))
+  expect_warning(ind2 <- tidync(l3file) %>% hyper_filter(lon = index %% 100 == 0))
+  expect_that(ind2$dimension$count[ind2$dimension$active], equals(c(2160, 4201)))  
   
 })
