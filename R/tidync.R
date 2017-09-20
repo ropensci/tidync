@@ -46,18 +46,20 @@ tidync.character <- function(x, what, ...) {
       if (bad_dim & bad_var) stop("no variables or dimension recognizable (is this a source with compound-types?)")
       if (!fexists) cat("Connection succeeded. \n")      
        meta <- meta$result
+       variable <- dplyr::mutate(meta[["variable"]], active = FALSE)
+       
        out <- list(source = meta$source, 
                              axis = meta$axis, 
                              grid = meta$grid,
                              dimension = meta$dimension, 
-                             variable = meta$variable)
+                             variable = variable)
        out$transforms <- axis_transforms(out)
        out <- structure(out,           class = "tidync")
-       
        ## we can't activate nothing
        if (nrow(out$axis) < 1) return(out)
        if (missing(what)) what <- 1
        out <- activate(out, what)
+
   out
 }
 
@@ -130,7 +132,9 @@ print.tidync <- function(x, ...) {
   cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
   dimension_print <- if (nrow(dims) > 0) {
     format(dims %>% dplyr::mutate(dimension = paste0("D", .data$id)) %>% 
-             dplyr::select(.data$dimension, .data$id, .data$name, .data$length, .data$unlim, .data$coord_dim), n = Inf)
+             dplyr::select(.data$dimension, .data$id, .data$name, .data$length, .data$unlim, .data$coord_dim, .data$active) %>% 
+             dplyr::arrange(desc(.data$active), .data$id), n = Inf)
+      
   } else {
   ""
 }

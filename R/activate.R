@@ -42,6 +42,14 @@ activate.tidync <- function(.data, what) {
   
   }
   active(.data) <- what
+
+  active_variables <- .data[["grid"]] %>% dplyr::filter(grid == what) %>% 
+    dplyr::inner_join(.data[["variable"]], c("variable" = "name"))
+  active_dimensions <- as.integer(gsub("^D", "", unlist(strsplit(active(.data), ","))))
+  .data$dimension$active <- rep(FALSE, nrow(.data$dimension))
+  .data$dimension$active[active_dimensions + 1] <- TRUE
+  .data[["variable"]] <-  mutate(.data[["variable"]], active = name %in% active_variables$variable)
+  
   .data
 }
 #' @name activate
