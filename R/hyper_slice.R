@@ -17,11 +17,14 @@ hyper_slice <- function(x, select_var = NULL, ..., raw_datavals = FALSE) {
 hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE) {
   variable <- x[["variable"]] %>% dplyr::filter(active)
   varname <- unique(variable[["name"]])
-  dimension <- x[["dimension"]] %>% dplyr::filter(active)
-  axis <- x[["axis"]] %>% dplyr::filter(variable == varname)
+  ## hack to get the order of the indices of the dimension
+  ordhack <- 1 + as.integer(unlist(strsplit(gsub("D", "", dplyr::filter(x$grid, grid == active(x)) %>% dplyr::slice(1L) %>% dplyr::pull(grid)), ",")))
+  dimension <- x[["dimension"]] %>% dplyr::slice(ordhack)
+  ## ensure dimension is in order of the dims in these vars
+  axis <- x[["axis"]] %>% dplyr::filter(variable %in% varname)
   ## dimension order must be same as axis
-  START <- dimension$start[match(axis$dimension, dimension$id)]
-  COUNT <- dimension$count[match(axis$dimension, dimension$id)]
+  START <- dimension$start
+  COUNT <- dimension$count
   if (is.null(select_var))   {
     varnames <- variable %>% dplyr::pull(name)
   } else {
