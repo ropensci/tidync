@@ -1,10 +1,15 @@
 
 
-#' Array subset by nse
+#' Array subset by expression
 #'
-#' NSE arguments must be named as per the dimensions in the variable. This is a restrictive variant of `dplyr::filter`, 
+#' Filter arguments must be named as per the dimensions in the variable. This is a restrictive variant of `dplyr::filter`, 
 #' with a syntax more like `dplyr::mutate`. This ensures that each element is named, so we know which dimension to 
 #' apply this to, but also that the expression evaluated against can do some extra work for a nuanced test. 
+#' 
+#' There are special columns provided with each axis, one is 'index' so that exact matching can be
+#' done by position, or to ignore the actual value of the coordinate. If the name is 'time' then 
+#' 'unit_time' is also available, but note that this is always in POSIXct and is only a straight
+#' conversion based on `RNetCDF::utcal.nc`. 
 #' @param .x NetCDF file, connection object, or `tidync` object
 #' @param ... currently ignored
 #'

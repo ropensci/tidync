@@ -52,6 +52,18 @@ axis_transforms.default <- function(x, ...) {
                    name = dims$name[i], 
                    coord_dim =  dims$coord_dim[i], 
                    selected = TRUE)
+    
+    ## add the "unit time" to the axis, see ncdf4.helpers for ways of finding out
+    ## which dims are "time" 
+    ## TODO: this also needs to avoid applying Gregorian assumptions, again ncdf4.helpers
+    ## and futureheatwaves have some prior art
+    if (dims$name[i] == "time") {
+      meta <- ncmeta::nc_meta(source$source[1])
+      attmeta <- tidyr::unnest(dplyr::filter(meta$attribute, variable == "time"))
+      ut <- RNetCDF::utcal.nc(dplyr::pull(dplyr::filter(attmeta, attribute == "units"), "value"), 
+                              axis[["time"]], type = "c")
+      axis[["unit_time"]] <- ut
+    }
     transforms[[i]] <- axis
 
   }

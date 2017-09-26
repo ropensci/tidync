@@ -8,12 +8,13 @@
 \alias{hyper_slice.character}
 \title{hyper slice}
 \usage{
-hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE)
+hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
+  force = FALSE)
 
 \method{hyper_slice}{tidync}(x, select_var = NULL, ...,
   raw_datavals = FALSE)
 
-\method{hyper_slice}{character}(x, select_var = NULL, ...,
+\method{hyper_slice}{character}(x, ..., select_var = NULL,
   raw_datavals = FALSE)
 }
 \arguments{
@@ -24,6 +25,8 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE)
 \item{...}{ignored}
 
 \item{raw_datavals}{logical to control whether scaling in the NetCDF is applied or not}
+
+\item{force}{ignore caveats about large extraction and just do it}
 }
 \description{
 By default all variables in the active grid are returned, use \code{select_var} to limit.

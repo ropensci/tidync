@@ -4,7 +4,7 @@
 \alias{hyper_filter}
 \alias{hyper_filter}
 \alias{hyper_filter.tidync}
-\title{Array subset by nse}
+\title{Array subset by expression}
 \usage{
 hyper_filter(.x, ...)
 
@@ -19,9 +19,15 @@ hyper_filter(.x, ...)
 data frame
 }
 \description{
-NSE arguments must be named as per the dimensions in the variable. This is a restrictive variant of \code{dplyr::filter},
+Filter arguments must be named as per the dimensions in the variable. This is a restrictive variant of \code{dplyr::filter},
 with a syntax more like \code{dplyr::mutate}. This ensures that each element is named, so we know which dimension to
 apply this to, but also that the expression evaluated against can do some extra work for a nuanced test.
+}
+\details{
+There are special columns provided with each axis, one is 'index' so that exact matching can be
+done by position, or to ignore the actual value of the coordinate. If the name is 'time' then
+'unit_time' is also available, but note that this is always in POSIXct and is only a straight
+conversion based on \code{RNetCDF::utcal.nc}.
 }
 \examples{
 ## inst/dev/filtrate_early.R
