@@ -16,7 +16,7 @@ hyper_slice <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force =
 
 #' @name hyper_slice
 #' @export
-hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE) {
+hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE) {
   variable <- x[["variable"]] %>% dplyr::filter(active)
   varname <- unique(variable[["name"]])
   ## hack to get the order of the indices of the dimension

@@ -12,7 +12,7 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
   force = FALSE)
 
 \method{hyper_slice}{tidync}(x, select_var = NULL, ...,
-  raw_datavals = FALSE)
+  raw_datavals = FALSE, force = FALSE)
 
 \method{hyper_slice}{character}(x, ..., select_var = NULL,
   raw_datavals = FALSE)
