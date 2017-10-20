@@ -59,10 +59,14 @@ axis_transforms.default <- function(x, ...) {
     ## and futureheatwaves have some prior art
     if (dims$name[i] == "time") {
       meta <- ncmeta::nc_meta(source$source[1])
-      attmeta <- tidyr::unnest(dplyr::filter(meta$attribute, variable == "time"))
-      ut <- RNetCDF::utcal.nc(dplyr::pull(dplyr::filter(attmeta, attribute == "units"), "value"), 
+      attmeta <- try(tidyr::unnest(dplyr::filter(meta$attribute, variable == "time")), silent = TRUE)
+      if (inherits(attmeta, "try-error")) {
+        warning("unable to convert unit-based time")
+      } else {
+       ut <- RNetCDF::utcal.nc(dplyr::pull(dplyr::filter(attmeta, attribute == "units"), "value"), 
                               axis[["time"]], type = "c")
-      axis[["unit_time"]] <- ut
+       axis[["unit_time"]] <- ut
+      }
     }
     transforms[[i]] <- axis
 
