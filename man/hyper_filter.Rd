@@ -25,9 +25,7 @@ apply this to, but also that the expression evaluated against can do some extra 
 }
 \details{
 There are special columns provided with each axis, one is 'index' so that exact matching can be
-done by position, or to ignore the actual value of the coordinate. If the name is 'time' then
-'unit_time' is also available, but note that this is always in POSIXct and is only a straight
-conversion based on \code{RNetCDF::utcal.nc}.
+done by position, or to ignore the actual value of the coordinate.
 }
 \examples{
 ## inst/dev/filtrate_early.R

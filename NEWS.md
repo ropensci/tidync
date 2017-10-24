@@ -1,6 +1,5 @@
 # tidync dev
 
-* add 'unit_time' to the 'time' axis 
 
 * removed hyper_index and incorporated that into hyper_filter, there's now 
 only one delay-capable class which is "tidync"

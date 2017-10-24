@@ -32,9 +32,6 @@ tidync(filename) %>% hyper_filter()
 
 ## pass named expressions to subset dimension by value or index (step)
 tidync(filename) %>% hyper_filter(lat = lat < -30, time = time == 20)
-
-## select a single variable from a multi-variable file and store this in tidyr compatible format (i.e. long format table)
-tidync(filename) %>% hyper_tibble(select_vars = c("varname"))
 ```
 
 A grid is a "virtual table" in the sense of a database source. It's possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. "D1,D0" and can otherwise be activated by their count identifier (starting at 1). The "D0" is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself.
@@ -103,7 +100,7 @@ devtools::install_github("hypertidy/tidync", dependencies = TRUE)
 Example
 -------
 
-This is a basic example which shows you how to connect to a file.
+This is a basic example which shows how to connect to a file.
 
 ``` r
 file <- system.file("extdata", "oceandata", "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
@@ -121,12 +118,12 @@ tidync(file)
 #> 
 #> Dimensions (4): 
 #>   
-#>   dimension    id          name length unlim coord_dim 
-#>       <chr> <dbl>         <chr>  <dbl> <lgl>     <lgl> 
-#> 1        D0     0           lat   2160 FALSE      TRUE 
-#> 2        D1     1           lon   4320 FALSE      TRUE 
-#> 3        D2     2           rgb      3 FALSE     FALSE 
-#> 4        D3     3 eightbitcolor    256 FALSE     FALSE
+#>   dimension    id          name length unlim coord_dim active start count 
+#>       <chr> <dbl>         <chr>  <dbl> <lgl>     <lgl>  <lgl> <int> <int> 
+#> 1        D0     0           lat   2160 FALSE      TRUE   TRUE     1  2160 
+#> 2        D1     1           lon   4320 FALSE      TRUE   TRUE     1  4320 
+#> 3        D2     2           rgb      3 FALSE     FALSE  FALSE     1     3 
+#> 4        D3     3 eightbitcolor    256 FALSE     FALSE  FALSE     1   256
 ```
 
 See this article for more: <https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html>

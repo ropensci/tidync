@@ -7,9 +7,7 @@
 #' apply this to, but also that the expression evaluated against can do some extra work for a nuanced test. 
 #' 
 #' There are special columns provided with each axis, one is 'index' so that exact matching can be
-#' done by position, or to ignore the actual value of the coordinate. If the name is 'time' then 
-#' 'unit_time' is also available, but note that this is always in POSIXct and is only a straight
-#' conversion based on `RNetCDF::utcal.nc`. 
+#' done by position, or to ignore the actual value of the coordinate. 
 #' @param .x NetCDF file, connection object, or `tidync` object
 #' @param ... currently ignored
 #'
