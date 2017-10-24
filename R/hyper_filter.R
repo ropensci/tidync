@@ -57,7 +57,7 @@ update_slices <- function(x) {
   
   transforms <- x[["transforms"]]
   starts <- unlist(lapply(transforms, function(axis) head(which(axis$selected), 1L)))
-  ends <- unlist(lapply(transforms, function(axis) tail(which(axis$selected), 1L)))
+  ends <- unlist(lapply(transforms, function(axis) utils::tail(which(axis$selected), 1L)))
   actual_counts <- unlist(lapply(transforms, function(axis) length(which(axis$selected))))
   counts <- ends - starts + 1L
   ## todo make this more informative

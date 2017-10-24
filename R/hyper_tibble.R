@@ -25,7 +25,6 @@ hyper_tibble <- function(x, ..., na.rm = TRUE) {
   UseMethod("hyper_tibble")
 }
 #' @name hyper_tibble
-#' @importFrom ncdump NetCDF
 #' @export
 hyper_tibble.character <- function(x, ..., na.rm = TRUE) {
   tidync(x) %>% hyper_filter(...) %>% hyper_tibble()
