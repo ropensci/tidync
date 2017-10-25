@@ -36,12 +36,7 @@ hyper_tibble.tidync<- function(x, ..., na.rm = TRUE) {
   slabs <- hyper_slice(x, ...)
   if (na.rm) all_na <- Reduce(`&`, lapply(slabs, function(a) is.na(as.vector(a))))
   total_prod <- prod(dim(slabs[[1]]))
-  #okfilter <- TRUE
-  #ns <- attr(x, "nominal_space")
-  #apply_okfilter <- !is.null(ns)
-  #if (apply_okfilter) okfilter <- ns$ok
-  #tib[[active(x)]] <- as.vector(slab)[okfilter]
-  out <- tibble::as_tibble(lapply(slabs, as.vector))
+out <- tibble::as_tibble(lapply(slabs, as.vector))
   
   prod_dims <- 1
   trans <- x[["transforms"]][x[["dimension"]][["active"]]]

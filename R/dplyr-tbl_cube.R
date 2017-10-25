@@ -29,11 +29,12 @@ hyper_tbl_cube <- function(x, ...) {
 #' @export
 #' @importFrom stats setNames
 hyper_tbl_cube.tidync <- function(x, ...) {
-  dim_names <- x[["dimension"]] %>% dplyr::filter(active) %>% dplyr::pull(name)
+  dim_names <- x[["dimension"]] %>% dplyr::filter(active) %>% dplyr::pull(.data$name)
   trans <- x[["transforms"]][dim_names]
   structure(list(mets = hyper_slice(x, ...), 
                  dims = stats::setNames(  lapply(dim_names, 
-                                                 function(inm) trans[[inm]] %>% dplyr::filter(.data$selected) %>% dplyr::pull(inm) ), 
+                                                 function(inm) trans[[inm]] %>% 
+                                                   dplyr::filter(.data$selected) %>% dplyr::pull(inm) ), 
                                           dim_names)), 
             class = "tbl_cube")
 }
@@ -43,13 +44,4 @@ hyper_tbl_cube.character <- function(x, ...) {
   stop("direct file access not yet supported, please use tidync(file) %>% hyper_tbl_cube(...)")
 } 
 
-#hyper_tbl_cube.hyperfilter <- function(x, ...) {
-  ##varname <- active(x)
- # hf <- hyper_filter(x, ...)
-  # dim_names <- names(x)
-  # structure(list(mets = hyper_slice(x, ...), 
-  #           dims = stats::setNames(  lapply(dim_names, 
-  #                                           function(inm) x[[inm]] %>% dplyr::filter(selected) %>% dplyr::pull(inm) ), 
-  #                             dim_names)), 
-  #           class = "tbl_cube")
-#}
+
