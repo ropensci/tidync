@@ -19,8 +19,8 @@
 #'# library(palr)
 #'# pal <- chlPal(palette = TRUE)
 #'# sfg <- scale_fill_gradientn(values = scl(head(pal$breaks, -1)),
-#'      colours = pal$cols)
-#' ggplot(tibble::as_tibble(cube) %>% dplyr::filter(!is.na(chlor_a))) +
+#'#      colours = pal$cols)
+#'# ggplot(tibble::as_tibble(cube) %>% dplyr::filter(!is.na(chlor_a))) +
 #' #geom_raster(aes(lon, lat, fill = chlor_a)) + sfg  + coord_equal() #+
 #' #geom_polygon(data = ggplot2::map_data("world",
 #' #xlim = c(100, 180),
@@ -35,11 +35,11 @@ hyper_tbl_cube <- function(x, ...) {
 #' @export
 #' @importFrom stats setNames
 hyper_tbl_cube.tidync <- function(x, ...) {
-  dim_names <- x[["dimension"]] %>% dplyr::filter(active) %>% dplyr::pull(name)
+  dim_names <- x[["dimension"]] %>% dplyr::filter(active) %>% dplyr::pull(.data$name)
   trans <- x[["transforms"]][dim_names]
   structure(list(mets = hyper_slice(x, ...), 
                  dims = stats::setNames(  lapply(dim_names, 
-                                                 function(inm) trans[[inm]] %>% dplyr::filter(selected) %>% dplyr::pull(inm) ), 
+                                                 function(inm) trans[[inm]] %>% dplyr::filter(.data$selected) %>% dplyr::pull(inm) ), 
                                           dim_names)), 
             class = "tbl_cube")
 }

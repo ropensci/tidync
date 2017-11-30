@@ -16,12 +16,13 @@ Imports:
     forcats,
     magrittr,
     ncdf4,
-    ncdump,
+    ncdump (> 0.0.3),
     ncmeta, 
     purrr, 
     RNetCDF,
     raster,
     rlang, 
+    tabularaster,
     tibble,
     yesno
 RoxygenNote: 6.0.1
@@ -31,8 +32,7 @@ Suggests: ggplot2,
     palr,
     rmarkdown,
     testthat,
-    covr, 
-    ncdump (> 0.0.3)
+    covr
 Remotes:  hypertidy/ncdump, hypertidy/ncmeta
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

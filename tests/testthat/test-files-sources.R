@@ -15,17 +15,6 @@ test_that("files and bad files are handled", {
   tidync(roms_file)
   
   l3_file <- raadtools::ocfiles()$fullname[1]  
-  tidync(l3_file) %>% expect_warning() %>% expect_error() 
+  expect_error(tidync(l3_file)) 
 })
 
-
-## FIXME: we need a lot more examples!  
-test_that("non-local sources work", {
-  skip_on_travis()
-
-  unc %>% activate("D2")
-  
-  uhf <- unc %>% hyper_filter(longitude = abs(index - 100) < 10, latitude = latitude > 60, time = index == 1)
-  
-  res_uv_wind <- hyper_tibble(uhf) 
-})

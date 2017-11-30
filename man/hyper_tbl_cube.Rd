@@ -40,8 +40,8 @@ activate(chlor_a), lon = lon > 107, lat = abs(lat) < 30))
 # library(palr)
 # pal <- chlPal(palette = TRUE)
 # sfg <- scale_fill_gradientn(values = scl(head(pal$breaks, -1)),
-     colours = pal$cols)
-ggplot(tibble::as_tibble(cube) \%>\% dplyr::filter(!is.na(chlor_a))) +
+#      colours = pal$cols)
+# ggplot(tibble::as_tibble(cube) \%>\% dplyr::filter(!is.na(chlor_a))) +
 #geom_raster(aes(lon, lat, fill = chlor_a)) + sfg  + coord_equal() #+
 #geom_polygon(data = ggplot2::map_data("world",
 #xlim = c(100, 180),

@@ -20,7 +20,9 @@ hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
   variable <- x[["variable"]] %>% dplyr::filter(active)
   varname <- unique(variable[["name"]])
   ## hack to get the order of the indices of the dimension
-  ordhack <- 1 + as.integer(unlist(strsplit(gsub("D", "", dplyr::filter(x$grid, grid == active(x)) %>% dplyr::slice(1L) %>% dplyr::pull(grid)), ",")))
+  ordhack <- 1 + as.integer(unlist(strsplit(gsub("D", "", 
+            dplyr::filter(x$grid, .data$grid == active(x)) %>% dplyr::slice(1L) %>% 
+              dplyr::pull(.data$grid)), ",")))
   dimension <- x[["dimension"]] %>% dplyr::slice(ordhack)
   ## ensure dimension is in order of the dims in these vars
   axis <- x[["axis"]] %>% dplyr::filter(variable %in% varname)
@@ -29,7 +31,7 @@ hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
   COUNT <- dimension$count
  # browser()
   if (is.null(select_var))   {
-    varnames <- variable %>% dplyr::pull(name)
+    varnames <- variable %>% dplyr::pull(.data$name)
   } else {
     if (!any(select_var %in% variable[["name"]])) {
       print("available variables: ")
