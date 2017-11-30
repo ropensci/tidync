@@ -1,4 +1,4 @@
-# tidync dev
+# tidync 0.0.3
 
 
 * removed hyper_index and incorporated that into hyper_filter, there's now 
