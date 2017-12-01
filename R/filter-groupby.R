@@ -1,3 +1,4 @@
+## replace by velox/tabularaster??
 ## 
 ## ## @importFrom rlang .data
 ## ## @importFrom raster setValues
