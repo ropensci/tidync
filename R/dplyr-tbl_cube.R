@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-#' ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+#' ufile <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
 #' tidync(ufile)
 #' hyper_tbl_cube(tidync(ufile))
 #' f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
@@ -35,7 +35,10 @@ hyper_tbl_cube <- function(x, ...) {
 #' @export
 #' @importFrom stats setNames
 hyper_tbl_cube.tidync <- function(x, ...) {
-  dim_names <- x[["dimension"]] %>% dplyr::filter(active) %>% dplyr::pull(.data$name)
+  active_names <- tibble::tibble(dim = as.integer(gsub("^D", "", unlist(strsplit(active(x), ",")))))
+  dim_names <- active_names %>% 
+    inner_join(x[["dimension"]] %>% dplyr::filter(active), c("dim" = "id")) %>% 
+    dplyr::pull(.data$name)
   trans <- x[["transforms"]][dim_names]
   structure(list(mets = hyper_slice(x, ...), 
                  dims = stats::setNames(  lapply(dim_names, 

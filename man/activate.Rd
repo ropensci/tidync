@@ -7,15 +7,7 @@
 \alias{activate}
 \alias{activate.tidync}
 \alias{activate}
-\alias{activate.hyperfilter}
-\alias{activate}
 \alias{active.tidync}
-\alias{activate}
-\alias{active.hyperfilter}
-\alias{activate}
-\alias{active<-.tidync}
-\alias{activate}
-\alias{active<-.hyperfilter}
 \alias{active}
 \alias{active.default}
 \alias{active<-}
@@ -26,15 +18,7 @@ activate(.data, what)
 
 \method{activate}{tidync}(.data, what)
 
-\method{activate}{hyperfilter}(.data, what)
-
 \method{active}{tidync}(x)
-
-\method{active}{hyperfilter}(x)
-
-\method{active}{tidync}(x) <- value
-
-\method{active}{hyperfilter}(x) <- value
 
 active(x)
 
@@ -51,7 +35,7 @@ active(x) <- value
 
 \item{x}{NetCDF object}
 
-\item{value}{name of variable to be active}
+\item{value}{name of grid or variable to be active}
 }
 \value{
 NetCDF object

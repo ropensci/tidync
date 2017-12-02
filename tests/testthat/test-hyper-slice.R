@@ -1,7 +1,9 @@
 context("hyper-slice")
 
 test_that("slicing works", {
-  l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
+  skip_on_cran()
+  l3file <- system.file("extdata/oceandata", 
+              "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package= "tidync")
   tidync(l3file) %>% hyper_filter() %>% hyper_slice()
   tidync(l3file) %>% hyper_filter() %>% hyper_tibble()
   a <- tidync(l3file) %>% hyper_filter(lon = index == 100) %>% hyper_slice()

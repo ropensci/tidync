@@ -13,6 +13,6 @@ test_that("tbl_cube works", {
   htc <- tidync(f) %>% hyper_filter(time = index < 10) %>% 
     hyper_tbl_cube() 
   
-  expect_true(all(dim(htc$mets$sst) == lengths(htc$dims)))
+  expect_true(all(dim(htc$mets$sst) == lengths(htc$dims)[1:2]))
 })
 

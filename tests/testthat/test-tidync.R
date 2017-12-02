@@ -16,8 +16,10 @@ test_that("recorded failures", {
   #   Error in ncvar_type_to_string(rv$precint) : 
   #  Error, unrecognized type code of variable supplied: -1 
   l3bin <- "/rdsi/PUBLIC/raad/data/oceandata.sci.gsfc.nasa.gov/SeaWiFS/L3BIN/2005/206/S2005206.L3b_DAY_RRS.nc"
-  expect_error(tidync(l3bin), "no variables or dimension recognizable")
-
+  #expect_error(tidync(l3bin), "no variables or dimension recognizable")
+  ## changed December 2017
+  expect_error(tidync(l3bin), "HDF error")
+  
   # Error in hyper_filter(., x = x < 30) : object 'x' not found
   (f <- "/rdsi/PRIVATE/raad/data_local/amps/2013021900_WRF_d2_PCP_f009.nc")
   PCP <- tidync(f) %>% activate(PCP)

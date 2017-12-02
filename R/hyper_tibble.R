@@ -9,10 +9,11 @@
 #' @export %>% 
 #' @examples
 #' l3file <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
-#' rnc <- tidync(system.file("extdata", "oceandata", l3file, package= "tidync"))
+#' f <- system.file("extdata", "oceandata", l3file, package= "tidync")
+#' rnc <- tidync(f)
 #' hyper_filter(rnc)
 #' library(dplyr)
-#' lapply(hyper_slice(l3file, lat = lat > 0, lon = index > 3000), dim)
+#' lapply(hyper_slice(f, lat = lat > 0, lon = index > 3000), dim)
 #' 
 #'  ht <- hyper_tibble(rnc) %>% 
 #'  filter(!is.na(chlor_a)) 

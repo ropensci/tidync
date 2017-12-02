@@ -52,26 +52,12 @@ activate.tidync <- function(.data, what) {
   .data <- update_slices(.data)
   .data
 }
-#' @name activate
-#' @export
-activate.hyperfilter <- function(.data, what) {
-  what_name <- deparse(substitute(what))
-  # if (what_name %in% var_names(.data)) what <- what_name
-  active(.data) <- what
-  .data
-}
 #' @param x NetCDF object
 #' @name activate
 #' @export
 active.tidync <- function(x) {
   attr(x, 'active')
 }
-#' @name activate
-#' @export
-active.hyperfilter <- active.tidync
-#' @param value name of variable to be active
-#' @name activate
-#' @export
 `active<-.tidync` <- function(x, value) {
   #vn <- var_names(x)
   sn <- unique(x$grid$grid)
@@ -83,14 +69,6 @@ active.hyperfilter <- active.tidync
   attr(x, 'active') <- value
   x
 }
-#' @name activate
-#' @export
-`active<-.hyperfilter` <- function(x, value) {
-  
-  attr(x, 'active') <- value
-  x
-}
-
 
 #' @export
 activate.default <- function(.data, what) {
@@ -112,6 +90,7 @@ active.default <- function(x) {
   val <- attr(x, 'active')
 }
 #' @rdname activate
+#' @param value name of grid or variable to be active
 #' @export
 `active<-` <- function(x, value) {
   UseMethod("active<-")

@@ -35,9 +35,12 @@ var_names.tidync <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
-#' rnc <- tidync(system.file("extdata", l3file, package= "tidync"))
+#' \dontrun{
+#' \donttest{
+#' l3file <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+#' rnc <- tidync(system.file("extdata/oceandata", l3file, package= "tidync"))
 #' dim_names(rnc)
+#' }}
 dim_names <- function(x, ...) {
   UseMethod("dim_names")
 }

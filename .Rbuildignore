@@ -5,7 +5,7 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^docs$
-^examples$
+^inst/examples$
 ^inst/extdata/unidata/madis-hydro.nc$
 ^\.travis\.yml$
 ^appveyor\.yml$

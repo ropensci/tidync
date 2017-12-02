@@ -28,7 +28,7 @@ tbl_cube
 dplyr tbl cube from NetCDF
 }
 \examples{
-ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+ufile <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
 tidync(ufile)
 hyper_tbl_cube(tidync(ufile))
 f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
