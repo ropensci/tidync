@@ -34,7 +34,6 @@ Suggests: ggplot2,
     testthat,
     covr
 Remotes: hypertidy/ncmeta
-VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/hypertidy/tidync
 BugReports: https://github.com/hypertidy/tidync/issues
