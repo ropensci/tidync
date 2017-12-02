@@ -8,8 +8,8 @@
 #' @export
 #'
 #' @examples
-#' l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
-#' rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
+#' l3file <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+#' rnc <- tidync(system.file("extdata", "oceandata", l3file, package= "tidync"))
 #' var_names(rnc)
 var_names <- function(x, ...) {
   UseMethod("var_names")
@@ -36,7 +36,7 @@ var_names.tidync <- function(x, ...) {
 #'
 #' @examples
 #' l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
-#' rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
+#' rnc <- tidync(system.file("extdata", l3file, package= "tidync"))
 #' dim_names(rnc)
 dim_names <- function(x, ...) {
   UseMethod("dim_names")
@@ -57,8 +57,6 @@ dimension_values <- function(x) {
   .Defunct()
   UseMethod("dimension_values")
 }
-# dimension_values.character <- function(x) {
-#   dimension_values(ncdump::NetCDF(x))
 # }
 dimension_values.tidync <- function(x) {
   dimids <- x$grid[x$grid$grid == active(x), ] %>% inner_join(x$variable, c("variable" = "name"))

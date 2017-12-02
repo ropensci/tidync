@@ -26,7 +26,7 @@ names of variables available
 Variable names
 }
 \examples{
-l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
-rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
+l3file <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+rnc <- tidync(system.file("extdata", "oceandata", l3file, package= "tidync"))
 var_names(rnc)
 }

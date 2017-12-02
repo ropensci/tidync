@@ -27,6 +27,6 @@ Dimension names
 }
 \examples{
 l3file <- "S2008001.L3m_DAY_CHL_chlor_a_9km.nc"
-rnc <- tidync(system.file("extdata", l3file, package= "ncdump"))
+rnc <- tidync(system.file("extdata", l3file, package= "tidync"))
 dim_names(rnc)
 }

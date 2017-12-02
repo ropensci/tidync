@@ -23,7 +23,7 @@ At the end we must as_tibble for ggplot2, but future work will remove the need f
 
 FIXME: can't work until we have variable-less dimensions again
 
-```{r,eval=FALSE}
+```{r,eval=T}
 romsfile <- file.path("/rdsi/PRIVATE/raad","data_local/acecrc.org.au/ROMS/s_corney/cpolar/ocean_his_3307.nc")
 
 library(tidync)
@@ -33,9 +33,7 @@ roms_cube <- tidync(romsfile) %>% activate(temp) %>%
                eta_rho = eta_rho > 200, 
 #               s_rho = index == 1,
                s_rho = index %% 4 == 0,
-               ocean_time = index == 15) 
-#%>% 
-#  hyper_tbl_cube()
+               ocean_time = index == 15) %>%  hyper_tbl_cube()
 
 library(ggplot2)
 ggplot(roms_cube %>% as_tibble(), aes(xi_rho, eta_rho, fill = temp)) + geom_raster() + facet_wrap(~s_rho)

@@ -28,8 +28,8 @@ a \code{tbl_df}
 hyper tibble
 }
 \examples{
-l3file <- system.file("extdata", "S2008001.L3m_DAY_CHL_chlor_a_9km.nc", package= "ncdump")
-rnc <- tidync(l3file)
+l3file <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+rnc <- tidync(system.file("extdata", "oceandata", l3file, package= "tidync"))
 hyper_filter(rnc)
 library(dplyr)
 lapply(hyper_slice(l3file, lat = lat > 0, lon = index > 3000), dim)

@@ -1,6 +1,6 @@
 
 context("activate")
-
+skip_on_cran()
 f <- ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
 tidync(ufile)
 ## also make sure we can active a new grid, this is the dimension ref comma separated (no brackets)
@@ -9,7 +9,7 @@ tidync(ufile) %>% activate("D3,D12")
 
 test_that("various access and activation works", {
   tidync(ufile) %>% active() %>% expect_equal("D0,D12")
-  
+  skip_on_cran()
   ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
   tidync(ufile)
   tidync(ufile, 3)

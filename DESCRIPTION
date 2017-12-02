@@ -16,7 +16,6 @@ Imports:
     forcats,
     magrittr,
     ncdf4,
-    ncdump (> 0.0.3),
     ncmeta, 
     purrr, 
     RNetCDF,
@@ -29,11 +28,11 @@ RoxygenNote: 6.0.1
 Suggests: ggplot2,
     knitr,
     memoise,
+    ncdump,
     palr,
     rmarkdown,
     testthat,
     covr
-Remotes:  hypertidy/ncdump, hypertidy/ncmeta
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/hypertidy/tidync
