@@ -52,10 +52,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -93,9 +96,6 @@
 <span class='fu'>hyper_tbl_cube</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>hyper_tbl_cube</span>(<span class='no'>x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for hyperfilter</span>
 <span class='fu'>hyper_tbl_cube</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -115,47 +115,41 @@
 
     <p>tbl_cube
 
-<code>dplyr::tbl_cube</code></p>
+<code><a href='http://dplyr.tidyverse.org/reference/tbl_cube.html'>dplyr::tbl_cube</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ufile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"unidata"</span>, <span class='st'>"madis-hydro.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>)
-<span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>ufile</span>)</div><div class='output co'>#&gt; 
-#&gt; Data Source (1): madis-hydro.nc ...
+    <pre class="examples"><div class='input'><span class='no'>ufile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"unidata"</span>, <span class='st'>"test_hgroups.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>)
+<span class='fu'>tidync</span>(<span class='no'>ufile</span>)</div><div class='output co'>#&gt; 
+#&gt; Data Source (1): test_hgroups.nc ...
 #&gt; 
-#&gt; Grids (13) &lt;dimension family&gt; : &lt;associated variables&gt; 
+#&gt; Grids (1) &lt;dimension family&gt; : &lt;associated variables&gt; 
 #&gt; 
-#&gt; [1]   D0,D12 : rawMessage    **ACTIVE GRID** ( 301056  values per variable)
-#&gt; [2]   D10,D9 : staticIds
-#&gt; [3]   D1,D12 : dataProvider, handbook5Id, stationId, stationType
-#&gt; [4]   D2,D12 : providerId
-#&gt; [5]   D3,D12 : stationName
-#&gt; [6]   D4,D12 : homeWFO
-#&gt; [7]   D5,D12 : precip12hrQCD, precip1hrQCD, precip24hrQCD, precip3hrQCD, precip5minQCD, precip6hrQCD, precipAccumQCD
-#&gt; [8]   D6,D5  : QCT
-#&gt; [9]   D8,D7  : ICT
-#&gt; [10]   D11    : firstInBin, lastInBin
-#&gt; [11]   D12    : elevation, invTime, isOverflow, latitude, longitude, numericWMOid, observationTime, precip12hr, precip12hrDD, precip12hrICA, precip12hrICR, precip12hrQCA, precip12hrQCR, precip1hr, precip1hrDD, precip1hrICA, precip1hrICR, precip1hrQCA, precip1hrQCR, precip24hr, precip24hrDD, precip24hrICA, precip24hrICR, precip24hrQCA, precip24hrQCR, precip3hr, precip3hrDD, precip3hrICA, precip3hrICR, precip3hrQCA, precip3hrQCR, precip5min, precip5minDD, precip5minICA, precip5minICR, precip5minQCA, precip5minQCR, precip6hr, precip6hrDD, precip6hrICA, precip6hrICR, precip6hrQCA, precip6hrQCR, precipAccum, precipAccumDD, precipAccumICA, precipAccumICR, precipAccumQCA, precipAccumQCR, prevRecord, receivedTime, reportTime, riverFlow, riverReportChangeTime, riverStage
-#&gt; [12]   D9     : inventory, lastRecord
-#&gt; [13]   S      : filterSetNum, firstOverflow, globalInventory, nStaticIds
+#&gt; [1]   D0 : UTC_time    **ACTIVE GRID** ( 74  values per variable)
 #&gt; 
-#&gt; Dimensions (13): 
+#&gt; Dimensions (1): 
 #&gt;   
-#&gt;    dimension    id              name length unlim 
-#&gt;        &lt;chr&gt; &lt;dbl&gt;             &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt; 
-#&gt;  1        D0     0 maxLDADmessageLen    256 FALSE 
-#&gt;  2        D1     1       maxStaIdLen     11 FALSE 
-#&gt;  3        D2     2  maxProviderIdLen     12 FALSE 
-#&gt;  4        D3     3     maxNameLength     51 FALSE 
-#&gt;  5        D4     4     maxHomeWFOlen      4 FALSE 
-#&gt;  6        D5     5        QCcheckNum     10 FALSE 
-#&gt;  7        D6     6    QCcheckNameLen     60 FALSE 
-#&gt;  8        D7     7        ICcheckNum     55 FALSE 
-#&gt;  9        D8     8    ICcheckNameLen     72 FALSE 
-#&gt; 10        D9     9      maxStaticIds   2000 FALSE 
-#&gt; 11       D10    10        totalIdLen     24 FALSE 
-#&gt; 12       D11    11    nInventoryBins     24 FALSE 
-#&gt; 13       D12    12            recNum   1176  TRUE </div><div class='input'>#hyper_tbl_cube(tidync(ufile))
+#&gt;   dimension    id   name length unlim coord_dim active start count 
+#&gt;       &lt;chr&gt; &lt;dbl&gt;  &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; 
+#&gt; 1        D0     0 recNum     74 FALSE     FALSE   TRUE     1    74 </div><div class='input'><span class='fu'>hyper_tbl_cube</span>(<span class='fu'>tidync</span>(<span class='no'>ufile</span>))</div><div class='output co'>#&gt; Source: local array [74 x 1]
+#&gt; D: recNum [int, 74]
+#&gt; M: UTC_time [chr]</div><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='st'>"S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"</span>
+<span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/oceandata"</span>, <span class='no'>f</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"tidync"</span>)
+(<span class='no'>cube</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tbl_cube</span>(<span class='fu'>tidync</span>(<span class='no'>l3file</span>) <span class='kw'>%&gt;%</span>
+<span class='fu'>activate</span>(<span class='no'>chlor_a</span>), <span class='kw'>lon</span> <span class='kw'>=</span> <span class='no'>lon</span> <span class='kw'>&gt;</span> <span class='fl'>107</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='fu'>abs</span>(<span class='no'>lat</span>) <span class='kw'>&lt;</span> <span class='fl'>30</span>))</div><div class='output co'>#&gt; Source: local array [9,331,200 x 2]
+#&gt; D: lon [dbl, 4320]
+#&gt; D: lat [dbl, 2160]
+#&gt; M: chlor_a [dbl]</div><div class='input'># library(ggplot2)
+# scl <- function(x) {rng <- range(x, na.rm = TRUE); (x - rng[1])/diff(rng)}
+# library(palr)
+# pal <- chlPal(palette = TRUE)
+# sfg <- scale_fill_gradientn(values = scl(head(pal$breaks, -1)),
+#      colours = pal$cols)
+# ggplot(tibble::as_tibble(cube) %>% dplyr::filter(!is.na(chlor_a))) +
+#geom_raster(aes(lon, lat, fill = chlor_a)) + sfg  + coord_equal() #+
+#geom_polygon(data = ggplot2::map_data("world",
+#xlim = c(100, 180),
+#ylim = c(-30, 30)), aes(long, lat, group = group, fill = NULL))
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

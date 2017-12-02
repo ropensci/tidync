@@ -52,10 +52,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -86,7 +89,7 @@
     
     <p>Provides easy to use idioms for working with NetCDF data for
 extraction, manipulation and visualization.
-NetCDF is Network Common Data Form <a href = 'https://www.unidata.ucar.edu/software/netcdf/'>https://www.unidata.ucar.edu/software/netcdf/</a>.</p>
+NetCDF is Network Common Data Form <a href='https://www.unidata.ucar.edu/software/netcdf/'>https://www.unidata.ucar.edu/software/netcdf/</a>.</p>
     
 
         
@@ -94,21 +97,19 @@ NetCDF is Network Common Data Form <a href = 'https://www.unidata.ucar.edu/softw
 
     <p>There is a family of functions "hyper_verb" around exploring and
 extracting data.</p><table><tr><td>
-<code><a href='tidync.html'>tidync</a></code> </td>
+<code>tidync</code> </td>
 <td> extracts all file metadata in an object useable by other tidync functions</td>
 </tr><tr><td>
-<code><a href='hyper_filter.html'>hyper_filter</a></code> </td>
+<code>hyper_filter</code> </td>
 <td> processes user-driven expressions to filter based on NetCDF dimensions </td>
 </tr><tr><td>
-<code><a href='hyper_index.html'>hyper_index</a></code> </td>
-<td> processes dimension filters into NetCDF extraction indexes </td>
-</tr><tr><td>
-<code><a href='hyper_slice.html'>hyper_slice</a></code> </td>
+<code>hyper_slice</code> </td>
 <td> extracts a raw data array based on a NetCDF index </td>
 </tr><tr><td>
-<code><a href='hyper_tibble.html'>hyper_tibble</a></code> </td>
+<code>hyper_tibble</code> </td>
 <td> extracts the slice as a data frame with all dimension values </td>
-</tr></table>
+</tr></table><p>The scheme generally processes dimension filters into NetCDF extraction indexes and these are always available
+to each function, and are expressed in print methods.</p>
     
 
   </div>

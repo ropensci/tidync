@@ -52,10 +52,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -87,16 +90,13 @@
     <p>hyper tibble</p>
     
 
-    <pre class="usage"><span class='fu'>hyper_tibble</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>hyper_tibble</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>hyper_tibble</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>hyper_tibble</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for tidync</span>
-<span class='fu'>hyper_tibble</span>(<span class='no'>x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for hyperfilter</span>
-<span class='fu'>hyper_tibble</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>hyper_tibble</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -109,6 +109,10 @@
       <th>...</th>
       <td><p>arguments to `hyper_filter``</p></td>
     </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p>if <code>TRUE</code> these rows are not included in the output when all variables are <code>NA</code></p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -117,35 +121,48 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"S2008001.L3m_DAY_CHL_chlor_a_9km.nc"</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"ncdump"</span>)
-<span class='no'>rnc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>)
-<span class='fu'><a href='hyper_filter.html'>hyper_filter</a></span>(<span class='no'>rnc</span>)</div><div class='output co'>#&gt; # A tibble: 1 x 2
-#&gt;                access
-#&gt;                &lt;dttm&gt;
-#&gt; 1 2017-06-25 14:59:37
-#&gt; # ... with 1 more variables: source &lt;chr&gt;
-#&gt; filtered dimension summary: 
-#&gt; # A tibble: 2 x 4
-#&gt;    name        min       max length
-#&gt;   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;  &lt;int&gt;
-#&gt; 1   lon -179.95833 179.95836   4320
-#&gt; 2   lat  -89.95834  89.95834   2160</div><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='hyper_slice.html'>hyper_slice</a></span>(<span class='no'>l3file</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='no'>lat</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>) <span class='kw'>%&gt;%</span> <span class='fu'>dim</span>()</div><div class='output co'>#&gt; NULL</div><div class='input'>
- <span class='no'>ht</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tibble</span>(<span class='no'>rnc</span>) <span class='kw'>%&gt;%</span> <span class='fu'>filter</span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>))
-<span class='no'>ht</span></div><div class='output co'>#&gt; # A tibble: 9 x 3
-#&gt;    chlor_a      lon       lat
-#&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 1.801773 170.3750 -75.95834
-#&gt; 2 1.801773 170.4584 -75.95834
-#&gt; 3 1.801773 170.5417 -75.95834
-#&gt; 4 1.801773 170.6250 -75.95834
-#&gt; 5 0.800647 165.1250 -77.37501
-#&gt; 6 0.800647 165.2084 -77.37501
-#&gt; 7 0.800647 165.2917 -77.37501
-#&gt; 8 0.800647 165.3750 -77.37501
-#&gt; 9 0.800647 165.4584 -77.37501</div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)
-<span class='fu'>ggplot</span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'>filter</span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>)),
-<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>lon</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>lat</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>chlor_a</span>)) + <span class='fu'>geom_point</span>()</div><img src='hyper_tibble-8.png' alt='' width='540' height='400' /><div class='input'>
+    <pre class="examples"><div class='input'><span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='st'>"S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"</span>
+<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"oceandata"</span>, <span class='no'>l3file</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"tidync"</span>)
+<span class='no'>rnc</span> <span class='kw'>&lt;-</span> <span class='fu'>tidync</span>(<span class='no'>f</span>)
+<span class='fu'>hyper_filter</span>(<span class='no'>rnc</span>)</div><div class='output co'>#&gt; 
+#&gt; Data Source (1): S20092742009304.L3m_MO_CHL_chlor_a_9km.nc ...
+#&gt; 
+#&gt; Grids (4) &lt;dimension family&gt; : &lt;associated variables&gt; 
+#&gt; 
+#&gt; [1]   D1,D0 : chlor_a    **ACTIVE GRID** ( 9331200  values per variable)
+#&gt; [2]   D3,D2 : palette
+#&gt; [3]   D0    : lat
+#&gt; [4]   D1    : lon
+#&gt; 
+#&gt; Dimensions (4): 
+#&gt;   
+#&gt;   dimension    id          name length unlim coord_dim active start count 
+#&gt;       &lt;chr&gt; &lt;dbl&gt;         &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; 
+#&gt; 1        D0     0           lat   2160 FALSE      TRUE   TRUE     1  2160 
+#&gt; 2        D1     1           lon   4320 FALSE      TRUE   TRUE     1  4320 
+#&gt; 3        D2     2           rgb      3 FALSE     FALSE  FALSE     1     3 
+#&gt; 4        D3     3 eightbitcolor    256 FALSE     FALSE  FALSE     1   256 </div><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)
+<span class='fu'>lapply</span>(<span class='fu'>hyper_slice</span>(<span class='no'>f</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='no'>lat</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>, <span class='kw'>lon</span> <span class='kw'>=</span> <span class='no'>index</span> <span class='kw'>&gt;</span> <span class='fl'>3000</span>), <span class='no'>dim</span>)</div><div class='output co'>#&gt; $chlor_a
+#&gt; [1] 1320 1080
+#&gt; </div><div class='input'>
+ <span class='no'>ht</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tibble</span>(<span class='no'>rnc</span>) <span class='kw'>%&gt;%</span>
+ <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>))
+<span class='no'>ht</span></div><div class='output co'>#&gt; # A tibble: 179,561 x 3
+#&gt;     chlor_a      lon      lat
+#&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+#&gt;  1 1.253608 163.1250 54.62500
+#&gt;  2 1.253608 163.2084 54.62500
+#&gt;  3 1.363552 163.1250 54.54166
+#&gt;  4 1.238402 163.2084 54.54166
+#&gt;  5 1.238402 163.2917 54.54166
+#&gt;  6 1.519527 163.0417 54.45833
+#&gt;  7 1.519527 163.1250 54.45833
+#&gt;  8 2.106483 163.2084 54.45833
+#&gt;  9 1.010342 162.9584 54.37500
+#&gt; 10 1.010342 163.0417 54.37500
+#&gt; # ... with 179,551 more rows</div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>)),
+<span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>lon</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>lat</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>chlor_a</span>)) + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>()</div><div class='img'><img src='hyper_tibble-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

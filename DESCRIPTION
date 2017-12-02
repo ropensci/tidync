@@ -16,7 +16,7 @@ Imports:
     forcats,
     magrittr,
     ncdf4,
-    ncmeta, 
+    ncmeta (>= 0.0.2), 
     purrr, 
     RNetCDF,
     raster,
@@ -33,6 +33,7 @@ Suggests: ggplot2,
     rmarkdown,
     testthat,
     covr
+Remotes: hypertidy/ncmeta
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/hypertidy/tidync

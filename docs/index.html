@@ -29,10 +29,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="articles/index.html">Articles</a>
+  <a href="reference/index.html">Reference</a>
 </li>
 <li>
   <a href="news/index.html">News</a>
@@ -63,59 +66,55 @@
 <div class="contents">
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<p><a href="https://cran.r-project.org/package=tidync"><img src="http://www.r-pkg.org/badges/version/tidync" alt="CRAN_Status_Badge"></a></p>
 <div id="tidync" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#tidync" class="anchor"></a>tidync</h1></div>
-<p><strong>NOTE:</strong> this package is development and subject to change. See Limitations below. Active design discussed here: <a href="https://github.com/hypertidy/tidync/issues/33" class="uri">https://github.com/hypertidy/tidync/issues/33</a></p>
 <p>The goal of tidync is to ease exploring the contents of a NetCDF file and constructing efficient queries to extract arbitrary hyperslabs.</p>
-<p>The data extracted can be used directly in array contexts, or in “long form” form “tidy” analysis and visualization contexts.</p>
+<p>The data extracted can be used directly as an array, or in “long form” form as a data frame for “tidy” analysis and visualization contexts.</p>
+<p>These examples are for illustration, see the vignettes for more details, and please try on your own sources!</p>
 <p>There are two main ways of using tidync.</p>
-<p>These examples are for illustration only, see the vignettes for more details, and please try on your own files!</p>
 <div id="interactive" class="section level2">
 <h2 class="hasAnchor">
 <a href="#interactive" class="anchor"></a>Interactive</h2>
-<p>Use <code><a href="reference/tidync.html">tidync()</a></code> and <code><a href="reference/hyper_filter.html">hyper_filter()</a></code> to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name <code>index</code> to filter it by it’s ‘step’ index).</p>
+<p>Use <code>tidync()</code> and <code>hyper_filter()</code> to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name <code>index</code> to filter it by its ‘step’ index).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## discover the available entities, and the active grid's dimensions and variables
-<span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename)
+<span class="kw">tidync</span>(filename)
 
 ## activate a different grid
-<span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(grid_identifier)
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(grid_identifier)
 
 ## get a dimension-focus on the space occupied within a grid
-<span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>()
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>()
 
 ## pass named expressions to subset dimension by value or index (step)
-<span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">lat =</span> lat <span class="op">&lt;</span><span class="st"> </span><span class="op">-</span><span class="dv">30</span>, <span class="dt">time =</span> time <span class="op">==</span><span class="st"> </span><span class="dv">20</span>)</code></pre></div>
-<p>Note, an earlier version of this package worked by activating “variables by name”. This still works but effectively activates the grid that this variable exists within, so all variables in the space are available by default. Grids have identifiers based on which dimensions they use i.e. “D1,D0” and can otherwise be activated by their count identifier (starting at 1).</p>
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">lat =</span> lat <span class="op">&lt;</span><span class="st"> </span><span class="dv">-30</span>, <span class="dt">time =</span> time <span class="op">==</span><span class="st"> </span><span class="dv">20</span>)</code></pre></div>
+<p>A grid is a “virtual table” in the sense of a database source. It’s possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. “D1,D0” and can otherwise be activated by their count identifier (starting at 1). The “D0” is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself.</p>
 </div>
 <div id="extractive" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extractive" class="anchor"></a>Extractive</h2>
-<p>Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form. It’s important to not actual request the data extraction until the expressions above would result in an efficient size (don’t try a data frame version of a 20Gb ROMs variable …).</p>
+<p>Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## we'll see a column for sst, lat, time, and whatever other dimensions sst has
 ## and whatever other variable's the grid has
-<span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"sst"") %&gt;% </span>
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(<span class="st">"sst"") %&gt;% </span>
 <span class="st">  hyper_filter(lat = lat &lt; -30, time = time == 20) %&gt;% </span>
 <span class="st">  hyper_tibble()</span>
 
 
 <span class="st">## raw array form, we'll see a (list of) R arrays with a dimension for each seen by tidync(filename) %&gt;% activate("</span>sst<span class="st">""</span>)
-<span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"sst"") %&gt;% </span>
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(<span class="st">"sst"") %&gt;% </span>
 <span class="st">  hyper_filter(lat = lat &lt; -30, time = time == 20) %&gt;% </span>
 <span class="st">  hyper_slice()</span></code></pre></div>
-<p>There is another function <code>hyper_index</code> that build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each <code>hyper_*</code> function can take the filtering expressions, but it’s not obvious if this is a good idea or not.</p>
+<p>It’s important to not actual request the data extraction until the expressions above would result in an efficient size (don’t try a data frame version of a 20Gb ROMs variable …). Use the interactive modes to determine the likely size of the output you will receive.</p>
+<p>Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each <code>hyper_*</code> function can take the filtering expressions, but it’s not obvious if this is a good idea or not.</p>
 </div>
 </div>
 <div id="development" class="section level1">
 <h1 class="hasAnchor">
 <a href="#development" class="anchor"></a>Development</h1>
-<p>Wishlist. Submit your own to the <a href="https://github.com/hypertidy/tidync">Issues tab</a></p>
+<p>Wishlist items here. Submit your own to the <a href="https://github.com/hypertidy/tidync">Issues tab</a></p>
 <ul>
-<li>install useful example files, and steps to download good files</li>
-<li>figure out whether “activate” is the right function, how to use that name (sorry Thomas)</li>
-<li>wrappers for returning raster brick</li>
-<li>helpers for dimension values as lists of coordinates for the slice form</li>
+<li>wrappers for returning various formats, like raster brick, simple features, rgl quad mesh forms, etc.</li>
 <li>delayed extraction to show the tibble you would get after collect()</li>
 <li>consider better function names like <code>hyper_df</code>, <code>hyper_dbl</code> and <code>hyper_int</code> (differentiate scaled and unscaled?)</li>
 </ul>
@@ -141,15 +140,15 @@ M: anom [dbl]</code></pre>
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install tidync from github with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"hypertidy/tidync"</span>)</code></pre></div>
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</code></pre></div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
-<p>This is a basic example which shows you how to connect to a file.</p>
+<p>This is a basic example which shows how to connect to a file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="st">"S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
 <span class="kw">library</span>(tidync)
-<span class="kw"><a href="reference/tidync.html">tidync</a></span>(file) 
+<span class="kw">tidync</span>(file) 
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Data Source (1): S20092742009304.L3m_MO_CHL_chlor_a_9km.nc ...</span>
 <span class="co">#&gt; </span>
@@ -162,45 +161,44 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Dimensions (4): </span>
 <span class="co">#&gt;   </span>
-<span class="co">#&gt;   dimension    id          name length unlim </span>
-<span class="co">#&gt;       &lt;chr&gt; &lt;dbl&gt;         &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt; </span>
-<span class="co">#&gt; 1        D0     0           lat   2160 FALSE </span>
-<span class="co">#&gt; 2        D1     1           lon   4320 FALSE </span>
-<span class="co">#&gt; 3        D2     2           rgb      3 FALSE </span>
-<span class="co">#&gt; 4        D3     3 eightbitcolor    256 FALSE</span></code></pre></div>
+<span class="co">#&gt;   dimension    id          name length unlim coord_dim active start count </span>
+<span class="co">#&gt;       &lt;chr&gt; &lt;dbl&gt;         &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; </span>
+<span class="co">#&gt; 1        D0     0           lat   2160 FALSE      TRUE   TRUE     1  2160 </span>
+<span class="co">#&gt; 2        D1     1           lon   4320 FALSE      TRUE   TRUE     1  4320 </span>
+<span class="co">#&gt; 3        D2     2           rgb      3 FALSE     FALSE  FALSE     1     3 </span>
+<span class="co">#&gt; 4        D3     3 eightbitcolor    256 FALSE     FALSE  FALSE     1   256</span></code></pre></div>
 <p>See this article for more: <a href="https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html" class="uri">https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html</a></p>
-<p>Stay tuned.</p>
 </div>
 <div id="limitations" class="section level2">
 <h2 class="hasAnchor">
 <a href="#limitations" class="anchor"></a>Limitations</h2>
+<p>Plesase get in touch if you have specfic workflows that <code>tidync</code> is not providing. There’s a lot of room for improvement!</p>
 <ul>
-<li>we can’t filter on multidimensional values (yet)</li>
-<li>compound types are not supported</li>
-<li>groups are not exposed as entities</li>
-<li>dims without variables are not handled currently, they should at least work in “index” form but don’t yet <a href="https://github.com/hypertidy/tidync/issues/30" class="uri">https://github.com/hypertidy/tidync/issues/30</a>
-</li>
-<li>testing has so far been minimal, and things will change</li>
+<li>we can’t do “grouped filters”" (i.e. polygon-overlay extraction), but it’s in the works</li>
+<li>compound types are not supported, though see the “rhdf5” branch on Github</li>
+<li>NetCDF groups are not exposed (groups are like a “files within a file”, analogous to a file system directory)</li>
 </ul>
 </div>
 <div id="terminology" class="section level2">
 <h2 class="hasAnchor">
 <a href="#terminology" class="anchor"></a>Terminology</h2>
-<p>I think of “slab” as a generalized “array” (in the R sense) that we can request from a NetCDF. We must provide the NetCDF API with a “slab index”, i.e. a start and a count vector - and that’s the only way to query them.</p>
+<p>Here I use the term “slab” as a generalized “array” (in the R sense) that may be read from a NetCDF. We must provide the NetCDF API with a “slab index”, i.e. both a start and a count vector each the same length (the same as the number of dimensions as the array variable), that is the only way to read them.</p>
 <p>In R terms a 3D array would be indexed like</p>
-<p>arr[1:10, 2:12, 3:5]</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arr[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">12</span>, <span class="dv">3</span><span class="op">:</span><span class="dv">5</span>]</code></pre></div>
 <p>and that would be analogous to</p>
-<p>ncvar_get(con, start = c(1, 2, 3), count = c(10, 11, 3))</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ncvar_get</span>(con, <span class="dt">start =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dt">count =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">3</span>))</code></pre></div>
 <p>If we only wanted a “sparse trace” through the array in R we can do</p>
-<p>arr[cbind(c(2, 4), c(5, 6), c(3, 4)]</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arr[<span class="kw">cbind</span>(<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>), <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">6</span>), <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)]</code></pre></div>
 <p>which would pull out 2-values from 2 arbitrary positions. The API doesn’t allow that (at least not in an efficient way that I can understand).</p>
 <p>We either have to get the whole “slab” that encompases those 2 cells, or request a degenerate 1-cell slab for each:</p>
-<p>ncvar_get(con, start = c(2, 5, 3), count = c(1, 1, 1)) ncvar_get(con, start = c(4, 6, 4), count = c(1, 1, 1))</p>
-<p>I’ve used the term “hyperslab” and “slab” since I realized this basic limitation during my PhD. Unidata use the term but it’s not in the API afaik:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ncvar_get</span>(con, <span class="dt">start =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>), <span class="dt">count =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))
+<span class="kw">ncvar_get</span>(con, <span class="dt">start =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">4</span>), <span class="dt">count =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</code></pre></div>
+<p>I’ve used the term “hyperslab” and “slab” since I realized this basic limitation during earlier work. Unidata use the term but it’s not in the API afaik:</p>
 <p><a href="http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html" class="uri">http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html</a></p>
 <p>Another term like this is “shape” which is a particular set of dimensions used by 1 or more variables in a file. tidync aims to allow “activation” of a given shape, so that any subsequent extraction gets all the variables that live in that space/shape. (It’s a database table interpretation of a set of variables).</p>
 <p>In R we can determine those indexes really easily for any given query, tracks over time through XYZ, polygons, boxes and so on - but we are ultimately limited by the API to these “slab” requests, so you see a lot of disparate approaches across packages to optimizing this.</p>
-<p>We have decided to use the term “grid” rather than “shape”, and so a grid is a specific ordered set of dimensions. An “axis” is a particular instance of a dimension within a variable. At times we need to know what grids we have, what variables use those grids, and what axes belong to a variable and in what order. Currently all the facility for determining this information is in package ncmeta.</p>
+<p>For <code>tidync</code> we decided to use the term “grid” rather than “shape”, and so a grid is the space defined by specific ordered set of dimensions. An “axis” is a particular instance of a dimension within a variable. At times we need to know what grids we have, what variables use those grids, and what axes belong to a variable and in what order. Currently all the facility for determining this information is in package <code>ncmeta</code>.</p>
+<p>The <code>ncmeta</code> package uses a mix of background packages <code>ncdf4</code>, <code>RNetCDF</code> because each has facilities and limitations and both are needed. For closer to full support we can also use <code>rhdf5</code> or <code>rgdal</code> which have indpendent wrappers around the core NetCDF library. Groups and compound types are particular challenges, and tidync and ncmeta don’t yet exploit all of the currently available facilities. It would still be good to have a single authoratative wrapper, but the details of that aren’t widely discussed.</p>
 </div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
@@ -231,6 +229,8 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/hypertidy/tidync"><img src="https://travis-ci.org/hypertidy/tidync.svg?branch=master" alt="Travis-CI Build Status"></a></li>
 <li><a href="https://ci.appveyor.com/project/hypertidy/tidync"><img src="https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
+<li><a href="https://cran.r-project.org/package=tidync"><img src="http://www.r-pkg.org/badges/version/tidync" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://codecov.io/github/hypertidy/tidync?branch=master"><img src="https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
 </ul>
 </div>
 

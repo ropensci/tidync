@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -84,6 +88,26 @@
     </div>
 
     <div class="contents">
+    <div id="tidync-0-0-3" class="section level1">
+<h1 class="hasAnchor">
+<a href="#tidync-0-0-3" class="anchor"></a>tidync 0.0.3</h1>
+<ul>
+<li>removed hyper_index and incorporated that into hyper_filter, there’s now only one delay-capable class which is “tidync”</li>
+</ul>
+</div>
+    <div id="tidync-0-0-2" class="section level1">
+<h1 class="hasAnchor">
+<a href="#tidync-0-0-2" class="anchor"></a>tidync 0.0.2</h1>
+<ul>
+<li><p>hyper_filter now uses a selection idiom, to record the state of the axis rather than expicitly filter it. This means we can have more flexibility on what the axis transform tables can be used for, and removes some unwieldy handling code. All the available axes are on the object from first contact, which means we can program against the entire space in the source which will help for complex mapping scenarios.</p></li>
+<li><p>hyper filter print now handles the case of char-type coordinate values by setting the min and max to NA_real_</p></li>
+<li><p>various improvements and fixes for the print method for tidync</p></li>
+<li><p>support coordinate-less dimensions has been added, there is new information in the print summary about which dimensions are a “coord_dim” and this results in the axis transform tables using the index as the ‘coordinate value’</p></li>
+<li><p>hyper_slice and hyper_tibble now return all variables that exist within a grid</p></li>
+<li><p>This version sees a new model is applied where activation is on ‘grids’, effectively a ‘space’ composed of dimensions. In addition to the variables, dimension, attributes we add “grid” defined by a set of dimensions, and “axis” which is an instance of a particular dimension as used by a variable.</p></li>
+<li><p>files without recognizable variables now gracefully handled, with help from ncmeta</p></li>
+</ul>
+</div>
     <div id="tidync-0-0-1" class="section level1">
 <h1 class="hasAnchor">
 <a href="#tidync-0-0-1" class="anchor"></a>tidync 0.0.1</h1>
@@ -101,6 +125,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#tidync-0-0-3">0.0.3</a></li>
+        <li><a href="#tidync-0-0-2">0.0.2</a></li>
         <li><a href="#tidync-0-0-1">0.0.1</a></li>
       </ul>
     </div>
