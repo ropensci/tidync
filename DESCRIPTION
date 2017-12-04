@@ -18,7 +18,7 @@ Imports:
     ncdf4,
     ncmeta (>= 0.0.2), 
     purrr, 
-    RNetCDF,
+    RNetCDF  (>= 1.9-1),
     raster,
     rlang, 
     tabularaster,
