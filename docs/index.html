@@ -76,7 +76,7 @@
 <div id="interactive" class="section level2">
 <h2 class="hasAnchor">
 <a href="#interactive" class="anchor"></a>Interactive</h2>
-<p>Use <code>tidync()</code> and <code>hyper_filter()</code> to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name <code>index</code> to filter it by its ‘step’ index).</p>
+<p>Use <code><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync()</a></code> and <code><a href="http://www.rdocumentation.org/packages/tidync/topics/hyper_filter">hyper_filter()</a></code> to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name <code>index</code> to filter it by its ‘step’ index).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## discover the available entities, and the active grid's dimensions and variables
 <span class="kw">tidync</span>(filename)
 
@@ -148,7 +148,7 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <p>This is a basic example which shows how to connect to a file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="st">"S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
 <span class="kw">library</span>(tidync)
-<span class="kw">tidync</span>(file) 
+<span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(file) 
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Data Source (1): S20092742009304.L3m_MO_CHL_chlor_a_9km.nc ...</span>
 <span class="co">#&gt; </span>
