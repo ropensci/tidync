@@ -7,6 +7,8 @@
 #' `active` gets and sets the active variable
 #' @param .data NetCDF object
 #' @param what name of a variable
+#' @param ... reserved, currently ignored
+#' @param select_var optional argument to set selected state of variable/s by name
 #' @return NetCDF object
 #' @export active activate active<- 
 #' @rdname activate 
@@ -17,10 +19,10 @@
 #' activate(rnc, "palette")
 #' @name activate
 #' @export
-activate <- function(.data, what) UseMethod("activate")
+activate <- function(.data, what, ..., select_var = NULL) UseMethod("activate")
 #' @name activate
 #' @export
-activate.tidync <- function(.data, what) {
+activate.tidync <- function(.data, what, ..., select_var = NULL) {
   if (missing(what)) return(.data)
   what_name <- deparse(substitute(what))
   #print(what_name)
@@ -28,8 +30,11 @@ activate.tidync <- function(.data, what) {
   if (what_name %in% .data$grid$variable) {
     ## use the variable to find the grid
     what <- .data$grid$grid[.data$grid$variable == what_name]
+    select_var <- what_name
   } else if (what %in% .data$grid$variable){
+    select_var <- what
     what <- .data$grid$grid[.data$grid$variable == what]
+    
   }
 
   if (is.numeric(what)) {
@@ -45,6 +50,9 @@ activate.tidync <- function(.data, what) {
 
   active_variables <- .data[["grid"]] %>% dplyr::filter(.data$grid == what) %>% 
     dplyr::inner_join(.data[["variable"]], c("variable" = "name"))
+  if (!is.null(select_var)) {
+    active_variables <- inner_join(active_variables, tibble::tibble(variable = select_var))
+  }
   active_dimensions <- as.integer(gsub("^D", "", unlist(strsplit(active(.data), ","))))
   .data$dimension$active <- rep(FALSE, nrow(.data$dimension))
   .data$dimension$active[active_dimensions + 1] <- TRUE
@@ -71,7 +79,7 @@ active.tidync <- function(x) {
 }
 
 #' @export
-activate.default <- function(.data, what) {
+activate.default <- function(.data, what, ..., select_var = NULL) {
   what_name <- deparse(substitute(what))
   if (what_name %in% names(.data)) what <- what_name
   active(.data) <- what
