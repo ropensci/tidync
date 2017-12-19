@@ -35,3 +35,4 @@ test_that("indexing works", {
   expect_that(ind2$dimension$count[ind2$dimension$active], equals(c(2160, 4201)))  
   
 })
+

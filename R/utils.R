@@ -21,3 +21,4 @@ print_bytes <- function (x, digits = 3, ...)
                       scientific = FALSE)
   paste0(formatted, " ", unit, "\n")
 }
+

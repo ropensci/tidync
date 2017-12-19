@@ -43,7 +43,7 @@ hyper_filter.tidync <- function(.x, ...) {
     iname <- names(quo_named)[i]
     if (!iname %in% names(trans0)) {
       warning(sprintf("'%s' not found in active grid, ignoring", iname))
-      next;
+      next
     }
     SELECTION <- dplyr::filter(trans0[[iname]], !!!quo_noname[i])
     if (nrow(SELECTION) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 

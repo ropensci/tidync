@@ -22,9 +22,7 @@ Imports:
     ncmeta (>= 0.0.2), 
     purrr, 
     RNetCDF  (>= 1.9-1),
-    raster,
     rlang, 
-    tabularaster,
     tibble,
     yesno
 RoxygenNote: 6.0.1
