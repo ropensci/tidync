@@ -78,7 +78,7 @@ concentration %>% hyper_filter(nj = nj < 20)
 We can also use the special internal variable 'step', which will test against position in the dimension elements '1:length' rather than the values. It's not different in this case because ni and nj are just position dimensions anyway. The special 'dplyr' adverbs like 'between' will work. 
 
 ```{r}
-concentration %>% hyper_filter(ni = step < 20, nj = dplyr::between(step, 30, 100))
+concentration %>% hyper_filter(ni = index < 20, nj = dplyr::between(index, 30, 100))
 
 ```
 
