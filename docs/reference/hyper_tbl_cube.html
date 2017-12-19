@@ -135,27 +135,16 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ufile</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata"</span>, <span class='st'>"unidata"</span>, <span class='st'>"test_hgroups.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>)
-<span class='fu'>tidync</span>(<span class='no'>ufile</span>)</div><div class='output co'>#&gt; 
-#&gt; Data Source (1): test_hgroups.nc ...
-#&gt; 
-#&gt; Grids (1) &lt;dimension family&gt; : &lt;associated variables&gt; 
-#&gt; 
-#&gt; [1]   D0 : UTC_time    **ACTIVE GRID** ( 74  values per variable)
-#&gt; 
-#&gt; Dimensions (1): 
-#&gt;   
-#&gt;   dimension    id   name length unlim coord_dim active start count 
-#&gt;       &lt;chr&gt; &lt;dbl&gt;  &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; 
-#&gt; 1        D0     0 recNum     74 FALSE     FALSE   TRUE     1    74 </div><div class='input'><span class='fu'>hyper_tbl_cube</span>(<span class='fu'>tidync</span>(<span class='no'>ufile</span>))</div><div class='output co'>#&gt; Source: local array [74 x 1]
-#&gt; D: recNum [int, 74]
-#&gt; M: UTC_time [chr]</div><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='st'>"S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"</span>
+    <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='st'>"S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"</span>
 <span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/oceandata"</span>, <span class='no'>f</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"tidync"</span>)
 (<span class='no'>cube</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tbl_cube</span>(<span class='fu'>tidync</span>(<span class='no'>l3file</span>) <span class='kw'>%&gt;%</span>
 <span class='fu'>activate</span>(<span class='no'>chlor_a</span>), <span class='kw'>lon</span> <span class='kw'>=</span> <span class='no'>lon</span> <span class='kw'>&gt;</span> <span class='fl'>107</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='fu'>abs</span>(<span class='no'>lat</span>) <span class='kw'>&lt;</span> <span class='fl'>30</span>))</div><div class='output co'>#&gt; <span class='message'>Joining, by = "variable"</span></div><div class='output co'>#&gt; Source: local array [9,331,200 x 2]
 #&gt; D: lon [dbl, 4320]
 #&gt; D: lat [dbl, 2160]
-#&gt; M: chlor_a [dbl]</div><div class='input'># library(ggplot2)
+#&gt; M: chlor_a [dbl]</div><div class='input'>#ufile <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
+#tidync(ufile)
+#hyper_tbl_cube(tidync(ufile))
+# library(ggplot2)
 # scl <- function(x) {rng <- range(x, na.rm = TRUE); (x - rng[1])/diff(rng)}
 # library(palr)
 # pal <- chlPal(palette = TRUE)

@@ -31,6 +31,7 @@ Suggests: ggplot2,
     memoise,
     ncdump,
     palr,
+    raster,
     rmarkdown,
     testthat,
     covr
