@@ -10,13 +10,14 @@
 #' @export
 #'
 #' @examples
-#' ufile <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
-#' tidync(ufile)
-#' hyper_tbl_cube(tidync(ufile))
+
 #' f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
 #' l3file <- system.file("extdata/oceandata", f, package= "tidync")
 #' (cube <- hyper_tbl_cube(tidync(l3file) %>%
 #' activate(chlor_a), lon = lon > 107, lat = abs(lat) < 30))
+#' #ufile <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
+#' #tidync(ufile)
+#' #hyper_tbl_cube(tidync(ufile))
 #'# library(ggplot2)
 #'# scl <- function(x) {rng <- range(x, na.rm = TRUE); (x - rng[1])/diff(rng)}
 #'# library(palr)
