@@ -1,6 +1,14 @@
 context("tbl_cube")
 
 test_that("tbl_cube works", {
+  f <- system.file("extdata", "ifremer", "20130415.nc", package = "tidync")
+  expect_error(hyper_tbl_cube(f), "direct file access not yet supported")
+  hyper_tbl_cube(tidync(f)) %>% expect_s3_class("tbl_cube")
+}
+          
+          )
+
+test_that("tbl_cube works for raad", {
   #f <- "eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/avhrr-only-v2.19810901.nc"
   skip_if_not(we_are_raady())
   f <- raadtools::sstfiles()$fullname[10000]
