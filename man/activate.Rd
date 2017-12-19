@@ -14,9 +14,9 @@
 \alias{active<-.default}
 \title{Activate}
 \usage{
-activate(.data, what)
+activate(.data, what, ..., select_var = NULL)
 
-\method{activate}{tidync}(.data, what)
+\method{activate}{tidync}(.data, what, ..., select_var = NULL)
 
 \method{active}{tidync}(x)
 
