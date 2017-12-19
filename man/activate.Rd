@@ -33,6 +33,10 @@ active(x) <- value
 
 \item{what}{name of a variable}
 
+\item{...}{reserved, currently ignored}
+
+\item{select_var}{optional argument to set selected state of variable/s by name}
+
 \item{x}{NetCDF object}
 
 \item{value}{name of grid or variable to be active}

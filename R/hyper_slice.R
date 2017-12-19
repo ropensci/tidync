@@ -1,7 +1,9 @@
 #' hyper slice
 #' 
+#' Extract the raw array data for the active grid, as a list of arrays. This can be the
+#' entire array/s or after dimension-slicing using `hyper_filter` expressions. 
+#' 
 #' By default all variables in the active grid are returned, use `select_var` to limit. 
-#'
 #' @param x tidync object
 #' @param ... ignored
 #' @param select_var optional vector of variable names to select
@@ -9,6 +11,15 @@
 #' @param force ignore caveats about large extraction and just do it
 #'
 #' @export
+#' @examples 
+#' f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+#' l3file <- system.file("extdata/oceandata", f, package= "tidync")
+#' 
+#' ## extract a raw list by filtered dimension
+#' araw <- tidync(l3file) %>% hyper_filter(lat = abs(lat) < 10, lon = index < 100) %>% 
+#'   hyper_slice()
+#' ## hyper_slice will pass the expressions to hyper_filter
+#' braw <- tidync(l3file) %>% hyper_slice(lat = abs(lat) < 10, lon = index < 100) 
 hyper_slice <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE) {
   UseMethod("hyper_slice")
 }

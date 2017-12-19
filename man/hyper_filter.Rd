@@ -28,7 +28,13 @@ There are special columns provided with each axis, one is 'index' so that exact 
 done by position, or to ignore the actual value of the coordinate.
 }
 \examples{
-## inst/dev/filtrate_early.R
-##http://rpubs.com/cyclemumner/tidyslab
-# 
+f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+l3file <- system.file("extdata/oceandata", f, package= "tidync")
+## filter by value
+tidync(l3file) \%>\% hyper_filter(lon = lon < 100)
+## filter by index
+tidync(l3file) \%>\% hyper_filter(lon = index < 100)
+
+## filter in combination/s
+tidync(l3file) \%>\% hyper_filter(lat = abs(lat) < 10, lon = index < 100)
 }

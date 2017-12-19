@@ -1,6 +1,9 @@
-#' dplyr tbl cube from NetCDF
-#'
-#' @param x filename
+#' dplyr tbl cube 
+#' 
+#' Produce a dplyr `tbl_cube` from NetCDF. 
+#' 
+#' #'
+#' @param x tidync object
 #' @param ... arguments for `hyper_filter`
 #'
 #' @return tbl_cube

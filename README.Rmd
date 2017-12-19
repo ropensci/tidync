@@ -24,9 +24,29 @@ arbitrary hyperslabs.
 The data extracted can be used directly as an array, or in "long form" form as a data frame for "tidy" analysis and
 visualization contexts. 
 
-These examples are for illustration, see the vignettes for more details, and please try on your own sources!
 
-There are two main ways of using tidync. 
+
+## Installation
+
+You can install tidync from github with:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("hypertidy/tidync", dependencies = TRUE)
+```
+
+## Example
+
+This is a basic example which shows how to connect to a file. 
+
+```{r}
+file <- system.file("extdata", "oceandata", "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
+library(tidync)
+tidync(file) 
+```
+
+There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions
+`tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_slice` and `hyper_tibble` give raw-array and data frames with-full-coordinates forms respectively. 
 
 
 ## Interactive
@@ -74,55 +94,6 @@ It's important to not actual request the data extraction until the expressions a
 
 Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each `hyper_*` function can take the filtering expressions, but it's not obvious if this is a good idea or not. 
 
-# Development
-
-Wishlist items here. Submit your own to the [Issues tab](https://github.com/hypertidy/tidync)
-
-* wrappers for returning various formats, like raster brick, simple features, rgl quad mesh forms, etc. 
-* delayed extraction to show the tibble you would get after collect()
-* consider better function names like `hyper_df`, `hyper_dbl` and `hyper_int` (differentiate scaled and unscaled?)
-
-Support for tbl_cube is in bare-bones form. See here for an example: http://rpubs.com/cyclemumner/281801
-
-
-```
-f <- "eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/avhrr-only-v2.19810901.nc"
-tidync(f) %>% hyper_tbl_cube(lat = lat > -30)
-Source: local array [691,200 x 4]
-D: lon [dbl, 1440]
-D: lat [dbl, 480]
-D: zlev [dbl, 1]
-D: time [dbl, 1]
-M: sst [dbl]
-
-tidync(f) %>% activate("anom"") %>% hyper_tbl_cube(lat = lat > -30)
-Source: local array [691,200 x 4]
-D: lon [dbl, 1440]
-D: lat [dbl, 480]
-D: zlev [dbl, 1]
-D: time [dbl, 1]
-M: anom [dbl]
-```
-
-
-## Installation
-
-You can install tidync from github with:
-
-```{r gh-installation, eval = FALSE}
-# install.packages("devtools")
-devtools::install_github("hypertidy/tidync", dependencies = TRUE)
-```
-
-## Example
-
-This is a basic example which shows how to connect to a file. 
-
-```{r}
-file <- system.file("extdata", "oceandata", "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
-library(tidync)
-tidync(file) 
-```
 
 
 See this article for more:  https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html

@@ -6,7 +6,7 @@
 \alias{hyper_tbl_cube.tidync}
 \alias{hyper_tbl_cube}
 \alias{hyper_tbl_cube.character}
-\title{dplyr tbl cube from NetCDF}
+\title{dplyr tbl cube}
 \usage{
 hyper_tbl_cube(x, ...)
 
@@ -15,7 +15,7 @@ hyper_tbl_cube(x, ...)
 \method{hyper_tbl_cube}{character}(x, ...)
 }
 \arguments{
-\item{x}{filename}
+\item{x}{tidync object}
 
 \item{...}{arguments for \code{hyper_filter}}
 }
@@ -25,7 +25,10 @@ tbl_cube
 \code{dplyr::tbl_cube}
 }
 \description{
-dplyr tbl cube from NetCDF
+Produce a dplyr \code{tbl_cube} from NetCDF.
+}
+\details{
+#'
 }
 \examples{
 ufile <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
