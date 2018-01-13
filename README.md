@@ -3,7 +3,7 @@
 tidync
 ======
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
+[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
 
 The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in "long form" form as a data frame for "tidy" analysis and visualization contexts.
 
@@ -44,12 +44,12 @@ tidync(file)
 #> 
 #> Dimensions (4): 
 #>   
-#>   dimension    id          name length unlim coord_dim active start count 
-#>       <chr> <dbl>         <chr>  <dbl> <lgl>     <lgl>  <lgl> <int> <int> 
-#> 1        D0     0           lat   2160 FALSE      TRUE   TRUE     1  2160 
-#> 2        D1     1           lon   4320 FALSE      TRUE   TRUE     1  4320 
-#> 3        D2     2           rgb      3 FALSE     FALSE  FALSE     1     3 
-#> 4        D3     3 eightbitcolor    256 FALSE     FALSE  FALSE     1   256
+#>   dimension    id name           length unlim coord_dim active start count 
+#>   <chr>     <dbl> <chr>           <dbl> <lgl> <lgl>     <lgl>  <int> <int> 
+#> 1 D0         0    lat           2160    F     T         T          1  2160 
+#> 2 D1         1.00 lon           4320    F     T         T          1  4320 
+#> 3 D2         2.00 rgb              3.00 F     F         F          1     3 
+#> 4 D3         3.00 eightbitcolor  256    F     F         F          1   256
 ```
 
 There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions `tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_slice` and `hyper_tibble` give raw-array and data frames with-full-coordinates forms respectively.

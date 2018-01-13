@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
  
 # tidync
 
+[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
 
 The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient 
