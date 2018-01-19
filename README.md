@@ -54,6 +54,8 @@ tidync(file)
 
 There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions `tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_slice` and `hyper_tibble` give raw-array and data frames with-full-coordinates forms respectively.
 
+Also [http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/](this%20blog) post by Matteo De Felice.
+
 ### Interactive
 
 Use `tidync()` and `hyper_filter()` to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `index` to filter it by its 'step' index).
