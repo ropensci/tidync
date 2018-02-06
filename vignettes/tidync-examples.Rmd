@@ -22,7 +22,7 @@ library(RNetCDF)
 print.nc(open.nc(f))
 ```
 
-NetCDF is a very widely use file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
+NetCDF is a very widely used file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
 
 Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many, varied, and no particularly well adhered to in many contexts. 
 
