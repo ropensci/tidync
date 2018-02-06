@@ -40,7 +40,7 @@ On Mac, it should also be easy as there are binaries for ncdf4 and RNetCDF avail
 
 ### Ubuntu/Debian
 
-On Linux you will need at least the following installed by an administrator, here tested on Ubuntu Xenial 16.04.
+On Linux you will need at least the following installed by an administrator, here tested on Ubuntu Xenial 16.04. As far as I know nothing extra above the libnetcdf-dev library is required for OpenDAP/Thredds.
 
 I otherwise recommend using docker, with for example [rocker/geospatial](https://github.com/rocker-org/geospatial).
 
@@ -61,6 +61,8 @@ Then in R
 install.packages("devtools")
 devtools::install_github("hypertidy/tidync")
 ```
+
+At the time of writing the [travis install configuration](https://github.com/hypertidy/tidync/blob/master/.travis.yml) was set up for "trusty", Ubuntu 14.04 so also provides a record.
 
 More general information about system dependencies libnetcdf-dev and libudunits2-dev is available from [Unidata NetCDF](https://www.unidata.ucar.edu/software/netcdf/docs/getting_and_building_netcdf.html) and [Unidata Udunits2](https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html#Installation).
 
