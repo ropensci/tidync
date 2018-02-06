@@ -3,7 +3,7 @@
 tidync
 ======
 
-[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
+[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync) [![Travis-CI Build Status](https://travis-ci.org/hypertidy/tidync.svg?branch=master)](https://travis-ci.org/hypertidy/tidync) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/hypertidy/tidync) [![Coverage status](https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/hypertidy/tidync?branch=master)
 
 The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in "long form" form as a data frame for "tidy" analysis and visualization contexts.
 
@@ -14,14 +14,55 @@ This project uses RNetCDF for the primary access to the NetCDF library.
 Installation
 ------------
 
-[![Travis-CI Build Status](https://travis-ci.org/hypertidy/tidync.svg?branch=master)](https://travis-ci.org/hypertidy/tidync) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/hypertidy/tidync) [![Coverage status](https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/hypertidy/tidync?branch=master)
-
 You can install tidync from github with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("hypertidy/tidync", dependencies = TRUE)
 ```
+
+Also required are packages 'ncdf4' and 'RNetCDF', so first make sure you can install and use these.
+
+``` r
+install.packages("ncdf4")
+install.packages("RNetCDF")
+```
+
+If you have problems, please see the [INSTALL instructions for RNetCDF](https://cran.r-project.org/web/packages/RNetCDF/INSTALL), these should work as well for ncdf4. Below I note specifics for different operating systems, notably Ubuntu/Debian where I work the most - these aren't comprehensive details but might be helpful.
+
+### Windows
+
+On Windows, everything should be easy as ncdf4 and RNetCDF are supported by CRAN. The RNetCDF package now includes OpenDAP/Thredds for 64-bit Windows (not 32-bit), and so tidync will work for those sources too.
+
+### MacOS
+
+On Mac, it should also be easy as there are binaries for ncdf4 and RNetCDF available on CRAN. As far as I know, these binaries won't support OpenDAP/Thredds.
+
+### Ubuntu/Debian
+
+On Linux you will need at least the following installed by an administrator, here tested on Ubuntu Xenial 16.04.
+
+I otherwise recommend using docker, with for example [rocker/geospatial](https://github.com/rocker-org/geospatial).
+
+``` bash
+apt update 
+apt upgrade --assume-yes
+
+## Install 3rd parties for NetCDF
+apt install libnetcdf-dev libudunits2-dev
+
+## install 3rd parties needed for devtools + openssl git2r httr
+apt install libssl-dev
+```
+
+Then in R
+
+``` r
+install.packages("devtools")
+devtools::install_github("hypertidy/tidync")
+```
+
+More general information about system dependencies libnetcdf-dev and libudunits2-dev is available from [Unidata NetCDF](https://www.unidata.ucar.edu/software/netcdf/docs/getting_and_building_netcdf.html) and [Unidata Udunits2](https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html#Installation).
 
 Usage
 -----
@@ -54,7 +95,7 @@ tidync(file)
 
 There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions `tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_slice` and `hyper_tibble` give raw-array and data frames with-full-coordinates forms respectively.
 
-Also [this blog](http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/) post by Matteo De Felice.
+Also [http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/](this%20blog) post by Matteo De Felice.
 
 ### Interactive
 
