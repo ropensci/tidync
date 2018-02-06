@@ -29,7 +29,25 @@ We haven't yet explored HDF5 per se, so any feedback is appreciated. Major
 use of compound types is made by https://github.com/mdsumner/roc
 }
 \examples{
-#cf <- raadtools::cpolarfiles()
-#nc <- tidync(cf$fullname[1])
-#print(nc)
+## a SeaWiFS (S) Level-3 Mapped (L3m) monthly (MO) chlorophyll-a (CHL)
+## remote sensing product at 9km resolution (at the equator)
+from the NASA ocean colour group in NetCDF4 format (.nc)
+for 30 day period October 2009 (20092742009304) 
+f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+l3file <- system.file("extdata/oceandata", f, package= "tidync")
+tnc <- tidync(l3file)
+print(tnc)
+
+## very simple Unidata example file, with one dimension
+uf <- system.file("extdata/unidata", "test_hgroups.nc", package = "tidync")
+tidync(uf)
+
+## a raw grid of Southern Ocean sea ice concentration from IFREMER
+## it is 12.5km resolution passive microwave concentration values
+## on a polar stereographic grid, on 2 October 2017, displaying the 
+## "hole in the ice" made famous here:
+## https://tinyurl.com/ycbchcgn
+ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
+ifrnc <- tidync(ifr)
+ifrnc \%>\% hyper_tibble(select_var = "concentration")
 }

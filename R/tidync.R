@@ -17,49 +17,67 @@ tidync <- function(x, what, ...) {
 }
 
 #' @examples
-#' #cf <- raadtools::cpolarfiles()
-#' #nc <- tidync(cf$fullname[1])
-#' #print(nc)
+#' ## a SeaWiFS (S) Level-3 Mapped (L3m) monthly (MO) chlorophyll-a (CHL)
+#' ## remote sensing product at 9km resolution (at the equator)
+#' from the NASA ocean colour group in NetCDF4 format (.nc)
+#' for 30 day period October 2009 (20092742009304) 
+#' f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+#' l3file <- system.file("extdata/oceandata", f, package= "tidync")
+#' tnc <- tidync(l3file)
+#' print(tnc)
+#' 
+#' ## very simple Unidata example file, with one dimension
+#' uf <- system.file("extdata/unidata", "test_hgroups.nc", package = "tidync")
+#' tidync(uf)
+#' 
+#' ## a raw grid of Southern Ocean sea ice concentration from IFREMER
+#' ## it is 12.5km resolution passive microwave concentration values
+#' ## on a polar stereographic grid, on 2 October 2017, displaying the 
+#' ## "hole in the ice" made famous here:
+#' ## https://tinyurl.com/ycbchcgn
+#' ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
+#' ifrnc <- tidync(ifr)
+#' ifrnc %>% hyper_tibble(select_var = "concentration")
 #' @name tidync
 #' @export
 #' @importFrom ncmeta nc_meta
 tidync.character <- function(x, what, ...) {
   if (length(x) > 1) warning("multiple sources: only one source name allowed, ignoring all but the first")
-    fexists <- file.exists(x)
-
-   if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", x))
-      safemeta <- purrr::safely(ncmeta::nc_meta)
-      meta <- safemeta(x)
-       if (is.null(meta$result)) {
-         cat("Oops, connection to source failed. \n")
-         print(x)
-         stop(meta$error)
-       }
-      bad_dim <- nrow(meta$result$dimension) < 1
-      bad_var <- nrow(meta$result$variable) < 1
-      if (bad_dim) {
-        warning("no dimensions found")
-      }
-      if (bad_dim) {
-        warning("no variables found")
-      }
-      if (bad_dim & bad_var) stop("no variables or dimension recognizable (is this a source with compound-types?)")
-      if (!fexists) cat("Connection succeeded. \n")      
-       meta <- meta$result
-       variable <- dplyr::mutate(meta[["variable"]], active = FALSE)
-       
-       out <- list(source = meta$source, 
-                             axis = meta$axis, 
-                             grid = meta$grid,
-                             dimension = meta$dimension, 
-                             variable = variable)
-       out$transforms <- axis_transforms(out)
-       out <- structure(out,           class = "tidync")
-       ## we can't activate nothing
-       if (nrow(out$axis) < 1) return(out)
-       if (missing(what)) what <- 1
-       out <- activate(out, what)
-
+  fexists <- file.exists(x)
+  
+  if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", x))
+  safemeta <- purrr::safely(ncmeta::nc_meta)
+  meta <- safemeta(x)
+  if (is.null(meta$result)) {
+    cat("Oops, connection to source failed. \n")
+    print(x)
+    stop(meta$error)
+  }
+  bad_dim <- nrow(meta$result$dimension) < 1
+  bad_var <- nrow(meta$result$variable) < 1
+  if (bad_dim) {
+    warning("no dimensions found")
+  }
+  if (bad_dim) {
+    warning("no variables found")
+  }
+  if (bad_dim & bad_var) stop("no variables or dimension recognizable (is this a source with compound-types?)")
+  if (!fexists) cat("Connection succeeded. \n")      
+  meta <- meta$result
+  variable <- dplyr::mutate(meta[["variable"]], active = FALSE)
+  
+  out <- list(source = meta$source, 
+              axis = meta$axis, 
+              grid = meta$grid,
+              dimension = meta$dimension, 
+              variable = variable)
+  out$transforms <- axis_transforms(out)
+  out <- structure(out,           class = "tidync")
+  ## we can't activate nothing
+  if (nrow(out$axis) < 1) return(out)
+  if (missing(what)) what <- 1
+  out <- activate(out, what)
+  
   out
 }
 
@@ -122,7 +140,7 @@ print.tidync <- function(x, ...) {
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
-
+    
     cat(paste((x$grid %>% dplyr::inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
     if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", format(estimatebigtime), 
                                                 sprintf(" value%s per variable)", ifelse(estimatebigtime > 1, "s", "")))
@@ -130,19 +148,37 @@ print.tidync <- function(x, ...) {
   }
   dims <- x$dimension
   cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
+  nms <- names(x$transforms)
+  ranges <- setNames(lapply(nms, function(a) {
+    range(x$transforms[[a]][[a]])
+  }), nms)
+  filter_ranges <- setNames(lapply(nms, function(a) {
+    tran <- dplyr::filter(x$transforms[[a]], .data$selected) 
+    range(tran[[a]])
+  }
+  ), nms)
+  # browser()
+  filter_ranges <- do.call(rbind, filter_ranges)
+  ranges <- do.call(rbind, ranges)
+  
+  # browser()
+  
+  dims[c("sl_min", "sl_max")] <- as.data.frame(filter_ranges)[match(names(x$transforms), dims$name), ]
+  dims[c("min", "max")] <- as.data.frame(ranges)[match(names(x$transforms), dims$name), ]
+  
   dimension_print <- if (nrow(dims) > 0) {
-    format(dims %>% dplyr::mutate(dimension = paste0("D", .data$id)) %>% 
-             dplyr::select(.data$dimension, .data$id, .data$name, .data$length, .data$unlim, .data$coord_dim, .data$active, .data$start, .data$count) %>% 
+    format(dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
+             dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$active, .data$start, .data$count, .data$sl_min, .data$sl_max, .data$unlim, .data$coord_dim,) %>% 
              dplyr::arrange(desc(.data$active), .data$id), n = Inf)
-      
+    
   } else {
-  ""
-}
+    ""
+  }
   #dp <- gsub("^ ?[0-9]?", "", dimension_print)  
   #dp <- gsub("^  ", "", dp)
   
- dp <- dimension_print[-grep("# A tibble:", dimension_print)]
- cat(" ", "\n")
+  dp <- dimension_print[-grep("# A tibble:", dimension_print)]
+  cat(" ", "\n")
   for (i in seq_along(dp)) cat(dp[i], "\n")
   #rownames(dims) <- paste0("D", dims$id)
   #print(dims)

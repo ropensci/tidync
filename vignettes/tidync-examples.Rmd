@@ -17,7 +17,7 @@ vignette: >
 Find an arbitrary NetCDF file and print a traditional summary. 
 
 ```{r}
-f <- system.file("extdata", "ifremer", "20130415.nc", package = "tidync")
+f <- system.file("extdata", "ifremer", "20171002.nc", package = "tidync")
 library(RNetCDF)
 print.nc(open.nc(f))
 ```
