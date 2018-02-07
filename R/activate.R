@@ -14,7 +14,7 @@
 #' @rdname activate 
 #' @aliases active activate active<- 
 #' @examples
-#' l3file <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+#' l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 #' rnc <- tidync(system.file("extdata", "oceandata", l3file, package = "tidync"))
 #' activate(rnc, "palette")
 #' @name activate

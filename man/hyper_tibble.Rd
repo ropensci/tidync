@@ -28,7 +28,7 @@ a \code{tbl_df}
 hyper tibble
 }
 \examples{
-l3file <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 f <- system.file("extdata", "oceandata", l3file, package= "tidync")
 rnc <- tidync(f)
 hyper_filter(rnc)

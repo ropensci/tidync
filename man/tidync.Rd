@@ -31,9 +31,9 @@ use of compound types is made by https://github.com/mdsumner/roc
 \examples{
 ## a SeaWiFS (S) Level-3 Mapped (L3m) monthly (MO) chlorophyll-a (CHL)
 ## remote sensing product at 9km resolution (at the equator)
-from the NASA ocean colour group in NetCDF4 format (.nc)
-for 30 day period October 2009 (20092742009304) 
-f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+## from the NASA ocean colour group in NetCDF4 format (.nc)
+## for 31 day period January 2008 (S20080012008031) 
+f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 l3file <- system.file("extdata/oceandata", f, package= "tidync")
 tnc <- tidync(l3file)
 print(tnc)

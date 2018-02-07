@@ -36,7 +36,7 @@ entire array/s or after dimension-slicing using \code{hyper_filter} expressions.
 By default all variables in the active grid are returned, use \code{select_var} to limit.
 }
 \examples{
-f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 l3file <- system.file("extdata/oceandata", f, package= "tidync")
 
 ## extract a raw list by filtered dimension

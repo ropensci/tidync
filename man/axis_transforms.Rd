@@ -27,7 +27,7 @@ Axis 'transforms' are data frames of each dimension in a NetCDF source.
 }
 \details{
 Each transform is available by name from a list, and each data frame has
-the coordinate of the dimesion, its index, and a 'selected' variable
+the coordinate of the dimension, its index, and a 'selected' variable
 set by the filtering expressions in \code{hyper_filter} and used by the
 read-functions \code{hyper_slice} and \code{hyper_tibble}.
 
@@ -35,7 +35,7 @@ Use \code{axis_transforms} to interrogate and explore the available dimension ma
 for development of custom functions.
 }
 \examples{
-l3file <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 f <- system.file("extdata", "oceandata", l3file, package = "tidync")
 ax <- tidync(f) \%>\% axis_transforms()
 names(ax)

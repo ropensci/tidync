@@ -75,14 +75,14 @@
       <h1>Tidy NetCDF examples</h1>
                         <h4 class="author">Michael D. Sumner</h4>
             
-            <h4 class="date">2017-12-19</h4>
+            <h4 class="date">2018-02-07</h4>
           </div>
 
     
     
 <div class="contents">
 <p>Find an arbitrary NetCDF file and print a traditional summary.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"ifremer"</span>, <span class="st">"20130415.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"ifremer"</span>, <span class="st">"20171002.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
 <span class="kw">library</span>(RNetCDF)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/RNetCDF/topics/print.nc">print.nc</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/RNetCDF/topics/open.nc">open.nc</a></span>(f))</code></pre></div>
 <pre><code>## dimensions:
@@ -111,19 +111,19 @@
 ## // global attributes:
 ##                 :CONVENTIONS = "COARDS" ;
 ##                 :long_name = "Sea-ice concentration as observed by SSM/I" ;
-##                 :short_name = "PSI-F17-Concentration" ;
+##                 :short_name = "PSI-F18-Concentration" ;
 ##                 :producer_agency = "IFREMER" ;
 ##                 :producer_institution = "CERSAT" ;
 ##                 :netcdf_version_id = "3.4" ;
 ##                 :product_version = "2.0" ;
-##                 :creation_time = "2013-111T09:24:52.000" ;
+##                 :creation_time = "2017-280T08:26:34.000" ;
 ##                 :time_resolution = "daily" ;
 ##                 :grid = "NSIDC" ;
 ##                 :pole = "south" ;
 ##                 :spatial_resolution = "12.5 km" ;
-##                 :platform_id = "F17" ;
+##                 :platform_id = "F18" ;
 ##                 :instrument = "SSM/I" ;</code></pre>
-<p>NetCDF is a very widely use file format for storing array-based data as <em>variables</em>. The <strong>variable’s</strong> space is defined by its <strong>dimensions</strong> and their metadata. Dimensions are by definition “one-dimensional” consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The <strong>space</strong> of a variable is defined as one or more of the dimensions in the file, but a variable won’t necessarily use all the available dimensions and no dimensions are mandatory or particularly special.</p>
+<p>NetCDF is a very widely used file format for storing array-based data as <em>variables</em>. The <strong>variable’s</strong> space is defined by its <strong>dimensions</strong> and their metadata. Dimensions are by definition “one-dimensional” consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The <strong>space</strong> of a variable is defined as one or more of the dimensions in the file, but a variable won’t necessarily use all the available dimensions and no dimensions are mandatory or particularly special.</p>
 <p>Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many, varied, and no particularly well adhered to in many contexts.</p>
 <p>A NetCDF file is essentially a container for simple array based data structures. There is limited capacity in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes. (I.e. it’s not possible to query a file for an arbitrary sparse set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set.)</p>
 <p>Notice how the listing above is organized by <em>dimension</em> and then by <em>variable</em>. It’s not particularly obvious that some variables live in the same set of dimensions as others.</p>
@@ -135,7 +135,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidync)
 <span class="kw">tidync</span>(f)</code></pre></div>
 <pre><code>## 
-## Data Source (1): 20130415.nc ...
+## Data Source (1): 20171002.nc ...
 ## 
 ## Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; 
 ## 
@@ -144,16 +144,17 @@
 ## 
 ## Dimensions (3): 
 ##   
-##   dimension    id  name length unlim coord_dim active start count 
-##       &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; 
-## 1        D0     0    ni    632 FALSE     FALSE   TRUE     1   632 
-## 2        D1     1    nj    664 FALSE     FALSE   TRUE     1   664 
-## 3        D2     2  time      1 FALSE      TRUE   TRUE     1     1</code></pre>
+##   dim      id name  length     min    max active start count   dmin   dmax 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; 
+## 1 D0     0    ni    632     1.00e⁰ 6.32e² T          1   632 1.00e⁰ 6.32e² 
+## 2 D1     1.00 nj    664     1.00e⁰ 6.64e² T          1   664 1.00e⁰ 6.64e² 
+## 3 D2     2.00 time    1.00  1.03e⁶ 1.03e⁶ T          1     1 1.03e⁶ 1.03e⁶ 
+## # ... with 2 more variables: unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## activate another variable
 <span class="kw">tidync</span>(f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(concentration)</code></pre></div>
 <pre><code>## Joining, by = "variable"</code></pre>
 <pre><code>## 
-## Data Source (1): 20130415.nc ...
+## Data Source (1): 20171002.nc ...
 ## 
 ## Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; 
 ## 
@@ -162,11 +163,12 @@
 ## 
 ## Dimensions (3): 
 ##   
-##   dimension    id  name length unlim coord_dim active start count 
-##       &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; 
-## 1        D0     0    ni    632 FALSE     FALSE   TRUE     1   632 
-## 2        D1     1    nj    664 FALSE     FALSE   TRUE     1   664 
-## 3        D2     2  time      1 FALSE      TRUE   TRUE     1     1</code></pre>
+##   dim      id name  length     min    max active start count   dmin   dmax 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; 
+## 1 D0     0    ni    632     1.00e⁰ 6.32e² T          1   632 1.00e⁰ 6.32e² 
+## 2 D1     1.00 nj    664     1.00e⁰ 6.64e² T          1   664 1.00e⁰ 6.64e² 
+## 3 D2     2.00 time    1.00  1.03e⁶ 1.03e⁶ T          1     1 1.03e⁶ 1.03e⁶ 
+## # ... with 2 more variables: unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</code></pre>
 <p>Here we see variables are clearly grouped by the <em>grid</em> they exist in, where grid is a specific (and ordered!) set of dimensions. This allows us to see the set of variables in a grid as existing in a single data set. We can expand out this entire set as a single data frame, which all the coordinates copied out - this is not efficient(!) but if we craft our queries sensibly to read only what we need, it’s a very easy way to explore the data in a file.</p>
 <p>The ‘hyper_filter’ function allows specification of expressions to subset a variable based on each dimension’s coordinate values.</p>
 <p>If no expressions are included we are presented with a table containing a row for each dimension, its extent in coordinates and its length. For convenience we also assign the activate form to an R variable, though we could just chain the entire operation without this.</p>
@@ -174,7 +176,7 @@
 <pre><code>## Joining, by = "variable"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>() </code></pre></div>
 <pre><code>## 
-## Data Source (1): 20130415.nc ...
+## Data Source (1): 20171002.nc ...
 ## 
 ## Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; 
 ## 
@@ -183,16 +185,17 @@
 ## 
 ## Dimensions (3): 
 ##   
-##   dimension    id  name length unlim coord_dim active start count 
-##       &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; 
-## 1        D0     0    ni    632 FALSE     FALSE   TRUE     1   632 
-## 2        D1     1    nj    664 FALSE     FALSE   TRUE     1   664 
-## 3        D2     2  time      1 FALSE      TRUE   TRUE     1     1</code></pre>
+##   dim      id name  length     min    max active start count   dmin   dmax 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; 
+## 1 D0     0    ni    632     1.00e⁰ 6.32e² T          1   632 1.00e⁰ 6.32e² 
+## 2 D1     1.00 nj    664     1.00e⁰ 6.64e² T          1   664 1.00e⁰ 6.64e² 
+## 3 D2     2.00 time    1.00  1.03e⁶ 1.03e⁶ T          1     1 1.03e⁶ 1.03e⁶ 
+## # ... with 2 more variables: unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</code></pre>
 <p>By specifying inequality expressions we see an <em>implicit</em> subsetting of the array. Everything so far is implicit to delay any file-based computation required to actually interact with the file and read from it.</p>
 <p>Notice that these are “name = expr” paired expressions, because the right hand side may be quite general we need the left hand side name to be assured of the name of the dimension referred to.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">nj =</span> nj <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>)</code></pre></div>
 <pre><code>## 
-## Data Source (1): 20130415.nc ...
+## Data Source (1): 20171002.nc ...
 ## 
 ## Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; 
 ## 
@@ -201,15 +204,16 @@
 ## 
 ## Dimensions (3): 
 ##   
-##   dimension    id  name length unlim coord_dim active start count 
-##       &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; 
-## 1        D0     0    ni    632 FALSE     FALSE   TRUE     1   632 
-## 2        D1     1    nj    664 FALSE     FALSE   TRUE     1    19 
-## 3        D2     2  time      1 FALSE      TRUE   TRUE     1     1</code></pre>
+##   dim      id name  length     min    max active start count   dmin   dmax 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; 
+## 1 D0     0    ni    632     1.00e⁰ 6.32e² T          1   632 1.00e⁰ 6.32e² 
+## 2 D1     1.00 nj    664     1.00e⁰ 6.64e² T          1    19 1.00e⁰ 1.90e¹ 
+## 3 D2     2.00 time    1.00  1.03e⁶ 1.03e⁶ T          1     1 1.03e⁶ 1.03e⁶ 
+## # ... with 2 more variables: unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</code></pre>
 <p>We can also use the special internal variable ‘step’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">ni =</span> index <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/between.html">between</a></span>(index, <span class="dv">30</span>, <span class="dv">100</span>))</code></pre></div>
 <pre><code>## 
-## Data Source (1): 20130415.nc ...
+## Data Source (1): 20171002.nc ...
 ## 
 ## Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; 
 ## 
@@ -218,11 +222,12 @@
 ## 
 ## Dimensions (3): 
 ##   
-##   dimension    id  name length unlim coord_dim active start count 
-##       &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; 
-## 1        D0     0    ni    632 FALSE     FALSE   TRUE     1    19 
-## 2        D1     1    nj    664 FALSE     FALSE   TRUE    30    71 
-## 3        D2     2  time      1 FALSE      TRUE   TRUE     1     1</code></pre>
+##   dim      id name  length     min    max active start count   dmin   dmax 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt; 
+## 1 D0     0    ni    632     1.00e⁰ 6.32e² T          1    19 1.00e⁰ 1.90e¹ 
+## 2 D1     1.00 nj    664     1.00e⁰ 6.64e² T         30    71 3.00e¹ 1.00e² 
+## 3 D2     2.00 time    1.00  1.03e⁶ 1.03e⁶ T          1     1 1.03e⁶ 1.03e⁶ 
+## # ... with 2 more variables: unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</code></pre>
 </div>
 <div id="data-extraction" class="section level2">
 <h2 class="hasAnchor">
@@ -262,7 +267,7 @@ arr &lt;-<span class="st"> </span>hf <span class="op">%&gt;%</span><span class="
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

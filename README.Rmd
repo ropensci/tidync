@@ -94,7 +94,7 @@ More general information about system dependencies libnetcdf-dev and libudunits2
 This is a basic example which shows how to connect to a file. 
 
 ```{r}
-file <- system.file("extdata", "oceandata", "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
+file <- system.file("extdata", "oceandata", "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
 library(tidync)
 tidync(file) 
 ```

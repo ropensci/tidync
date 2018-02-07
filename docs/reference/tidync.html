@@ -134,10 +134,31 @@ use of compound types is made by https://github.com/mdsumner/roc</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>#cf <- raadtools::cpolarfiles()
-#nc <- tidync(cf$fullname[1])
-#print(nc)
-</div></pre>
+    <pre class="examples"><div class='input'>## a SeaWiFS (S) Level-3 Mapped (L3m) monthly (MO) chlorophyll-a (CHL)
+## remote sensing product at 9km resolution (at the equator)
+from the NASA ocean colour group in NetCDF4 format (.nc)
+for 31 day period January 2008 (S20080012008031) 
+f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
+l3file <- system.file("extdata/oceandata", f, package= "tidync")
+tnc <- tidync(l3file)
+print(tnc)
+
+## very simple Unidata example file, with one dimension
+uf <- system.file("extdata/unidata", "test_hgroups.nc", package = "tidync")
+tidync(uf)
+
+## a raw grid of Southern Ocean sea ice concentration from IFREMER
+## it is 12.5km resolution passive microwave concentration values
+## on a polar stereographic grid, on 2 October 2017, displaying the 
+## "hole in the ice" made famous here:
+## https://tinyurl.com/ycbchcgn
+ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
+ifrnc <- tidync(ifr)
+ifrnc %>% hyper_tibble(select_var = "concentration")
+</div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:3:6: unexpected symbol</span>
+#&gt; <span class='error'>2: ## remote sensing product at 9km resolution (at the equator)</span>
+#&gt; <span class='error'>3: from the</span>
+#&gt; <span class='error'>        ^</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -158,7 +179,7 @@ use of compound types is made by https://github.com/mdsumner/roc</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

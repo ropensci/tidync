@@ -87,20 +87,52 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p><a href="https://travis-ci.org/hypertidy/tidync"><img src="https://travis-ci.org/hypertidy/tidync.svg?branch=master" alt="Travis-CI Build Status"></a> <a href="https://ci.appveyor.com/project/hypertidy/tidync"><img src="https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a> <a href="https://codecov.io/github/hypertidy/tidync?branch=master"><img src="https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg" alt="Coverage status"></a></p>
 <p>You can install tidync from github with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
 devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>Also required are packages ‘ncdf4’ and ‘RNetCDF’, so first make sure you can install and use these.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"ncdf4"</span>)
+<span class="kw">install.packages</span>(<span class="st">"RNetCDF"</span>)</code></pre></div>
+<p>If you have problems, please see the <a href="https://cran.r-project.org/web/packages/RNetCDF/INSTALL">INSTALL instructions for RNetCDF</a>, these should work as well for ncdf4. Below I note specifics for different operating systems, notably Ubuntu/Debian where I work the most - these aren’t comprehensive details but might be helpful.</p>
+<div id="windows" class="section level3">
+<h3 class="hasAnchor">
+<a href="#windows" class="anchor"></a>Windows</h3>
+<p>On Windows, everything should be easy as ncdf4 and RNetCDF are supported by CRAN. The RNetCDF package now includes OpenDAP/Thredds for 64-bit Windows (not 32-bit), and so tidync will work for those sources too.</p>
+</div>
+<div id="macos" class="section level3">
+<h3 class="hasAnchor">
+<a href="#macos" class="anchor"></a>MacOS</h3>
+<p>On Mac, it should also be easy as there are binaries for ncdf4 and RNetCDF available on CRAN. As far as I know, these binaries won’t support OpenDAP/Thredds.</p>
+</div>
+<div id="ubuntudebian" class="section level3">
+<h3 class="hasAnchor">
+<a href="#ubuntudebian" class="anchor"></a>Ubuntu/Debian</h3>
+<p>On Linux you will need at least the following installed by an administrator, here tested on Ubuntu Xenial 16.04. As far as I know nothing extra above the libnetcdf-dev library is required for OpenDAP/Thredds.</p>
+<p>I otherwise recommend using docker, with for example <a href="https://github.com/rocker-org/geospatial">rocker/geospatial</a>.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">apt</span> update 
+<span class="ex">apt</span> upgrade --assume-yes
+
+<span class="co">## Install 3rd parties for NetCDF</span>
+<span class="ex">apt</span> install libnetcdf-dev libudunits2-dev
+
+<span class="co">## install 3rd parties needed for devtools + openssl git2r httr</span>
+<span class="ex">apt</span> install libssl-dev</code></pre></div>
+<p>Then in R</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)
+devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>)</code></pre></div>
+<p>At the time of writing the <a href="https://github.com/hypertidy/tidync/blob/master/.travis.yml">travis install configuration</a> was set up for “trusty”, Ubuntu 14.04 so also provides a record.</p>
+<p>More general information about system dependencies libnetcdf-dev and libudunits2-dev is available from <a href="https://www.unidata.ucar.edu/software/netcdf/docs/getting_and_building_netcdf.html">Unidata NetCDF</a> and <a href="https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html#Installation">Unidata Udunits2</a>.</p>
+</div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>This is a basic example which shows how to connect to a file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="st">"S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="st">"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
 <span class="kw">library</span>(tidync)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(file) 
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Data Source (1): S20092742009304.L3m_MO_CHL_chlor_a_9km.nc ...</span>
+<span class="co">#&gt; Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Grids (4) &lt;dimension family&gt; : &lt;associated variables&gt; </span>
 <span class="co">#&gt; </span>
@@ -111,13 +143,15 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Dimensions (4): </span>
 <span class="co">#&gt;   </span>
-<span class="co">#&gt;   dimension    id          name length unlim coord_dim active start count </span>
-<span class="co">#&gt;       &lt;chr&gt; &lt;dbl&gt;         &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;     &lt;lgl&gt;  &lt;lgl&gt; &lt;int&gt; &lt;int&gt; </span>
-<span class="co">#&gt; 1        D0     0           lat   2160 FALSE      TRUE   TRUE     1  2160 </span>
-<span class="co">#&gt; 2        D1     1           lon   4320 FALSE      TRUE   TRUE     1  4320 </span>
-<span class="co">#&gt; 3        D2     2           rgb      3 FALSE     FALSE  FALSE     1     3 </span>
-<span class="co">#&gt; 4        D3     3 eightbitcolor    256 FALSE     FALSE  FALSE     1   256</span></code></pre></div>
+<span class="co">#&gt;   dim      id name        length     min    max active start count    dmin </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; </span>
+<span class="co">#&gt; 1 D0     0    lat         2.16e³ - 90.0   90.0  T          1  2160 - 90.0  </span>
+<span class="co">#&gt; 2 D1     1.00 lon         4.32e³ -180    180    T          1  4320 -180    </span>
+<span class="co">#&gt; 3 D2     2.00 rgb         3.00e⁰    1.00   3.00 F          1     3    1.00 </span>
+<span class="co">#&gt; 4 D3     3.00 eightbitco… 2.56e²    1.00 256    F          1   256    1.00 </span>
+<span class="co">#&gt; # ... with 3 more variables: dmax &lt;dbl&gt;, unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</span></code></pre></div>
 <p>There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions <code>tidync</code> and <code>activate</code> and <code>hyper_filter</code> allow us to hone in on the part/s of the data we want, and functions <code>hyper_slice</code> and <code>hyper_tibble</code> give raw-array and data frames with-full-coordinates forms respectively.</p>
+<p>Also <a href="this%20blog">http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/</a> post by Matteo De Felice.</p>
 <div id="interactive" class="section level3">
 <h3 class="hasAnchor">
 <a href="#interactive" class="anchor"></a>Interactive</h3>
@@ -215,7 +249,11 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 </ul>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://github.com/ropensci/onboarding/issues/174"><img src="https://badges.ropensci.org/174_status.svg"></a></li>
 <li><a href="https://cran.r-project.org/package=tidync"><img src="http://www.r-pkg.org/badges/version/tidync" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://travis-ci.org/hypertidy/tidync"><img src="https://travis-ci.org/hypertidy/tidync.svg?branch=master" alt="Travis-CI Build Status"></a></li>
+<li><a href="https://ci.appveyor.com/project/hypertidy/tidync"><img src="https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
+<li><a href="https://codecov.io/github/hypertidy/tidync?branch=master"><img src="https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
 </ul>
 </div>
 
@@ -227,7 +265,7 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

@@ -10,8 +10,7 @@
 #' @export
 #'
 #' @examples
-
-#' f <- "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
+#' f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 #' l3file <- system.file("extdata/oceandata", f, package= "tidync")
 #' (cube <- hyper_tbl_cube(tidync(l3file) %>%
 #' activate(chlor_a), lon = lon > 107, lat = abs(lat) < 30))

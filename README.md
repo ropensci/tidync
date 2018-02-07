@@ -72,11 +72,11 @@ Usage
 This is a basic example which shows how to connect to a file.
 
 ``` r
-file <- system.file("extdata", "oceandata", "S20092742009304.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
+file <- system.file("extdata", "oceandata", "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
 library(tidync)
 tidync(file) 
 #> 
-#> Data Source (1): S20092742009304.L3m_MO_CHL_chlor_a_9km.nc ...
+#> Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...
 #> 
 #> Grids (4) <dimension family> : <associated variables> 
 #> 
@@ -87,12 +87,13 @@ tidync(file)
 #> 
 #> Dimensions (4): 
 #>   
-#>   dimension    id name           length unlim coord_dim active start count 
-#>   <chr>     <dbl> <chr>           <dbl> <lgl> <lgl>     <lgl>  <int> <int> 
-#> 1 D0         0    lat           2160    F     T         T          1  2160 
-#> 2 D1         1.00 lon           4320    F     T         T          1  4320 
-#> 3 D2         2.00 rgb              3.00 F     F         F          1     3 
-#> 4 D3         3.00 eightbitcolor  256    F     F         F          1   256
+#>   dim      id name        length     min    max active start count    dmin 
+#>   <chr> <dbl> <chr>        <dbl>   <dbl>  <dbl> <lgl>  <int> <int>   <dbl> 
+#> 1 D0     0    lat         2.16e³ - 90.0   90.0  T          1  2160 - 90.0  
+#> 2 D1     1.00 lon         4.32e³ -180    180    T          1  4320 -180    
+#> 3 D2     2.00 rgb         3.00e⁰    1.00   3.00 F          1     3    1.00 
+#> 4 D3     3.00 eightbitco… 2.56e²    1.00 256    F          1   256    1.00 
+#> # ... with 3 more variables: dmax <dbl>, unlim <lgl>, coord_dim <lgl>
 ```
 
 There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions `tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_slice` and `hyper_tibble` give raw-array and data frames with-full-coordinates forms respectively.

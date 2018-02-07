@@ -1,7 +1,10 @@
-f <- "/rdsi/PRIVATE/raad/data/oceandata.sci.gsfc.nasa.gov/SeaWiFS/Mapped/Monthly/9km/chlor/S20092742009304.L3m_MO_CHL_chlor_a_9km.nc"
-file.copy(f, file.path("inst/extdata/oceandata", basename(f)))
+ufun <- "https://oceandata.sci.gsfc.nasa.gov/cgi/getfile"
+f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
+curl::curl_download(file.path(ufun, f), 
+                    file.path("inst", "extdata", "oceandata", f), mode = "wb")
 
 
-oc <- raadtools::ocfiles()
+#oc <- raadtools::ocfiles(product = "SeaWiFS")
 #which.min(file.info(oc$fullname)$size)
-file.copy(oc$fullname[28], file.path("inst/extdata/oceandata", basename(oc$fullname[28])))
+f2 <- "S2008001.L3b_DAY_RRS.nc"
+curl::curl_download(file.path(ufun, f2), file.path("inst", "extdata", "oceandata", f2), mode = "wb")
