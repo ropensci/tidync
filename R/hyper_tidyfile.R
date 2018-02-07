@@ -13,7 +13,7 @@
 #' @param ...  ignored
 #'
 #' @return data frame of filename "fullname" and "meta" in a list-col
-#' @export
+#' @noRd
 #'
 #' @examples
 #' #library(dplyr)
@@ -23,7 +23,7 @@ tidyfile <- function(x, all = FALSE, ...){
   UseMethod("tidyfile")
 }
 #' @name tidyfile
-#' @export
+#' @noRd
 tidyfile.data.frame <- function(x, all = FALSE, ...) {
   if (is.null(x$fullname)) stop("x must have at least column 'fullname'")
   if (all(file.exists(x$fullname)) ) {
@@ -32,7 +32,7 @@ tidyfile.data.frame <- function(x, all = FALSE, ...) {
   tidyfile(x, all = all)
 }
 #' @name tidyfile
-#' @export
+#' @noRd
 tidyfile.raadfiles <- function(x, all = FALSE, ...) {
   if (all) {
     metalist <- tidyfile(x$fullname)
@@ -44,8 +44,28 @@ tidyfile.raadfiles <- function(x, all = FALSE, ...) {
                  meta = metalist), class = c("tidyfile", "tbl_df", "tbl", "data.frame"))
 }
 #' @name tidyfile
-#' @export
+#' @noRd
 tidyfile.character <- function(x, all = FALSE, ...) {
   purrr::map(x, ncmeta::nc_meta)  
 }
+
+
+# 
+# # @name tidync
+# # @noRd
+# tidync.tidyfile <- function(x, ...) {
+#   meta <- ncmeta::nc_meta(x$fullname[1L])
+#   out <- structure(list(file = x, 
+#                         shape = shapes(meta), 
+#                         dimension = dimensions(meta)),
+#                    
+#                    class = "tidync")
+#   activate(out, shapes(meta)$shape[1])
+# }
+# # @name tidync
+# # @noRd
+# tidync.data.frame <- function(x, ...) {
+#   tidync(tidyfile(x))
+# }
+
 

@@ -186,24 +186,6 @@ print.tidync <- function(x, ...) {
 }
 
 
-# 
-# # @name tidync
-# # @export
-# tidync.tidyfile <- function(x, ...) {
-#   meta <- ncmeta::nc_meta(x$fullname[1L])
-#   out <- structure(list(file = x, 
-#                         shape = shapes(meta), 
-#                         dimension = dimensions(meta)),
-#                    
-#                    class = "tidync")
-#   activate(out, shapes(meta)$shape[1])
-# }
-# # @name tidync
-# # @export
-# tidync.data.frame <- function(x, ...) {
-#   tidync(tidyfile(x))
-# }
-
 
 # print.tidync <- function(x, ...) {
 #   form <- active(x)
