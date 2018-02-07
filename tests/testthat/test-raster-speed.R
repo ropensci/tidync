@@ -3,8 +3,6 @@
 library(raster)
 u <- "ftp://ftp.cdc.noaa.gov/Datasets/noaa.oisst.v2/sst.wkmean.1990-present.nc"
 tfile <- file.path(tempdir(), basename(u))
-#tfile <-  "/mnt/temp/Rtmprdlg8R/sst.wkmean.1990-present.nc"
-if (tidync:::we_are_raady()) tfile <- raadtools::sstfiles(time.resolution = "monthly")$fullname[1]
 if (!file.exists(tfile)) curl::curl_download(u, tfile, mode = "wb")
 
 # in-development pattern for tidync

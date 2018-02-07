@@ -55,13 +55,15 @@ tidync.character <- function(x, what, ...) {
   }
   bad_dim <- nrow(meta$result$dimension) < 1
   bad_var <- nrow(meta$result$variable) < 1
+  if (is.null(bad_dim) || is.na(bad_dim) || length(bad_dim) < 1) bad_dim <- TRUE
+  if (is.null(bad_var) || is.na(bad_var) || length(bad_var) < 1) bad_var <- TRUE
   if (bad_dim) {
     warning("no dimensions found")
   }
   if (bad_dim) {
     warning("no variables found")
   }
-  if (bad_dim & bad_var) stop("no variables or dimension recognizable (is this a source with compound-types?)")
+  if (bad_dim && bad_var) stop("no variables or dimension recognizable \n  (is this a source with compound-types? Try h5, rhdf5, or hdf5r)")
   if (!fexists) cat("Connection succeeded. \n")      
   meta <- meta$result
   variable <- dplyr::mutate(meta[["variable"]], active = FALSE)
@@ -163,12 +165,12 @@ print.tidync <- function(x, ...) {
   
   # browser()
   
-  dims[c("sl_min", "sl_max")] <- as.data.frame(filter_ranges)[match(names(x$transforms), dims$name), ]
+  dims[c("dmin", "dmax")] <- as.data.frame(filter_ranges)[match(names(x$transforms), dims$name), ]
   dims[c("min", "max")] <- as.data.frame(ranges)[match(names(x$transforms), dims$name), ]
   
   dimension_print <- if (nrow(dims) > 0) {
     format(dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
-             dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$active, .data$start, .data$count, .data$sl_min, .data$sl_max, .data$unlim, .data$coord_dim,) %>% 
+             dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$active, .data$start, .data$count, .data$dmin, .data$dmax, .data$unlim, .data$coord_dim,) %>% 
              dplyr::arrange(desc(.data$active), .data$id), n = Inf)
     
   } else {

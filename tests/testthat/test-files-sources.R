@@ -2,20 +2,15 @@ context("files")
 
 fname <- paste(sample(unlist(strsplit("somecrazyfile", ""))), collapse = "")
 test_that("file not found is friendly", {
-  expect_error(tidync(fname), "No such file or directory")
+  expect_error(tidync(fname), "failed to open")
 })
 
 test_that("files and bad files are handled", {
-  skip_if_not(we_are_raady())
-  oisst_dayfile <- raadtools::sstfiles()$fullname[1]
-  tidync(oisst_dayfile)
-  oisst_monfile <- raadtools::sstfiles(time.resolution = "monthly")$fullname[1]
-  tidync(oisst_monfile)
-  roms_file <- raadtools::cpolarfiles()$fullname[1]
-  tidync(roms_file)
-  
-  l3_file <- raadtools::ocfiles()$fullname[1]  
-  expect_error(tidync(l3_file)) 
+  l3b_file <- system.file("extdata/oceandata/A2002218.L3b_DAY_RRS.nc", package = "tidync")
+  expect_error(suppressWarnings(tidync(l3b_file)), "no variables or dimension recognizable") 
+  expect_warning(try(tidync(l3b_file), silent = TRUE), "no dimensions found")
+  expect_warning(try(tidync(l3b_file), silent = TRUE), "no variables found")
+  expect_warning(try(tidync(l3b_file), silent = TRUE), "no variables recognizable")  
 })
 
 
