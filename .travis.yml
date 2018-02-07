@@ -1,19 +1,50 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
+#before_install:
+#  - sudo apt-get --yes --force-yes update -qq
+#  - sudo apt-get install -y libudunits2-dev libnetcdf-dev 
+
+
+
 language: R
-sudo: required
+warnings_are_errors: true
+sudo: false
 cache: packages
-latex: false
-dist: trusty
 
-before_install:
-  - sudo apt-get --yes --force-yes update -qq
-  - sudo apt-get install -y libudunits2-dev libnetcdf-dev 
+addons:
+    apt:
+        packages:
+            - libudunits2-dev
+            - libnetcdf-dev
 
+matrix:
+    include:
+        - os: linux
+          r: release
+          dist: trusty # 14.04
+          env: R_CODECOV=true
+          #- os: linux
+          #r: devel
+          #dist: trusty
+        - os: linux
+          r: oldrel
+          dist: trusty
+        - os: osx
+          r: release
+          #- os: osx
+          #r: devel
+
+# r-devel temporarily switched off; see
+# https://www.mail-archive.com/r-devel@r-project.org/msg38248.html
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+r_github_packages:
+      - jimhester/covr
 
 after_success:
   - Rscript -e 'covr::codecov()'
 
-r_binary_packages:
-  - ncdf4
-  
