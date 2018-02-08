@@ -39,9 +39,11 @@ tnc <- tidync(l3file)
 print(tnc)
 
 ## very simple Unidata example file, with one dimension
+\dontrun{
 uf <- system.file("extdata/unidata", "test_hgroups.nc", package = "tidync")
-tidync(uf)
-
+recNum <- tidync(uf) \%>\% hyper_tibble()
+print(recNum)
+}
 ## a raw grid of Southern Ocean sea ice concentration from IFREMER
 ## it is 12.5km resolution passive microwave concentration values
 ## on a polar stereographic grid, on 2 October 2017, displaying the 
