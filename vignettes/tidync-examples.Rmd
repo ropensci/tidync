@@ -1,5 +1,5 @@
 ---
-title: "Tidy NetCDF examples"
+title: "NetCDF examples"
 author: "Michael D. Sumner"
 date: "`r Sys.Date()`"
 output:
@@ -12,9 +12,23 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient 
+queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in 
+"long form" form as a data frame for "tidy" analysis and visualization contexts. 
 
+NetCDF is **Network Common Data Form** a very common, and very general way to store and work with 
+scientific array-based data. NetCDF is defined and provided by [Unidata](https://www.unidata.ucar.edu/software/netcdf/).
 
-Find an arbitrary NetCDF file and print a traditional summary. 
+Here we introduce traditional concepts of NetCDF, and show examples with built-in data to demonstrate tidync functionality. 
+
+# NetCDF
+
+NetCDF is a very widely used file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
+
+Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many and varied, and not always adhered to. 
+
+Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the [command line program `ncdump`](https://www.unidata.ucar.edu/software/netcdf/netcdf-4/newdocs/netcdf/NetCDF-Utilities.html#NetCDF-Utilities). 
+
 
 ```{r}
 f <- system.file("extdata", "ifremer", "20171002.nc", package = "tidync")
@@ -22,32 +36,48 @@ library(RNetCDF)
 print.nc(open.nc(f))
 ```
 
-NetCDF is a very widely used file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
+The analogous operation at the command line on a suitable system. 
 
-Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many, varied, and no particularly well adhered to in many contexts. 
+```bash 
+ncdump -h /path/to/extdata/ifremer/20171002.nc
+```
 
-A NetCDF file is essentially a container for simple array based data structures. There is limited capacity in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes. (I.e. it's not possible to query a file for an arbitrary sparse set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set.)
+
+
+With the ncdf4 package it's a slightly different approach, but gives the same result. 
+
+```R
+print(ncdf4::nc_open(f))
+```
 
 Notice how the listing above is organized by *dimension* and then by *variable*. It's not particularly 
 obvious that some variables live in the same set of dimensions as others. 
 
+A NetCDF file is essentially a container for simple array based data structures. There is limited capacity in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes. (I.e. it's not possible to query a file for an arbitrary sparse set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set.)
+
+
+
 ## tidync
 
-Tidync provides facilities to explore the contents of a NetCDF file and construct efficient queries to extract arbitrary hyperslabs. These can be used directly in array contexts, or in "long form" database contexts. 
+Tidync aims to ease exploration of the contents of a NetCDF file and provides methods extract arbitrary hyperslabs. These can be used directly in array contexts, or in "long form" database contexts. 
 
-On first contact with the file, the available variables are reported (the first is made "active") and
-the dimensions of the active variable are described.  The "active" variable may be specified with the `activate` function. 
+On first contact with the file, the available variables are classified by grid and
+dimension.  The "active" grid is the one that queries may be made against, and may be changed with the `activate` function. 
 
 
 ```{r}
 library(tidync)
 tidync(f)
 
-## activate another variable
-tidync(f) %>% activate(concentration)
 ```
 
-Here we see variables are clearly grouped by the *grid* they exist in, where grid is a specific (and ordered!) set of dimensions. This allows us to see the set of variables in a grid as existing in a single data set. We can expand out this entire set as a single data frame, which all the coordinates copied out - this is not efficient(!) but if we craft our queries sensibly to read only what we need, it's a very easy way to explore the data in a file. 
+Here we see variables are clearly grouped by the *grid* they exist in, where grid is a specific (and ordered!) set of dimensions. This allows us to see the set of variables that implicitly co-exist, they have the same *shape*.  The first grid "D0,D1,D2" has two variables, *concentration* and *quality_flag*, and the second "D2" has only one variable *time*. There are no general rules here, a file might have any number of dimensions and variables, and any variable might be defined by one or more dimensions. 
+
+In this case the D2 grid has only one variable in its single dimension, and it happens to be a special kind of variable - a "coordinate dimension", as indicated by the `coord_dim` flag. In the traditional `ncdump` summary above it's easy to see there's only really one data grid, in `ni,nj,time` that it holds two variables, and that time is a special coordinate dimension - in contrast neither `ni` or `nj` have
+an explicit 1-dimension variable. When there are many dimensions and/or many variables those patterns are *not* easy to see. 
+
+
+We can expand out this entire set as a single data frame, which all the coordinates copied out - this is not efficient(!) but if we craft our queries sensibly to read only what we need, it's a very easy way to explore the data in a file. 
 
 The 'hyper_filter' function allows specification of expressions to subset a variable based on each dimension's coordinate values.  
 
