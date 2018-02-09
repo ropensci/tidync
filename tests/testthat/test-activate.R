@@ -1,6 +1,12 @@
 
  context("activate")
 
+ test_that("generic meaningless activation works", {
+   l <- list(a = 1, b = 2)
+   expect_warning(l <- activate(l, "b"))
+   expect_warning(active(l) <- "b")
+ }
+           )
  test_that("various access and activation works", {
 
    ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")

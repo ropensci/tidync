@@ -14,3 +14,12 @@ test_that("files and bad files are handled", {
 })
 
 
+test_that("RNetCDF fall back works", {
+  ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+  nc_get(ufile, "invTime") %>% expect_is("array") %>% 
+    expect_length(1176) #%>% expect_type("double")
+  nc_get(ufile, "invTime", test = TRUE) %>% expect_is("array") %>% 
+    expect_length(1176) #%>% expect_type("integer")
+  
+})
+
