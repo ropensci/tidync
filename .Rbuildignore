@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^vignettes$
+
 ^inst/extras$
 ^README\.Rmd$
 ^README-.*\.png$
