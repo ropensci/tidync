@@ -45,7 +45,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/tidync-examples.html">Tidy NetCDF examples</a>
+      <a href="articles/tidync-examples.html">NetCDF examples</a>
     </li>
   </ul>
 </li>
@@ -130,7 +130,7 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <p>This is a basic example which shows how to connect to a file.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="st">"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)
 <span class="kw">library</span>(tidync)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(file) 
+<span class="kw">tidync</span>(file) 
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...</span>
 <span class="co">#&gt; </span>
@@ -144,29 +144,29 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="co">#&gt; Dimensions (4): </span>
 <span class="co">#&gt;   </span>
 <span class="co">#&gt;   dim      id name        length     min    max active start count    dmin </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; </span>
-<span class="co">#&gt; 1 D0     0    lat         2.16e³ - 90.0   90.0  T          1  2160 - 90.0  </span>
-<span class="co">#&gt; 2 D1     1.00 lon         4.32e³ -180    180    T          1  4320 -180    </span>
-<span class="co">#&gt; 3 D2     2.00 rgb         3.00e⁰    1.00   3.00 F          1     3    1.00 </span>
-<span class="co">#&gt; 4 D3     3.00 eightbitco… 2.56e²    1.00 256    F          1   256    1.00 </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; </span>
+<span class="co">#&gt; 1 D0        0 lat         2.16e³ - 90.0   90.0  TRUE       1  2160 - 90.0  </span>
+<span class="co">#&gt; 2 D1        1 lon         4.32e³ -180    180    TRUE       1  4320 -180    </span>
+<span class="co">#&gt; 3 D2        2 rgb         3.00e⁰    1.00   3.00 FALSE      1     3    1.00 </span>
+<span class="co">#&gt; 4 D3        3 eightbitco… 2.56e²    1.00 256    FALSE      1   256    1.00 </span>
 <span class="co">#&gt; # ... with 3 more variables: dmax &lt;dbl&gt;, unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</span></code></pre></div>
 <p>There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions <code>tidync</code> and <code>activate</code> and <code>hyper_filter</code> allow us to hone in on the part/s of the data we want, and functions <code>hyper_slice</code> and <code>hyper_tibble</code> give raw-array and data frames with-full-coordinates forms respectively.</p>
 <p>Also <a href="this%20blog">http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/</a> post by Matteo De Felice.</p>
 <div id="interactive" class="section level3">
 <h3 class="hasAnchor">
 <a href="#interactive" class="anchor"></a>Interactive</h3>
-<p>Use <code><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync()</a></code> and <code><a href="http://www.rdocumentation.org/packages/tidync/topics/hyper_filter">hyper_filter()</a></code> to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name <code>index</code> to filter it by its ‘step’ index).</p>
+<p>Use <code>tidync()</code> and <code>hyper_filter()</code> to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name <code>index</code> to filter it by its ‘step’ index).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## discover the available entities, and the active grid's dimensions and variables
-<span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(filename)
+<span class="kw">tidync</span>(filename)
 
 ## activate a different grid
-<span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/activate">activate</a></span>(grid_identifier)
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(grid_identifier)
 
 ## get a dimension-focus on the space occupied within a grid
-<span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/hyper_filter">hyper_filter</a></span>()
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>()
 
 ## pass named expressions to subset dimension by value or index (step)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/hyper_filter">hyper_filter</a></span>(<span class="dt">lat =</span> lat <span class="op">&lt;</span><span class="st"> </span><span class="dv">-30</span>, <span class="dt">time =</span> time <span class="op">==</span><span class="st"> </span><span class="dv">20</span>)</code></pre></div>
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">lat =</span> lat <span class="op">&lt;</span><span class="st"> </span><span class="dv">-30</span>, <span class="dt">time =</span> time <span class="op">==</span><span class="st"> </span><span class="dv">20</span>)</code></pre></div>
 <p>A grid is a “virtual table” in the sense of a database source. It’s possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. “D1,D0” and can otherwise be activated by their count identifier (starting at 1). The “D0” is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself.</p>
 </div>
 <div id="extractive" class="section level3">
@@ -175,13 +175,13 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <p>Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## we'll see a column for sst, lat, time, and whatever other dimensions sst has
 ## and whatever other variable's the grid has
-<span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/activate">activate</a></span>(<span class="st">"sst"") %&gt;% </span>
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(<span class="st">"sst"") %&gt;% </span>
 <span class="st">  hyper_filter(lat = lat &lt; -30, time = time == 20) %&gt;% </span>
 <span class="st">  hyper_tibble()</span>
 
 
 <span class="st">## raw array form, we'll see a (list of) R arrays with a dimension for each seen by tidync(filename) %&gt;% activate("</span>sst<span class="st">""</span>)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/tidync">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidync/topics/activate">activate</a></span>(<span class="st">"sst"") %&gt;% </span>
+<span class="kw">tidync</span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">activate</span>(<span class="st">"sst"") %&gt;% </span>
 <span class="st">  hyper_filter(lat = lat &lt; -30, time = time == 20) %&gt;% </span>
 <span class="st">  hyper_slice()</span></code></pre></div>
 <p>It’s important to not actual request the data extraction until the expressions above would result in an efficient size (don’t try a data frame version of a 20Gb ROMs variable …). Use the interactive modes to determine the likely size of the output you will receive.</p>

@@ -1,16 +1,17 @@
 context("filter")
 
-f1 <- system.file("extdata/unidata/madis-hydro.nc", package = "tidync")
-x1 <- tidync(f1) %>% activate("D5,D12") %>% hyper_filter(QCcheckNum  = index < 2)
-x2 <- tidync(f1) %>% activate("D5,D12") %>% hyper_filter()
 
 library(dplyr)
-test_that("standard mapped", {
-  ## dimensions without variables
-  x1 %>% expect_s3_class("tidync")
-  x2 %>% expect_s3_class("tidync")
-  
-  })
+# test_that("standard mapped", {
+#   f1 <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+#   
+#   ## dimensions without variables
+#   tidync(f1) %>%  activate("D5,D12") %>% hyper_filter(QCcheckNum  = index < 2) %>% 
+#     expect_s3_class("tidync")
+#   tidync(f1) %>% activate("D5,D12") %>% hyper_filter() %>% 
+#     expect_s3_class("tidync")
+#   
+#   })
 
 test_that("indexing works", {
   l3file <- system.file("extdata/oceandata", 

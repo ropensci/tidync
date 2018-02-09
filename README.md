@@ -88,11 +88,11 @@ tidync(file)
 #> Dimensions (4): 
 #>   
 #>   dim      id name        length     min    max active start count    dmin 
-#>   <chr> <dbl> <chr>        <dbl>   <dbl>  <dbl> <lgl>  <int> <int>   <dbl> 
-#> 1 D0     0    lat         2.16e³ - 90.0   90.0  T          1  2160 - 90.0  
-#> 2 D1     1.00 lon         4.32e³ -180    180    T          1  4320 -180    
-#> 3 D2     2.00 rgb         3.00e⁰    1.00   3.00 F          1     3    1.00 
-#> 4 D3     3.00 eightbitco… 2.56e²    1.00 256    F          1   256    1.00 
+#>   <chr> <int> <chr>        <dbl>   <dbl>  <dbl> <lgl>  <int> <int>   <dbl> 
+#> 1 D0        0 lat         2.16e³ - 90.0   90.0  TRUE       1  2160 - 90.0  
+#> 2 D1        1 lon         4.32e³ -180    180    TRUE       1  4320 -180    
+#> 3 D2        2 rgb         3.00e⁰    1.00   3.00 FALSE      1     3    1.00 
+#> 4 D3        3 eightbitco… 2.56e²    1.00 256    FALSE      1   256    1.00 
 #> # ... with 3 more variables: dmax <dbl>, unlim <lgl>, coord_dim <lgl>
 ```
 
