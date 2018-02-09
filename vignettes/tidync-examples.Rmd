@@ -12,22 +12,32 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(pillar.subtle = FALSE, pillar.sigfig = 4)
+```
+
 The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient 
 queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in 
 "long form" form as a data frame for "tidy" analysis and visualization contexts. 
 
-NetCDF is **Network Common Data Form** a very common, and very general way to store and work with 
+NetCDF is **Network Common Data Form**, a [data model][not-a-format] and an [API](https://en.wikipedia.org/wiki/Application_programming_interface).
+
+This is a very common, and *very general* way to store and work with 
 scientific array-based data. NetCDF is defined and provided by [Unidata](https://www.unidata.ucar.edu/software/netcdf/).
 
-Here we introduce traditional concepts of NetCDF, and show examples with built-in data to demonstrate tidync functionality. 
+Here we introduce traditional concepts of NetCDF, and show examples with built-in files and online sources to demonstrate tidync functionality. 
 
 # NetCDF
 
-NetCDF is a very widely used file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition "one-dimensional" consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
+NetCDF is a very widely used file format for storing array-based data as *variables*. The **variable's** space is defined by its **dimensions** and their metadata. Dimensions are by definition *one-dimensional* (i.e. an atomic vector, in \R) consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
 
 Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many and varied, and not always adhered to. 
 
-Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the [command line program `ncdump`](https://www.unidata.ucar.edu/software/netcdf/netcdf-4/newdocs/netcdf/NetCDF-Utilities.html#NetCDF-Utilities). 
+Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the command line program [`ncdump`](https://www.unidata.ucar.edu/software/netcdf/netcdf-4/newdocs/netcdf/NetCDF-Utilities.html#NetCDF-Utilities). 
 
 
 ```{r}
@@ -36,13 +46,11 @@ library(RNetCDF)
 print.nc(open.nc(f))
 ```
 
-The analogous operation at the command line on a suitable system. 
+Using `ncdump` at the command line on a suitable system would yield very similar output to the print above.  
 
 ```bash 
 ncdump -h /path/to/extdata/ifremer/20171002.nc
 ```
-
-
 
 With the ncdf4 package it's a slightly different approach, but gives the same result. 
 
@@ -51,11 +59,11 @@ print(ncdf4::nc_open(f))
 ```
 
 Notice how the listing above is organized by *dimension* and then by *variable*. It's not particularly 
-obvious that some variables live in the same set of dimensions as others. 
+obvious that some variables are defined within the same set of dimensions as others. 
 
-A NetCDF file is essentially a container for simple array based data structures. There is limited capacity in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes. (I.e. it's not possible to query a file for an arbitrary sparse set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set.)
+A NetCDF file is a container for simple array based data structures. There is [limited capacity][random-access] in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes. 
 
-
+[random-access]: I.e. it's not possible to query a file for an arbitrary sparse set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set.  Do you know different? Please let me know!
 
 ## tidync
 
@@ -130,3 +138,6 @@ str(arr)
 #concentration %>% hyper_tibble() %>% filter(!is.na(concentration))
 
 ```
+
+
+[not-a-format]: https://twitter.com/TedHabermann/status/958034585002041344
