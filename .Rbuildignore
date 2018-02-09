@@ -1,11 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-
-^inst/extras$
 ^README\.Rmd$
 ^README-.*\.png$
 ^docs$
-^inst/extdata/unidata/madis-hydro.nc$
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^CONDUCT\.md$
