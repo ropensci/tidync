@@ -53,7 +53,8 @@ hyper_tbl_cube.tidync <- function(x, ...) {
 #' @name hyper_tbl_cube
 #' @export
 hyper_tbl_cube.character <- function(x, ...) {
-  stop("direct file access not yet supported, please use tidync(file) %>% hyper_tbl_cube(...)")
+  tidync(x) %>% hyper_filter(...) %>% hyper_tbl_cube()
+  #stop("direct file access not yet supported, please use tidync(file) %>% hyper_tbl_cube(...)")
 } 
 
 

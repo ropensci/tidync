@@ -59,6 +59,11 @@ hyper_filter.tidync <- function(.x, ...) {
 out
 }
 
+
+#' @export
+hyper_filter.character <- function(.x, ...) {
+  tidync(.x) %>% hyper_filter(...) 
+}
 update_slices <- function(x) {
   
   transforms <- x[["transforms"]]

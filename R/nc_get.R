@@ -17,7 +17,7 @@ nc_get.character <- function(x, v, test = FALSE, ...) {
   con4 <- NULL
   con4 <- ncdf4::nc_open(x, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
   on.exit(ncdf4::nc_close(con4), add = TRUE)
-  safe_get4 <- purrr::safely(ncdf4::ncvar_get)
+  safe_get4 <- purrr::safely(ncget.ncdf4)
   val <- safe_get4(con4, v)
   if (!is.null(val$result)) {
     return(val$result)
