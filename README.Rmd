@@ -153,9 +153,13 @@ It's important to not actual request the data extraction until the expressions a
 Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each `hyper_*` function can take the filtering expressions, but it's not obvious if this is a good idea or not. 
 
 
+See the vignettes for more: 
 
-See this article for more:  https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html
+```R
+vignette("tidync-examples")
 
+browseVignettes(package = "tidync")
+```
 
 ## Limitations
 

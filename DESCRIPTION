@@ -5,7 +5,7 @@ Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c(
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
              person("Ben", "Raymond", role = "ctb"))
-Description: Tidy tools for 'NetCDF' data sources. Explore the contents of a NetCDF source (file or URL) 
+Description: Tidy tools for 'NetCDF' data sources. Explore the contents of a 'NetCDF' source (file or URL) 
  presented as variables organized by grid with a database-like interface. The 'hyper_filter' verb 
  shows the effects of array-slicing expressions by value or index. Actual data read is delayed until explicitly 
  requested, as a data frame or list of arrays. 

@@ -26,7 +26,7 @@ Any NetCDF with variable arrays should work. Files with compound types are not y
 should fail gracefully.
 
 We haven't yet explored HDF5 per se, so any feedback is appreciated. Major
-use of compound types is made by https://github.com/mdsumner/roc
+use of compound types is made by \url{https://github.com/sosoc/croc}
 }
 \examples{
 ## a SeaWiFS (S) Level-3 Mapped (L3m) monthly (MO) chlorophyll-a (CHL)

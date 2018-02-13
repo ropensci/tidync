@@ -7,7 +7,7 @@
 #' should fail gracefully. 
 #' 
 #' We haven't yet explored HDF5 per se, so any feedback is appreciated. Major 
-#' use of compound types is made by https://github.com/mdsumner/roc
+#' use of compound types is made by \url{https://github.com/sosoc/croc}
 #' @param x path to a NetCDF file
 #' @param ... reserved for arguments to methods, currently ignored
 #' @param what (optional) character name of grid (see `ncmeta::nc_grids`) or (bare) name of variable (see `ncmeta::nc_vars`) or index of grid to `activate`

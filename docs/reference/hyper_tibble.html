@@ -150,10 +150,10 @@
 #&gt;   
 #&gt;   dim      id name      length     min    max active start count    dmin   dmax 
 #&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt; 
-#&gt; 1 D0        0 lat       2.16e³ - 90.0   90.0  TRUE       1  2160 - 90.0   90.0  
-#&gt; 2 D1        1 lon       4.32e³ -180    180    TRUE       1  4320 -180    180    
-#&gt; 3 D2        2 rgb       3.00e⁰    1.00   3.00 FALSE      1     3    1.00   3.00 
-#&gt; 4 D3        3 eightbit… 2.56e²    1.00 256    FALSE      1   256    1.00 256    
+#&gt; 1 D0        0 lat        2160. - 90.0   90.0  TRUE       1  2160 - 90.0   90.0  
+#&gt; 2 D1        1 lon        4320. -180.   180.   TRUE       1  4320 -180.   180.   
+#&gt; 3 D2        2 rgb           3.    1.00   3.00 FALSE      1     3    1.00   3.00 
+#&gt; 4 D3        3 eightbit…   256.    1.00 256.   FALSE      1   256    1.00 256.   
 #&gt; # ... with 2 more variables: unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt; </div><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
 #&gt; <span class='message'></span>
@@ -169,18 +169,18 @@
 <span class='no'>ht</span></div><div class='output co'>#&gt; # A tibble: 11 x 3
 #&gt;    chlor_a   lon   lat
 #&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt;  1   1.71    170 -76.0
-#&gt;  2   1.71    170 -76.0
-#&gt;  3   1.71    171 -76.0
-#&gt;  4   1.71    171 -76.0
-#&gt;  5   1.71    171 -76.0
-#&gt;  6   0.759   165 -77.4
-#&gt;  7   0.759   165 -77.4
-#&gt;  8   0.759   165 -77.4
-#&gt;  9   0.759   165 -77.4
-#&gt; 10   0.759   165 -77.4
-#&gt; 11   0.759   166 -77.4</div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='message'>Want to understand how all the pieces fit together? Buy the ggplot2</span>
-#&gt; <span class='message'>book: http://ggplot2.org/book/</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>)),
+#&gt;  1   1.71   170. -76.0
+#&gt;  2   1.71   170. -76.0
+#&gt;  3   1.71   171. -76.0
+#&gt;  4   1.71   171. -76.0
+#&gt;  5   1.71   171. -76.0
+#&gt;  6   0.759  165. -77.4
+#&gt;  7   0.759  165. -77.4
+#&gt;  8   0.759  165. -77.4
+#&gt;  9   0.759  165. -77.4
+#&gt; 10   0.759  165. -77.4
+#&gt; 11   0.759  166. -77.4</div><div class='input'><span class='fu'>library</span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='message'>Want to understand how all the pieces fit together? Buy the</span>
+#&gt; <span class='message'>ggplot2 book: http://ggplot2.org/book/</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'>is.na</span>(<span class='no'>chlor_a</span>)),
 <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>lon</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>lat</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>chlor_a</span>)) + <span class='fu'><a href='http://www.rdocumentation.org/packages/ggplot2/topics/geom_point'>geom_point</a></span>()</div><div class='img'><img src='hyper_tibble-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
 </div></pre>
   </div>

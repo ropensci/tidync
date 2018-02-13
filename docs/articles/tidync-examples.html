@@ -75,7 +75,7 @@
       <h1>NetCDF examples</h1>
                         <h4 class="author">Michael D. Sumner</h4>
             
-            <h4 class="date">2018-02-09</h4>
+            <h4 class="date">2018-02-13</h4>
           </div>
 
     
@@ -155,11 +155,11 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Dimensions (3): </span>
 <span class="co">#&gt;   </span>
-<span class="co">#&gt;   dim      id name   length       min      max active start count     dmin </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; </span>
-<span class="co">#&gt; 1 D0        0 ni    632.0     1.000e⁰  6.320e² TRUE       1   632  1.000e⁰ </span>
-<span class="co">#&gt; 2 D1        1 nj    664.0     1.000e⁰  6.640e² TRUE       1   664  1.000e⁰ </span>
-<span class="co">#&gt; 3 D2        2 time    1.000   1.032e⁶  1.032e⁶ TRUE       1     1  1.032e⁶ </span>
+<span class="co">#&gt;   dim      id name  length      min      max active start count     dmin </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; </span>
+<span class="co">#&gt; 1 D0        0 ni      632.       1.     632. TRUE       1   632       1. </span>
+<span class="co">#&gt; 2 D1        1 nj      664.       1.     664. TRUE       1   664       1. </span>
+<span class="co">#&gt; 3 D2        2 time      1. 1032204. 1032204. TRUE       1     1 1032204. </span>
 <span class="co">#&gt; # ... with 3 more variables: dmax &lt;dbl&gt;, unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</span></code></pre></div>
 <p>Here we see variables are clearly grouped by the <em>grid</em> they exist in, where grid is a specific (and ordered!) set of dimensions. This allows us to see the set of variables that implicitly co-exist, they have the same <em>shape</em>. The first grid “D0,D1,D2” has two variables, <em>concentration</em> and <em>quality_flag</em>, and the second “D2” has only one variable <em>time</em>. There are no general rules here, a file might have any number of dimensions and variables, and any variable might be defined by one or more dimensions.</p>
 <p>In this case the D2 grid has only one variable in its single dimension, and it happens to be a special kind of variable - a “coordinate dimension”, as indicated by the <code>coord_dim</code> flag. In the traditional <code>ncdump</code> summary above it’s easy to see there’s only really one data grid, in <code>ni,nj,time</code> that it holds two variables, and that time is a special coordinate dimension - in contrast neither <code>ni</code> or <code>nj</code> have an explicit 1-dimension variable. When there are many dimensions and/or many variables those patterns are <em>not</em> easy to see.</p>
@@ -180,11 +180,11 @@ concentration <span class="op">%&gt;%</span><span class="st"> </span><span class
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Dimensions (3): </span>
 <span class="co">#&gt;   </span>
-<span class="co">#&gt;   dim      id name   length       min      max active start count     dmin </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; </span>
-<span class="co">#&gt; 1 D0        0 ni    632.0     1.000e⁰  6.320e² TRUE       1   632  1.000e⁰ </span>
-<span class="co">#&gt; 2 D1        1 nj    664.0     1.000e⁰  6.640e² TRUE       1   664  1.000e⁰ </span>
-<span class="co">#&gt; 3 D2        2 time    1.000   1.032e⁶  1.032e⁶ TRUE       1     1  1.032e⁶ </span>
+<span class="co">#&gt;   dim      id name  length      min      max active start count     dmin </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; </span>
+<span class="co">#&gt; 1 D0        0 ni      632.       1.     632. TRUE       1   632       1. </span>
+<span class="co">#&gt; 2 D1        1 nj      664.       1.     664. TRUE       1   664       1. </span>
+<span class="co">#&gt; 3 D2        2 time      1. 1032204. 1032204. TRUE       1     1 1032204. </span>
 <span class="co">#&gt; # ... with 3 more variables: dmax &lt;dbl&gt;, unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</span></code></pre></div>
 <p>By specifying inequality expressions we see an <em>implicit</em> subsetting of the array. Everything so far is implicit to delay any file-based computation required to actually interact with the file and read from it.</p>
 <p>Notice that these are “name = expr” paired expressions, because the right hand side may be quite general we need the left hand side name to be assured of the name of the dimension referred to.</p>
@@ -200,13 +200,13 @@ concentration <span class="op">%&gt;%</span><span class="st"> </span><span class
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Dimensions (3): </span>
 <span class="co">#&gt;   </span>
-<span class="co">#&gt;   dim      id name   length       min      max active start count     dmin </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; </span>
-<span class="co">#&gt; 1 D0        0 ni    632.0     1.000e⁰  6.320e² TRUE       1   632  1.000e⁰ </span>
-<span class="co">#&gt; 2 D1        1 nj    664.0     1.000e⁰  6.640e² TRUE       1    19  1.000e⁰ </span>
-<span class="co">#&gt; 3 D2        2 time    1.000   1.032e⁶  1.032e⁶ TRUE       1     1  1.032e⁶ </span>
+<span class="co">#&gt;   dim      id name  length      min      max active start count     dmin </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; </span>
+<span class="co">#&gt; 1 D0        0 ni      632.       1.     632. TRUE       1   632       1. </span>
+<span class="co">#&gt; 2 D1        1 nj      664.       1.     664. TRUE       1    19       1. </span>
+<span class="co">#&gt; 3 D2        2 time      1. 1032204. 1032204. TRUE       1     1 1032204. </span>
 <span class="co">#&gt; # ... with 3 more variables: dmax &lt;dbl&gt;, unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</span></code></pre></div>
-<p>We can also use the special internal variable ‘step’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
+<p>We can also use the special internal variable ‘index’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hyper_filter</span>(<span class="dt">ni =</span> index <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/between.html">between</a></span>(index, <span class="dv">30</span>, <span class="dv">100</span>))
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Data Source (1): 20171002.nc ...</span>
@@ -218,11 +218,11 @@ concentration <span class="op">%&gt;%</span><span class="st"> </span><span class
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Dimensions (3): </span>
 <span class="co">#&gt;   </span>
-<span class="co">#&gt;   dim      id name   length       min      max active start count     dmin </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; </span>
-<span class="co">#&gt; 1 D0        0 ni    632.0     1.000e⁰  6.320e² TRUE       1    19  1.000e⁰ </span>
-<span class="co">#&gt; 2 D1        1 nj    664.0     1.000e⁰  6.640e² TRUE      30    71  3.000e¹ </span>
-<span class="co">#&gt; 3 D2        2 time    1.000   1.032e⁶  1.032e⁶ TRUE       1     1  1.032e⁶ </span>
+<span class="co">#&gt;   dim      id name  length      min      max active start count     dmin </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; </span>
+<span class="co">#&gt; 1 D0        0 ni      632.       1.     632. TRUE       1    19       1. </span>
+<span class="co">#&gt; 2 D1        1 nj      664.       1.     664. TRUE      30    71      30. </span>
+<span class="co">#&gt; 3 D2        2 time      1. 1032204. 1032204. TRUE       1     1 1032204. </span>
 <span class="co">#&gt; # ... with 3 more variables: dmax &lt;dbl&gt;, unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</span></code></pre></div>
 </div>
 <div id="data-extraction" class="section level2">

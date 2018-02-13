@@ -145,10 +145,10 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="co">#&gt;   </span>
 <span class="co">#&gt;   dim      id name        length     min    max active start count    dmin </span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;int&gt; &lt;int&gt;   &lt;dbl&gt; </span>
-<span class="co">#&gt; 1 D0        0 lat         2.16e³ - 90.0   90.0  TRUE       1  2160 - 90.0  </span>
-<span class="co">#&gt; 2 D1        1 lon         4.32e³ -180    180    TRUE       1  4320 -180    </span>
-<span class="co">#&gt; 3 D2        2 rgb         3.00e⁰    1.00   3.00 FALSE      1     3    1.00 </span>
-<span class="co">#&gt; 4 D3        3 eightbitco… 2.56e²    1.00 256    FALSE      1   256    1.00 </span>
+<span class="co">#&gt; 1 D0        0 lat          2160. - 90.0   90.0  TRUE       1  2160 - 90.0  </span>
+<span class="co">#&gt; 2 D1        1 lon          4320. -180.   180.   TRUE       1  4320 -180.   </span>
+<span class="co">#&gt; 3 D2        2 rgb             3.    1.00   3.00 FALSE      1     3    1.00 </span>
+<span class="co">#&gt; 4 D3        3 eightbitco…   256.    1.00 256.   FALSE      1   256    1.00 </span>
 <span class="co">#&gt; # ... with 3 more variables: dmax &lt;dbl&gt;, unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt;</span></code></pre></div>
 <p>There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions <code>tidync</code> and <code>activate</code> and <code>hyper_filter</code> allow us to hone in on the part/s of the data we want, and functions <code>hyper_slice</code> and <code>hyper_tibble</code> give raw-array and data frames with-full-coordinates forms respectively.</p>
 <p>Also <a href="this%20blog">http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/</a> post by Matteo De Felice.</p>
@@ -186,7 +186,10 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 <span class="st">  hyper_slice()</span></code></pre></div>
 <p>It’s important to not actual request the data extraction until the expressions above would result in an efficient size (don’t try a data frame version of a 20Gb ROMs variable …). Use the interactive modes to determine the likely size of the output you will receive.</p>
 <p>Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each <code>hyper_*</code> function can take the filtering expressions, but it’s not obvious if this is a good idea or not.</p>
-<p>See this article for more: <a href="https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html" class="uri">https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html</a></p>
+<p>See the vignettes for more:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vignette</span>(<span class="st">"tidync-examples"</span>)
+
+<span class="kw">browseVignettes</span>(<span class="dt">package =</span> <span class="st">"tidync"</span>)</code></pre></div>
 </div>
 </div>
 <div id="limitations" class="section level2">

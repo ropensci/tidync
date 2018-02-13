@@ -89,10 +89,10 @@ tidync(file)
 #>   
 #>   dim      id name        length     min    max active start count    dmin 
 #>   <chr> <int> <chr>        <dbl>   <dbl>  <dbl> <lgl>  <int> <int>   <dbl> 
-#> 1 D0        0 lat         2.16e³ - 90.0   90.0  TRUE       1  2160 - 90.0  
-#> 2 D1        1 lon         4.32e³ -180    180    TRUE       1  4320 -180    
-#> 3 D2        2 rgb         3.00e⁰    1.00   3.00 FALSE      1     3    1.00 
-#> 4 D3        3 eightbitco… 2.56e²    1.00 256    FALSE      1   256    1.00 
+#> 1 D0        0 lat          2160. - 90.0   90.0  TRUE       1  2160 - 90.0  
+#> 2 D1        1 lon          4320. -180.   180.   TRUE       1  4320 -180.   
+#> 3 D2        2 rgb             3.    1.00   3.00 FALSE      1     3    1.00 
+#> 4 D3        3 eightbitco…   256.    1.00 256.   FALSE      1   256    1.00 
 #> # ... with 3 more variables: dmax <dbl>, unlim <lgl>, coord_dim <lgl>
 ```
 
@@ -142,7 +142,13 @@ It's important to not actual request the data extraction until the expressions a
 
 Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each `hyper_*` function can take the filtering expressions, but it's not obvious if this is a good idea or not.
 
-See this article for more: <https://hypertidy.github.io/tidync/articles/static-vignettes/tidync-examples.html>
+See the vignettes for more:
+
+``` r
+vignette("tidync-examples")
+
+browseVignettes(package = "tidync")
+```
 
 Limitations
 -----------

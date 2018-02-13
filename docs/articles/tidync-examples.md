@@ -1,7 +1,7 @@
 ---
 title: "NetCDF examples"
 author: "Michael D. Sumner"
-date: "`r Sys.Date()`"
+date: "2018-02-10"
 output:
   rmarkdown::html_vignette:
     fig_width: 10
@@ -12,13 +12,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-options(pillar.subtle = FALSE, pillar.sigfig = 4)
-```
+
 
 The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient 
 queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in 
@@ -40,10 +34,49 @@ Some conventions exist to define usage and minimal standards for metadata for pa
 Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the command line program [`ncdump`](https://www.unidata.ucar.edu/software/netcdf/netcdf-4/newdocs/netcdf/NetCDF-Utilities.html#NetCDF-Utilities). 
 
 
-```{r}
+
+```r
 f <- system.file("extdata", "ifremer", "20171002.nc", package = "tidync")
 library(RNetCDF)
 print.nc(open.nc(f))
+#> dimensions:
+#>         ni = 632 ;
+#>         nj = 664 ;
+#>         time = 1 ;
+#> variables:
+#>         int time(time) ;
+#>                 time:long_name = "time" ;
+#>                 time:units = "hours since 1900-1-1 0:0:0" ;
+#>         byte concentration(ni, nj, time) ;
+#>                 concentration:long_name = "sea-ice concentration" ;
+#>                 concentration:units = "percent" ;
+#>                 concentration:scale_factor = 1 ;
+#>                 concentration:add_offset = 0 ;
+#>                 concentration:missing_value = -128 ;
+#>                 concentration:_FillValue = -128 ;
+#>         byte quality_flag(ni, nj, time) ;
+#>                 quality_flag:long_name = "quality_flag" ;
+#>                 quality_flag:units = "n/a" ;
+#>                 quality_flag:scale_factor = 1 ;
+#>                 quality_flag:add_offset = 0 ;
+#>                 quality_flag:missing_value = -128 ;
+#>                 quality_flag:_FillValue = -128 ;
+#> 
+#> // global attributes:
+#>                 :CONVENTIONS = "COARDS" ;
+#>                 :long_name = "Sea-ice concentration as observed by SSM/I" ;
+#>                 :short_name = "PSI-F18-Concentration" ;
+#>                 :producer_agency = "IFREMER" ;
+#>                 :producer_institution = "CERSAT" ;
+#>                 :netcdf_version_id = "3.4" ;
+#>                 :product_version = "2.0" ;
+#>                 :creation_time = "2017-280T08:26:34.000" ;
+#>                 :time_resolution = "daily" ;
+#>                 :grid = "NSIDC" ;
+#>                 :pole = "south" ;
+#>                 :spatial_resolution = "12.5 km" ;
+#>                 :platform_id = "F18" ;
+#>                 :instrument = "SSM/I" ;
 ```
 
 Using `ncdump` at the command line on a suitable system would yield very similar output to the print above.  
@@ -73,10 +106,26 @@ On first contact with the file, the available variables are classified by grid a
 dimension.  The "active" grid is the one that queries may be made against, and may be changed with the `activate` function. 
 
 
-```{r}
+
+```r
 library(tidync)
 tidync(f)
-
+#> 
+#> Data Source (1): 20171002.nc ...
+#> 
+#> Grids (2) <dimension family> : <associated variables> 
+#> 
+#> [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)
+#> [2]   D2       : time
+#> 
+#> Dimensions (3): 
+#>   
+#>   dim      id name  length      min      max active start count     dmin 
+#>   <chr> <int> <chr>  <dbl>    <dbl>    <dbl> <lgl>  <int> <int>    <dbl> 
+#> 1 D0        0 ni      632.       1.     632. TRUE       1   632       1. 
+#> 2 D1        1 nj      664.       1.     664. TRUE       1   664       1. 
+#> 3 D2        2 time      1. 1032204. 1032204. TRUE       1     1 1032204. 
+#> # ... with 3 more variables: dmax <dbl>, unlim <lgl>, coord_dim <lgl>
 ```
 
 Here we see variables are clearly grouped by the *grid* they exist in, where grid is a specific (and ordered!) set of dimensions. This allows us to see the set of variables that implicitly co-exist, they have the same *shape*.  The first grid "D0,D1,D2" has two variables, *concentration* and *quality_flag*, and the second "D2" has only one variable *time*. There are no general rules here, a file might have any number of dimensions and variables, and any variable might be defined by one or more dimensions. 
@@ -91,10 +140,28 @@ The 'hyper_filter' function allows specification of expressions to subset a vari
 
 If no expressions are included we are presented with a table containing a row for each dimension, its extent in coordinates and its length. For convenience we also assign the activate form to an R variable, though we could just chain the entire operation without this. 
 
-```{r}
+
+```r
 concentration <- tidync(f) %>% activate(concentration) 
+#> Joining, by = "variable"
 
 concentration %>% hyper_filter() 
+#> 
+#> Data Source (1): 20171002.nc ...
+#> 
+#> Grids (2) <dimension family> : <associated variables> 
+#> 
+#> [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)
+#> [2]   D2       : time
+#> 
+#> Dimensions (3): 
+#>   
+#>   dim      id name  length      min      max active start count     dmin 
+#>   <chr> <int> <chr>  <dbl>    <dbl>    <dbl> <lgl>  <int> <int>    <dbl> 
+#> 1 D0        0 ni      632.       1.     632. TRUE       1   632       1. 
+#> 2 D1        1 nj      664.       1.     664. TRUE       1   664       1. 
+#> 3 D2        2 time      1. 1032204. 1032204. TRUE       1     1 1032204. 
+#> # ... with 3 more variables: dmax <dbl>, unlim <lgl>, coord_dim <lgl>
 ```
 
 
@@ -106,18 +173,49 @@ delay any file-based computation required to actually interact with the file and
 Notice that these are "name = expr" paired expressions, because the right hand side may be quite general we 
 need the left hand side name to be assured of the name of the dimension referred to. 
 
-```{r}
+
+```r
 
 concentration %>% hyper_filter(nj = nj < 20)
-
-
+#> 
+#> Data Source (1): 20171002.nc ...
+#> 
+#> Grids (2) <dimension family> : <associated variables> 
+#> 
+#> [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)
+#> [2]   D2       : time
+#> 
+#> Dimensions (3): 
+#>   
+#>   dim      id name  length      min      max active start count     dmin 
+#>   <chr> <int> <chr>  <dbl>    <dbl>    <dbl> <lgl>  <int> <int>    <dbl> 
+#> 1 D0        0 ni      632.       1.     632. TRUE       1   632       1. 
+#> 2 D1        1 nj      664.       1.     664. TRUE       1    19       1. 
+#> 3 D2        2 time      1. 1032204. 1032204. TRUE       1     1 1032204. 
+#> # ... with 3 more variables: dmax <dbl>, unlim <lgl>, coord_dim <lgl>
 ```
 
-We can also use the special internal variable 'index', which will test against position in the dimension elements '1:length' rather than the values. It's not different in this case because ni and nj are just position dimensions anyway. The special 'dplyr' adverbs like 'between' will work. 
+We can also use the special internal variable 'step', which will test against position in the dimension elements '1:length' rather than the values. It's not different in this case because ni and nj are just position dimensions anyway. The special 'dplyr' adverbs like 'between' will work. 
 
-```{r}
+
+```r
 concentration %>% hyper_filter(ni = index < 20, nj = dplyr::between(index, 30, 100))
-
+#> 
+#> Data Source (1): 20171002.nc ...
+#> 
+#> Grids (2) <dimension family> : <associated variables> 
+#> 
+#> [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)
+#> [2]   D2       : time
+#> 
+#> Dimensions (3): 
+#>   
+#>   dim      id name  length      min      max active start count     dmin 
+#>   <chr> <int> <chr>  <dbl>    <dbl>    <dbl> <lgl>  <int> <int>    <dbl> 
+#> 1 D0        0 ni      632.       1.     632. TRUE       1    19       1. 
+#> 2 D1        1 nj      664.       1.     664. TRUE      30    71      30. 
+#> 3 D2        2 time      1. 1032204. 1032204. TRUE       1     1 1032204. 
+#> # ... with 3 more variables: dmax <dbl>, unlim <lgl>, coord_dim <lgl>
 ```
 
 ## Data extraction
@@ -126,17 +224,19 @@ How to use these idioms to extract actual data?
 
 We can now exercise these variable choice and dimension filters to return actual data, either in by slicing out a  "slab" in array-form, or as a data frame. 
 
-```{r}
+
+```r
 hf <- concentration %>% hyper_filter(ni = index < 20, nj = dplyr::between(index, 30, 100))
 
 ## as an array
 arr <- hf %>% hyper_slice()
 str(arr)
+#> List of 1
+#>  $ concentration: int [1:19, 1:71] NA NA NA NA NA NA NA NA NA NA ...
 
 ## as a data frame
 
 #concentration %>% hyper_tibble() %>% filter(!is.na(concentration))
-
 ```
 
 
