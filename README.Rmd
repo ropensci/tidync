@@ -51,7 +51,7 @@ install.packages("ncdf4")
 install.packages("RNetCDF")
 ```
 
-If you have problems, please see the [INSTALL instructions for RNetCDF](https://cran.r-project.org/web/packages/RNetCDF/INSTALL), these should work as well for ncdf4. Below I note specifics for different operating systems, notably Ubuntu/Debian where I work the most - these aren't comprehensive details but might be helpful.
+If you have problems, please see the [INSTALL instructions for RNetCDF](https://CRAN.R-project.org/package=RNetCDF/INSTALL), these should work as well for ncdf4. Below I note specifics for different operating systems, notably Ubuntu/Debian where I work the most - these aren't comprehensive details but might be helpful.
 
 ### Windows
 
@@ -136,13 +136,13 @@ Use what we learned interactively to extract the data, either in data frame or r
 ```{r extraction, eval=FALSE}
 ## we'll see a column for sst, lat, time, and whatever other dimensions sst has
 ## and whatever other variable's the grid has
-tidync(filename) %>% activate("sst"") %>% 
+tidync(filename) %>% activate("sst") %>% 
   hyper_filter(lat = lat < -30, time = time == 20) %>% 
   hyper_tibble()
 
 
 ## raw array form, we'll see a (list of) R arrays with a dimension for each seen by tidync(filename) %>% activate("sst"")
-tidync(filename) %>% activate("sst"") %>% 
+tidync(filename) %>% activate("sst") %>% 
   hyper_filter(lat = lat < -30, time = time == 20) %>% 
   hyper_slice()
 
