@@ -5,6 +5,7 @@
 #' 
 #' By default all variables in the active grid are returned, use `select_var` to limit. 
 #' @param x tidync object
+#' @param drop collapse degenerate dimensions, defaults to `TRUE`
 #' @param ... ignored
 #' @param select_var optional vector of variable names to select
 #' @param raw_datavals logical to control whether scaling in the NetCDF is applied or not
@@ -20,14 +21,14 @@
 #'   hyper_slice()
 #' ## hyper_slice will pass the expressions to hyper_filter
 #' braw <- tidync(l3file) %>% hyper_slice(lat = abs(lat) < 10, lon = index < 100) 
-hyper_slice <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE) {
+hyper_slice <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
   UseMethod("hyper_slice")
 }
 
 
 #' @name hyper_slice
 #' @export
-hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE) {
+hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
   variable <- x[["variable"]] %>% dplyr::filter(active)
   varname <- unique(variable[["name"]])
   ## hack to get the order of the indices of the dimension
@@ -58,7 +59,7 @@ hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
     on.exit(ncdf4::nc_close(con), add =   TRUE)
     ncdf4::ncvar_get(con, vara, 
                      start = START, count = COUNT, 
-                     raw_datavals = raw_datavals)
+                     raw_datavals = raw_datavals, collapse_degen = drop)
   }
   mess <- sprintf("pretty big extraction here with (%i*%i values [%s]*%i", 
                   as.integer(prod( COUNT)), length(varnames), 
@@ -74,6 +75,6 @@ hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
 }
 #' @name hyper_slice
 #' @export
-hyper_slice.character <- function(x,  ..., select_var = NULL, raw_datavals = FALSE) {
-  tidync(x) %>% hyper_filter(...) %>%  hyper_slice(select_var = select_var, raw_datavals = raw_datavals)
+hyper_slice.character <- function(x,  ..., select_var = NULL, raw_datavals = FALSE, drop = TRUE) {
+  tidync(x) %>% hyper_filter(...) %>%  hyper_slice(select_var = select_var, raw_datavals = raw_datavals, drop = drop)
 }
