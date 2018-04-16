@@ -1,7 +1,7 @@
 ---
 title: "NetCDF examples"
 author: "Michael D. Sumner"
-date: "2018-02-10"
+date: "2018-04-16"
 output:
   rmarkdown::html_vignette:
     fig_width: 10
@@ -30,6 +30,10 @@ Here we introduce traditional concepts of NetCDF, and show examples with built-i
 NetCDF is a very widely used file format for storing array-based data as *variables*. The **space** occupied by a **variable** is defined by its **dimensions** and their metadata. Dimensions are by definition *one-dimensional* (i.e. an atomic vector, in R) consisting of one or more elements, a rectilinear virtual array with coordinate metadata on its units, type and interpretation. The **space** of a variable is defined as one or more of the dimensions in the file, but a variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. 
 
 Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many and varied, and not always adhered to. 
+
+The R community is not particuarly strong with use of NetCDF, though it
+is common and widely used it pales compared to use in general climate science work, and there the most used tool is the [CDO Climate Data Operators](https://code.mpimet.mpg.de/projects/cdo).  In R the most common
+tools used are ncdf4 and raster (which uses ncdf4). 
 
 Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the command line program [`ncdump`](https://www.unidata.ucar.edu/software/netcdf/netcdf-4/newdocs/netcdf/NetCDF-Utilities.html#NetCDF-Utilities). 
 
@@ -195,7 +199,7 @@ concentration %>% hyper_filter(nj = nj < 20)
 #> # ... with 3 more variables: dmax <dbl>, unlim <lgl>, coord_dim <lgl>
 ```
 
-We can also use the special internal variable 'step', which will test against position in the dimension elements '1:length' rather than the values. It's not different in this case because ni and nj are just position dimensions anyway. The special 'dplyr' adverbs like 'between' will work. 
+We can also use the special internal variable 'index', which will test against position in the dimension elements '1:length' rather than the values. It's not different in this case because ni and nj are just position dimensions anyway. The special 'dplyr' adverbs like 'between' will work. 
 
 
 ```r
@@ -225,19 +229,6 @@ How to use these idioms to extract actual data?
 We can now exercise these variable choice and dimension filters to return actual data, either in by slicing out a  "slab" in array-form, or as a data frame. 
 
 
-```r
-hf <- concentration %>% hyper_filter(ni = index < 20, nj = dplyr::between(index, 30, 100))
-
-## as an array
-arr <- hf %>% hyper_slice()
-str(arr)
-#> List of 1
-#>  $ concentration: int [1:19, 1:71] NA NA NA NA NA NA NA NA NA NA ...
-
-## as a data frame
-
-#concentration %>% hyper_tibble() %>% filter(!is.na(concentration))
-```
 
 
-[not-a-format]: https://twitter.com/TedHabermann/status/958034585002041344
+

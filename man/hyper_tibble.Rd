@@ -33,7 +33,7 @@ f <- system.file("extdata", "oceandata", l3file, package= "tidync")
 rnc <- tidync(f)
 hyper_filter(rnc)
 library(dplyr)
-lapply(hyper_slice(f, lat = lat > 0, lon = index > 3000), dim)
+lapply(hyper_array(f, lat = lat > 0, lon = index > 3000), dim)
 
  ht <- hyper_tibble(rnc) \%>\% 
  filter(!is.na(chlor_a)) 

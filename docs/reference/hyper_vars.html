@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tidy tools for NetCDF data. — tidync-package • tidync</title>
+<title>Hyper utilities — hyper_vars • tidync</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,11 +25,10 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Tidy tools for NetCDF data. — tidync-package" />
+<meta property="og:title" content="Hyper utilities — hyper_vars" />
 
-<meta property="og:description" content="Provides easy to use idioms for working with NetCDF data for
-extraction, manipulation and visualization.
-NetCDF is Network Common Data Form https://www.unidata.ucar.edu/software/netcdf/." />
+<meta property="og:description" content="Functions to report on the current hyper_filter status of the active
+grid." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -110,44 +109,72 @@ NetCDF is Network Common Data Form https://www.unidata.ucar.edu/software/netcdf/
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tidy tools for NetCDF data.</h1>
-    <small>Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/tidync-package.r'><code>R/tidync-package.r</code></a></small>
-    <div class="hidden name"><code>tidync-package.Rd</code></div>
+    <h1>Hyper utilities</h1>
+    <small>Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/hyper_utils.R'><code>R/hyper_utils.R</code></a></small>
+    <div class="hidden name"><code>hyper_vars.Rd</code></div>
     </div>
 
     
-    <p>Provides easy to use idioms for working with NetCDF data for
-extraction, manipulation and visualization.
-NetCDF is Network Common Data Form <a href='https://www.unidata.ucar.edu/software/netcdf/'>https://www.unidata.ucar.edu/software/netcdf/</a>.</p>
+    <p>Functions to report on the current <code>hyper_filter</code> status of the <code>active</code>
+grid.</p>
     
 
-        
+    <pre class="usage"><span class='fu'>hyper_vars</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+
+<span class='fu'>hyper_dims</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>tidync object</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>ignored</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>data frame</p>
+    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There is a family of functions "hyper_verb" around exploring and
-extracting data.</p><table><tr><td>
-<code>tidync</code> </td>
-<td> extracts all file metadata in an object useable by other tidync functions</td>
-</tr><tr><td><br />
-<code>hyper_filter</code> </td>
-<td> processes user-driven expressions to filter based on NetCDF dimensions </td>
-</tr><tr><td><br />
-<code>hyper_array</code> </td>
-<td> extracts a raw data array based on a NetCDF index </td>
-</tr><tr><td><br />
-<code>hyper_tibble</code> </td>
-<td> extracts the slice as a data frame with all dimension values </td>
-</tr></table><p>The scheme generally processes dimension filters into NetCDF extraction indexes and these are always available
-to each function, and are expressed in print methods.</p>
+    <p><code>hyper_vars</code> will list the names of the variables on the currently active grid
+<code>hyper_dims</code> will list the ids, names, lengths, and start and count records
+on the currently active dimensions</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='st'>"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span>
+<span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"extdata/oceandata"</span>, <span class='no'>f</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"tidync"</span>)
+<span class='no'>tnc</span> <span class='kw'>&lt;-</span> <span class='fu'>tidync</span>(<span class='no'>l3file</span>)
+<span class='fu'>hyper_vars</span>(<span class='no'>tnc</span>)</div><div class='output co'>#&gt; # A tibble: 1 x 6
+#&gt;      id name    type     ndims natts dim_coord
+#&gt;   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt; &lt;int&gt; &lt;lgl&gt;    
+#&gt; 1     0 chlor_a NC_FLOAT     2    10 FALSE    </div><div class='input'><span class='fu'>hyper_dims</span>(<span class='no'>tnc</span>)</div><div class='output co'>#&gt; # A tibble: 2 x 7
+#&gt;   name  length start count    id unlim coord_dim
+#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;lgl&gt; &lt;lgl&gt;    
+#&gt; 1 lon    4320.     1  4320     1 FALSE TRUE     
+#&gt; 2 lat    2160.     1  2160     0 FALSE TRUE     </div><div class='input'><span class='fu'>hyper_dims</span>(<span class='no'>tnc</span> <span class='kw'>%&gt;%</span> <span class='fu'>hyper_filter</span>(<span class='kw'>lat</span> <span class='kw'>=</span> <span class='no'>lat</span> <span class='kw'>&lt;</span> <span class='fl'>20</span>))</div><div class='output co'>#&gt; # A tibble: 2 x 7
+#&gt;   name  length start count    id unlim coord_dim
+#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;lgl&gt; &lt;lgl&gt;    
+#&gt; 1 lon    4320.     1  4320     1 FALSE TRUE     
+#&gt; 2 lat    2160.   841  1320     0 FALSE TRUE     </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
+      <li><a href="#value">Value</a></li>
+
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

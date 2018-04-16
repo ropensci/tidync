@@ -13,7 +13,7 @@
 #' rnc <- tidync(f)
 #' hyper_filter(rnc)
 #' library(dplyr)
-#' lapply(hyper_slice(f, lat = lat > 0, lon = index > 3000), dim)
+#' lapply(hyper_array(f, lat = lat > 0, lon = index > 3000), dim)
 #' 
 #'  ht <- hyper_tibble(rnc) %>% 
 #'  filter(!is.na(chlor_a)) 
@@ -34,7 +34,7 @@ hyper_tibble.character <- function(x, ..., na.rm = TRUE) {
 #' @export
 hyper_tibble.tidync<- function(x, ..., na.rm = TRUE) {
   
-  slabs <- hyper_slice(x, ...)
+  slabs <- hyper_array(x, ...)
   if (na.rm) all_na <- Reduce(`&`, lapply(slabs, function(a) is.na(as.vector(a))))
   total_prod <- prod(dim(slabs[[1]]))
 out <- tibble::as_tibble(lapply(slabs, as.vector))

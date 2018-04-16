@@ -103,7 +103,7 @@ tidync(file)
 ```
 
 There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions
-`tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_slice` and `hyper_tibble` give raw-array and data frames with-full-coordinates forms respectively. 
+`tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_array` and `hyper_tibble` give raw-array and data frames with-full-coordinates forms respectively. 
 
 Also [http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/](this blog) post by Matteo De Felice. 
 
@@ -144,7 +144,7 @@ tidync(filename) %>% activate("sst") %>%
 ## raw array form, we'll see a (list of) R arrays with a dimension for each seen by tidync(filename) %>% activate("sst"")
 tidync(filename) %>% activate("sst") %>% 
   hyper_filter(lat = lat < -30, time = time == 20) %>% 
-  hyper_slice()
+  hyper_array()
 
 ```
 

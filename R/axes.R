@@ -5,7 +5,7 @@
 #' Each transform is available by name from a list, and each data frame has
 #' the coordinate of the dimension, its index, and a 'selected' variable
 #' set by the filtering expressions in `hyper_filter` and used by the
-#' read-functions `hyper_slice` and `hyper_tibble`. 
+#' read-functions `hyper_array` and `hyper_tibble`. 
 #' 
 #' Use `axis_transforms` to interrogate and explore the available dimension manually, or
 #' for development of custom functions. 

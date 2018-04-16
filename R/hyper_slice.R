@@ -1,4 +1,4 @@
-#' hyper slice
+#' Hyper array
 #' 
 #' Extract the raw array data for the active grid, as a list of arrays. This can be the
 #' entire array/s or after dimension-slicing using `hyper_filter` expressions. 
@@ -17,18 +17,30 @@
 #' l3file <- system.file("extdata/oceandata", f, package= "tidync")
 #' 
 #' ## extract a raw list by filtered dimension
+#' library(dplyr)
+#' araw1 <- tidync(l3file) %>% 
+#'  hyper_filter(lat = between(lat, -78, -75.8), lon = between(lon, 165, 171)) %>% 
+#'  hyper_array()
+#'
 #' araw <- tidync(l3file) %>% hyper_filter(lat = abs(lat) < 10, lon = index < 100) %>% 
-#'   hyper_slice()
-#' ## hyper_slice will pass the expressions to hyper_filter
-#' braw <- tidync(l3file) %>% hyper_slice(lat = abs(lat) < 10, lon = index < 100) 
-hyper_slice <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
-  UseMethod("hyper_slice")
+#'   hyper_array()
+#'   
+#' ## hyper_array will pass the expressions to hyper_filter
+#' braw <- tidync(l3file) %>% hyper_array(lat = abs(lat) < 10, lon = index < 100) 
+hyper_array <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
+  UseMethod("hyper_array")
 }
 
-
-#' @name hyper_slice
+## alias
+#' @name hyper_array
 #' @export
-hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
+hyper_slice <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
+  warning("hyper_array should be used instead of hyper_slice")
+  hyper_array(x = x, select_var = select_var, ..., raw_datavals = raw_datavals, force = force, drop = drop)
+}
+#' @name hyper_array
+#' @export
+hyper_array.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
   variable <- x[["variable"]] %>% dplyr::filter(active)
   varname <- unique(variable[["name"]])
   ## hack to get the order of the indices of the dimension
@@ -73,8 +85,8 @@ hyper_slice.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
   
   stats::setNames(lapply(varnames, get_vara), varnames)
 }
-#' @name hyper_slice
+#' @name hyper_array
 #' @export
-hyper_slice.character <- function(x,  ..., select_var = NULL, raw_datavals = FALSE, drop = TRUE) {
-  tidync(x) %>% hyper_filter(...) %>%  hyper_slice(select_var = select_var, raw_datavals = raw_datavals, drop = drop)
+hyper_array.character <- function(x,  ..., select_var = NULL, raw_datavals = FALSE, drop = TRUE) {
+  tidync(x) %>% hyper_filter(...) %>%  hyper_array(select_var = select_var, raw_datavals = raw_datavals, drop = drop)
 }

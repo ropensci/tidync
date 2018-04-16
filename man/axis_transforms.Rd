@@ -29,7 +29,7 @@ Axis 'transforms' are data frames of each dimension in a NetCDF source.
 Each transform is available by name from a list, and each data frame has
 the coordinate of the dimension, its index, and a 'selected' variable
 set by the filtering expressions in \code{hyper_filter} and used by the
-read-functions \code{hyper_slice} and \code{hyper_tibble}.
+read-functions \code{hyper_array} and \code{hyper_tibble}.
 
 Use \code{axis_transforms} to interrogate and explore the available dimension manually, or
 for development of custom functions.

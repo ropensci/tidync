@@ -18,13 +18,16 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Function reference" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +35,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +52,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidync</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidync</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -73,7 +82,7 @@
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -85,6 +94,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -92,88 +102,89 @@
       
       </header>
 
-      <div class="row">
-  <div class="col-md-9">
+<div class="row">
+  <div class="contents col-md-9">
     <div class="page-header">
-      <h1>
-        Reference
-        <small>version&nbsp;0.0.3</small>
-      </h1>
+      <h1>Reference</h1>
     </div>
 
-    <div class="contents">
-      <table class="ref-index">
+    <table class="ref-index">
 
-      <colgroup>
-        <col class="alias" />
-        <col class="title" />
-      </colgroup>
+    <colgroup>
+      <col class="alias" />
+      <col class="title" />
+    </colgroup>
 
-      <tbody>
-        <tr>
-          <th colspan="2">
-            <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-            <p class="section-desc"></p>
-          </th>
-        </tr>
-        <tr>
-          <!--  -->
-          <td>
-            <p><code><a href="activate.html">activate</a></code> <code><a href="activate.html">active</a></code> <code><a href="activate.html">active<-</a></code> </p>
-          </td>
-          <td><p>Activate</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="axis_transforms.html">axis_transforms</a></code> <code><a href="axis_transforms.html">active_axis_transforms</a></code> </p>
-          </td>
-          <td><p>Axis transforms</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="hyper_filter.html">hyper_filter</a></code> </p>
-          </td>
-          <td><p>Array subset by expression</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="hyper_slice.html">hyper_slice</a></code> </p>
-          </td>
-          <td><p>hyper slice</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="hyper_tbl_cube.html">hyper_tbl_cube</a></code> </p>
-          </td>
-          <td><p>dplyr tbl cube</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="hyper_tibble.html">hyper_tibble</a></code> </p>
-          </td>
-          <td><p>hyper tibble</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="print.tidync.html">print</a></code> </p>
-          </td>
-          <td><p>Print NetCDF object</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="tidync-package.html">tidync-package</a></code> </p>
-          </td>
-          <td><p>Tidy tools for NetCDF data.</p></td>
-        </tr><tr>
-          <!--  -->
-          <td>
-            <p><code><a href="tidync.html">tidync</a></code> </p>
-          </td>
-          <td><p>tidy netcdf</p></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        <!--  -->
+        <td>
+          <p><code><a href="activate.html">activate()</a></code> <code><a href="activate.html">active()</a></code> <code><a href="activate.html">`active<-`()</a></code> </p>
+        </td>
+        <td><p>Activate</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="axis_transforms.html">axis_transforms()</a></code> <code><a href="axis_transforms.html">active_axis_transforms()</a></code> </p>
+        </td>
+        <td><p>Axis transforms</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="hyper_array.html">hyper_array()</a></code> <code><a href="hyper_array.html">hyper_slice()</a></code> </p>
+        </td>
+        <td><p>Hyper array</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="hyper_filter.html">hyper_filter()</a></code> </p>
+        </td>
+        <td><p>Array subset by expression</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="hyper_tbl_cube.html">hyper_tbl_cube()</a></code> </p>
+        </td>
+        <td><p>dplyr tbl cube</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="hyper_tibble.html">hyper_tibble()</a></code> </p>
+        </td>
+        <td><p>hyper tibble</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="hyper_vars.html">hyper_vars()</a></code> <code><a href="hyper_vars.html">hyper_dims()</a></code> </p>
+        </td>
+        <td><p>Hyper utilities</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="print.tidync.html">print(<i>&lt;tidync&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print NetCDF object</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="tidync-package.html">tidync-package</a></code> </p>
+        </td>
+        <td><p>Tidy tools for NetCDF data.</p></td>
+      </tr><tr>
+        <!--  -->
+        <td>
+          <p><code><a href="tidync.html">tidync()</a></code> </p>
+        </td>
+        <td><p>tidy netcdf</p></td>
+      </tr>
+    </tbody>
+    </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -196,5 +207,8 @@
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

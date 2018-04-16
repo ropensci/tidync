@@ -37,6 +37,10 @@ NetCDF is a very widely used file format for storing array-based data as *variab
 
 Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many and varied, and not always adhered to. 
 
+The R community is not particuarly strong with use of NetCDF, though it
+is common and widely used it pales compared to use in general climate science work, and there the most used tool is the [CDO Climate Data Operators](https://code.mpimet.mpg.de/projects/cdo).  In R the most common
+tools used are ncdf4 and raster (which uses ncdf4). 
+
 Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the command line program [`ncdump`](https://www.unidata.ucar.edu/software/netcdf/netcdf-4/newdocs/netcdf/NetCDF-Utilities.html#NetCDF-Utilities). 
 
 
@@ -135,9 +139,30 @@ str(arr)
 
 ## as a data frame
 
-#concentration %>% hyper_tibble() %>% filter(!is.na(concentration))
+hf %>% hyper_tibble() %>% dplyr::filter(!is.na(concentration))
 
 ```
+
+## Miscellaneous
+
+Further utilities are available to get immediate information on the current status of the activated grid, and the subsetted space. These
+are directly useable by the traditional API tools, and in particular by the functions `ncdf4::ncvar_get` (`varid`, `start`, `count`), its counterpart in `RNetCDF::var.get.nc` and command line tools like CDO. 
+
+```{r}
+hyper_vars(hf)
+
+hyper_dims(hf)
+```
+
+
+## Future improvements
+
+There are many improvements that could be made here, but so far attempting
+them has complicated matters rather than improving them so I simply list them. 
+
+* allow a group-by function for a polygon layer, against a pair of dimensions to classify cells
+* allow a truly `DBI/dplyr` level of lazy read, with more filter, select, mutate and collect idioms
+* provide converters to raster format, stars format
 
 
 [not-a-format]: https://twitter.com/TedHabermann/status/958034585002041344

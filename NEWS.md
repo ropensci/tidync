@@ -1,7 +1,13 @@
 # tidync 0.0.3
 
-* dependent on ncmeta >= 0.0.2, partly to avoid crashing on invalid source/file 
- strings
+* Function rename `hyper_array` now matches `hyper_tibble` indicating the form of the 
+ output (rather than the action used, was `hyper_slice`). 
+
+* New utilities `hyper_vars` and `hyper_dims` for reporting on the 
+ currently active variables and dimensions and their `hyper_filter` status. 
+
+* dependent on ncmeta >= 0.0.2, partly to avoid crashing on invalid 
+ source/file strings
 
 * removed hyper_index and incorporated that into hyper_filter, there's now 
 only one delay-capable class which is "tidync"
