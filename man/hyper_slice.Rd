@@ -9,13 +9,13 @@
 \title{hyper slice}
 \usage{
 hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
-  force = FALSE)
+  force = FALSE, drop = TRUE)
 
 \method{hyper_slice}{tidync}(x, select_var = NULL, ...,
-  raw_datavals = FALSE, force = FALSE)
+  raw_datavals = FALSE, force = FALSE, drop = TRUE)
 
 \method{hyper_slice}{character}(x, ..., select_var = NULL,
-  raw_datavals = FALSE)
+  raw_datavals = FALSE, drop = TRUE)
 }
 \arguments{
 \item{x}{tidync object}
@@ -27,6 +27,8 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
 \item{raw_datavals}{logical to control whether scaling in the NetCDF is applied or not}
 
 \item{force}{ignore caveats about large extraction and just do it}
+
+\item{drop}{collapse degenerate dimensions, defaults to \code{TRUE}}
 }
 \description{
 Extract the raw array data for the active grid, as a list of arrays. This can be the
