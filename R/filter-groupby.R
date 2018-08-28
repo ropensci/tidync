@@ -27,15 +27,19 @@ summarise.tidync <- function(.data, ...) {
     
     ## 2. fasterize groups to it
     .data$groups$ID <- 1:nrow(.data$groups)
-    rcell <- fasterize::fasterize(.data$groups, r, "ID")
-    #cells <- tabularaster::cellnumbers(.data$groups, r)
-    #ht <- hyper_tibble(.data, na.rm = FALSE)
+    #rcell <- fasterize::fasterize(.data$groups, r, "ID")
+    cells <- tabularaster::cellnumbers(r, .data$groups)
+    cells <- dplyr::filter(cells, !is.na(cell_))
+    ht <- hyper_tibble(.data, na.rm = FALSE)
+  #  browser()
+    ht[["tidync_group_"]] <- NA
     
-    #ht[["tidync_group_"]] <- NA
-    #ht[["tidync_group_"]]
+    ht[["tidync_cell_"]] <- raster::cellFromXY(r, as.matrix(ht[names(ax)]))
+    
+    ht[["tidync_group_"]][match(cells$cell_, ht$tidync_cell_)] <- cells$object_
     ## 3. run actual group_by with sf-ID
             ## danger, see the flip here ////!!!
-    ht[["tidync_group_"]] <- values(flip(rcell, "y"))
+    #ht[["tidync_group_"]] <- values(flip(rcell, "y"))
     ## could use setdiff here with cellnumbers ...
     ht <- dplyr::filter(ht, !is.na(tidync_group_))
    return( ht %>% group_by(tidync_group_) %>% summarise(...))
