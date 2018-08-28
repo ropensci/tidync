@@ -1,3 +1,31 @@
+#' @examples 
+#' x <- tidync(raadtools::sshfiles()$fullname[1])
+#'  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize(adt = mean(adt, na.rm = TRUE))
+#'  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize_all(mean, na.rm = TRUE)
+tbl_vars.tidync <- function(x) {
+  c(x$variable$name[x$variable$active], 
+    x$dimension$name[x$dimension$active])
+}
+groups.tidync <- function(x) {
+  x$groups
+}
+#' @rdname dplyr-verbs
+summarise.tidync <- function(.data, ...) {
+  hyper_tibble(.data) %>% group_by(!!!.data$groups) %>% summarise(...)
+}
+#' @importFrom dplyr group_by ungroup summarise
+#' @rdname dplyr-verbs
+group_by.tidync <- function(.x, ..., add = FALSE) {
+  if (add) stop('groupings cannot be added to')
+  groups <- rlang::quos(...)
+  .x$groups <- groups
+  .x
+}
+#' @rdname dplyr-verbs
+ungroup.tidync <- function(x, ...) {
+  x$groups <- NULL
+  x
+}
 ## replace by velox/tabularaster??
 ## 
 ## ## @importFrom rlang .data
@@ -44,3 +72,4 @@
 ##   nominal_space 
 ## }
 ## 
+
