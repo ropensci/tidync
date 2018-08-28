@@ -11,13 +11,48 @@ groups.tidync <- function(x) {
 }
 #' @rdname dplyr-verbs
 summarise.tidync <- function(.data, ...) {
+  if (inherits(.data$groups, "sf")) {
+    ## 1. create a raster (transform sf if needed)
+    
+    ns <- 1:2
+    ax <- active_axis_transforms(.data)[ns]
+    X <- ax[[1]][[names(ax)[1]]][ax[[1]][["selected"]]]
+    Y <- ax[[2]][[names(ax)[2]]][ax[[2]][["selected"]]]
+    ## 1a. obtain nominal sf axes from group_by  TODO ^^
+    ex <- c(range(X) + c(-1, 1) * diff(X[1:2])/2, 
+            range(Y) + c(-1, 1) * diff(Y[1:2])/2)
+    
+    r <- raster::raster(raster::extent(ex), 
+                   ncols = sum(ax[[1]][["selected"]]), nrows = sum(ax[[2]][["selected"]]))
+    
+    ## 2. fasterize groups to it
+    .data$groups$ID <- 1:nrow(.data$groups)
+    rcell <- fasterize::fasterize(.data$groups, r, "ID")
+    #cells <- tabularaster::cellnumbers(.data$groups, r)
+    #ht <- hyper_tibble(.data, na.rm = FALSE)
+    
+    #ht[["tidync_group_"]] <- NA
+    #ht[["tidync_group_"]]
+    ## 3. run actual group_by with sf-ID
+            ## danger, see the flip here ////!!!
+    ht[["tidync_group_"]] <- values(flip(rcell, "y"))
+    ## could use setdiff here with cellnumbers ...
+    ht <- dplyr::filter(ht, !is.na(tidync_group_))
+   return( ht %>% group_by(tidync_group_) %>% summarise(...))
+  }
   hyper_tibble(.data) %>% group_by(!!!.data$groups) %>% summarise(...)
 }
 #' @importFrom dplyr group_by ungroup summarise
 #' @rdname dplyr-verbs
 group_by.tidync <- function(.x, ..., add = FALSE) {
   if (add) stop('groupings cannot be added to')
-  groups <- rlang::quos(...)
+  if(inherits(list(...)[[1]], "sf")) {
+    groups <- list(...)[[1]]
+  } else {
+    ## TODO
+    stop("grouping by dimension is currently not working")
+   groups <- rlang::quos(...)
+}
   .x$groups <- groups
   .x
 }
