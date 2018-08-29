@@ -48,15 +48,15 @@ summarise.tidync <- function(.data, ...) {
 }
 #' @importFrom dplyr group_by ungroup summarise
 #' @rdname dplyr-verbs
-group_by.tidync <- function(.x, ..., add = FALSE) {
+group_by.tidync <- function(.x, ..., add = FALSE, shape = NULL) {
   if (add) stop('groupings cannot be added to')
-  if(inherits(list(...)[[1]], "sf")) {
-    groups <- list(...)[[1]]
-  } else {
-    ## TODO
-    stop("grouping by dimension is currently not working")
-   groups <- rlang::quos(...)
-}
+  groups <- rlang::quos(...)
+  x$groupshape <- FALSE
+  if(!is.null(shape)) {
+    if (length(groups) > 0) warning("'shape' is set, so bare grouping names ignored")
+    groups <- shape
+    x$groupshape <- TRUE
+  }  
   .x$groups <- groups
   .x
 }
