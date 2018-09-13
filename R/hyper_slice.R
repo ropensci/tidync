@@ -4,9 +4,12 @@
 #' entire array/s or after dimension-slicing using `hyper_filter` expressions. 
 #' 
 #' By default all variables in the active grid are returned, use `select_var` to limit. 
+#' 
+#' The transforms are stored as a list of tables in an attribute "transforms", access these
+#' with `attr(x, "transforms")`. 
 #' @param x tidync object
 #' @param drop collapse degenerate dimensions, defaults to `TRUE`
-#' @param ... ignored
+#' @param ... passed to `hyper_filter`
 #' @param select_var optional vector of variable names to select
 #' @param raw_datavals logical to control whether scaling in the NetCDF is applied or not
 #' @param force ignore caveats about large extraction and just do it
@@ -27,6 +30,11 @@
 #'   
 #' ## hyper_array will pass the expressions to hyper_filter
 #' braw <- tidync(l3file) %>% hyper_array(lat = abs(lat) < 10, lon = index < 100) 
+#' 
+#' ## get the transforms tables (the axis coordinates)
+#' lapply(attr(braw, "transforms"), function(x) nrow(dplyr::filter(x, selected)))
+#' ## the selected axis coordinates should match in order and in size
+#' lapply(braw, dim)
 hyper_array <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
   UseMethod("hyper_array")
 }
@@ -41,6 +49,7 @@ hyper_slice <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force =
 #' @name hyper_array
 #' @export
 hyper_array.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, force = FALSE, drop = TRUE) {
+  x <- hyper_filter(x, ...) 
   variable <- x[["variable"]] %>% dplyr::filter(active)
   varname <- unique(variable[["name"]])
   ## hack to get the order of the indices of the dimension
@@ -82,8 +91,8 @@ hyper_array.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
     yes <- yesno::yesno(mess, "\nProceed?")
     if (!yes) return(invisible(NULL))
   }
-  
-  stats::setNames(lapply(varnames, get_vara), varnames)
+  transforms <- x[["transforms"]][x[["dimension"]][["active"]]]
+  structure(lapply(varnames, get_vara), names = varnames, transforms = transforms)
 }
 #' @name hyper_array
 #' @export

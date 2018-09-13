@@ -1,3 +1,8 @@
+# dev
+
+* The `hyper_array` function now stores the relevant transforms table as an attribute "transforms" so that
+ objects can be constructed directly from the raw array output. 
+
 # tidync 0.0.3
 
 * Function rename `hyper_array` now matches `hyper_tibble` indicating the form of the 
