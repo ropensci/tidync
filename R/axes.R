@@ -65,11 +65,15 @@ axis_transforms.default <- function(x, ...) {
                         nc_get(source$source, dims$name[i]), seq_len(dims$length[i])))
     axis <- tibble::as_tibble(ll)
     names(axis)  <- dims$name[i]
+    ## axis might have a column called "i"  https://github.com/hypertidy/tidync/issues/74
+    id_value <- dims$dimension[i]
+    dim_name <- dims$name[i]
+    dim_coord <- dims$coord_dim[i]
     axis <- mutate(axis, 
                    index = row_number(), 
-                   id = dims$dimension[i], 
-                   name = dims$name[i], 
-                   coord_dim =  dims$coord_dim[i], 
+                   id = id_value, 
+                   name = dim_name, 
+                   coord_dim =  dim_coord, 
                    selected = TRUE)
     
     
