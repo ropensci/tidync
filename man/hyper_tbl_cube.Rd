@@ -2,9 +2,7 @@
 % Please edit documentation in R/dplyr-tbl_cube.R
 \name{hyper_tbl_cube}
 \alias{hyper_tbl_cube}
-\alias{hyper_tbl_cube}
 \alias{hyper_tbl_cube.tidync}
-\alias{hyper_tbl_cube}
 \alias{hyper_tbl_cube.character}
 \title{dplyr tbl cube}
 \usage{

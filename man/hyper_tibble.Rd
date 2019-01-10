@@ -2,9 +2,7 @@
 % Please edit documentation in R/hyper_tibble.R
 \name{hyper_tibble}
 \alias{hyper_tibble}
-\alias{hyper_tibble}
 \alias{hyper_tibble.character}
-\alias{hyper_tibble}
 \alias{hyper_tibble.tidync}
 \title{hyper tibble}
 \usage{

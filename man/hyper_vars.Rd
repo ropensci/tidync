@@ -2,7 +2,6 @@
 % Please edit documentation in R/hyper_utils.R
 \name{hyper_vars}
 \alias{hyper_vars}
-\alias{hyper_vars}
 \alias{hyper_dims}
 \title{Hyper utilities}
 \usage{

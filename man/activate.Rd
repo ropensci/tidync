@@ -4,13 +4,9 @@
 \alias{activate}
 \alias{active}
 \alias{active<-}
-\alias{activate}
 \alias{activate.tidync}
-\alias{activate}
 \alias{active.tidync}
-\alias{active}
 \alias{active.default}
-\alias{active<-}
 \alias{active<-.default}
 \title{Activate}
 \usage{

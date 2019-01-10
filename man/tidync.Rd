@@ -2,13 +2,12 @@
 % Please edit documentation in R/tidync.R
 \name{tidync}
 \alias{tidync}
-\alias{tidync}
 \alias{tidync.character}
 \title{tidy netcdf}
 \usage{
 tidync(x, what, ...)
 
-\method{tidync}{character}(x, what, ...)
+\method{tidync}{character}(x, what, ..., group = "")
 }
 \arguments{
 \item{x}{path to a NetCDF file}

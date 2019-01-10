@@ -2,11 +2,8 @@
 % Please edit documentation in R/hyper_slice.R
 \name{hyper_array}
 \alias{hyper_array}
-\alias{hyper_array}
 \alias{hyper_slice}
-\alias{hyper_array}
 \alias{hyper_array.tidync}
-\alias{hyper_array}
 \alias{hyper_array.character}
 \title{Hyper array}
 \usage{
@@ -27,7 +24,7 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
 
 \item{select_var}{optional vector of variable names to select}
 
-\item{...}{ignored}
+\item{...}{passed to \code{hyper_filter}}
 
 \item{raw_datavals}{logical to control whether scaling in the NetCDF is applied or not}
 
@@ -41,6 +38,9 @@ entire array/s or after dimension-slicing using \code{hyper_filter} expressions.
 }
 \details{
 By default all variables in the active grid are returned, use \code{select_var} to limit.
+
+The transforms are stored as a list of tables in an attribute "transforms", access these
+with \code{attr(x, "transforms")}.
 }
 \examples{
 f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
@@ -57,4 +57,9 @@ araw <- tidync(l3file) \%>\% hyper_filter(lat = abs(lat) < 10, lon = index < 100
   
 ## hyper_array will pass the expressions to hyper_filter
 braw <- tidync(l3file) \%>\% hyper_array(lat = abs(lat) < 10, lon = index < 100) 
+
+## get the transforms tables (the axis coordinates)
+lapply(attr(braw, "transforms"), function(x) nrow(dplyr::filter(x, selected)))
+## the selected axis coordinates should match in order and in size
+lapply(braw, dim)
 }

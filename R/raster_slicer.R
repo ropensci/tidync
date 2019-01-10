@@ -81,4 +81,7 @@ raster1 <- function(x, ..., slice = 1) {
 }
 
 setOldClass("tidync")
+if (!isGeneric("raster"))
+  setGeneric("raster", function(x, ...)
+    standardGeneric("raster"))
 setMethod("raster", "tidync", raster1)

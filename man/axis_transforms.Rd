@@ -2,9 +2,7 @@
 % Please edit documentation in R/axes.R
 \name{axis_transforms}
 \alias{axis_transforms}
-\alias{axis_transforms}
 \alias{active_axis_transforms}
-\alias{axis_transforms}
 \alias{axis_transforms.default}
 \title{Axis transforms}
 \usage{

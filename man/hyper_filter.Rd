@@ -2,7 +2,6 @@
 % Please edit documentation in R/hyper_filter.R
 \name{hyper_filter}
 \alias{hyper_filter}
-\alias{hyper_filter}
 \alias{hyper_filter.tidync}
 \title{Array subset by expression}
 \usage{

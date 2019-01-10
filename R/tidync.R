@@ -43,50 +43,59 @@ tidync <- function(x, what, ...) {
 #' @name tidync
 #' @export
 #' @importFrom ncmeta nc_meta
-tidync.character <- function(x, what, ...) {
+tidync.character <- function(x, what, ..., group = "") {
   if (length(x) > 1) warning("multiple sources: only one source name allowed, ignoring all but the first")
   fexists <- file.exists(x)
   
   if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", x))
   safemeta <- purrr::safely(ncmeta::nc_meta)
   meta <- safemeta(x)
+
   if (is.null(meta$result)) {
     cat("Oops, connection to source failed. \n")
     print(x)
     stop(meta$error)
   }
+
   bad_dim <- nrow(meta$result$dimension) < 1
   bad_var <- nrow(meta$result$variable) < 1
   if (is.null(bad_dim) || is.na(bad_dim) || length(bad_dim) < 1) bad_dim <- TRUE
   if (is.null(bad_var) || is.na(bad_var) || length(bad_var) < 1) bad_var <- TRUE
+
   if (bad_dim) {
     warning("no dimensions found")
   }
   if (bad_dim) {
     warning("no variables found")
   }
-  if (bad_dim && bad_var) stop("no variables or dimension recognizable \n  (is this a source with compound-types? Try h5, rhdf5, or hdf5r)")
+  if (bad_dim && bad_var) {
+    stop("no variables or dimension recognizable \n  (is this a source with compound-types? Try h5, rhdf5, or hdf5r)")
+  }
   if (!fexists) cat("Connection succeeded. \n")      
   meta <- meta$result
   variable <- dplyr::mutate(meta[["variable"]], active = FALSE)
-  
+
   out <- list(source = meta$source, 
               axis = meta$axis, 
               grid = meta$grid,
               dimension = meta$dimension, 
               variable = variable)
   out$transforms <- axis_transforms(out)
+
   out <- structure(out,           class = "tidync")
   ## we can't activate nothing
   if (nrow(out$axis) < 1) return(out)
   if (missing(what)) what <- 1
+
   out <- activate(out, what)
-  
+
   out
 }
 
 
-
+read_groups <- function(src) {
+  ncdf4::nc_open(src, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
+}
 ## TBD we need
 ## support NetCDF, ncdf4, RNetCDF, raster, anything with a file behind it
 #tidync.NetCDF
@@ -153,6 +162,11 @@ print.tidync <- function(x, ...) {
   dims <- x$dimension
   cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
   nms <- names(x$transforms)
+  ## handle case where value is character
+  for (i in seq_along(x$transforms)) {
+    
+    if (!is.numeric(x$transforms[[nms[i]]][[nms[i]]])) x$transforms[[nms[i]]][[nms[i]]] <- NA_integer_
+  }
   ranges <- setNames(lapply(nms, function(a) {
     range(x$transforms[[a]][[a]])
   }), nms)
@@ -166,10 +180,12 @@ print.tidync <- function(x, ...) {
   ranges <- do.call(rbind, ranges)
   
   # browser()
+  idxnm <- match(names(x$transforms), dims$name)
+  dims$dmin <- dims$dmax <- dims$min <- dims$max <- NA_real_
+  dims[idxnm, c("dmin", "dmax")] <- as.data.frame(filter_ranges)[idxnm, ]
+  dims[idxnm, c("min", "max")] <- as.data.frame(ranges)[idxnm, ]
   
-  dims[c("dmin", "dmax")] <- as.data.frame(filter_ranges)[match(names(x$transforms), dims$name), ]
-  dims[c("min", "max")] <- as.data.frame(ranges)[match(names(x$transforms), dims$name), ]
-  
+
   dimension_print <- if (nrow(dims) > 0) {
     format(dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
              dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$active, .data$start, .data$count, .data$dmin, .data$dmax, .data$unlim, .data$coord_dim,) %>% 
