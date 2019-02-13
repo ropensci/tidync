@@ -65,9 +65,8 @@ hyper_filter.character <- function(.x, ...) {
   tidync(.x) %>% hyper_filter(...) 
 }
 update_slices <- function(x) {
-#browser()
   transforms <- x[["transforms"]]
-  starts <- unlist(lapply(transforms, function(axis) head(which(axis$selected), 1L)))
+ starts <- unlist(lapply(transforms, function(axis) head(which(axis$selected), 1L)))
   ends <- unlist(lapply(transforms, function(axis) utils::tail(which(axis$selected), 1L)))
   actual_counts <- unlist(lapply(transforms, function(axis) length(which(axis$selected))))
   counts <- ends - starts + 1L
