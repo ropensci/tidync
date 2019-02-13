@@ -65,9 +65,8 @@ hyper_filter.character <- function(.x, ...) {
   tidync(.x) %>% hyper_filter(...) 
 }
 update_slices <- function(x) {
-
+#browser()
   transforms <- x[["transforms"]]
-  browser()
   starts <- unlist(lapply(transforms, function(axis) head(which(axis$selected), 1L)))
   ends <- unlist(lapply(transforms, function(axis) utils::tail(which(axis$selected), 1L)))
   actual_counts <- unlist(lapply(transforms, function(axis) length(which(axis$selected))))
@@ -76,6 +75,8 @@ update_slices <- function(x) {
   if (!all(counts == actual_counts)) warning("arbitrary indexing within dimension is not yet supported")
                         
  idx <- match(names(starts), x[["dimension"]][["name"]])
+ x[["dimension"]][["start"]] <- NA
+ x[["dimension"]][["count"]] <- NA
  x[["dimension"]][["start"]][idx] <- starts
  x[["dimension"]][["count"]][idx] <- counts
  

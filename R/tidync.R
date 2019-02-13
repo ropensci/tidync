@@ -85,14 +85,24 @@ tidync.character <- function(x, what, ..., group = "") {
   out <- structure(out,           class = "tidync")
   ## we can't activate nothing
   if (nrow(out$axis) < 1) return(out)
-  if (missing(what)) what <- 1
+  if (missing(what)) what <- first_numeric_var(out)
 
   out <- activate(out, what)
 
   out
 }
 
+first_numeric_var <- function(x) {
+  grid <- x$grid
+  grid$type <- x$variable$type[match(grid$variable, x$variable$name)] 
+  grid <- dplyr::filter(grid, !type == "NC_CHAR")
+  if (nrow(grid) < 1) {
+    warning("no non-NC_CHAR variables found (dimensionality does not make sense with CHAR, so beware)")
+    return(1L)
+  }
 
+  match(grid$variable, x$grid$variable)[1L]
+}
 read_groups <- function(src) {
   ncdf4::nc_open(src, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
 }
