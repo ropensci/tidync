@@ -5,6 +5,13 @@ warnings_are_errors: true
 sudo: true
 cache: packages
 
+
+env:
+  global:
+  - NOT_CRAN=true
+  - secure: "g6+qoKLXBm9DwTafsgGHG75zp4CZu2Wd8x3KlkYn7BJ1ekzQMX6NxnaGZdChDjGymz1Vb2cfk5dkJfj7GAoB3U9zYSxwg5ExVPnJidqgUJdz3KvJUMhlYr2ZMfmOTt2abredyyDePWIILBjdUvvGgkRNzk+dd5FFwPi/euWjDQm684amDuo2Q0GYDJIL0ihs3d9jnzOg3qWXpaDfzjcOFjKVWF4FaX/jyCRA7W6H72ThO4H4vTNvyyhMh/9E5QX4OGv0BbpF6Qql0N0/TgmwU9WhU/sRxDrLs15Uw8U5TTjRLrNmqDqyTdXukKXYPvgI3XvNcNbPPjau//slF+pDbKwbRbIZiSCcgUortJ6Z5sYEelXwOtFPDC4va4ot/RAV2nuguLDZgzS8bgoj/BRJsUKIkccUZIqWF9BkUiW+uHNVV6c8xmGsvyXM81fzw6IeJwUBLptzY1qA7YgLEwjrPnHE7H3BuwE0EOHp1lbka/qdjgVNNny2ZQnfFqNmQhIAeuL3oLtQV2CrauiK7Yf2JM5Xx9AFFyLoKwSLqFCncsJHajMxI0zjS+qjzQuw0go7jPuhcTNDAu2gnd/bKoCJJlB4w36CHVvMWXTywv6dY4EKcba4FvxhrblZtbKpHr+Vv8YQg77k+NSxWkq+0KFm0quG9b6HYiBOyPow8zuW2ys="
+  
+
 addons:
     apt:
         packages:
