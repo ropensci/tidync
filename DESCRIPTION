@@ -27,7 +27,7 @@ Imports:
     yesno,
     tidyr,
     tabularaster
-Remotes: hypertidy/tabularaster, mdsumner/ncmeta
+Remotes: hypertidy/tabularaster, hypertidy/ncmeta
 RoxygenNote: 6.1.1
 Suggests: ggplot2,
     knitr,

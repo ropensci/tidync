@@ -10,7 +10,7 @@ Status](http://badges.herokuapp.com/travis/hypertidy/tidync?branch=master&env=BU
 [![Build
 Status](http://badges.herokuapp.com/travis/hypertidy/tidync?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/hypertidy/tidync)
 [![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/hypertidy/tidync)
+Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/tidync-3m5h7)
 [![Coverage
 status](https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/hypertidy/tidync?branch=master)
 
