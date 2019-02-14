@@ -7,7 +7,7 @@
 \usage{
 tidync(x, what, ...)
 
-\method{tidync}{character}(x, what, ..., group = "")
+\method{tidync}{character}(x, what, ...)
 }
 \arguments{
 \item{x}{path to a NetCDF file}

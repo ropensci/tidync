@@ -37,11 +37,15 @@ rflip <- function(x) {
 }
 #' @name raster-tidync
 raster0 <- function(x, ..., slice = 1) {
+  if (!requireNamespace("raster", quietly = TRUE))
+    stop("package raster required, try installing with 'install.packages(\"raster\")'")
+  
   ## convert to index raster
   UseMethod("raster0") 
 }
 #' @name raster-tidync
 raster0.default <- function(x, ..., slice = 1) {
+  
   set_ext0(raster::raster(slicer(x[[1]], slice)))
 }
 #' @name raster-tidync
@@ -59,10 +63,13 @@ array_transforms <- function(x) {
 #' @name raster-tidync
 select_transforms <- function(x) {
   # only selected coordinates
-  lapply(array_transforms(x), function(a) dplyr::filter(a, selected))
+  lapply(array_transforms(x), function(a) dplyr::filter(a, .data$selected))
 }
 #' @name raster-tidync
 raster1 <- function(x, ..., slice = 1) {
+  if (!requireNamespace("raster", quietly = TRUE))
+    stop("package raster required, try installing with 'install.packages(\"raster\")'")
+  
   ## raster with reference extent
   ha <- hyper_array(x, ...)
   tr <- select_transforms(ha)
@@ -76,12 +83,12 @@ raster1 <- function(x, ..., slice = 1) {
   dy <- diff(ys[1:2])
 
   ex <- raster::extent(min(xs), max(xs), min(ys), max(ys)) + c(dx, dy)/2
-  setExtent(r, ex)
+  raster::setExtent(r, ex)
   
 }
 
-setOldClass("tidync")
-if (!isGeneric("raster"))
-  setGeneric("raster", function(x, ...)
-    standardGeneric("raster"))
-setMethod("raster", "tidync", raster1)
+#setOldClass("tidync")
+#if (!isGeneric("raster"))
+#  setGeneric("raster", function(x, ...)
+#    standardGeneric("raster"))
+#setMethod("raster", "tidync", raster1)

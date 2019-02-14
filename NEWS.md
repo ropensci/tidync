@@ -1,5 +1,9 @@
 # dev
 
+* Breaking change: when using `tidync$grid`it's now expected that this must 
+  be `tidyr::unnest()`ed in order to expand out the grid list per variable, in line with
+  https://github.com/hypertidy/ncmeta/issues/26. 
+  
 * The `hyper_array` function now stores the relevant transforms table as an attribute "transforms" so that
  objects can be constructed directly from the raw array output. 
 

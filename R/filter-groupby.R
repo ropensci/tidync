@@ -29,7 +29,7 @@ summarise.tidync <- function(.data, ...) {
     .data$groups$ID <- 1:nrow(.data$groups)
     #rcell <- fasterize::fasterize(.data$groups, r, "ID")
     cells <- tabularaster::cellnumbers(r, .data$groups)
-    cells <- dplyr::filter(cells, !is.na(cell_))
+    cells <- dplyr::filter(cells, !is.na(.data$cell_))
     ht <- hyper_tibble(.data, na.rm = FALSE)
   #  browser()
     ht[["tidync_group_"]] <- NA
@@ -41,8 +41,8 @@ summarise.tidync <- function(.data, ...) {
             ## danger, see the flip here ////!!!
     #ht[["tidync_group_"]] <- values(flip(rcell, "y"))
     ## could use setdiff here with cellnumbers ...
-    ht <- dplyr::filter(ht, !is.na(tidync_group_))
-   return( ht %>% group_by(tidync_group_) %>% summarise(...))
+    ht <- dplyr::filter(ht, !is.na(.data$tidync_group_))
+   return( ht %>% group_by(.data$tidync_group_) %>% summarise(...))
   }
   hyper_tibble(.data) %>% group_by(!!!.data$groups) %>% summarise(...)
 }

@@ -27,7 +27,7 @@ axis_transforms <- function(x, ...) {
 }
 #' @name axis_transforms
 active_axis_transforms <- function(x, ...) {
-  grid <- x$grid
+  grid <- x$grid %>% tidyr::unnest()
   axis <- x$axis
   dimension <- x$dimension
   active_x <- active(x)
@@ -50,9 +50,9 @@ axis_transforms.default <- function(x, ...) {
   source <- x$source
   ## ignore activation, just do all
   #active_x <- active(x)
-  dims <- grid %>% 
+  dims <- axis %>% 
    # dplyr::filter(.data$grid == active_x) %>% 
-    dplyr::inner_join(axis, "variable") %>% 
+    #dplyr::inner_join(axis, "variable") %>% 
     dplyr::inner_join(dimension, c("dimension" = "id")) %>% 
     dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
     dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim)

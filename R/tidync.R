@@ -43,7 +43,7 @@ tidync <- function(x, what, ...) {
 #' @name tidync
 #' @export
 #' @importFrom ncmeta nc_meta
-tidync.character <- function(x, what, ..., group = "") {
+tidync.character <- function(x, what, ...) {
   if (length(x) > 1) warning("multiple sources: only one source name allowed, ignoring all but the first")
   fexists <- file.exists(x)
   
@@ -85,23 +85,38 @@ tidync.character <- function(x, what, ..., group = "") {
   out <- structure(out,           class = "tidync")
   ## we can't activate nothing
   if (nrow(out$axis) < 1) return(out)
-  if (missing(what)) what <- first_numeric_var(out)
-
+  if (missing(what)) {
+    what  <- first_numeric_var(out)
+   
+  }
+  
   out <- activate(out, what)
 
   out
 }
 
 first_numeric_var <- function(x) {
-  grid <- x$grid
-  grid$type <- x$variable$type[match(grid$variable, x$variable$name)] 
-  grid <- dplyr::filter(grid, !type == "NC_CHAR")
-  if (nrow(grid) < 1) {
-    warning("no non-NC_CHAR variables found (dimensionality does not make sense with CHAR, so beware)")
-    return(1L)
-  }
+  # grid <- x$grid
+  # grid$type <- x$variable$type[match(grid$variable, x$variable$name)] 
+  # grid <- dplyr::filter(grid, !type == "NC_CHAR")
+  # if (nrow(grid) < 1) {
+  #   warning("no non-NC_CHAR variables found (dimensionality does not make sense with CHAR, so beware)")
+  #   return(1L)
+  # }
+  # 
+  # match(grid$variable, x$grid$variable)[1L]
 
-  match(grid$variable, x$grid$variable)[1L]
+  priorityvar <-   x$axis %>% 
+    dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
+    dplyr::inner_join(x$variable, c("variable" = "name")) %>% 
+      dplyr::arrange(.data$type == "NC_CHAR", -.data$ndims)
+  if (nrow(priorityvar) < 1) {
+     return(priorityvar$variable[1L])
+  }
+  if (priorityvar$type[1] == "NC_CHAR") {
+   warning("no non-NC_CHAR variables found (dimensionality does not make sense with CHAR, so beware)")
+  }
+  priorityvar$variable[1L]
 }
 read_groups <- function(src) {
   ncdf4::nc_open(src, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
@@ -150,7 +165,8 @@ print.tidync <- function(x, ...) {
   active_sh <- active(x)
   nms <- if(nrow(ushapes) > 0)  nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
-  estimatebigtime <- x$grid %>% 
+  vargrids <- tidyr::unnest(x$grid)
+  estimatebigtime <- vargrids %>% 
     dplyr::filter(.data$grid == active(x)) %>% 
     dplyr::inner_join(x$axis, "variable") %>% 
     #dplyr::distinct(dimids) %>% 
@@ -164,7 +180,7 @@ print.tidync <- function(x, ...) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
     
-    cat(paste((x$grid %>% dplyr::inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
+    cat(paste((vargrids %>% dplyr::inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
     if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", format(estimatebigtime), 
                                                 sprintf(" value%s per variable)", ifelse(estimatebigtime > 1, "s", "")))
     cat("\n")

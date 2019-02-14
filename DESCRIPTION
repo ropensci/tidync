@@ -1,6 +1,6 @@
 Package: tidync
 Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.0.3
+Version: 0.0.3.9001
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
@@ -15,16 +15,19 @@ Encoding: UTF-8
 LazyData: true
 ByteCompile: true
 Imports:
-    dplyr (>= 0.7.0), 
+    dplyr (>= 0.7.0),
     forcats,
     magrittr,
     ncdf4,
-    ncmeta (>= 0.0.2), 
-    purrr, 
-    RNetCDF  (>= 1.9-1),
-    rlang, 
+    ncmeta (>= 0.0.3.9002),
+    purrr,
+    RNetCDF (>= 1.9-1),
+    rlang,
     tibble,
-    yesno
+    yesno,
+    tidyr,
+    tabularaster
+Remotes: hypertidy/tabularaster, mdsumner/ncmeta
 RoxygenNote: 6.1.1
 Suggests: ggplot2,
     knitr,

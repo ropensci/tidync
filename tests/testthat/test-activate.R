@@ -12,9 +12,9 @@
    ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
    tnc <- tidync(ufile)
 
-
-  expect_equal(active(tidync(ufile)) , "D0,D12")
-
+  ## changed with nesting of variables in nc_grids https://github.com/hypertidy/ncmeta/issues/26
+  #expect_equal(active(tidync(ufile)) , "D0,D12")
+  expect_equal(active(tidync(ufile)) , "D5,D12")
   ## also make sure we can active a new grid, this is the dimension ref comma separated (no brackets)
   #  tidync(ufile) %>% activate("D3,D12")
   #tidync(ufile, 3)
