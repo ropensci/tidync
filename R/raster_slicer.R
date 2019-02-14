@@ -1,4 +1,7 @@
 #' Construct raster from slices
+#' 
+#' Experimental, internal
+#' @keywords internal
 #' @noRd
 #' @examples
 #' files <- raadtools::ghrsstfiles() 

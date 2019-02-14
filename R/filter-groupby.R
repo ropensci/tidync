@@ -1,3 +1,12 @@
+#' Dplyr verbs for tidync
+#' 
+#' Very experimental
+#' @param x tidync object
+#' @param .data tidync object
+#' @param ... passed into dplyr engine
+#' @param add add to existing groups
+#' @param shape experimental tidync
+#' @rdname dplyr-verbs
 #' @examples 
 #' x <- tidync(raadtools::sshfiles()$fullname[1])
 #'  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize(adt = mean(adt, na.rm = TRUE))
