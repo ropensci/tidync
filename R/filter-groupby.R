@@ -2,6 +2,7 @@
 #' 
 #' Very experimental
 #' @param x tidync object
+#' @param .x tidync object
 #' @param .data tidync object
 #' @param ... passed into dplyr engine
 #' @param add add to existing groups
@@ -10,8 +11,10 @@
 #' @examples 
 #' \dontrun{
 #' #x <- tidync(raadtools::sshfiles()$fullname[1])
-#' #  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize(adt = mean(adt, na.rm = TRUE))
-#' #  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize_all(mean, na.rm = TRUE)
+#' #  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% 
+#' # group_by(longitude) %>%   summarize(adt = mean(adt, na.rm = TRUE))
+#' #  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% 
+#' #group_by(longitude) %>%   summarize_all(mean, na.rm = TRUE)
 #' }
 tbl_vars.tidync <- function(x) {
   c(x$variable$name[x$variable$active], 
