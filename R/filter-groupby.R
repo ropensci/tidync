@@ -8,9 +8,11 @@
 #' @param shape experimental tidync
 #' @rdname dplyr-verbs
 #' @examples 
-#' x <- tidync(raadtools::sshfiles()$fullname[1])
-#'  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize(adt = mean(adt, na.rm = TRUE))
-#'  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize_all(mean, na.rm = TRUE)
+#' \dontrun{
+#' #x <- tidync(raadtools::sshfiles()$fullname[1])
+#' #  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize(adt = mean(adt, na.rm = TRUE))
+#' #  x %>% hyper_filter(longitude = longitude > 147, latitude = latitude < - 30) %>% group_by(longitude) %>%   summarize_all(mean, na.rm = TRUE)
+#' }
 tbl_vars.tidync <- function(x) {
   c(x$variable$name[x$variable$active], 
     x$dimension$name[x$dimension$active])
