@@ -22,7 +22,7 @@
   
   
   ## use variable to find grid
-  tnc1 <-  tnc %>% activate("handbook5Id")
+  tnc1 <-  tnc %>% activate(handbook5Id)
   expect_equal(active(tnc1),  "D1,D12")
   
   ## use number to find grid
@@ -31,8 +31,11 @@
   expect_equal(active(tnc2), "D10,D9")
   
   expect_error(activate(tnc2, 0))
+
   
-  expect_error(activate(tnc2, "snarfleglobber"), "Only possible")
+  expect_error(activate(tnc2, snarfleglobber), "not found")
+  snarfleglobber <-   "snarfleglobber "
+  expect_error(activate(tnc2, snarfleglobber), "Only possible")
   
   expect_warning(activate(1, "a"))
   ## also make sure we can active a new grid, this is the dimension ref comma separated (no brackets)

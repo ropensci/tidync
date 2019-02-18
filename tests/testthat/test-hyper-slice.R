@@ -15,5 +15,11 @@ test_that("slicing works", {
     tidync(l3file) %>% hyper_filter(lat = between(lat, -42, -45), 
                                                lon = lon > 170) %>% hyper_slice()
   )
+  
+  ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+  a <- hyper_array(tidync(ufile) %>% activate("D5,D12"))
+  expect_named(a, c("precip5minQCD", "precip1hrQCD", "precip3hrQCD", "precip6hrQCD", "precip12hrQCD", "precip24hrQCD", "precipAccumQCD"))
+  a <- hyper_array(tidync(ufile) %>% activate(precip3hrQCD))
+  expect_named(a, c("precip3hrQCD"))
 })
 

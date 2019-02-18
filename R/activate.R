@@ -25,7 +25,6 @@ activate <- function(.data, what, ..., select_var = NULL) UseMethod("activate")
 activate.tidync <- function(.data, what, ..., select_var = NULL) {
   if (missing(what)) return(.data)
   vargrids <- tidyr::unnest(.data$grid) 
-  
   what_name <- deparse(substitute(what))
   #print(what_name)
   #if (what_name %in% var_names(.data)) what <- what_name
@@ -34,10 +33,10 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
     what <- vargrids$grid[vargrids$variable == what_name]
     select_var <- what_name
   } else if (what %in% .data$variable$name){
-    select_var <- what
     if (!is.null(select_var)) vargrids <- vargrids[vargrids$variable == select_var, , drop = FALSE]
     #what <- paste(paste0("D", .data$axis$dimension[.data$axis$variable == select_var]), collapse = ",")
     #.data$grid$grid[.data$grid$variable == what]
+
     what <- vargrids$grid[1L]
   }
 
@@ -54,7 +53,7 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
 
   active_variables <- vargrids %>% dplyr::filter(.data$grid == what) %>% 
     dplyr::inner_join(.data[["variable"]], c("variable" = "name"))
-  
+
   if (!is.null(select_var)) {
     active_variables <- inner_join(active_variables, tibble::tibble(variable = select_var), "variable")
   }

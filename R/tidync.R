@@ -86,10 +86,11 @@ tidync.character <- function(x, what, ...) {
   ## we can't activate nothing
   if (nrow(out$axis) < 1) return(out)
   if (missing(what)) {
-    what  <- first_numeric_var(out)
+    varg  <- first_numeric_var(out)
+    gg <- tidyr::unnest(out$grid)
+    what <- gg$grid[match(varg, gg$variable)]
    
   }
-  
   out <- activate(out, what)
 
   out

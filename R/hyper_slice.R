@@ -75,6 +75,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
     ## todo, make this quosic?
     varnames <- select_var
   }
+
   get_vara <- function(vara)  {
     con <- ncdf4::nc_open(x$source$source[1])
     on.exit(ncdf4::nc_close(con), add =   TRUE)
