@@ -27,3 +27,10 @@ test_that("indexing works", {
   
 })
 
+test_that("sanity prevails", {
+  
+  f1 <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+  
+  expect_error(tidync(f1) %>% hyper_filter(a < 2), "subexpressions must be in 'mutate' form")
+})
+  
