@@ -5,7 +5,7 @@
 \alias{hyper_slice}
 \alias{hyper_array.tidync}
 \alias{hyper_array.character}
-\title{Hyper array}
+\title{Extract NetCDF data as an array}
 \usage{
 hyper_array(x, select_var = NULL, ..., raw_datavals = FALSE,
   force = FALSE, drop = TRUE)
@@ -20,8 +20,6 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
   raw_datavals = FALSE, drop = TRUE)
 }
 \arguments{
-\item{x}{tidync object}
-
 \item{select_var}{optional vector of variable names to select}
 
 \item{...}{passed to \code{hyper_filter}}
@@ -31,12 +29,16 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
 \item{force}{ignore caveats about large extraction and just do it}
 
 \item{drop}{collapse degenerate dimensions, defaults to \code{TRUE}}
+
+\item{.x}{NetCDF file, connection object, or \code{tidync} object}
 }
 \description{
-Extract the raw array data for the active grid, as a list of arrays. This can be the
-entire array/s or after dimension-slicing using \code{hyper_filter} expressions.
+Extract the raw array data as a list of  one or more arrays. This can be the
+entire variable/s or after dimension-slicing using \code{hyper_filter} expressions.
 }
 \details{
+The function \code{hyper_array} will act on an existing tidync object or a source string.
+
 By default all variables in the active grid are returned, use \code{select_var} to limit.
 
 The transforms are stored as a list of tables in an attribute "transforms", access these

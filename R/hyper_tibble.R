@@ -1,6 +1,14 @@
-#' hyper tibble
-#'
-#' @param x object to tibbulate
+#' Extract NetCDF data as an expanded table. 
+#' 
+#' Extract the raw array data as an expanded data frame. This can be the
+#' entire variable/s or after dimension-slicing using `hyper_filter` expressions with 
+#' dimension values expanded appropriately for each element in the arrays (one row per element).  
+#' 
+#' The function `hyper_array` will act on an existing tidync object or a source string. 
+#' 
+#' By default all variables in the active grid are returned, use `select_var` to limit. 
+#' 
+#' @param .x NetCDF file, connection object, or `tidync` object
 #' @param ... arguments to `hyper_filter``
 #' @param na.rm if `TRUE` these rows are not included in the output when all variables are `NA`
 #' @return a `tbl_df`

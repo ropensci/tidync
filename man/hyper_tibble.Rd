@@ -4,7 +4,7 @@
 \alias{hyper_tibble}
 \alias{hyper_tibble.character}
 \alias{hyper_tibble.tidync}
-\title{hyper tibble}
+\title{Extract NetCDF data as an expanded table.}
 \usage{
 hyper_tibble(x, ..., na.rm = TRUE)
 
@@ -13,17 +13,24 @@ hyper_tibble(x, ..., na.rm = TRUE)
 \method{hyper_tibble}{tidync}(x, ..., na.rm = TRUE)
 }
 \arguments{
-\item{x}{object to tibbulate}
-
 \item{...}{arguments to `hyper_filter``}
 
 \item{na.rm}{if \code{TRUE} these rows are not included in the output when all variables are \code{NA}}
+
+\item{.x}{NetCDF file, connection object, or \code{tidync} object}
 }
 \value{
 a \code{tbl_df}
 }
 \description{
-hyper tibble
+Extract the raw array data as an expanded data frame. This can be the
+entire variable/s or after dimension-slicing using \code{hyper_filter} expressions with
+dimension values expanded appropriately for each element in the arrays (one row per element).
+}
+\details{
+The function \code{hyper_array} will act on an existing tidync object or a source string.
+
+By default all variables in the active grid are returned, use \code{select_var} to limit.
 }
 \examples{
 l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"

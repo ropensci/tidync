@@ -1,13 +1,15 @@
-#' Hyper array
+#' Extract NetCDF data as an array
 #' 
-#' Extract the raw array data for the active grid, as a list of arrays. This can be the
-#' entire array/s or after dimension-slicing using `hyper_filter` expressions. 
+#' Extract the raw array data as a list of  one or more arrays. This can be the
+#' entire variable/s or after dimension-slicing using `hyper_filter` expressions. 
+#' 
+#' The function `hyper_array` will act on an existing tidync object or a source string. 
 #' 
 #' By default all variables in the active grid are returned, use `select_var` to limit. 
 #' 
 #' The transforms are stored as a list of tables in an attribute "transforms", access these
 #' with `attr(x, "transforms")`. 
-#' @param x tidync object
+#' @param .x NetCDF file, connection object, or `tidync` object
 #' @param drop collapse degenerate dimensions, defaults to `TRUE`
 #' @param ... passed to `hyper_filter`
 #' @param select_var optional vector of variable names to select
