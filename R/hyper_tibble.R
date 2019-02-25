@@ -28,8 +28,7 @@
 #' ht   
 #' library(ggplot2)
 #' ggplot(ht %>% filter(!is.na(chlor_a)), 
-#' aes(x = lon, y = lat, fill = chlor_a)) + geom_point()
-#' 
+#' aes(x = lon, y = lat, fill = chlor_a)) + geom_tile()
 hyper_tibble <- function(x, ..., na.rm = TRUE) {
   UseMethod("hyper_tibble")
 }
