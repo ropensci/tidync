@@ -1,22 +1,37 @@
 
-#' Activate
+#' Activate a NetCDF grid
 #'
-#' Set the context for subsequent manipulations. 
-#' 
-#' `activate` puts the named variable first
-#' `active` gets and sets the active variable
+#' A grid is the definition use in NetCDF for the shape and size of array
+#' variables, and if only one exists it is activated by default. A grid must be
+#' selected by name in the form of 'D1,D0' where one or more numbered dimensions
+#' indicates the grid. The grid definition names are printed as part of the
+#' summary of in the tidync object and may be obtained directly with
+#' `tidync(file)$grid$grid` on the tidync object.
+#'
+#' Activation of a grid sets the context for downstream operations (slicing and
+#' reading data) from NetCDF, and as there may be several grids in a single
+#' source activation allows a different choice of available variables.  By
+#' default the largest grid is activated. Once activated, all downstream tasks
+#' apply to the set of variables that exist on that grid.
+#'
+#' `activate` puts the named variable first `active` gets and sets the active
+#' variable
 #' @param .data NetCDF object
 #' @param what name of a variable
 #' @param ... reserved, currently ignored
-#' @param select_var optional argument to set selected state of variable/s by name
+#' @param select_var optional argument to set selected state of variable/s by
+#'   name
 #' @return NetCDF object
-#' @export active activate active<- 
-#' @rdname activate 
-#' @aliases active activate active<- 
+#' @export active activate active<-
+#' @rdname activate
+#' @aliases active activate active<-
 #' @examples
 #' l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 #' rnc <- tidync(system.file("extdata", "oceandata", l3file, package = "tidync"))
 #' activate(rnc, "palette")
+#' 
+#' ## extract available grid names
+#' rnc$grid$grid
 #' @name activate
 #' @export
 activate <- function(.data, what, ..., select_var = NULL) UseMethod("activate")

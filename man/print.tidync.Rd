@@ -2,7 +2,7 @@
 % Please edit documentation in R/tidync.R
 \name{print.tidync}
 \alias{print.tidync}
-\title{Print NetCDF object}
+\title{Print tidync object}
 \usage{
 \method{print}{tidync}(x, ...)
 }
@@ -12,15 +12,7 @@
 \item{...}{reserved}
 }
 \description{
-print S3 method
-}
-\details{
-Prints a summary of variables and dimensions, organized by their 'shape' - "same shape" means "same grid".
-Shape is an instance of a particular set of dimensions, which can be shared by more than one
-variable. This is not the 'rank' of a variable (the number of dimensions) since a single
-data set may have many 3D variables composed of different sets of axes/dimensions. There's no
-formality around the concept of 'shape', as far as we know.
-
-A dimension may have length zero, but this is a special case for a "measure" dimension, we think. (It
-doesn't mean the product of the dimensions is zero, for example).
+Provide a summary of variables and dimensions, organized by their 'grid' (or
+'shape') and with a summary of any slicing operations provided as 'start' and
+'count' summaries for each dimension in the active grid.
 }

@@ -1,16 +1,44 @@
-#' tidy netcdf
-#' 
-#' Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
-#' the first *shape* encountered is  `activate`d. 
-#' 
-#' Any NetCDF with variable arrays should work. Files with compound types are not yet supported and
-#' should fail gracefully. 
-#' 
-#' We haven't yet explored HDF5 per se, so any feedback is appreciated. Major 
-#' use of compound types is made by \url{https://github.com/sosoc/croc}
+#' Tidy NetCDF
+#'
+#' Connect to a NetCDF source and allow use of `hyper_*` verbs for slicing
+#' (`hyper_filter()`) and extracting data (`hyper_array()`, `hyper_tibble()`)
+#' from an activated grid. By default the largest *grid* encountered is
+#' activated (see  `activate()`).
+#'
+#' Many NetCDF forms are supported and tidync tries to reduce the interpretation
+#' applied to a given source. The NetCDF system defines a 'grid' for storing
+#' array data, where 'grid' is the array 'shape', or 'set of dimensions'). There
+#' may be several grids in a single source and so we introduce the concept of
+#' grid 'activation'. Once activated, all downstream tasks apply to the set of
+#' variables that exist on that grid.
+#'
+#' NetCDF sources with numeric types are chosen by default, even if existing
+#' 'NC_CHAR' type variables are on the largest grid. When read any 'NC_CHAR'
+#' type variables are exploded into single character elements so that dimensions
+#' match the source.
+#'
+#' @section Grids: A grid is an instance of a particular set of dimensions,
+#'   which can be shared by more than one variable. This is not the 'rank' of a
+#'   variable (the number of dimensions) since a single data set may have many
+#'   3D variables composed of different sets of axes/dimensions. There's no
+#'   formality around the concept of 'shape', as far as we know.
+#'
+#'   A dimension may have length zero, but this is a special case for a
+#'   "measure" dimension, we think. (It doesn't mean the product of the
+#'   dimensions is zero, for example).
+#'   
+#' @section Limitations: 
+#' Files with compound types are not yet supported and should fail gracefully.
+#' Groups are not yet supported.
+#'
+#' We haven't yet explored HDF5 per se, so any feedback is appreciated. Major
+#' use of compound types is made by \url{https://github.com/sosoc/croc}.
+#'
 #' @param x path to a NetCDF file
 #' @param ... reserved for arguments to methods, currently ignored
-#' @param what (optional) character name of grid (see `ncmeta::nc_grids`) or (bare) name of variable (see `ncmeta::nc_vars`) or index of grid to `activate`
+#' @param what (optional) character name of grid (see `ncmeta::nc_grids`) or
+#'   (bare) name of variable (see `ncmeta::nc_vars`) or index of grid to
+#'   `activate`
 #' @export
 tidync <- function(x, what, ...) {
   UseMethod("tidync")
@@ -97,16 +125,6 @@ tidync.character <- function(x, what, ...) {
 }
 
 first_numeric_var <- function(x) {
-  # grid <- x$grid
-  # grid$type <- x$variable$type[match(grid$variable, x$variable$name)] 
-  # grid <- dplyr::filter(grid, !type == "NC_CHAR")
-  # if (nrow(grid) < 1) {
-  #   warning("no non-NC_CHAR variables found (dimensionality does not make sense with CHAR, so beware)")
-  #   return(1L)
-  # }
-  # 
-  # match(grid$variable, x$grid$variable)[1L]
-
   priorityvar <-   x$axis %>% 
     dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
     dplyr::inner_join(x$variable, c("variable" = "name")) %>% 
@@ -122,24 +140,12 @@ first_numeric_var <- function(x) {
 read_groups <- function(src) {
   ncdf4::nc_open(src, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
 }
-## TBD we need
-## support NetCDF, ncdf4, RNetCDF, raster, anything with a file behind it
-#tidync.NetCDF
-#tidync.ncdf4
-# xtractomatic, rerddap?
 
-#' Print NetCDF object
-#' 
-#' print S3 method
-#' 
-#' Prints a summary of variables and dimensions, organized by their 'shape' - "same shape" means "same grid". 
-#' Shape is an instance of a particular set of dimensions, which can be shared by more than one
-#' variable. This is not the 'rank' of a variable (the number of dimensions) since a single
-#' data set may have many 3D variables composed of different sets of axes/dimensions. There's no
-#' formality around the concept of 'shape', as far as we know. 
-#' 
-#' A dimension may have length zero, but this is a special case for a "measure" dimension, we think. (It 
-#' doesn't mean the product of the dimensions is zero, for example).   
+#' Print tidync object
+#'
+#' Provide a summary of variables and dimensions, organized by their 'grid' (or
+#' 'shape') and with a summary of any slicing operations provided as 'start' and
+#' 'count' summaries for each dimension in the active grid.
 #' @param x NetCDF object
 #'
 #' @param ... reserved
@@ -170,13 +176,12 @@ print.tidync <- function(x, ...) {
   estimatebigtime <- vargrids %>% 
     dplyr::filter(.data$grid == active(x)) %>% 
     dplyr::inner_join(x$axis, "variable") %>% 
-    #dplyr::distinct(dimids) %>% 
     dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
     distinct(.data$dimension, .data$length)
   ## hack to assume always double numeric 
   ## TODO because could be integer after load
   estimatebigtime <- prod(estimatebigtime$length)
-  ##print_bytes(            * 8)
+
   for (ishape in seq_len(nshapes)) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
@@ -187,7 +192,6 @@ print.tidync <- function(x, ...) {
     cat("\n")
   }
   dims <- x$dimension
-  cat(sprintf("\nDimensions (%i): \n", nrow(dims)))
   nms <- names(x$transforms)
   ## handle case where value is character
   for (i in seq_along(x$transforms)) {
@@ -202,27 +206,38 @@ print.tidync <- function(x, ...) {
     range(tran[[a]])
   }
   ), nms)
-  # browser()
+
   filter_ranges <- do.call(rbind, filter_ranges)
   ranges <- do.call(rbind, ranges)
   
-  # browser()
+
   idxnm <- match(names(x$transforms), dims$name)
   dims$dmin <- dims$dmax <- dims$min <- dims$max <- NA_real_
   dims[idxnm, c("dmin", "dmax")] <- as.data.frame(filter_ranges)[idxnm, ]
   dims[idxnm, c("min", "max")] <- as.data.frame(ranges)[idxnm, ]
   dimension_print <- ""
   if (nrow(dims) > 0) { 
-  dimension_print <-  
-    format(dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
-             dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$active, .data$start, .data$count, .data$dmin, .data$dmax, .data$unlim, .data$coord_dim,) %>% 
-             dplyr::arrange(desc(.data$active), .data$id), n = Inf)
+    alldims <- dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
+      dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$active, .data$start, .data$count, .data$dmin, .data$dmax, .data$unlim, .data$coord_dim) %>% 
+      dplyr::arrange(desc(.data$active), .data$id)
+    
+  dimension_active <-  format(alldims %>% dplyr::filter(.data$active), n = Inf)
+  dimension_other <- format(alldims %>% dplyr::filter(!.data$active) %>% 
+                              dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max,.data$active, .data$unlim, .data$coord_dim), n = Inf)
     
   }
 
-  dp <- dimension_print[-grep("# A tibble:", dimension_print)]
+  cat(sprintf("\nDimensions (%i, %i active): \n", nrow(dims), sum(dims$active)))
+  
+  #browser()
+  dp <- dimension_active[-grep("# A tibble:", dimension_active)]
   cat(" ", "\n")
   for (i in seq_along(dp)) cat(dp[i], "\n")
+  cat(" ", "\n\n")
+  dp2 <- dimension_other[-grep("# A tibble:", dimension_other)]
+  cat(" ", "\n")
+  for (i in seq_along(dp2)) cat(dp2[i], "\n")
+  
   invisible(NULL)
 }
 

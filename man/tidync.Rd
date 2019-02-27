@@ -3,7 +3,7 @@
 \name{tidync}
 \alias{tidync}
 \alias{tidync.character}
-\title{tidy netcdf}
+\title{Tidy NetCDF}
 \usage{
 tidync(x, what, ...)
 
@@ -12,21 +12,52 @@ tidync(x, what, ...)
 \arguments{
 \item{x}{path to a NetCDF file}
 
-\item{what}{(optional) character name of grid (see \code{ncmeta::nc_grids}) or (bare) name of variable (see \code{ncmeta::nc_vars}) or index of grid to \code{activate}}
+\item{what}{(optional) character name of grid (see \code{ncmeta::nc_grids}) or
+(bare) name of variable (see \code{ncmeta::nc_vars}) or index of grid to
+\code{activate}}
 
 \item{...}{reserved for arguments to methods, currently ignored}
 }
 \description{
-Function to extract all metadata from a NetCDF, for use in subsequent operations. By default
-the first \emph{shape} encountered is  \code{activate}d.
+Connect to a NetCDF source and allow use of \code{hyper_*} verbs for slicing
+(\code{hyper_filter()}) and extracting data (\code{hyper_array()}, \code{hyper_tibble()})
+from an activated grid. By default the largest \emph{grid} encountered is
+activated (see  \code{activate()}).
 }
 \details{
-Any NetCDF with variable arrays should work. Files with compound types are not yet supported and
-should fail gracefully.
+Many NetCDF forms are supported and tidync tries to reduce the interpretation
+applied to a given source. The NetCDF system defines a 'grid' for storing
+array data, where 'grid' is the array 'shape', or 'set of dimensions'). There
+may be several grids in a single source and so we introduce the concept of
+grid 'activation'. Once activated, all downstream tasks apply to the set of
+variables that exist on that grid.
+
+NetCDF sources with numeric types are chosen by default, even if existing
+'NC_CHAR' type variables are on the largest grid. When read any 'NC_CHAR'
+type variables are exploded into single character elements so that dimensions
+match the source.
+}
+\section{Grids}{
+ A grid is an instance of a particular set of dimensions,
+which can be shared by more than one variable. This is not the 'rank' of a
+variable (the number of dimensions) since a single data set may have many
+3D variables composed of different sets of axes/dimensions. There's no
+formality around the concept of 'shape', as far as we know.
+
+A dimension may have length zero, but this is a special case for a
+"measure" dimension, we think. (It doesn't mean the product of the
+dimensions is zero, for example).
+}
+
+\section{Limitations}{
+
+Files with compound types are not yet supported and should fail gracefully.
+Groups are not yet supported.
 
 We haven't yet explored HDF5 per se, so any feedback is appreciated. Major
-use of compound types is made by \url{https://github.com/sosoc/croc}
+use of compound types is made by \url{https://github.com/sosoc/croc}.
 }
+
 \examples{
 ## a SeaWiFS (S) Level-3 Mapped (L3m) monthly (MO) chlorophyll-a (CHL)
 ## remote sensing product at 9km resolution (at the equator)
