@@ -211,43 +211,19 @@ print.tidync <- function(x, ...) {
   dims$dmin <- dims$dmax <- dims$min <- dims$max <- NA_real_
   dims[idxnm, c("dmin", "dmax")] <- as.data.frame(filter_ranges)[idxnm, ]
   dims[idxnm, c("min", "max")] <- as.data.frame(ranges)[idxnm, ]
-  
-
-  dimension_print <- if (nrow(dims) > 0) {
+  dimension_print <- ""
+  if (nrow(dims) > 0) { 
+  dimension_print <-  
     format(dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
              dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$active, .data$start, .data$count, .data$dmin, .data$dmax, .data$unlim, .data$coord_dim,) %>% 
              dplyr::arrange(desc(.data$active), .data$id), n = Inf)
     
-  } else {
-    ""
   }
-  #dp <- gsub("^ ?[0-9]?", "", dimension_print)  
-  #dp <- gsub("^  ", "", dp)
-  
+
   dp <- dimension_print[-grep("# A tibble:", dimension_print)]
   cat(" ", "\n")
   for (i in seq_along(dp)) cat(dp[i], "\n")
-  #rownames(dims) <- paste0("D", dims$id)
-  #print(dims)
   invisible(NULL)
 }
 
 
-
-# print.tidync <- function(x, ...) {
-#   form <- active(x)
-#   vn <- c(form, setdiff(var_names(x), form))
-#   if (length(vn)> 1) {
-#     form <- sprintf("%s, (%s)", vn[1L],  paste(vn[-1L], collapse = ", "))
-#   }
-#   cat(sprintf("Variables: %s", form), "\n")
-#   
-#   cat(sprintf("Dimensions: \n", ""))
-#   print(variable_dimensions(x) %>% 
-#           inner_join(x$dimension %>% dplyr::transmute(.data$.dimension_, dimension_length = .data$len), ".dimension_"))
-#   # print(x$dimension %>% 
-#   #         dplyr::arrange(.data$id)  %>% 
-#   #         transmute(.data$name, length = .data$len, 
-#   #                   unlimited= .data$unlim ) %>% as.data.frame())
-#   invisible(NULL)
-# }
