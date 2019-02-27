@@ -67,7 +67,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
   COUNT <- dimension$count
  # browser()
   if (is.null(select_var))   {
-    varnames <- variable %>% dplyr::pull(.data$name)
+    varnames <- varname
   } else {
     if (!any(select_var %in% variable[["name"]])) {
       print("available variables: ")
@@ -94,7 +94,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
     yes <- yesno::yesno(mess, "\nProceed?")
     if (!yes) return(invisible(NULL))
   }
-  transforms <- x[["transforms"]][x[["dimension"]][["active"]]]
+  transforms <- x[["transforms"]][x[["dimension"]] %>% dplyr::filter(.data$active) %>% dplyr::pull(.data$name)]
   structure(lapply(varnames, get_vara), names = varnames, transforms = transforms)
 }
 #' @name hyper_array
