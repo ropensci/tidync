@@ -13,11 +13,11 @@ hyper_tibble(x, ..., na.rm = TRUE)
 \method{hyper_tibble}{tidync}(x, ..., na.rm = TRUE)
 }
 \arguments{
+\item{x}{NetCDF file, connection object, or \code{tidync} object}
+
 \item{...}{arguments to `hyper_filter``}
 
 \item{na.rm}{if \code{TRUE} these rows are not included in the output when all variables are \code{NA}}
-
-\item{.x}{NetCDF file, connection object, or \code{tidync} object}
 }
 \value{
 a \code{tbl_df}

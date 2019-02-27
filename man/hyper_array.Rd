@@ -20,6 +20,8 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
   raw_datavals = FALSE, drop = TRUE)
 }
 \arguments{
+\item{x}{NetCDF file, connection object, or \code{tidync} object}
+
 \item{select_var}{optional vector of variable names to select}
 
 \item{...}{passed to \code{hyper_filter}}
@@ -29,8 +31,6 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
 \item{force}{ignore caveats about large extraction and just do it}
 
 \item{drop}{collapse degenerate dimensions, defaults to \code{TRUE}}
-
-\item{.x}{NetCDF file, connection object, or \code{tidync} object}
 }
 \description{
 Extract the raw array data as a list of  one or more arrays. This can be the

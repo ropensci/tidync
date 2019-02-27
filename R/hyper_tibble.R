@@ -8,7 +8,7 @@
 #' 
 #' By default all variables in the active grid are returned, use `select_var` to limit. 
 #' 
-#' @param .x NetCDF file, connection object, or `tidync` object
+#' @param x NetCDF file, connection object, or `tidync` object
 #' @param ... arguments to `hyper_filter``
 #' @param na.rm if `TRUE` these rows are not included in the output when all variables are `NA`
 #' @return a `tbl_df`
@@ -47,7 +47,9 @@ hyper_tibble.tidync<- function(x, ..., na.rm = TRUE) {
 out <- tibble::as_tibble(lapply(slabs, as.vector))
   
   prod_dims <- 1
-  trans <- x[["transforms"]][x[["dimension"]][["active"]]]
+  ##trans <- x[["transforms"]][x[["dimension"]][["active"]]]
+  trans <- attr(slabs, "transforms")
+
   for (i in seq_along(trans)) {
     nm <- names(trans)[i]
     nr <- sum(trans[[i]]$selected)

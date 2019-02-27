@@ -9,7 +9,7 @@
 #' 
 #' The transforms are stored as a list of tables in an attribute "transforms", access these
 #' with `attr(x, "transforms")`. 
-#' @param .x NetCDF file, connection object, or `tidync` object
+#' @param x NetCDF file, connection object, or `tidync` object
 #' @param drop collapse degenerate dimensions, defaults to `TRUE`
 #' @param ... passed to `hyper_filter`
 #' @param select_var optional vector of variable names to select
@@ -78,6 +78,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
     varnames <- select_var
   }
 
+  ## naughty  internal function using scope for x, START, COUNT, con, raw_datavals, drop
   get_vara <- function(vara)  {
     con <- ncdf4::nc_open(x$source$source[1])
     on.exit(ncdf4::nc_close(con), add =   TRUE)
@@ -95,7 +96,20 @@ hyper_array.tidync <- function(x, select_var = NULL, ..., raw_datavals = FALSE, 
     if (!yes) return(invisible(NULL))
   }
   transforms <- x[["transforms"]][x[["dimension"]] %>% dplyr::filter(.data$active) %>% dplyr::pull(.data$name)]
-  structure(lapply(varnames, get_vara), names = varnames, transforms = transforms)
+  datalist <- lapply(varnames, get_vara)
+  
+  
+  ## which of the variables for read are NC_CHAR? (they have to be split)
+  charvars <- variable$type[match(varnames, variable$name)] == "NC_CHAR"
+  if (any(charvars)) {
+    idx <- which(charvars)
+    for (i in seq_along(idx)) {
+      
+      ii <- idx[i]
+      datalist[[ii]] <- array(unlist(strsplit(datalist[[ii]], "")), dimension$count)
+    }
+  }
+  structure(datalist, names = varnames, transforms = transforms)
 }
 #' @name hyper_array
 #' @export
