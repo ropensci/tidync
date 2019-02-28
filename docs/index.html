@@ -91,7 +91,13 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#tidync" class="anchor"></a>tidync</h1></div>
 
-<p>The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in long-form data frame.</p>
+<p>The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in long-form data frame. In contrast to other packages tidync helps reduce the volume of code required to discover and read the contents of NetCDF, with simple steps:</p>
+<ul>
+<li>Connect and summarize <code><a href="reference/tidync.html">tidync()</a></code>.</li>
+<li>(optionally) Specify source variables <code><a href="reference/activate.html">activate()</a></code>.</li>
+<li>(optionally) Specify array sub-setting (slicing) <code><a href="reference/hyper_filter.html">hyper_filter()</a></code>.</li>
+<li>Read array data in either native <code><a href="reference/hyper_array.html">hyper_array()</a></code> or long-form (<code><a href="reference/hyper_tibble.html">hyper_tibble()</a></code>).</li>
+</ul>
 <p>NetCDF is <strong>Network Common Data Form</strong> a very common, and very general way to store and work with scientific array-based data. NetCDF is defined and provided by <a href="https://www.unidata.ucar.edu/software/netcdf/">Unidata</a>. R has (independent) support for NetCDF via the <a href="https://CRAN.R-project.org/package=RNetCDF">RNetCDF</a>, <a href="https://CRAN.R-project.org/package=ncdf4">ncdf4</a>, <a href="https://bioconductor.org/packages/release/bioc/html/rhdf5.html">rhdf5</a>, <a href="https://CRAN.R-project.org/package=stars">stars</a>, <a href="https://CRAN.R-project.org/package=sf">sf</a> and <a href="https://CRAN.R-project.org/package=rgdal">rgdal</a> packages.</p>
 <p>This project uses RNetCDF for the primary access to the NetCDF library.</p>
 <div id="installation" class="section level2">
@@ -221,23 +227,14 @@
 <div id="terminology" class="section level2">
 <h2 class="hasAnchor">
 <a href="#terminology" class="anchor"></a>Terminology</h2>
-<p>Here I use the term “slab” as a generalized “array” (in the R sense) that may be read from a NetCDF. We must provide the NetCDF API with a “slab index”, i.e. both a start and a count vector each the same length (the same as the number of dimensions as the array variable), that is the only way to read them.</p>
-<p>In R terms a 3D array would be indexed like</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">arr[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">12</span>, <span class="dv">3</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<p>and that would be analogous to</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">ncvar_get</span>(con, <span class="dt">start =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="dt">count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">3</span>))</a></code></pre></div>
-<p>If we only wanted a “sparse trace” through the array in R we can do</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">arr[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">cbind</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">4</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>, <span class="dv">6</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>, <span class="dv">4</span>)]</a></code></pre></div>
-<p>which would pull out 2-values from 2 arbitrary positions. The API doesn’t allow that (at least not in an efficient way that I can understand).</p>
-<p>We either have to get the whole “slab” that encompasses those 2 cells, or request a degenerate 1-cell slab for each:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">ncvar_get</span>(con, <span class="dt">start =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>), <span class="dt">count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">ncvar_get</span>(con, <span class="dt">start =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">4</span>), <span class="dt">count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</a></code></pre></div>
-<p>I’ve used the term “hyperslab” and “slab” since I realized this basic limitation during earlier work. Unidata use the term but it’s not in the API as far as I know:</p>
-<p><a href="http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html" class="uri">http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html</a></p>
-<p>Another term like this is “shape” which is a particular set of dimensions used by 1 or more variables in a file. tidync aims to allow “activation” of a given shape, so that any subsequent extraction gets all the variables that live in that space/shape. (It’s a database table interpretation of a set of variables).</p>
-<p>In R we can determine those indexes really easily for any given query, tracks over time through XYZ, polygons, boxes and so on - but we are ultimately limited by the API to these “slab” requests, and there a of disparate approaches across packages to optimizing this.</p>
-<p>For <code>tidync</code> we decided to use the term “grid” rather than “shape”, and so a grid is the space defined by specific ordered set of dimensions. An “axis” is a particular instance of a dimension within a variable. At times we need to know what grids we have, what variables use those grids, and what axes belong to a variable and in what order. Currently all the facility for determining this information is in package <code>ncmeta</code>.</p>
-<p>The <code>ncmeta</code> package uses a mix of background packages <code>ncdf4</code>, <code>RNetCDF</code> because each has facilities and limitations and both are needed. For closer to full support we can also use <code>rhdf5</code> or <code>rgdal</code> which have independent wrappers around the core NetCDF library. Groups and compound types are particular challenges, and tidync and ncmeta don’t yet exploit all of the currently available facilities. It would still be good to have a single authorative wrapper, but the details of that aren’t widely discussed.</p>
+<ul>
+<li>
+<strong>slab</strong>, <strong>hyperslab</strong> - array variable that may be read from a NetCDF</li>
+<li>
+<strong>shape</strong>, <strong>grid</strong> - set of dimensions that define variables in NetCDF</li>
+<li>
+<strong>activation</strong> - choice of a given grid to apply subsetting and read operations to</li>
+</ul>
 </div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
@@ -274,12 +271,13 @@
       <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/ropensci/onboarding/issues/174"><img src="https://badges.ropensci.org/174_status.svg"></a></li>
-<li><a href="https://cran.r-project.org/package=tidync"><img src="http://www.r-pkg.org/badges/version/tidync" alt="CRAN_Status_Badge"></a></li>
 <li><a href="https://travis-ci.org/hypertidy/tidync"><img src="http://badges.herokuapp.com/travis/hypertidy/tidync?branch=master&amp;env=BUILD_NAME=trusty_release&amp;label=linux" alt="Travis-CI Build Status"></a></li>
 <li><a href="https://travis-ci.org/hypertidy/tidync"><img src="http://badges.herokuapp.com/travis/hypertidy/tidync?branch=master&amp;env=BUILD_NAME=osx_release&amp;label=osx" alt="Build Status"></a></li>
 <li><a href="https://ci.appveyor.com/project/mdsumner/tidync-3m5h7"><img src="https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
 <li><a href="https://codecov.io/github/hypertidy/tidync?branch=master"><img src="https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
+<li><a href="https://github.com/ropensci/onboarding/issues/174"><img src="https://badges.ropensci.org/174_status.svg"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
+<li><a href="https://cran.r-project.org/package=tidync"><img src="http://www.r-pkg.org/badges/version/tidync" alt="CRAN_Status_Badge"></a></li>
 </ul>
 </div>
 </div>
