@@ -16,3 +16,14 @@ Provide a summary of variables and dimensions, organized by their 'grid' (or
 'shape') and with a summary of any slicing operations provided as 'start' and
 'count' summaries for each dimension in the active grid.
 }
+\details{
+The print summary is organized in two sections, the first is available grids
+(sets of dimensions) and their associated variables, the second is the
+dimensions, separated into active and inactive. All dimensions may be active
+in some NetCDF sources.
+
+Individual \emph{active} dimensions include the following components:
+\itemize{
+\item 'dim' - dimension label, D0, D1, D2, ...
+}
+}

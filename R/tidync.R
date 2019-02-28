@@ -151,6 +151,22 @@ read_groups <- function(src) {
 #' Provide a summary of variables and dimensions, organized by their 'grid' (or
 #' 'shape') and with a summary of any slicing operations provided as 'start' and
 #' 'count' summaries for each dimension in the active grid.
+#'
+#' The print summary is organized in two sections, the first is available grids
+#' (sets of dimensions) and their associated variables, the second is the
+#' dimensions, separated into active and inactive. All dimensions may be active
+#' in some NetCDF sources.
+#' 
+#' Individual *active* dimensions include the following components: 
+#' * 'dim' - dimension label, D0, D1, D2, ...
+#' * 'name' - dimension name
+#' * 'length' - size of the dimension
+#' * 'min'    - minimum value of the dimension 
+#' * 'max'    - maximum value of the dimension
+#' * 'start'  - start index of subsetting 
+#' * 'count'  - length of subsetting index
+#' * 'dmin'   - minimum value of the subset dimension
+#' * 'dmax'   - maximum value of the subset dimension
 #' @param x NetCDF object
 #'
 #' @param ... reserved
@@ -221,19 +237,20 @@ print.tidync <- function(x, ...) {
   dims[idxnm, c("dmin", "dmax")] <- as.data.frame(filter_ranges)[idxnm, ]
   dims[idxnm, c("min", "max")] <- as.data.frame(ranges)[idxnm, ]
   dimension_print <- ""
+  dims_active <- dims$active
   if (nrow(dims) > 0) { 
     alldims <- dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
       dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$start, .data$count, .data$dmin, .data$dmax, .data$active, .data$unlim, .data$coord_dim) %>% 
       dplyr::arrange(desc(.data$active), .data$id)
     
-  dimension_active <-  format(alldims %>% dplyr::filter(.data$active), n = Inf)
+  dimension_active <-  format(alldims %>% dplyr::filter(.data$active) %>% dplyr::mutate(id = NULL, active = NULL), n = Inf)
   dimension_other <- format(alldims %>% dplyr::filter(!.data$active) %>% 
-                              dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max,.data$active, .data$unlim, .data$coord_dim), n = Inf)
+                              dplyr::select(.data$dim, .data$name, .data$length, .data$min, .data$max, .data$unlim, .data$coord_dim), n = Inf)
     
   }
 
-  if (any(!dims$active)) {
-    cat(sprintf("\nDimensions %i (%i active): \n", nrow(dims), sum(dims$active)))
+  if (any(!dims_active)) {
+    cat(sprintf("\nDimensions %i (%i active): \n", nrow(dims), sum(dims_active)))
   } else {
     cat(sprintf("\nDimensions %i (all active): \n", nrow(dims)))
   }
@@ -242,7 +259,7 @@ print.tidync <- function(x, ...) {
   dp <- dimension_active[-grep("# A tibble:", dimension_active)]
   cat(" ", "\n")
   for (i in seq_along(dp)) cat(dp[i], "\n")
-  if (any(!dims$active)) {
+  if (any(!dims_active)) {
   cat(" ", "\nInactive dimensions:\n")
   dp2 <- dimension_other[-grep("# A tibble:", dimension_other)]
   cat(" ", "\n")
