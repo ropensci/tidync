@@ -5,6 +5,12 @@
 #' from an activated grid. By default the largest *grid* encountered is
 #' activated (see  `activate()`).
 #'
+#' The print method for tidync includes a lot of information about which
+#' variables exist on which dimensions, and if any slicing (`hyper_filter()`)
+#' operations have occurred these are summarized as 'start' and 'count'
+#' modifications relative to the dimension lengths. See `[print][print.tidync()]`
+#' for these details.
+#'
 #' Many NetCDF forms are supported and tidync tries to reduce the interpretation
 #' applied to a given source. The NetCDF system defines a 'grid' for storing
 #' array data, where 'grid' is the array 'shape', or 'set of dimensions'). There
@@ -26,13 +32,12 @@
 #'   A dimension may have length zero, but this is a special case for a
 #'   "measure" dimension, we think. (It doesn't mean the product of the
 #'   dimensions is zero, for example).
-#'   
-#' @section Limitations: 
-#' Files with compound types are not yet supported and should fail gracefully.
-#' Groups are not yet supported.
 #'
-#' We haven't yet explored HDF5 per se, so any feedback is appreciated. Major
-#' use of compound types is made by \url{https://github.com/sosoc/croc}.
+#' @section Limitations: Files with compound types are not yet supported and
+#'   should fail gracefully. Groups are not yet supported.
+#'
+#'   We haven't yet explored 'HDF5' in detail, so any feedback is appreciated. Major
+#'   use of compound types is made by \url{https://github.com/sosoc/croc}.
 #'
 #' @param x path to a NetCDF file
 #' @param ... reserved for arguments to methods, currently ignored
@@ -218,7 +223,7 @@ print.tidync <- function(x, ...) {
   dimension_print <- ""
   if (nrow(dims) > 0) { 
     alldims <- dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
-      dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$active, .data$start, .data$count, .data$dmin, .data$dmax, .data$unlim, .data$coord_dim) %>% 
+      dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$start, .data$count, .data$dmin, .data$dmax, .data$active, .data$unlim, .data$coord_dim) %>% 
       dplyr::arrange(desc(.data$active), .data$id)
     
   dimension_active <-  format(alldims %>% dplyr::filter(.data$active), n = Inf)
@@ -227,17 +232,22 @@ print.tidync <- function(x, ...) {
     
   }
 
-  cat(sprintf("\nDimensions (%i, %i active): \n", nrow(dims), sum(dims$active)))
+  if (any(!dims$active)) {
+    cat(sprintf("\nDimensions %i (%i active): \n", nrow(dims), sum(dims$active)))
+  } else {
+    cat(sprintf("\nDimensions %i (all active): \n", nrow(dims)))
+  }
   
   #browser()
   dp <- dimension_active[-grep("# A tibble:", dimension_active)]
   cat(" ", "\n")
   for (i in seq_along(dp)) cat(dp[i], "\n")
-  cat(" ", "\n\n")
+  if (any(!dims$active)) {
+  cat(" ", "\nInactive dimensions:\n")
   dp2 <- dimension_other[-grep("# A tibble:", dimension_other)]
   cat(" ", "\n")
   for (i in seq_along(dp2)) cat(dp2[i], "\n")
-  
+  }
   invisible(NULL)
 }
 

@@ -26,7 +26,7 @@ only one delay-capable class which is "tidync"
 
 # tidync 0.0.2
 
-* hyper_filter now uses a selection idiom, to record the state of the axis rather than expicitly
+* hyper_filter now uses a selection idiom, to record the state of the axis rather than explicitly
  filter it. This means we can have more flexibility on what the axis transform tables can 
  be used for, and removes some unwieldy handling code. All the available axes are on the
  object from first contact, which means we can program against the entire space in the source

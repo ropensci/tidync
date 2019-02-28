@@ -4,7 +4,7 @@
 #'
 #' The 'hyper filter' acts on a 'tidync' object by matching one or more filtering
 #' expressions like with `dplyr::filter`. This allows us to lazily specify a subset 
-#' from a NetCDF array without pulling  any datadata. The modified object may be printed
+#' from a NetCDF array without pulling  any data. The modified object may be printed
 #' to see the effects of subsetting, or saved for further use. 
 #' 
 #' The function `hyper_filter` will act on an existing tidync object or a source string. 

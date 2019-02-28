@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 
 The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient 
 queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in 
-"long form" form as a data frame for "tidy" analysis and visualization contexts. 
+long-form data frame. 
 
 NetCDF is **Network Common Data Form** a very common, and very general way to store and work with 
 scientific array-based data. NetCDF is defined and provided by [Unidata](https://www.unidata.ucar.edu/software/netcdf/). R has (independent) support for NetCDF via the [RNetCDF](https://CRAN.R-project.org/package=RNetCDF), [ncdf4](https://CRAN.R-project.org/package=ncdf4), [rhdf5](https://bioconductor.org/packages/release/bioc/html/rhdf5.html), [stars](https://CRAN.R-project.org/package=stars),  [sf](https://CRAN.R-project.org/package=sf) and [rgdal](https://CRAN.R-project.org/package=rgdal) packages. 
@@ -57,7 +57,7 @@ On Windows, everything should be easy as ncdf4 and RNetCDF are supported by CRAN
 
 ### MacOS
 
-On Mac, it should also be easy as there are binaries for ncdf4 and RNetCDF available on CRAN. As far as I know, these binaries won't support OpenDAP/Thredds. 
+On MacOS, it should also be easy as there are binaries for ncdf4 and RNetCDF available on CRAN. As far as I know, these binaries won't support OpenDAP/Thredds. 
 
 ### Ubuntu/Debian
 
@@ -107,7 +107,7 @@ Also [http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a
 ### Interactive
 
 Use `tidync()` and `hyper_filter()` to discern what variables and dimensions are available, and to craft axis-filtering
-expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `index` to filter it by its 'step' index). 
+expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `index` to filter it by its index). 
 
 ```{r interactive,eval=FALSE}
 ## discover the available entities, and the active grid's dimensions and variables
@@ -160,7 +160,7 @@ browseVignettes(package = "tidync")
 
 ## Limitations
 
-Plesase get in touch if you have specfic workflows that `tidync` is not providing. There's a lot of room for improvement!
+Please get in touch if you have specific workflows that `tidync` is not providing. There's a lot of room for improvement!
 
 * we can't do "grouped filters"" (i.e. polygon-overlay extraction), but it's in the works
 * compound types are not supported, though see the "rhdf5" branch on Github
@@ -192,24 +192,24 @@ arr[cbind(c(2, 4), c(5, 6), c(3, 4)]
 ```
 which would pull out 2-values from 2 arbitrary positions. The API doesn't allow that (at least not in an efficient way that I can understand). 
 
-We either have to get the whole "slab" that encompases those 2 cells, or request a degenerate 1-cell slab for each: 
+We either have to get the whole "slab" that encompasses those 2 cells, or request a degenerate 1-cell slab for each: 
 
 ```R
 ncvar_get(con, start = c(2, 5, 3), count = c(1, 1, 1))
 ncvar_get(con, start = c(4, 6, 4), count = c(1, 1, 1))
 ```
 
-I've used the term "hyperslab" and "slab" since I realized this basic limitation during earlier work. Unidata use the term but it's not in the API afaik: 
+I've used the term "hyperslab" and "slab" since I realized this basic limitation during earlier work. Unidata use the term but it's not in the API as far as I know: 
 
 http://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html
 
 Another term like this is "shape" which is a particular set of dimensions used by 1 or more variables in a file. tidync aims to allow "activation" of a given shape, so that any subsequent extraction gets all the variables that live in that space/shape. (It's a database table interpretation of a set of variables). 
 
-In R we can determine those indexes really easily for any given query, tracks over time through XYZ, polygons, boxes and so on - but we are ultimately limited by the API to these "slab" requests, so you see a lot of disparate approaches across packages to optimizing this. 
+In R we can determine those indexes really easily for any given query, tracks over time through XYZ, polygons, boxes and so on - but we are ultimately limited by the API to these "slab" requests, and there a of disparate approaches across packages to optimizing this. 
 
 For `tidync` we decided to use the term "grid" rather than "shape", and so a grid is the space defined by specific ordered set of dimensions. An "axis" is a particular instance of a dimension within a variable. At times we need to know what grids we have, what variables use those grids, and what axes belong to a variable and in what order. Currently all the facility for determining this information is in package `ncmeta`. 
 
-The `ncmeta` package uses a mix of background packages `ncdf4`, `RNetCDF` because each has facilities and limitations and both are needed. For closer to full support we can also use `rhdf5` or `rgdal` which have indpendent wrappers around the core NetCDF library. Groups and compound types are particular challenges, and tidync and ncmeta don't yet exploit all of the currently available facilities. It would still be good to have a single authoratative wrapper, but the details of that aren't widely discussed. 
+The `ncmeta` package uses a mix of background packages `ncdf4`, `RNetCDF` because each has facilities and limitations and both are needed. For closer to full support we can also use `rhdf5` or `rgdal` which have independent wrappers around the core NetCDF library. Groups and compound types are particular challenges, and tidync and ncmeta don't yet exploit all of the currently available facilities. It would still be good to have a single authorative wrapper, but the details of that aren't widely discussed. 
 
 
 

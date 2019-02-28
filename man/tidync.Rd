@@ -25,6 +25,12 @@ from an activated grid. By default the largest \emph{grid} encountered is
 activated (see  \code{activate()}).
 }
 \details{
+The print method for tidync includes a lot of information about which
+variables exist on which dimensions, and if any slicing (\code{hyper_filter()})
+operations have occurred these are summarized as 'start' and 'count'
+modifications relative to the dimension lengths. See \code{[print][print.tidync()]}
+for these details.
+
 Many NetCDF forms are supported and tidync tries to reduce the interpretation
 applied to a given source. The NetCDF system defines a 'grid' for storing
 array data, where 'grid' is the array 'shape', or 'set of dimensions'). There
@@ -50,11 +56,10 @@ dimensions is zero, for example).
 }
 
 \section{Limitations}{
+ Files with compound types are not yet supported and
+should fail gracefully. Groups are not yet supported.
 
-Files with compound types are not yet supported and should fail gracefully.
-Groups are not yet supported.
-
-We haven't yet explored HDF5 per se, so any feedback is appreciated. Major
+We haven't yet explored 'HDF5' in detail, so any feedback is appreciated. Major
 use of compound types is made by \url{https://github.com/sosoc/croc}.
 }
 

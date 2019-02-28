@@ -37,7 +37,7 @@ NetCDF is a very widely used file format for storing array-based data as *variab
 
 Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many and varied, and not always adhered to. 
 
-The R community is not particuarly strong with use of NetCDF, though it
+The R community is not particularly strong with use of NetCDF, though it
 is common and widely used it pales compared to use in general climate science work, and there the most used tool is the [CDO Climate Data Operators](https://code.mpimet.mpg.de/projects/cdo).  In R the most common
 tools used are ncdf4 and raster (which uses ncdf4). 
 
@@ -146,7 +146,7 @@ hf %>% hyper_tibble() %>% dplyr::filter(!is.na(concentration))
 ## Miscellaneous
 
 Further utilities are available to get immediate information on the current status of the activated grid, and the subsetted space. These
-are directly useable by the traditional API tools, and in particular by the functions `ncdf4::ncvar_get` (`varid`, `start`, `count`), its counterpart in `RNetCDF::var.get.nc` and command line tools like CDO. 
+are directly useable by the traditional API tools, and in particular by the functions `ncdf4::ncvar_get()` (`varid`, `start`, `count`), its counterpart in `RNetCDF::var.get.nc()` and command line tools like CDO. 
 
 ```{r}
 hyper_vars(hf)
@@ -160,8 +160,11 @@ hyper_dims(hf)
 There are many improvements that could be made here, but so far attempting
 them has complicated matters rather than improving them so I simply list them. 
 
+* support multiple sources at once for lazy read of a virtual grid
+* support groups
+* support compound types
 * allow a group-by function for a polygon layer, against a pair of dimensions to classify cells
-* allow a truly `DBI/dplyr` level of lazy read, with more filter, select, mutate and collect idioms
+* allow a truly DBI and dplyr level of lazy read, with more filter, select, mutate and collect idioms
 * provide converters to raster format, stars format
 
 
