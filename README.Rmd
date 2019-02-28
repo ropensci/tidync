@@ -26,7 +26,7 @@ long-form data frame. In contrast to other packages tidync helps reduce the volu
 * Connect and summarize `tidync()`.
 * (optionally) Specify source variables `activate()`.
 * (optionally) Specify array sub-setting (slicing) `hyper_filter()`.
-* Read array data in either native `hyper_array()` or long-form (`hyper_tibble()`). 
+* Read array data in either native `hyper_array()` or long-form `hyper_tibble()`. 
 
 NetCDF is **Network Common Data Form** a very common, and very general way to store and work with 
 scientific array-based data. NetCDF is defined and provided by [Unidata](https://www.unidata.ucar.edu/software/netcdf/). R has (independent) support for NetCDF via the [RNetCDF](https://CRAN.R-project.org/package=RNetCDF), [ncdf4](https://CRAN.R-project.org/package=ncdf4), [rhdf5](https://bioconductor.org/packages/release/bioc/html/rhdf5.html), [stars](https://CRAN.R-project.org/package=stars),  [sf](https://CRAN.R-project.org/package=sf) and [rgdal](https://CRAN.R-project.org/package=rgdal) packages. 

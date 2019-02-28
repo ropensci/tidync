@@ -96,7 +96,7 @@
 <li>Connect and summarize <code><a href="reference/tidync.html">tidync()</a></code>.</li>
 <li>(optionally) Specify source variables <code><a href="reference/activate.html">activate()</a></code>.</li>
 <li>(optionally) Specify array sub-setting (slicing) <code><a href="reference/hyper_filter.html">hyper_filter()</a></code>.</li>
-<li>Read array data in either native <code><a href="reference/hyper_array.html">hyper_array()</a></code> or long-form (<code><a href="reference/hyper_tibble.html">hyper_tibble()</a></code>).</li>
+<li>Read array data in either native <code><a href="reference/hyper_array.html">hyper_array()</a></code> or long-form <code><a href="reference/hyper_tibble.html">hyper_tibble()</a></code>.</li>
 </ul>
 <p>NetCDF is <strong>Network Common Data Form</strong> a very common, and very general way to store and work with scientific array-based data. NetCDF is defined and provided by <a href="https://www.unidata.ucar.edu/software/netcdf/">Unidata</a>. R has (independent) support for NetCDF via the <a href="https://CRAN.R-project.org/package=RNetCDF">RNetCDF</a>, <a href="https://CRAN.R-project.org/package=ncdf4">ncdf4</a>, <a href="https://bioconductor.org/packages/release/bioc/html/rhdf5.html">rhdf5</a>, <a href="https://CRAN.R-project.org/package=stars">stars</a>, <a href="https://CRAN.R-project.org/package=sf">sf</a> and <a href="https://CRAN.R-project.org/package=rgdal">rgdal</a> packages.</p>
 <p>This project uses RNetCDF for the primary access to the NetCDF library.</p>
@@ -158,18 +158,17 @@
 <a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; Dimensions 4 (2 active): </span></a>
 <a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;   dim      id name  length    min   max start count   dmin  dmax active </span></a>
-<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;  </span></a>
-<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 1 D0        0 lat     2160 -180.  180.      1  2160 -180.  180.  TRUE   </span></a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 2 D1        1 lon     4320  -90.0  90.0     1  4320  -90.0  90.0 TRUE   </span></a>
-<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; # … with 2 more variables: unlim &lt;lgl&gt;, coord_dim &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt; Inactive dimensions:</span></a>
-<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt;   dim      id name          length   min   max active unlim coord_dim </span></a>
-<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;  &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#&gt; 1 D2        2 rgb                3     1   256 FALSE  FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">#&gt; 2 D3        3 eightbitcolor    256     1     3 FALSE  FALSE FALSE</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;   dim   name  length    min   max start count   dmin  dmax unlim coord_dim </span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 1 D0    lat     2160 -180.  180.      1  2160 -180.  180.  FALSE TRUE      </span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 2 D1    lon     4320  -90.0  90.0     1  4320  -90.0  90.0 FALSE TRUE      </span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; Inactive dimensions:</span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt;   dim   name          length   min   max unlim coord_dim </span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; 1 D2    rgb                3     1   256 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#&gt; 2 D3    eightbitcolor    256     1     3 FALSE FALSE</span></a></code></pre></div>
 <p>There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions <code>tidync</code> and <code>activate</code> and <code>hyper_filter</code> allow us to hone in on the part/s of the data we want, and functions <code>hyper_array</code> and <code>hyper_tibble</code> give raw-array and data frames with-full-coordinates forms respectively.</p>
 <p>Also <a href="this%20blog">http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/</a> post by Matteo De Felice.</p>
 <div id="interactive" class="section level3">

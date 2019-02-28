@@ -23,7 +23,7 @@ steps:
   - (optionally) Specify source variables `activate()`.
   - (optionally) Specify array sub-setting (slicing) `hyper_filter()`.
   - Read array data in either native `hyper_array()` or long-form
-    (`hyper_tibble()`).
+    `hyper_tibble()`.
 
 NetCDF is **Network Common Data Form** a very common, and very general
 way to store and work with scientific array-based data. NetCDF is
@@ -130,18 +130,17 @@ tidync(file)
 #> 
 #> Dimensions 4 (2 active): 
 #>   
-#>   dim      id name  length    min   max start count   dmin  dmax active 
-#>   <chr> <dbl> <chr>  <dbl>  <dbl> <dbl> <int> <int>  <dbl> <dbl> <lgl>  
-#> 1 D0        0 lat     2160 -180.  180.      1  2160 -180.  180.  TRUE   
-#> 2 D1        1 lon     4320  -90.0  90.0     1  4320  -90.0  90.0 TRUE   
-#> # … with 2 more variables: unlim <lgl>, coord_dim <lgl> 
+#>   dim   name  length    min   max start count   dmin  dmax unlim coord_dim 
+#>   <chr> <chr>  <dbl>  <dbl> <dbl> <int> <int>  <dbl> <dbl> <lgl> <lgl>     
+#> 1 D0    lat     2160 -180.  180.      1  2160 -180.  180.  FALSE TRUE      
+#> 2 D1    lon     4320  -90.0  90.0     1  4320  -90.0  90.0 FALSE TRUE      
 #>   
 #> Inactive dimensions:
 #>   
-#>   dim      id name          length   min   max active unlim coord_dim 
-#>   <chr> <dbl> <chr>          <dbl> <dbl> <dbl> <lgl>  <lgl> <lgl>     
-#> 1 D2        2 rgb                3     1   256 FALSE  FALSE FALSE     
-#> 2 D3        3 eightbitcolor    256     1     3 FALSE  FALSE FALSE
+#>   dim   name          length   min   max unlim coord_dim 
+#>   <chr> <chr>          <dbl> <dbl> <dbl> <lgl> <lgl>     
+#> 1 D2    rgb                3     1   256 FALSE FALSE     
+#> 2 D3    eightbitcolor    256     1     3 FALSE FALSE
 ```
 
 There are two main ways of using tidync, interactively to explore what

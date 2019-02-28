@@ -18,13 +18,19 @@ hyper_dims(x, ...)
 data frame
 }
 \description{
-Functions to report on the current \code{hyper_filter} status of the \code{active}
-grid.
+Functions to report on the current status of the \code{active} grid. Information on the active
+dimensions and variables are listed in a data frame with multiple columns.
 }
 \details{
-\code{hyper_vars} will list the names of the variables on the currently active grid
-\code{hyper_dims} will list the ids, names, lengths, and start and count records
-on the currently active dimensions
+The dimensions and variables of the active grid are identified in the
+\link[=print.tidync]{print} method of the tidync object, these functions exist to
+provide that information programmatically.
+
+\code{hyper_vars()} will list the ids, data type, name, dimension number, number of attributes and and coordinate status of the variables on the currently active
+grid.
+
+\code{hyper_dims()} will list the names, lengths, start/count index, ids, and status of dimensions on the currently active grid.
+records on the currently active dimensions
 }
 \examples{
 f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"

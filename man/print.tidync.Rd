@@ -17,13 +17,28 @@ Provide a summary of variables and dimensions, organized by their 'grid' (or
 'count' summaries for each dimension in the active grid.
 }
 \details{
+See \link[=tidync]{tidync} for detail about the object, and
+\link[=hyper_vars]{hyper_vars} for programmatic access to the active grid's
+variable and dimension information.
+
 The print summary is organized in two sections, the first is available grids
 (sets of dimensions) and their associated variables, the second is the
 dimensions, separated into active and inactive. All dimensions may be active
 in some NetCDF sources.
 
-Individual \emph{active} dimensions include the following components:
+Individual \emph{active} dimensions include the following components: * 'dim'    -
+dimension label, D0, D1, D2, ... * 'name'   - dimension name * 'length' -
+size of the dimension * 'min'    - minimum value of the dimension * 'max' -
+maximum value of the dimension * 'start'  - start index of subsetting *
+'count'  - length of subsetting index * 'dmin'   - minimum value of the
+subset dimension * 'dmax'   - maximum value of the subset dimension * 'unlim'
 \itemize{
-\item 'dim' - dimension label, D0, D1, D2, ...
+\item indicates whether dimension is unlimited (spread across other files,
+usually the time-step) * 'coord_dim' - indicates whether dimension is a
+coordinate-dimension (i.e. listed as a 1-D grid)
 }
+
+The \emph{inactive} dimension summary does not include 'start', 'count', 'dmin',
+'dmax' as these are identical to the values of 1, 'length', 'min', 'max' when
+no array subsetting has been applied.
 }

@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Hyper utilities — hyper_vars" />
 
-<meta property="og:description" content="Functions to report on the current hyper_filter status of the active
-grid." />
+<meta property="og:description" content="Functions to report on the current status of the active grid. Information on the active
+dimensions and variables are listed in a data frame with multiple columns." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -122,8 +122,8 @@ grid." />
 
     <div class="ref-description">
     
-    <p>Functions to report on the current <code>hyper_filter</code> status of the <code>active</code>
-grid.</p>
+    <p>Functions to report on the current status of the <code>active</code> grid. Information on the active
+dimensions and variables are listed in a data frame with multiple columns.</p>
     
     </div>
 
@@ -150,9 +150,13 @@ grid.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>hyper_vars</code> will list the names of the variables on the currently active grid
-<code>hyper_dims</code> will list the ids, names, lengths, and start and count records
-on the currently active dimensions</p>
+    <p>The dimensions and variables of the active grid are identified in the
+<a href='print.tidync.html'>print</a> method of the tidync object, these functions exist to
+provide that information programmatically.</p>
+<p><code>hyper_vars()</code> will list the ids, data type, name, dimension number, number of attributes and and coordinate status of the variables on the currently active
+grid.</p>
+<p><code>hyper_dims()</code> will list the names, lengths, start/count index, ids, and status of dimensions on the currently active grid.
+records on the currently active dimensions</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

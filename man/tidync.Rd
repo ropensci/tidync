@@ -19,17 +19,18 @@ tidync(x, what, ...)
 \item{...}{reserved for arguments to methods, currently ignored}
 }
 \description{
-Connect to a NetCDF source and allow use of \code{hyper_*} verbs for slicing
-(\code{hyper_filter()}) and extracting data (\code{hyper_array()}, \code{hyper_tibble()})
+Connect to a NetCDF source and allow use of \code{hyper_*} verbs for slicing with
+\code{\link[=hyper_filter]{hyper_filter()}}, extracting data with \code{\link[=hyper_array]{hyper_array()}} and  [hyper_tibble()
 from an activated grid. By default the largest \emph{grid} encountered is
-activated (see  \code{activate()}).
+activated, see\code{\link[=activate]{activate()}}.
 }
 \details{
 The print method for tidync includes a lot of information about which
-variables exist on which dimensions, and if any slicing (\code{hyper_filter()})
+variables exist on which dimensions, and if any slicing (\code{\link[=hyper_filter]{hyper_filter()}})
 operations have occurred these are summarized as 'start' and 'count'
-modifications relative to the dimension lengths. See \code{[print][print.tidync()]}
-for these details.
+modifications relative to the dimension lengths. See \link[=print.tidync]{print}
+for these details, and \link[=hyper_vars]{hyper_vars} for programmatic access to
+this information
 
 Many NetCDF forms are supported and tidync tries to reduce the interpretation
 applied to a given source. The NetCDF system defines a 'grid' for storing
@@ -59,8 +60,8 @@ dimensions is zero, for example).
  Files with compound types are not yet supported and
 should fail gracefully. Groups are not yet supported.
 
-We haven't yet explored 'HDF5' in detail, so any feedback is appreciated. Major
-use of compound types is made by \url{https://github.com/sosoc/croc}.
+We haven't yet explored 'HDF5' in detail, so any feedback is appreciated.
+Major use of compound types is made by \url{https://github.com/sosoc/croc}.
 }
 
 \examples{

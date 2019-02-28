@@ -145,13 +145,38 @@
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>See <a href='tidync.html'>tidync</a> for detail about the object, and
+<a href='hyper_vars.html'>hyper_vars</a> for programmatic access to the active grid's
+variable and dimension information.</p>
+<p>The print summary is organized in two sections, the first is available grids
+(sets of dimensions) and their associated variables, the second is the
+dimensions, separated into active and inactive. All dimensions may be active
+in some NetCDF sources.</p>
+<p>Individual <em>active</em> dimensions include the following components: * 'dim'    -
+dimension label, D0, D1, D2, ... * 'name'   - dimension name * 'length' -
+size of the dimension * 'min'    - minimum value of the dimension * 'max' -
+maximum value of the dimension * 'start'  - start index of subsetting *
+'count'  - length of subsetting index * 'dmin'   - minimum value of the
+subset dimension * 'dmax'   - maximum value of the subset dimension * 'unlim'</p><ul>
+<li><p>indicates whether dimension is unlimited (spread across other files,
+usually the time-step) * 'coord_dim' - indicates whether dimension is a
+coordinate-dimension (i.e. listed as a 1-D grid)</p></li>
+</ul>
+    <p>The <em>inactive</em> dimension summary does not include 'start', 'count', 'dmin',
+'dmax' as these are identical to the values of 1, 'length', 'min', 'max' when
+no array subsetting has been applied.</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>

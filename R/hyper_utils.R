@@ -14,12 +14,18 @@
 
 #' Hyper utilities
 #'
-#' Functions to report on the current `hyper_filter` status of the `active`
+#' Functions to report on the current status of the `active` grid. Information on the active
+#' dimensions and variables are listed in a data frame with multiple columns.
+#'
+#' The dimensions and variables of the active grid are identified in the
+#' [print][print.tidync()] method of the tidync object, these functions exist to
+#' provide that information programmatically.
+#'
+#' `hyper_vars()` will list the ids, data type, name, dimension number, number of attributes and and coordinate status of the variables on the currently active
 #' grid. 
 #' 
-#' `hyper_vars` will list the names of the variables on the currently active grid
-#' `hyper_dims` will list the ids, names, lengths, and start and count records
-#' on the currently active dimensions
+#' `hyper_dims()` will list the names, lengths, start/count index, ids, and status of dimensions on the currently active grid. 
+#' records on the currently active dimensions
 #' @param x tidync object
 #' @param ... ignored
 #'

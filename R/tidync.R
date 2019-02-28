@@ -1,15 +1,16 @@
 #' Tidy NetCDF
 #'
-#' Connect to a NetCDF source and allow use of `hyper_*` verbs for slicing
-#' (`hyper_filter()`) and extracting data (`hyper_array()`, `hyper_tibble()`)
+#' Connect to a NetCDF source and allow use of `hyper_*` verbs for slicing with
+#' [hyper_filter()], extracting data with [hyper_array()] and  [hyper_tibble()
 #' from an activated grid. By default the largest *grid* encountered is
-#' activated (see  `activate()`).
+#' activated, see[activate()].
 #'
 #' The print method for tidync includes a lot of information about which
-#' variables exist on which dimensions, and if any slicing (`hyper_filter()`)
+#' variables exist on which dimensions, and if any slicing ([hyper_filter()])
 #' operations have occurred these are summarized as 'start' and 'count'
-#' modifications relative to the dimension lengths. See `[print][print.tidync()]`
-#' for these details.
+#' modifications relative to the dimension lengths. See [print][print.tidync()]
+#' for these details, and [hyper_vars][hyper_vars()] for programmatic access to
+#' this information
 #'
 #' Many NetCDF forms are supported and tidync tries to reduce the interpretation
 #' applied to a given source. The NetCDF system defines a 'grid' for storing
@@ -36,8 +37,8 @@
 #' @section Limitations: Files with compound types are not yet supported and
 #'   should fail gracefully. Groups are not yet supported.
 #'
-#'   We haven't yet explored 'HDF5' in detail, so any feedback is appreciated. Major
-#'   use of compound types is made by \url{https://github.com/sosoc/croc}.
+#'   We haven't yet explored 'HDF5' in detail, so any feedback is appreciated.
+#'   Major use of compound types is made by \url{https://github.com/sosoc/croc}.
 #'
 #' @param x path to a NetCDF file
 #' @param ... reserved for arguments to methods, currently ignored
@@ -152,21 +153,28 @@ read_groups <- function(src) {
 #' 'shape') and with a summary of any slicing operations provided as 'start' and
 #' 'count' summaries for each dimension in the active grid.
 #'
+#' See [tidync][tidync()] for detail about the object, and
+#' [hyper_vars][hyper_vars()] for programmatic access to the active grid's
+#' variable and dimension information.
+#'
 #' The print summary is organized in two sections, the first is available grids
 #' (sets of dimensions) and their associated variables, the second is the
 #' dimensions, separated into active and inactive. All dimensions may be active
 #' in some NetCDF sources.
-#' 
-#' Individual *active* dimensions include the following components: 
-#' * 'dim' - dimension label, D0, D1, D2, ...
-#' * 'name' - dimension name
-#' * 'length' - size of the dimension
-#' * 'min'    - minimum value of the dimension 
-#' * 'max'    - maximum value of the dimension
-#' * 'start'  - start index of subsetting 
-#' * 'count'  - length of subsetting index
-#' * 'dmin'   - minimum value of the subset dimension
-#' * 'dmax'   - maximum value of the subset dimension
+#'
+#' Individual *active* dimensions include the following components: * 'dim'    -
+#' dimension label, D0, D1, D2, ... * 'name'   - dimension name * 'length' -
+#' size of the dimension * 'min'    - minimum value of the dimension * 'max' -
+#' maximum value of the dimension * 'start'  - start index of subsetting *
+#' 'count'  - length of subsetting index * 'dmin'   - minimum value of the
+#' subset dimension * 'dmax'   - maximum value of the subset dimension * 'unlim'
+#' - indicates whether dimension is unlimited (spread across other files,
+#' usually the time-step) * 'coord_dim' - indicates whether dimension is a
+#' coordinate-dimension (i.e. listed as a 1-D grid)
+#'
+#' The *inactive* dimension summary does not include 'start', 'count', 'dmin',
+#' 'dmax' as these are identical to the values of 1, 'length', 'min', 'max' when
+#' no array subsetting has been applied.
 #' @param x NetCDF object
 #'
 #' @param ... reserved
