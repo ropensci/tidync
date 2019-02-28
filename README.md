@@ -42,8 +42,8 @@ You can install tidync from github with:
 remotes::install_github("hypertidy/tidync", dependencies = TRUE)
 ```
 
-Also required are packages ‘ncdf4’ and ‘RNetCDF’, so first make sure you
-can install and use these.
+Also required are packages ncdf4 and RNetCDF, so first make sure you can
+install and use these.
 
 ``` r
 install.packages("ncdf4")
@@ -305,7 +305,7 @@ needed. For closer to full support we can also use `rhdf5` or `rgdal`
 which have independent wrappers around the core NetCDF library. Groups
 and compound types are particular challenges, and tidync and ncmeta
 don’t yet exploit all of the currently available facilities. It would
-still be good to have a single authorative wrapper, but the details of
+still be good to have a single authoritative wrapper, but the details of
 that aren’t widely discussed.
 
 ## Code of conduct

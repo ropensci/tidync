@@ -42,7 +42,7 @@ You can install tidync from github with:
 remotes::install_github("hypertidy/tidync", dependencies = TRUE)
 ```
 
-Also required are packages 'ncdf4' and 'RNetCDF', so first make sure you can install and use these. 
+Also required are packages ncdf4 and RNetCDF, so first make sure you can install and use these. 
 
 ```{r,eval=FALSE}
 install.packages("ncdf4")
@@ -209,7 +209,7 @@ In R we can determine those indexes really easily for any given query, tracks ov
 
 For `tidync` we decided to use the term "grid" rather than "shape", and so a grid is the space defined by specific ordered set of dimensions. An "axis" is a particular instance of a dimension within a variable. At times we need to know what grids we have, what variables use those grids, and what axes belong to a variable and in what order. Currently all the facility for determining this information is in package `ncmeta`. 
 
-The `ncmeta` package uses a mix of background packages `ncdf4`, `RNetCDF` because each has facilities and limitations and both are needed. For closer to full support we can also use `rhdf5` or `rgdal` which have independent wrappers around the core NetCDF library. Groups and compound types are particular challenges, and tidync and ncmeta don't yet exploit all of the currently available facilities. It would still be good to have a single authorative wrapper, but the details of that aren't widely discussed. 
+The `ncmeta` package uses a mix of background packages `ncdf4`, `RNetCDF` because each has facilities and limitations and both are needed. For closer to full support we can also use `rhdf5` or `rgdal` which have independent wrappers around the core NetCDF library. Groups and compound types are particular challenges, and tidync and ncmeta don't yet exploit all of the currently available facilities. It would still be good to have a single authoritative wrapper, but the details of that aren't widely discussed. 
 
 
 
