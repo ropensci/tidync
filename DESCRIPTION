@@ -25,9 +25,8 @@ Imports:
     rlang,
     tibble,
     yesno,
-    tidyr,
-    tabularaster
-Remotes: hypertidy/tabularaster, hypertidy/ncmeta
+    tidyr
+Remotes: hypertidy/ncmeta
 RoxygenNote: 6.1.1
 Suggests: ggplot2,
     knitr,

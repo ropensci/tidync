@@ -13,11 +13,12 @@ status](https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg)](h
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
 
 The goal of tidync is to ease exploring the contents of a NetCDF source
-and constructing efficient queries to extract arbitrary hyperslabs. The
-data extracted can be used directly as an array, or in long-form data
-frame. In contrast to other packages tidync helps reduce the volume of
-code required to discover and read the contents of NetCDF, with simple
-steps:
+and constructing efficient queries to extract arbitrary sub-arrays.
+
+The data extracted can be used directly as an array, or in long-form
+data frame. In contrast to other packages tidync helps reduce the volume
+of code required to discover and read the contents of NetCDF, with
+simple steps:
 
   - Connect and summarize `tidync()`.
   - (optionally) Specify source variables `activate()`.
@@ -30,14 +31,17 @@ way to store and work with scientific array-based data. NetCDF is
 defined and provided by
 [Unidata](https://www.unidata.ucar.edu/software/netcdf/). R has
 (independent) support for NetCDF via the
-[RNetCDF](https://CRAN.R-project.org/package=RNetCDF),
 [ncdf4](https://CRAN.R-project.org/package=ncdf4),
 [rhdf5](https://bioconductor.org/packages/release/bioc/html/rhdf5.html),
-[stars](https://CRAN.R-project.org/package=stars),
+[RNetCDF](https://CRAN.R-project.org/package=RNetCDF),
+[rgdal](https://CRAN.R-project.org/package=rgdal),
 [sf](https://CRAN.R-project.org/package=sf) and
-[rgdal](https://CRAN.R-project.org/package=rgdal) packages.
+[vapour](https://CRAN.R-project.org/package=vapour) packages.
 
-This project uses RNetCDF for the primary access to the NetCDF library.
+This project uses RNetCDF for the primary access to the NetCDF library,
+as well as the ncdf4 package in some cases. The wrapper provided by
+[ncmeta](https://CRAN.R-project.org/package=ncmeta) over RNetCDF is used
+to obtain information about data sources.
 
 ## Installation
 
@@ -77,9 +81,7 @@ support OpenDAP/Thredds.
 ### Ubuntu/Debian
 
 On Linux you will need at least the following installed by an
-administrator, here tested on Ubuntu Xenial 16.04. As far as I know
-nothing extra above the libnetcdf-dev library is required for
-OpenDAP/Thredds.
+administrator, here tested on Ubuntu Xenial 16.04.
 
 ``` bash
 apt update 
@@ -95,8 +97,8 @@ apt install libssl-dev
 Then in R
 
 ``` r
-install.packages("devtools")
-devtools::install_github("hypertidy/tidync")
+install.packages("remotes")
+remotes::install_github("hypertidy/tidync")
 ```
 
 At the time of writing the [travis install
