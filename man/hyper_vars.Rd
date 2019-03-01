@@ -3,7 +3,8 @@
 \name{hyper_vars}
 \alias{hyper_vars}
 \alias{hyper_dims}
-\title{Hyper utilities}
+\title{Functions to report on the current status of the \code{active} grid. Information on the active
+dimensions and variables are listed in a data frame with multiple columns.}
 \usage{
 hyper_vars(x, ...)
 
@@ -18,14 +19,11 @@ hyper_dims(x, ...)
 data frame
 }
 \description{
-Functions to report on the current status of the \code{active} grid. Information on the active
-dimensions and variables are listed in a data frame with multiple columns.
-}
-\details{
 The dimensions and variables of the active grid are identified in the
 \link[=print.tidync]{print} method of the tidync object, these functions exist to
 provide that information programmatically.
-
+}
+\details{
 \code{hyper_vars()} will list the ids, data type, name, dimension number, number of attributes and and coordinate status of the variables on the currently active
 grid.
 

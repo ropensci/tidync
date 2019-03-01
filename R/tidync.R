@@ -114,7 +114,7 @@ tidync.character <- function(x, what, ...) {
               grid = meta$grid,
               dimension = meta$dimension, 
               variable = variable)
-  out$transforms <- axis_transforms(out)
+  out$transforms <- hyper_transforms(out, all = TRUE)
 
   out <- structure(out,           class = "tidync")
   ## we can't activate nothing

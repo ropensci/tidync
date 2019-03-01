@@ -1,31 +1,41 @@
 #' Axis transforms
 #'
-#' Axis 'transforms' are data frames of each dimension in a NetCDF source. 
-#' 
-#' Each transform is available by name from a list, and each data frame has
-#' the coordinate of the dimension, its index, and a 'selected' variable
-#' set by the filtering expressions in `hyper_filter` and used by the
-#' read-functions `hyper_array` and `hyper_tibble`. 
-#' 
-#' Use `axis_transforms` to interrogate and explore the available dimension manually, or
-#' for development of custom functions. 
+#' Axis 'transforms' are data frames of each dimension in a NetCDF source.
+#' `hyper_transforms` returns a list of the active transforms by default, 
+#'
+#' Each transform is available by name from a list, and each data frame has the
+#' coordinate of the dimension, its index, and a 'selected' variable set by the
+#' filtering expressions in `hyper_filter` and used by the read-functions
+#' `hyper_array` and `hyper_tibble`.
+#'
+#' Use `hyper_transforms` to interrogate and explore the available dimension
+#' manually, or for development of custom functions.
 #' @param x tidync object
+#' @param all only active transforms are returned by default, set to `TRUE` to return all
 #' @param ... ignored
 #' @export
 #' @return list of axis transforms
-#' @examples 
+#' @examples
 #' l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 #' f <- system.file("extdata", "oceandata", l3file, package = "tidync")
-#' ax <- tidync(f) %>% axis_transforms()
+#' ax <- tidync(f) %>% hyper_transforms()
 #' names(ax)
 #' lapply(ax, dim)
-#' 
+#'
 #' ## this function returns the transforms tidync knows about for this source
 #' str(tidync(f)$transforms)
-axis_transforms <- function(x, ...) {
-  UseMethod("axis_transforms")
+hyper_transforms <- function(x, all = FALSE, ...) {
+  UseMethod("hyper_transforms")
 }
-#' @name axis_transforms
+#' Deprecated functions in tidync
+#' 
+#' @inheritParams hyper_transforms
+#' @export
+#' @name deprecated-tidync
+axis_transforms <- function(x, ...) {
+  .Deprecated("hyper_transforms")
+  UseMethod("hyper_transforms")
+}
 active_axis_transforms <- function(x, ...) {
   grid <- x$grid %>% tidyr::unnest()
   axis <- x$axis
@@ -40,10 +50,11 @@ active_axis_transforms <- function(x, ...) {
   x$transforms[dims$name]
 }
 
-#' @name axis_transforms
+#' @name hyper_transforms
 #' @importFrom dplyr row_number
 #' @export
-axis_transforms.default <- function(x, ...) {
+hyper_transforms.default <- function(x, all = FALSE, ...) {
+  if (!all) return(active_axis_transforms(x, ...))
   grid <- x$grid
   axis <- x$axis
   dimension <- x$dimension

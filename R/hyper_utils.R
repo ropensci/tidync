@@ -12,7 +12,7 @@
 ## return ditto for filtered versions
 ## utility to burn polygons into a NetCDF of nominated mask space
 
-#' Hyper utilities
+#' 
 #'
 #' Functions to report on the current status of the `active` grid. Information on the active
 #' dimensions and variables are listed in a data frame with multiple columns.
@@ -48,7 +48,7 @@ hyper_vars <- function(x, ...) {
 #' @name hyper_vars
 #' @export
 hyper_dims <- function(x, ...) {
-  act <- active_axis_transforms(x)
+  act <- hyper_transforms(x)
   out <- tibble::tibble(name = names(act), 
          length = unlist(lapply(act, nrow)), 
          start = unlist(lapply(act, function(a) which(a$selected)[1])), 

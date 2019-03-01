@@ -40,3 +40,5 @@
   expect_warning(activate(1, "a"))
 
 })
+
+ 

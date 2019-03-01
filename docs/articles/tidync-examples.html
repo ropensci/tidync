@@ -83,7 +83,7 @@
       <h1>NetCDF examples</h1>
                         <h4 class="author">Michael D. Sumner</h4>
             
-            <h4 class="date">2019-02-28</h4>
+            <h4 class="date">2019-03-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hypertidy/tidync/blob/master/vignettes/tidync-examples.Rmd"><code>vignettes/tidync-examples.Rmd</code></a></small>
       <div class="hidden name"><code>tidync-examples.Rmd</code></div>
@@ -149,7 +149,8 @@
 <p>With the ncdf4 package it’s a slightly different approach, but gives the same result.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(ncdf4<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ncdf4/topics/nc_open">nc_open</a></span>(f))</a></code></pre></div>
 <p>Notice how the listing above is organized by <em>dimension</em> and then by <em>variable</em>. It’s not particularly obvious that some variables are defined within the same set of dimensions as others.</p>
-<p>A NetCDF file is a container for simple array based data structures. There is <a href="I.e.%20it's%20not%20possible%20to%20query%20a%20file%20for%20an%20arbitrary%20sparse%20set%20of%20values,%20without%20constructing%20a%20degenerate%20hyperslab%20query%20for%20each%20point%20or%20reading%20a%20hyperslab%20containing%20cells%20not%20in%20the%20set.%20Do%20you%20know%20different?%20Please%20let%20me%20know!">limited capacity</a> in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes.</p>
+<p>A NetCDF file is a container for simple array based data structures. There is <a href="I.e.%20it's%20not%20possible%20to%20query%20a%20file%20for%20an%20arbitrary%20sparse">limited capacity</a> in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes.</p>
+<p>set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set. Do you know different? Please let me know!</p>
 <div id="tidync" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tidync" class="anchor"></a>tidync</h2>
@@ -281,24 +282,23 @@
 <a class="sourceLine" id="cb7-18" data-line-number="18"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
 <p>By specifying inequality expressions we see an <em>implicit</em> subsetting of the array. Everything so far is implicit to delay any file-based computation required to actually interact with the file and read from it.</p>
 <p>Notice that these are “name = expr” paired expressions, because the right hand side may be quite general we need the left hand side name to be assured of the name of the dimension referred to.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">nj =</span> nj <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>)</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt; [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; [2]   D2       : time</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt; Dimensions 3 (all active): </span></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1   632 1032204 1032204 FALSE </span></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; 2 D1    nj       664       1     632     1    19       1     632 FALSE </span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; 3 D2    time       1       1     664     1     1       1      19 FALSE </span></a>
-<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">nj =</span> nj <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">#&gt; Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt; [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt; [2]   D2       : time</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt; Dimensions 3 (all active): </span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1   632 1032204 1032204 FALSE </span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; 2 D1    nj       664       1     632     1    19       1     632 FALSE </span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; 3 D2    time       1       1     664     1     1       1      19 FALSE </span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
 <p>We can also use the special internal variable ‘index’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">concentration <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">ni =</span> index <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/between.html">between</a></span>(index, <span class="dv">30</span>, <span class="dv">100</span>))</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#&gt; </span></a>
@@ -440,14 +440,11 @@
 <a class="sourceLine" id="cb11-73" data-line-number="73"><span class="co">#&gt; 2     2 quality_flag  NC_BYTE     3     6 FALSE</span></a>
 <a class="sourceLine" id="cb11-74" data-line-number="74"></a>
 <a class="sourceLine" id="cb11-75" data-line-number="75"><span class="kw"><a href="../reference/activate.html">active</a></span>(hf)</a>
-<a class="sourceLine" id="cb11-76" data-line-number="76"><span class="co">#&gt; [1] "D0,D1,D2"</span></a>
-<a class="sourceLine" id="cb11-77" data-line-number="77"></a>
-<a class="sourceLine" id="cb11-78" data-line-number="78"><span class="co">#activate(hf)</span></a></code></pre></div>
+<a class="sourceLine" id="cb11-76" data-line-number="76"><span class="co">#&gt; [1] "D0,D1,D2"</span></a></code></pre></div>
 </div>
 <div id="future-improvements" class="section level2">
 <h2 class="hasAnchor">
 <a href="#future-improvements" class="anchor"></a>Future improvements</h2>
-<p>There are many improvements that could be made here, but so far attempting them has complicated matters rather than improving them so I simply list them.</p>
 <ul>
 <li>support multiple sources at once for lazy read of a virtual grid</li>
 <li>support groups</li>

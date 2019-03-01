@@ -32,7 +32,9 @@ test_that("verbs have a character method", {
   l3file <- system.file("extdata/oceandata", f, package= "tidync", mustWork = TRUE)
   hyper_tibble(l3file, lon = lon < -140, lat = lat > 85) %>% expect_s3_class("tbl_df")
   hyper_filter(l3file, lon = lon < -140, lat = lat > 85) %>% expect_s3_class("tidync")
-  hyper_slice(l3file, lon = lon < -140, lat = lat > 85, select_var = "chlor_a") %>% expect_type("list")
+  expect_warning(hyper_slice(l3file, lon = lon < -140, lat = lat > 85, select_var = "chlor_a")) %>% expect_type("list")
+  expect_silent(hyper_array(l3file, lon = lon < -140, lat = lat > 85, select_var = "chlor_a")) %>% expect_type("list")
+  
   hyper_tbl_cube(l3file, lon = lon < -140, lat = lat > 85) %>% expect_s3_class("tbl_cube")
   
 })

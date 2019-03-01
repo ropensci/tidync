@@ -43,7 +43,7 @@ hyper_tbl_cube.tidync <- function(x, ...) {
     inner_join(x[["dimension"]] %>% dplyr::filter(active), c("dim" = "id")) %>% 
     dplyr::pull(.data$name)
   trans <- x[["transforms"]][dim_names]
-  structure(list(mets = hyper_slice(x, ...), 
+  structure(list(mets = hyper_array(x, ...), 
                  dims = stats::setNames(  lapply(dim_names, 
                                                  function(inm) trans[[inm]] %>% 
                                                    dplyr::filter(.data$selected) %>% dplyr::pull(inm) ), 
