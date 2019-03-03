@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidync-examples.html">NetCDF examples</a>
+      <a href="../articles/netcdf-with-tidync.html">NetCDF with tidync</a>
     </li>
   </ul>
 </li>
@@ -115,7 +115,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>dplyr tbl cube</h1>
-    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/dplyr-tbl_cube.R'><code>R/dplyr-tbl_cube.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/hyper_tbl_cube.R'><code>R/hyper_tbl_cube.R</code></a></small>
     <div class="hidden name"><code>hyper_tbl_cube.Rd</code></div>
     </div>
 
@@ -160,24 +160,25 @@
     <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='st'>"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span>
 <span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/oceandata"</span>, <span class='no'>f</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"tidync"</span>)
 (<span class='no'>cube</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tbl_cube</span>(<span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>) <span class='kw'>%&gt;%</span>
-<span class='fu'><a href='activate.html'>activate</a></span>(<span class='no'>chlor_a</span>), <span class='kw'>lon</span> <span class='kw'>=</span> <span class='no'>lon</span> <span class='kw'>&gt;</span> <span class='fl'>107</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='no'>lat</span>) <span class='kw'>&lt;</span> <span class='fl'>30</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: hyper_array should be used instead of hyper_slice</span></div><div class='output co'>#&gt; Source: local array [630,720 x 2]
+<span class='fu'><a href='activate.html'>activate</a></span>(<span class='no'>chlor_a</span>), <span class='kw'>lon</span> <span class='kw'>=</span> <span class='no'>lon</span> <span class='kw'>&gt;</span> <span class='fl'>107</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='no'>lat</span>) <span class='kw'>&lt;</span> <span class='fl'>30</span>))</div><div class='output co'>#&gt; Source: local array [630,720 x 2]
 #&gt; D: lon [dbl, 4320]
 #&gt; D: lat [dbl, 2160]
-#&gt; M: chlor_a [dbl]</div><div class='input'>#ufile <- system.file("extdata", "unidata", "test_hgroups.nc", package = "tidync")
-#tidync(ufile)
-#hyper_tbl_cube(tidync(ufile))
-# library(ggplot2)
-# scl <- function(x) {rng <- range(x, na.rm = TRUE); (x - rng[1])/diff(rng)}
-# library(palr)
-# pal <- chlPal(palette = TRUE)
-# sfg <- scale_fill_gradientn(values = scl(head(pal$breaks, -1)),
-#      colours = pal$cols)
-# ggplot(tibble::as_tibble(cube) %>% dplyr::filter(!is.na(chlor_a))) +
-#geom_raster(aes(lon, lat, fill = chlor_a)) + sfg  + coord_equal() #+
-#geom_polygon(data = ggplot2::map_data("world",
-#xlim = c(100, 180),
-#ylim = c(-30, 30)), aes(long, lat, group = group, fill = NULL))
-</div></pre>
+#&gt; M: chlor_a [dbl]</div><div class='input'><span class='no'>ufile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"unidata"</span>, <span class='st'>"test_hgroups.nc"</span>,
+ <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>, <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>ufile</span>)</div><div class='output co'>#&gt; 
+#&gt; Data Source (1): test_hgroups.nc ...
+#&gt; 
+#&gt; Grids (1) &lt;dimension family&gt; : &lt;associated variables&gt; 
+#&gt; 
+#&gt; [1]   D0 : UTC_time    **ACTIVE GRID** ( 74  values per variable)
+#&gt; 
+#&gt; Dimensions 1 (all active): 
+#&gt;   
+#&gt;   dim   name   length   min   max start count  dmin  dmax unlim coord_dim 
+#&gt;   <span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     
+#&gt; </span><span style='color: #555555;'>1</span><span> D0    recNum     74     1    74     1    74     1    74 FALSE FALSE     </div><div class='input'><span class='fu'>hyper_tbl_cube</span>(<span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>ufile</span>))</div><div class='output co'>#&gt; Source: local array [74 x 1]
+#&gt; D: recNum [int, 74]
+#&gt; M: UTC_time [chr]</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

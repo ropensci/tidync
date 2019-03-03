@@ -2,24 +2,26 @@
 
 #' Subset NetCDF variable by expression
 #'
-#' The 'hyper filter' acts on a 'tidync' object by matching one or more filtering
-#' expressions like with `dplyr::filter`. This allows us to lazily specify a subset 
-#' from a NetCDF array without pulling  any data. The modified object may be printed
-#' to see the effects of subsetting, or saved for further use. 
-#' 
-#' The function `hyper_filter` will act on an existing tidync object or a source string. 
-#' 
-#' Filter arguments must be named as per the dimensions in the variable in form 
-#' `dimname = dimname < 10`. This is a restrictive 
-#' variant of `dplyr::filter`, with a syntax more like `dplyr::mutate`. This ensures that each 
-#' element is named, so we know which dimension to apply this to, but also that the expression 
-#' evaluated against can do some extra work for a nuanced test. 
-#' 
-#' There are special columns provided with each axis, one is 'index' so that exact matching can be
-#' done by position, or to ignore the actual value of the coordinate. That means we can use a form like
-#' `dimname = index < 10` to subset by position in the array index, without necessarily knowing the 
-#' values along that dimension. 
-#' 
+#' The 'hyper filter' acts on a 'tidync' object by matching one or more
+#' filtering expressions like with `dplyr::filter`. This allows us to lazily
+#' specify a subset from a NetCDF array without pulling  any data. The modified
+#' object may be printed to see the effects of subsetting, or saved for further
+#' use.
+#'
+#' The function `hyper_filter` will act on an existing tidync object or a 
+#' source string.
+#'
+#' Filter arguments must be named as per the dimensions in the variable in form
+#' `dimname = dimname < 10`. This is a restrictive variant of `dplyr::filter`,
+#' with a syntax more like `dplyr::mutate`. This ensures that each element is
+#' named, so we know which dimension to apply this to, but also that the
+#' expression evaluated against can do some extra work for a nuanced test.
+#'
+#' There are special columns provided with each axis, one is 'index' so that
+#' exact matching can be done by position, or to ignore the actual value of the
+#' coordinate. That means we can use a form like `dimname = index < 10` to
+#' subset by position in the array index, without necessarily knowing the 
+#' values along that dimension.
 #' @param .x NetCDF file, connection object, or `tidync` object
 #' @param ... currently ignored
 #'
@@ -34,7 +36,7 @@
 #' tidync(l3file) %>% hyper_filter(lon = lon < 100)
 #' ## filter by index
 #' tidync(l3file) %>% hyper_filter(lon = index < 100)
-#' 
+#'
 #' ## filter in combination/s
 #' tidync(l3file) %>% hyper_filter(lat = abs(lat) < 10, lon = index < 100)
 hyper_filter <- function(.x, ...) {
@@ -48,7 +50,10 @@ hyper_filter <- function(.x, ...) {
 hyper_filter.tidync <- function(.x, ...) {
   quo_named <- rlang::quos(...)
   trans0 <- hyper_transforms(.x)
-  if (any(nchar(names(quo_named)) < 1)) stop("subexpressions must be in 'mutate' form, i.e. 'lon = lon > 100' or 'lat = index > 10'")
+  if (any(nchar(names(quo_named)) < 1)) {
+    stop("subexpressions must be in 'mutate' form, i.e.
+           'lon = lon > 100' or 'lat = index > 10'")
+  }
   quo_noname <- unname(quo_named)
 
   for (i in seq_along(quo_named)) {
@@ -58,8 +63,10 @@ hyper_filter.tidync <- function(.x, ...) {
       next
     }
     SELECTION <- dplyr::filter(trans0[[iname]], !!!quo_noname[i])
-    if (nrow(SELECTION) < 1L) stop(sprintf("subexpression for [%s] results in empty slice, no intersection specified", 
+    if (nrow(SELECTION) < 1L) {
+      stop(sprintf("subexpression for [%s] results in empty slice", 
                                                  iname))
+    }
     
     trans0[[iname]]$selected <- trans0[[iname]]$index %in% SELECTION$index
   }
@@ -78,19 +85,21 @@ hyper_filter.character <- function(.x, ...) {
 }
 update_slices <- function(x) {
   transforms <- x[["transforms"]]
- starts <- unlist(lapply(transforms, function(axis) head(which(axis$selected), 1L)))
-  ends <- unlist(lapply(transforms, function(axis) utils::tail(which(axis$selected), 1L)))
-  actual_counts <- unlist(lapply(transforms, function(axis) length(which(axis$selected))))
+ starts <- unlist(lapply(transforms, 
+                         function(axis) head(which(axis$selected), 1L)))
+  ends <- unlist(lapply(transforms, 
+                        function(axis) utils::tail(which(axis$selected), 1L)))
+  actual_counts <- unlist(lapply(transforms, 
+                                 function(axis) length(which(axis$selected))))
   counts <- ends - starts + 1L
   ## todo make this more informative
-  if (!all(counts == actual_counts)) warning("arbitrary indexing within dimension is not yet supported")
-                        
+  if (!all(counts == actual_counts)) {
+    warning("arbitrary indexing within dimension is not yet supported")
+  }                        
  idx <- match(names(starts), x[["dimension"]][["name"]])
  x[["dimension"]][["start"]] <- NA
  x[["dimension"]][["count"]] <- NA
  x[["dimension"]][["start"]][idx] <- starts
  x[["dimension"]][["count"]][idx] <- counts
- 
-#  x[["dimension"]] <- dplyr::inner_join(x[["dimension"]], tibble(name = names(starts), start = starts, count = counts), "name")
-x
+ x
 }

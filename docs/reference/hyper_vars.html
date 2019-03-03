@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hyper utilities — hyper_vars • tidync</title>
+<title>Grid status — hyper_vars • tidync</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,11 @@
 
 
 
-<meta property="og:title" content="Hyper utilities — hyper_vars" />
+<meta property="og:title" content="Grid status — hyper_vars" />
 
-<meta property="og:description" content="Functions to report on the current status of the active grid. Information on the active
-dimensions and variables are listed in a data frame with multiple columns." />
+<meta property="og:description" content="Functions to report on the current status of the active grid. Information
+on the active dimensions and variables are listed in a data frame with
+multiple columns." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +65,7 @@ dimensions and variables are listed in a data frame with multiple columns." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -87,7 +88,7 @@ dimensions and variables are listed in a data frame with multiple columns." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidync-examples.html">NetCDF examples</a>
+      <a href="../articles/netcdf-with-tidync.html">NetCDF with tidync</a>
     </li>
   </ul>
 </li>
@@ -115,15 +116,16 @@ dimensions and variables are listed in a data frame with multiple columns." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Hyper utilities</h1>
-    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/hyper_utils.R'><code>R/hyper_utils.R</code></a></small>
+    <h1>Grid status</h1>
+    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/hyper_vars_dims.R'><code>R/hyper_vars_dims.R</code></a></small>
     <div class="hidden name"><code>hyper_vars.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Functions to report on the current status of the <code>active</code> grid. Information on the active
-dimensions and variables are listed in a data frame with multiple columns.</p>
+    <p>Functions to report on the current status of the <code>active</code> grid. Information
+on the active dimensions and variables are listed in a data frame with
+multiple columns.</p>
     
     </div>
 
@@ -153,10 +155,12 @@ dimensions and variables are listed in a data frame with multiple columns.</p>
     <p>The dimensions and variables of the active grid are identified in the
 <a href='print.tidync.html'>print</a> method of the tidync object, these functions exist to
 provide that information programmatically.</p>
-<p><code>hyper_vars()</code> will list the ids, data type, name, dimension number, number of attributes and and coordinate status of the variables on the currently active
-grid.</p>
-<p><code>hyper_dims()</code> will list the names, lengths, start/count index, ids, and status of dimensions on the currently active grid.
-records on the currently active dimensions</p>
+<p><code>hyper_vars()</code> will list the ids, data type, name, dimension number, number
+of attributes and and coordinate status of the variables on the currently
+active grid.</p>
+<p><code>hyper_dims()</code> will list the names, lengths, start/count index, ids, and
+status of dimensions on the currently active grid. records on the currently
+active dimensions</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

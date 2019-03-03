@@ -13,10 +13,12 @@
 )
  test_that("various access and activation works", {
 
-   ufile <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
+   ufile <- system.file("extdata", "unidata", "madis-hydro.nc", 
+                        package = "tidync", mustWork = TRUE)
    tnc <- tidync(ufile)
 
-  ## changed with nesting of variables in nc_grids https://github.com/hypertidy/ncmeta/issues/26
+  ## changed with nesting of variables in nc_grids 
+  ## https://github.com/hypertidy/ncmeta/issues/26
   #expect_equal(active(tidync(ufile)) , "D0,D12")
   expect_equal(active(tidync(ufile)) , "D5,D12")
   
@@ -35,10 +37,20 @@
   
   expect_error(activate(tnc2, snarfleglobber), "not found")
   snarfleglobber <-   "snarfleglobber "
-  expect_error(activate(tnc2, snarfleglobber), "Only possible")
+  expect_error(activate(tnc2, snarfleglobber), "Activate grids by name")
   
   expect_warning(activate(1, "a"))
+  expect_true(sum(activate(tnc, "D11")$variable$active) == 2L) 
+  
+  expect_true(sum(activate(tnc, "D11", 
+                           select_var = "firstInBin")$variable$active) == 1L) 
 
+  expect_true(sum(activate(tnc, firstInBin)$variable$active) == 1L) 
+  
+  expect_true(sum(activate(tnc, firstInBin, 
+                           select_var = "firstInBin")$variable$active) == 1L) 
+  
+  expect_warning(active("a"), "determining active status of object not recognized")
+  
 })
 
- 

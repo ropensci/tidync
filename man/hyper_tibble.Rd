@@ -17,20 +17,24 @@ hyper_tibble(x, ..., na.rm = TRUE)
 
 \item{...}{arguments to `hyper_filter``}
 
-\item{na.rm}{if \code{TRUE} these rows are not included in the output when all variables are \code{NA}}
+\item{na.rm}{if \code{TRUE} these rows are not included in the output when all
+variables are \code{NA}}
 }
 \value{
 a \code{tbl_df}
 }
 \description{
-Extract the raw array data as an expanded data frame. This can be the
-entire variable/s or after dimension-slicing using \code{hyper_filter} expressions with
-dimension values expanded appropriately for each element in the arrays (one row per element).
+Extract the raw array data as an expanded data frame. This can be the entire
+variable/s or after dimension-slicing using \code{hyper_filter} expressions with
+dimension values expanded appropriately for each element in the arrays (one
+row per element).
 }
 \details{
-The function \code{hyper_array} will act on an existing tidync object or a source string.
+The function \code{hyper_array} will act on an existing tidync object or a source
+string.
 
-By default all variables in the active grid are returned, use \code{select_var} to limit.
+By default all variables in the active grid are returned, use \code{select_var} to
+limit.
 }
 \examples{
 l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
@@ -40,10 +44,10 @@ hyper_filter(rnc)
 library(dplyr)
 lapply(hyper_array(f, lat = lat > 0, lon = index > 3000), dim)
 
- ht <- hyper_tibble(rnc) \%>\% 
- filter(!is.na(chlor_a)) 
-ht   
+ ht <- hyper_tibble(rnc) \%>\%
+ filter(!is.na(chlor_a))
+ht
 library(ggplot2)
-ggplot(ht \%>\% filter(!is.na(chlor_a)), 
+ggplot(ht \%>\% filter(!is.na(chlor_a)),
 aes(x = lon, y = lat, fill = chlor_a)) + geom_tile()
 }

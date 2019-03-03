@@ -78,10 +78,16 @@ tidync <- function(x, what, ...) {
 #' @export
 #' @importFrom ncmeta nc_meta
 tidync.character <- function(x, what, ...) {
-  if (length(x) > 1) warning("multiple sources: only one source name allowed, ignoring all but the first")
+  if (length(x) > 1) {
+    warning("only one source allowed, first supplied chosen")
+    x <- x[1L]
+  }
   fexists <- file.exists(x)
   
-  if (!fexists) cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", x))
+  if (!fexists) {
+    cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", 
+                x))
+  }
   safemeta <- purrr::safely(ncmeta::nc_meta)
   meta <- safemeta(x)
 
@@ -103,7 +109,8 @@ tidync.character <- function(x, what, ...) {
     warning("no variables found")
   }
   if (bad_dim && bad_var) {
-    stop("no variables or dimension recognizable \n  (is this a source with compound-types? Try h5, rhdf5, or hdf5r)")
+    stop("no variables or dimension recognizable \n  
+         (is this a source with compound-types? Try h5, rhdf5, or hdf5r)")
   }
   if (!fexists) cat("Connection succeeded. \n")      
   meta <- meta$result
@@ -138,13 +145,7 @@ first_numeric_var <- function(x) {
   if (nrow(priorityvar) < 1) {
      return(priorityvar$variable[1L])
   }
-  if (priorityvar$type[1] == "NC_CHAR") {
-   warning("no non-NC_CHAR variables found (dimensionality does not make sense with CHAR, so beware)")
-  }
   priorityvar$variable[1L]
-}
-read_groups <- function(src) {
-  ncdf4::nc_open(src, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
 }
 
 #' Print tidync object
@@ -190,10 +191,12 @@ print.tidync <- function(x, ...) {
   nshapes <- nrow(ushapes)
   cat(sprintf("\nData Source (%i): %s ...\n", 
               nrow(x$source), 
-              paste(utils::head(basename(x$source$source), 2), collapse = ", ")))
-  cat(sprintf("\nGrids (%i) <dimension family> : <associated variables> \n\n", nshapes))
+          paste(utils::head(basename(x$source$source), 2), collapse = ", ")))
+  cat(sprintf("\nGrids (%i) <dimension family> : <associated variables> \n\n", 
+              nshapes))
   if (nrow(ushapes) < 1L) {
-    cat("No recognizable dimensions or variables \n(... maybe HDF5? Consider 'rhdf5' package from Bioconductor.)\n")
+    cat("No recognizable dimensions or variables \n 
+        (... maybe HDF5? Consider 'rhdf5' package from Bioconductor.)\n")
     cat("\nStandard ncdump -h output follows for reference: \n\n")
     RNetCDF::print.nc(RNetCDF::open.nc(x$source$source))
     return(invisible(NULL))  
@@ -215,9 +218,13 @@ print.tidync <- function(x, ...) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
     
-    cat(paste((vargrids %>% dplyr::inner_join(ushapes[ishape, ], "grid"))$variable, collapse = ", "))
-    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", format(estimatebigtime), 
-                                                sprintf(" value%s per variable)", ifelse(estimatebigtime > 1, "s", "")))
+    cat(paste((vargrids %>% 
+                 dplyr::inner_join(ushapes[ishape, ], "grid"))$variable, 
+              collapse = ", "))
+    if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", 
+                                                format(estimatebigtime), 
+                                            sprintf(" value%s per variable)", 
+                                ifelse(estimatebigtime > 1, "s", "")))
     cat("\n")
   }
   dims <- x$dimension
@@ -225,7 +232,9 @@ print.tidync <- function(x, ...) {
   ## handle case where value is character
   for (i in seq_along(x$transforms)) {
     
-    if (!is.numeric(x$transforms[[nms[i]]][[nms[i]]])) x$transforms[[nms[i]]][[nms[i]]] <- NA_integer_
+    if (!is.numeric(x$transforms[[nms[i]]][[nms[i]]])) {
+      x$transforms[[nms[i]]][[nms[i]]] <- NA_integer_
+    }
   }
   ranges <- setNames(lapply(nms, function(a) {
     range(x$transforms[[a]][[a]])
@@ -248,17 +257,26 @@ print.tidync <- function(x, ...) {
   dims_active <- dims$active
   if (nrow(dims) > 0) { 
     alldims <- dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
-      dplyr::select(.data$dim, .data$id, .data$name, .data$length, .data$min, .data$max, .data$start, .data$count, .data$dmin, .data$dmax, .data$active, .data$unlim, .data$coord_dim) %>% 
+      dplyr::select(.data$dim, .data$id, .data$name, .data$length, 
+                    .data$min, .data$max, .data$start, .data$count, 
+                    .data$dmin, .data$dmax, .data$active, .data$unlim, 
+                    .data$coord_dim) %>% 
       dplyr::arrange(desc(.data$active), .data$id)
     
-  dimension_active <-  format(alldims %>% dplyr::filter(.data$active) %>% dplyr::mutate(id = NULL, active = NULL), n = Inf)
+  dimension_active <-  format(alldims %>% 
+                              dplyr::filter(.data$active) %>% 
+                              dplyr::mutate(id = NULL, active = NULL), n = Inf)
   dimension_other <- format(alldims %>% dplyr::filter(!.data$active) %>% 
-                              dplyr::select(.data$dim, .data$name, .data$length, .data$min, .data$max, .data$unlim, .data$coord_dim), n = Inf)
+                              dplyr::select(.data$dim, .data$name,   
+                                            .data$length, .data$min, .data$max,
+                                            
+                                        .data$unlim, .data$coord_dim), n = Inf)
     
   }
 
   if (any(!dims_active)) {
-    cat(sprintf("\nDimensions %i (%i active): \n", nrow(dims), sum(dims_active)))
+    cat(sprintf("\nDimensions %i (%i active): \n", nrow(dims), 
+                sum(dims_active)))
   } else {
     cat(sprintf("\nDimensions %i (all active): \n", nrow(dims)))
   }

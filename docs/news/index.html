@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -83,7 +83,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidync-examples.html">NetCDF examples</a>
+      <a href="../articles/netcdf-with-tidync.html">NetCDF with tidync</a>
     </li>
   </ul>
 </li>
@@ -115,6 +115,15 @@
       <small>Source: <a href='https://github.com/hypertidy/tidync/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="tidync-0-1-0" class="section level1">
+<h1 class="page-header">
+<a href="#tidync-0-1-0" class="anchor"></a>tidync 0.1.0</h1>
+<ul>
+<li><p>Now supports ‘NC_CHAR’ type, by exploding these into the array size expected.</p></li>
+<li><p>Breaking change: when using <code>tidync$grid</code>it’s now expected that this must be <code><a href="https://tidyr.tidyverse.org/reference/unnest.html">tidyr::unnest()</a></code>ed in order to expand out the grid list per variable, in line with <a href="https://github.com/hypertidy/ncmeta/issues/26" class="uri">https://github.com/hypertidy/ncmeta/issues/26</a>.</p></li>
+<li><p>The <code>hyper_array</code> function now stores the relevant transforms table as an attribute “transforms” so that objects can be constructed directly from the raw array output.</p></li>
+</ul>
+</div>
     <div id="tidync-0-0-3" class="section level1">
 <h1 class="page-header">
 <a href="#tidync-0-0-3" class="anchor"></a>tidync 0.0.3</h1>
@@ -154,6 +163,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#tidync-0-1-0">0.1.0</a></li>
         <li><a href="#tidync-0-0-3">0.0.3</a></li>
         <li><a href="#tidync-0-0-2">0.0.2</a></li>
         <li><a href="#tidync-0-0-1">0.0.1</a></li>

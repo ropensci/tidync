@@ -18,23 +18,26 @@ hyper_filter(.x, ...)
 data frame
 }
 \description{
-The 'hyper filter' acts on a 'tidync' object by matching one or more filtering
-expressions like with \code{dplyr::filter}. This allows us to lazily specify a subset
-from a NetCDF array without pulling  any data. The modified object may be printed
-to see the effects of subsetting, or saved for further use.
+The 'hyper filter' acts on a 'tidync' object by matching one or more
+filtering expressions like with \code{dplyr::filter}. This allows us to lazily
+specify a subset from a NetCDF array without pulling  any data. The modified
+object may be printed to see the effects of subsetting, or saved for further
+use.
 }
 \details{
-The function \code{hyper_filter} will act on an existing tidync object or a source string.
+The function \code{hyper_filter} will act on an existing tidync object or a
+source string.
 
 Filter arguments must be named as per the dimensions in the variable in form
-\code{dimname = dimname < 10}. This is a restrictive
-variant of \code{dplyr::filter}, with a syntax more like \code{dplyr::mutate}. This ensures that each
-element is named, so we know which dimension to apply this to, but also that the expression
-evaluated against can do some extra work for a nuanced test.
+\code{dimname = dimname < 10}. This is a restrictive variant of \code{dplyr::filter},
+with a syntax more like \code{dplyr::mutate}. This ensures that each element is
+named, so we know which dimension to apply this to, but also that the
+expression evaluated against can do some extra work for a nuanced test.
 
-There are special columns provided with each axis, one is 'index' so that exact matching can be
-done by position, or to ignore the actual value of the coordinate. That means we can use a form like
-\code{dimname = index < 10} to subset by position in the array index, without necessarily knowing the
+There are special columns provided with each axis, one is 'index' so that
+exact matching can be done by position, or to ignore the actual value of the
+coordinate. That means we can use a form like \code{dimname = index < 10} to
+subset by position in the array index, without necessarily knowing the
 values along that dimension.
 }
 \examples{

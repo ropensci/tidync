@@ -11,7 +11,7 @@
 #' Use `hyper_transforms` to interrogate and explore the available dimension
 #' manually, or for development of custom functions.
 #' @param x tidync object
-#' @param all only active transforms are returned by default, set to `TRUE` to return all
+#' @param all set to `TRUE` to return all transforms, not only active ones 
 #' @param ... ignored
 #' @export
 #' @return list of axis transforms
@@ -24,6 +24,7 @@
 #'
 #' ## this function returns the transforms tidync knows about for this source
 #' str(tidync(f)$transforms)
+#' names(hyper_transforms(tidync(f), all = TRUE))
 hyper_transforms <- function(x, all = FALSE, ...) {
   UseMethod("hyper_transforms")
 }
@@ -73,10 +74,11 @@ hyper_transforms.default <- function(x, all = FALSE, ...) {
   
   for (i in seq_along(transforms)) {
     ll <- list(value = ifelse(rep(dims$coord_dim[i], dims$length[i]), 
-                        nc_get(source$source, dims$name[i]), seq_len(dims$length[i])))
+                nc_get(source$source, dims$name[i]), seq_len(dims$length[i])))
     axis <- tibble::as_tibble(ll)
     names(axis)  <- dims$name[i]
-    ## axis might have a column called "i"  https://github.com/hypertidy/tidync/issues/74
+    ## axis might have a column called "i"  
+    ## https://github.com/hypertidy/tidync/issues/74
     id_value <- dims$dimension[i]
     dim_name <- dims$name[i]
     dim_coord <- dims$coord_dim[i]

@@ -32,9 +32,9 @@
 
 <meta property="og:title" content="Tidy tools for NetCDF data. — tidync-package" />
 
-<meta property="og:description" content="Provides easy to use idioms for working with NetCDF data for
-extraction, manipulation and visualization.
-NetCDF is Network Common Data Form https://www.unidata.ucar.edu/software/netcdf/." />
+<meta property="og:description" content="Provides easy to use idioms for working with NetCDF data for extraction,
+manipulation and visualization. NetCDF is Network Common Data Form
+https://www.unidata.ucar.edu/software/netcdf/." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@ NetCDF is Network Common Data Form https://www.unidata.ucar.edu/software/netcdf/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@ NetCDF is Network Common Data Form https://www.unidata.ucar.edu/software/netcdf/
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidync-examples.html">NetCDF examples</a>
+      <a href="../articles/netcdf-with-tidync.html">NetCDF with tidync</a>
     </li>
   </ul>
 </li>
@@ -117,15 +117,15 @@ NetCDF is Network Common Data Form https://www.unidata.ucar.edu/software/netcdf/
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Tidy tools for NetCDF data.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/tidync-package.r'><code>R/tidync-package.r</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/tidync-package.R'><code>R/tidync-package.R</code></a></small>
     <div class="hidden name"><code>tidync-package.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Provides easy to use idioms for working with NetCDF data for
-extraction, manipulation and visualization.
-NetCDF is Network Common Data Form <a href='https://www.unidata.ucar.edu/software/netcdf/'>https://www.unidata.ucar.edu/software/netcdf/</a>.</p>
+    <p>Provides easy to use idioms for working with NetCDF data for extraction,
+manipulation and visualization. NetCDF is Network Common Data Form
+<a href='https://www.unidata.ucar.edu/software/netcdf/'>https://www.unidata.ucar.edu/software/netcdf/</a>.</p>
     
     </div>
 
@@ -134,18 +134,31 @@ NetCDF is Network Common Data Form <a href='https://www.unidata.ucar.edu/softwar
 
     <p>There is a family of functions "hyper_verb" around exploring and
 extracting data.</p><table class='table'>
+<tr><td></td><td><code><a href='activate.html'>active</a></code></td></tr>
+<tr><td></td><td>report the currently active grid</td></tr>
+<tr><td></td><td><code><a href='activate.html'>activate</a></code></td></tr>
+<tr><td></td><td>active a grid</td></tr>
 <tr><td></td><td><code><a href='tidync.html'>tidync</a></code></td></tr>
-<tr><td></td><td>extracts all file metadata in an object useable by other tidync functions</td></tr>
+<tr><td></td><td>core NetCDF source object for tidync functions</td></tr>
 <tr><td></td><td><code><a href='hyper_filter.html'>hyper_filter</a></code></td></tr>
-<tr><td></td><td>processes user-driven expressions to filter based on NetCDF dimensions</td></tr>
+<tr><td></td><td>apply dimension expressions to specify array slices</td></tr>
 <tr><td></td><td><code><a href='hyper_array.html'>hyper_array</a></code></td></tr>
 <tr><td></td><td>extracts a raw data array based on a NetCDF index</td></tr>
+<tr><td></td><td><code><a href='hyper_tbl_cube.html'>hyper_tbl_cube</a></code></td></tr>
+<tr><td></td><td>extracts data as a dplyr tbl_cube</td></tr>
 <tr><td></td><td><code><a href='hyper_tibble.html'>hyper_tibble</a></code></td></tr>
-<tr><td></td><td>extracts the slice as a data frame with all dimension values</td></tr>
+<tr><td></td><td>extracts data as a data frame with all dimension values</td></tr>
+<tr><td></td><td><code><a href='hyper_transforms.html'>hyper_transforms</a></code></td></tr>
+<tr><td></td><td>extract the active (or all) dimension transforms</td></tr>
+<tr><td></td><td><code><a href='hyper_vars.html'>hyper_vars</a></code></td></tr>
+<tr><td></td><td>information on active variables</td></tr>
+<tr><td></td><td><code><a href='hyper_vars.html'>hyper_dims</a></code></td></tr>
+<tr><td></td><td>information on active dimensions</td></tr>
 <tr><td></td><td></td></tr>
 </table>
-<p>The scheme generally processes dimension filters into NetCDF extraction indexes and these are always available
-to each function, and are expressed in print methods.</p>
+<p>The scheme generally processes dimension filters into NetCDF extraction
+indexes and these are always available to each function, and are expressed
+in print methods.</p>
     
 
   </div>

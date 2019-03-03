@@ -1,14 +1,16 @@
 Package: tidync
 Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.0.4
+Version: 0.1.0
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
              person("Ben", "Raymond", role = "ctb"))
-Description: Tidy tools for 'NetCDF' data sources. Explore the contents of a 'NetCDF' source (file or URL) 
- presented as variables organized by grid with a database-like interface. The 'hyper_filter' verb 
- shows the effects of array-slicing expressions by value or index. Actual data read is delayed until explicitly 
- requested, as a data frame or list of arrays. 
+Description: Tidy tools for 'NetCDF' data sources. Explore the contents of a 
+ 'NetCDF' source (file or URL) presented as variables organized by grid with a 
+ database-like interface. The 'hyper_filter' interactive function translates the 
+ filter value or index expressions to array-slicing form. No data is read is 
+ delayed until explicitly requested, as a data frame, list of arrays or other 
+ form. 
 Depends: R (>= 3.3.0)
 License: GPL-3
 Encoding: UTF-8

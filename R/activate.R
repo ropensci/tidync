@@ -3,10 +3,10 @@
 #'
 #' A grid is the definition use in NetCDF for the shape and size of array
 #' variables, and if only one exists it is activated by default. A grid must be
-#' selected by name in the form of 'D1,D0' where one or more numbered dimensions
-#' indicates the grid. The grid definition names are printed as part of the
-#' summary of in the tidync object and may be obtained directly with
-#' `tidync(file)$grid$grid` on the tidync object.
+#' selected by name in the form of 'D1,D0' where one or more numbered 
+#' dimensions indicates the grid. The grid definition names are printed 
+#' as part of the summary of in the tidync object and may be obtained 
+#' directly with `tidync(file)$grid$grid` on the tidync object.
 #'
 #' Activation of a grid sets the context for downstream operations (slicing and
 #' reading data) from NetCDF, and as there may be several grids in a single
@@ -27,7 +27,8 @@
 #' @aliases active activate active<-
 #' @examples
 #' l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
-#' rnc <- tidync(system.file("extdata", "oceandata", l3file, package = "tidync"))
+#' rnc <- tidync(system.file("extdata", "oceandata", l3file, 
+#' package = "tidync"))
 #' activate(rnc, "palette")
 #' 
 #' ## extract available grid names
@@ -48,17 +49,17 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
     what <- vargrids$grid[vargrids$variable == what_name]
     select_var <- what_name
   } else if (what %in% .data$variable$name){
-    if (!is.null(select_var)) vargrids <- vargrids[vargrids$variable == select_var, , drop = FALSE]
-    #what <- paste(paste0("D", .data$axis$dimension[.data$axis$variable == select_var]), collapse = ",")
-    #.data$grid$grid[.data$grid$variable == what]
-
+    if (!is.null(select_var)) {
+      vargrids <- vargrids[vargrids$variable == select_var, , drop = FALSE]
+    }
     what <- vargrids$grid[1L]
   }
 
   if (is.numeric(what)) {
     ## this pattern is copied from print
     ## remove $variables because it a list 
-    ushapes <- dplyr::distinct(.data$grid %>% dplyr::select(-.data$variables)) %>% 
+    ushapes <- dplyr::distinct(.data$grid %>% 
+                                 dplyr::select(-.data$variables)) %>% 
       dplyr::arrange(desc(nchar(.data$grid)))
     ## otherwise pick the what-th grid
     stopifnot(what >= 1 && what <= nrow(.data$grid))
@@ -71,12 +72,17 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
     dplyr::inner_join(.data[["variable"]], c("variable" = "name"))
 
   if (!is.null(select_var)) {
-    active_variables <- inner_join(active_variables, tibble::tibble(variable = select_var), "variable")
+    active_variables <- inner_join(active_variables, 
+                                   tibble::tibble(variable = select_var), 
+                                   "variable")
   }
-  active_dimensions <- as.integer(gsub("^D", "", unlist(strsplit(active(.data), ","))))
+  active_dimensions <- as.integer(gsub("^D", "", 
+                                       unlist(strsplit(active(.data), ","))))
   .data$dimension$active <- rep(FALSE, nrow(.data$dimension))
   .data$dimension$active[active_dimensions + 1] <- TRUE
-  .data[["variable"]] <-  mutate(.data[["variable"]], active = .data$name %in% active_variables$variable)
+  .data[["variable"]] <-  
+    mutate(.data[["variable"]], 
+    active = .data$name %in% active_variables$variable)
   .data <- update_slices(.data)
   .data
 }
@@ -90,9 +96,10 @@ active.tidync <- function(x) {
   #vn <- var_names(x)
   sn <- unique(x$grid$grid)
   if (!value %in% sn) {
-    #stop(sprintf('Only possible to activate existing variables: %s', paste(vn, collapse = ", ")), call. = FALSE)
-     
-   stop(sprintf('Only possible to activate grids by name (or number, or by nominated variable): \n%s', paste(sn, collapse = "\n")), call. = FALSE)
+    txt <- 'Activate grids by name (or number, or by nominated variable): \n%s'
+    mess <- sprintf(txt, 
+                    paste(sn, collapse = "\n"))
+   stop(mess, call. = FALSE)
   }
   attr(x, 'active') <- value
   x

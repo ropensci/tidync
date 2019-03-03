@@ -1,7 +1,4 @@
-# dev
-
-* `axis_transforms` is deprecated by `hyper_transforms()` which includes an argument
-`all` to control which set of transforms is returned. 
+# tidync 0.1.0
 
 * Now supports 'NC_CHAR' type, by exploding these into the array size expected. 
 

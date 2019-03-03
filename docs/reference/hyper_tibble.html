@@ -32,9 +32,10 @@
 
 <meta property="og:title" content="Extract NetCDF data as an expanded table. — hyper_tibble" />
 
-<meta property="og:description" content="Extract the raw array data as an expanded data frame. This can be the
-entire variable/s or after dimension-slicing using hyper_filter expressions with
-dimension values expanded appropriately for each element in the arrays (one row per element)." />
+<meta property="og:description" content="Extract the raw array data as an expanded data frame. This can be the entire
+variable/s or after dimension-slicing using hyper_filter expressions with
+dimension values expanded appropriately for each element in the arrays (one
+row per element)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +66,7 @@ dimension values expanded appropriately for each element in the arrays (one row 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -88,7 +89,7 @@ dimension values expanded appropriately for each element in the arrays (one row 
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidync-examples.html">NetCDF examples</a>
+      <a href="../articles/netcdf-with-tidync.html">NetCDF with tidync</a>
     </li>
   </ul>
 </li>
@@ -123,9 +124,10 @@ dimension values expanded appropriately for each element in the arrays (one row 
 
     <div class="ref-description">
     
-    <p>Extract the raw array data as an expanded data frame. This can be the
-entire variable/s or after dimension-slicing using <code>hyper_filter</code> expressions with
-dimension values expanded appropriately for each element in the arrays (one row per element).</p>
+    <p>Extract the raw array data as an expanded data frame. This can be the entire
+variable/s or after dimension-slicing using <code>hyper_filter</code> expressions with
+dimension values expanded appropriately for each element in the arrays (one
+row per element).</p>
     
     </div>
 
@@ -150,7 +152,8 @@ dimension values expanded appropriately for each element in the arrays (one row 
     </tr>
     <tr>
       <th>na.rm</th>
-      <td><p>if <code>TRUE</code> these rows are not included in the output when all variables are <code>NA</code></p></td>
+      <td><p>if <code>TRUE</code> these rows are not included in the output when all
+variables are <code>NA</code></p></td>
     </tr>
     </table>
     
@@ -160,8 +163,10 @@ dimension values expanded appropriately for each element in the arrays (one row 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function <code>hyper_array</code> will act on an existing tidync object or a source string.</p>
-<p>By default all variables in the active grid are returned, use <code>select_var</code> to limit.</p>
+    <p>The function <code>hyper_array</code> will act on an existing tidync object or a source
+string.</p>
+<p>By default all variables in the active grid are returned, use <code>select_var</code> to
+limit.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

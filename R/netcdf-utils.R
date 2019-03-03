@@ -1,4 +1,3 @@
-
 #' @importFrom ncdf4 nc_open nc_close ncvar_get
 #' @importFrom RNetCDF open.nc close.nc var.get.nc
 #' @importFrom purrr safely
@@ -15,14 +14,14 @@ nc_get.character <- function(x, v, test = FALSE, ...) {
     if (!is.null(val$result)) return(val$result)
   } else {
   con4 <- NULL
-  con4 <- ncdf4::nc_open(x, readunlim = FALSE, verbose = FALSE, auto_GMT = FALSE, suppress_dimvals = TRUE)
+  con4 <- ncdf4::nc_open(x, readunlim = FALSE, verbose = FALSE, 
+                         auto_GMT = FALSE, suppress_dimvals = TRUE)
   on.exit(ncdf4::nc_close(con4), add = TRUE)
   safe_get4 <- purrr::safely(nc_get.ncdf4)
   val <- safe_get4(con4, v)
   if (!is.null(val$result)) {
     return(val$result)
   } else {
-    #stop("error")
     warning("dimension has no coordinates, returning index")
     return()
   }

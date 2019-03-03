@@ -212,13 +212,38 @@ hf %>%
   dplyr::filter(!is.na(concentration))
 ```
 
-## Helper functions
+## Interrogating sea ice concentration
 
-Further utilities are available to get immediate information on the current
-status of the activated grid, and the subsetted space. These are directly
+
+The connection object 'hf' is available for determining what is available and how we might cut into it. 'time' interestingly is of length 1, so perhaps adds nothing to the information about this otherwise 2D data set. If we were to open this file in `ncdf4` or `RNetCDF` and wanted to take a subset of the file out, we would have to specify and `start` of 1 and a `count` of ` even though it's completely redundant. 
+
+
+```{r sea-ice-example}
+hf
+```
+
+
+The 'start' and 'count' values reported are directly
 useable by the traditional API tools, and in particular by the functions
 `ncdf4::ncvar_get()` (`varid`, `start`, `count`), its counterpart in
 `RNetCDF::var.get.nc()` and command line tools like CDO.
+
+
+But, it's a pain to have to know the dimension of the variable and specify every slot. Code in the traditional API that looks like this
+
+```{r eval= FALSE}
+## WARNING, pseudocode
+var_get(con, variable, start = c(1, 1, 1), count = c(10, 5, 1))
+```
+
+Obviously, it should be reasonable to specify only the count of any dimensions that *we don't want the entirety of*. This problem manifests exactly in R arrays generally, we can't provide information only about the dimensions we want, they have to be specified explicitly - even if we mean *all of it*. 
+
+```{r eval=FALSE}
+## WARNING pseudocode
+
+```
+
+
 
 ```{r}
 hyper_vars(hf)

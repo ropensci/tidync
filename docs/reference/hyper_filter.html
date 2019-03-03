@@ -32,10 +32,11 @@
 
 <meta property="og:title" content="Subset NetCDF variable by expression — hyper_filter" />
 
-<meta property="og:description" content="The 'hyper filter' acts on a 'tidync' object by matching one or more filtering
-expressions like with dplyr::filter. This allows us to lazily specify a subset
-from a NetCDF array without pulling  any data. The modified object may be printed
-to see the effects of subsetting, or saved for further use." />
+<meta property="og:description" content="The 'hyper filter' acts on a 'tidync' object by matching one or more
+filtering expressions like with dplyr::filter. This allows us to lazily
+specify a subset from a NetCDF array without pulling  any data. The modified
+object may be printed to see the effects of subsetting, or saved for further
+use." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +67,7 @@ to see the effects of subsetting, or saved for further use." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -89,7 +90,7 @@ to see the effects of subsetting, or saved for further use." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/tidync-examples.html">NetCDF examples</a>
+      <a href="../articles/netcdf-with-tidync.html">NetCDF with tidync</a>
     </li>
   </ul>
 </li>
@@ -124,10 +125,11 @@ to see the effects of subsetting, or saved for further use." />
 
     <div class="ref-description">
     
-    <p>The 'hyper filter' acts on a 'tidync' object by matching one or more filtering
-expressions like with <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>. This allows us to lazily specify a subset
-from a NetCDF array without pulling  any data. The modified object may be printed
-to see the effects of subsetting, or saved for further use.</p>
+    <p>The 'hyper filter' acts on a 'tidync' object by matching one or more
+filtering expressions like with <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>. This allows us to lazily
+specify a subset from a NetCDF array without pulling  any data. The modified
+object may be printed to see the effects of subsetting, or saved for further
+use.</p>
     
     </div>
 
@@ -155,15 +157,17 @@ to see the effects of subsetting, or saved for further use.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function <code>hyper_filter</code> will act on an existing tidync object or a source string.</p>
+    <p>The function <code>hyper_filter</code> will act on an existing tidync object or a
+source string.</p>
 <p>Filter arguments must be named as per the dimensions in the variable in form
-<code>dimname = dimname &lt; 10</code>. This is a restrictive
-variant of <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>, with a syntax more like <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code>. This ensures that each
-element is named, so we know which dimension to apply this to, but also that the expression
-evaluated against can do some extra work for a nuanced test.</p>
-<p>There are special columns provided with each axis, one is 'index' so that exact matching can be
-done by position, or to ignore the actual value of the coordinate. That means we can use a form like
-<code>dimname = index &lt; 10</code> to subset by position in the array index, without necessarily knowing the
+<code>dimname = dimname &lt; 10</code>. This is a restrictive variant of <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>,
+with a syntax more like <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code>. This ensures that each element is
+named, so we know which dimension to apply this to, but also that the
+expression evaluated against can do some extra work for a nuanced test.</p>
+<p>There are special columns provided with each axis, one is 'index' so that
+exact matching can be done by position, or to ignore the actual value of the
+coordinate. That means we can use a form like <code>dimname = index &lt; 10</code> to
+subset by position in the array index, without necessarily knowing the
 values along that dimension.</p>
     
 

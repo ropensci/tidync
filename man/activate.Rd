@@ -44,10 +44,10 @@ NetCDF object
 \description{
 A grid is the definition use in NetCDF for the shape and size of array
 variables, and if only one exists it is activated by default. A grid must be
-selected by name in the form of 'D1,D0' where one or more numbered dimensions
-indicates the grid. The grid definition names are printed as part of the
-summary of in the tidync object and may be obtained directly with
-\code{tidync(file)$grid$grid} on the tidync object.
+selected by name in the form of 'D1,D0' where one or more numbered
+dimensions indicates the grid. The grid definition names are printed
+as part of the summary of in the tidync object and may be obtained
+directly with \code{tidync(file)$grid$grid} on the tidync object.
 }
 \details{
 Activation of a grid sets the context for downstream operations (slicing and
@@ -61,7 +61,8 @@ variable
 }
 \examples{
 l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
-rnc <- tidync(system.file("extdata", "oceandata", l3file, package = "tidync"))
+rnc <- tidync(system.file("extdata", "oceandata", l3file, 
+package = "tidync"))
 activate(rnc, "palette")
 
 ## extract available grid names
