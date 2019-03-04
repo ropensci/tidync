@@ -24,6 +24,12 @@ matrix:
           dist: trusty # 14.04
           env:
            - BUILD_NAME=trusty_release
+           - DETAILS="old trusty"
+        - os: linux
+          r: release
+          dist: xenial # 16.04
+          env:
+           - BUILD_NAME=xenial_release
            - DETAILS="release build"
         - os: osx
           r: release
