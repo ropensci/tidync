@@ -17,6 +17,8 @@
                         package = "tidync", mustWork = TRUE)
    tnc <- tidync(ufile)
 
+   expect_silent(activate(tnc, select_var = "precip24hrQCD")) %>% 
+     hyper_tibble()
   ## changed with nesting of variables in nc_grids 
   ## https://github.com/hypertidy/ncmeta/issues/26
   #expect_equal(active(tidync(ufile)) , "D0,D12")
