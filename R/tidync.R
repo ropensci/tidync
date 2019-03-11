@@ -251,8 +251,11 @@ print.tidync <- function(x, ...) {
 
   idxnm <- match(names(x$transforms), dims$name)
   dims$dmin <- dims$dmax <- dims$min <- dims$max <- NA_real_
-  dims[idxnm, c("dmin", "dmax")] <- as.data.frame(filter_ranges)[idxnm, ]
-  dims[idxnm, c("min", "max")] <- as.data.frame(ranges)[idxnm, ]
+  ## fix https://github.com/hypertidy/tidync/issues/84
+  ## idxnm was used on the LHS here as well, garbling the order
+  
+  dims[idxnm, c("dmin", "dmax")] <- as.data.frame(filter_ranges)
+  dims[idxnm, c("min", "max")] <- as.data.frame(ranges)
   dimension_print <- ""
   dims_active <- dims$active
   if (nrow(dims) > 0) { 

@@ -1,5 +1,7 @@
 # tidync 0.1.0
 
+* A printing error of dimension value ranges is now fixed, thanks to James Goldie (#84). 
+
 * Now supports 'NC_CHAR' type, by exploding these into the array size expected. 
 
 * Breaking change: when using `tidync$grid`it's now expected that this must 
