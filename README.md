@@ -134,22 +134,22 @@ tidync(file)
 #>   
 #>   dim   name  length    min   max start count   dmin  dmax unlim coord_dim 
 #>   <chr> <chr>  <dbl>  <dbl> <dbl> <int> <int>  <dbl> <dbl> <lgl> <lgl>     
-#> 1 D0    lat     2160 -180.  180.      1  2160 -180.  180.  FALSE TRUE      
-#> 2 D1    lon     4320  -90.0  90.0     1  4320  -90.0  90.0 FALSE TRUE      
+#> 1 D0    lat     2160  -90.0  90.0     1  2160  -90.0  90.0 FALSE TRUE      
+#> 2 D1    lon     4320 -180.  180.      1  4320 -180.  180.  FALSE TRUE      
 #>   
 #> Inactive dimensions:
 #>   
 #>   dim   name          length   min   max unlim coord_dim 
 #>   <chr> <chr>          <dbl> <dbl> <dbl> <lgl> <lgl>     
-#> 1 D2    rgb                3     1   256 FALSE FALSE     
-#> 2 D3    eightbitcolor    256     1     3 FALSE FALSE
+#> 1 D2    rgb                3     1     3 FALSE FALSE     
+#> 2 D3    eightbitcolor    256     1   256 FALSE FALSE
 ```
 
 There are two main ways of using tidync, interactively to explore what
 is there, and for extraction. The functions `tidync` and `activate` and
 `hyper_filter` allow us to hone in on the part/s of the data we want,
-and functions `hyper_array` and `hyper_tibble` give raw-array and data
-frames with-full-coordinates forms respectively.
+and functions `hyper_array`, `hyper_tibble` and `hyper_tbl_cube` give
+raw-array or data frames.
 
 Also
 [http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/](this%20blog)
@@ -165,17 +165,190 @@ filter it by its
 index).
 
 ``` r
+filename <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
 ## discover the available entities, and the active grid's dimensions and variables
 tidync(filename)
+#> 
+#> Data Source (1): MD5903593_001.nc ...
+#> 
+#> Grids (16) <dimension family> : <associated variables> 
+#> 
+#> [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE
+#> [2]   D6,D9,D11,D8 : PARAMETER
+#> [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT
+#> [4]   D6,D9,D8     : STATION_PARAMETERS
+#> [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR    **ACTIVE GRID** ( 986  values per variable)
+#> [6]   D1,D8        : DATA_CENTRE
+#> [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE
+#> [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM
+#> [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION
+#> [10]   D6,D8        : PROJECT_NAME, PI_NAME
+#> [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME
+#> [12]   D9,D8        : PARAMETER_DATA_MODE
+#> [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE
+#> [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION
+#> [15]   D5           : DATA_TYPE
+#> [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC
+#> 
+#> Dimensions 14 (2 active): 
+#>   
+#>   dim   name     length   min   max start count  dmin  dmax unlim coord_dim 
+#>   <chr> <chr>     <dbl> <dbl> <dbl> <int> <int> <dbl> <dbl> <lgl> <lgl>     
+#> 1 D8    N_PROF        2     1     2     1     2     1     2 FALSE FALSE     
+#> 2 D10   N_LEVELS    493     1   493     1   493     1   493 FALSE FALSE     
+#>   
+#> Inactive dimensions:
+#>   
+#>    dim   name       length   min   max unlim coord_dim 
+#>    <chr> <chr>       <dbl> <dbl> <dbl> <lgl> <lgl>     
+#>  1 D0    DATE_TIME      14     1    14 FALSE FALSE     
+#>  2 D1    STRING2         2     1     2 FALSE FALSE     
+#>  3 D2    STRING4         4     1     4 FALSE FALSE     
+#>  4 D3    STRING8         8     1     8 FALSE FALSE     
+#>  5 D4    STRING16       16    NA    NA FALSE FALSE     
+#>  6 D5    STRING32       32     1    32 FALSE FALSE     
+#>  7 D6    STRING64       64     1    64 FALSE FALSE     
+#>  8 D7    STRING256     256     1   256 FALSE FALSE     
+#>  9 D9    N_PARAM         7     1     7 FALSE FALSE     
+#> 10 D11   N_CALIB         1     1     1 FALSE FALSE     
+#> 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
+#> 12 D13   N_VALUES41     41    NA    NA FALSE FALSE
 
 ## activate a different grid
+grid_identifier <- "D7,D9,D11,D8"
 tidync(filename) %>% activate(grid_identifier)
-
-## get a dimension-focus on the space occupied within a grid
-tidync(filename) %>% hyper_filter()
+#> 
+#> Data Source (1): MD5903593_001.nc ...
+#> 
+#> Grids (16) <dimension family> : <associated variables> 
+#> 
+#> [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE
+#> [2]   D6,D9,D11,D8 : PARAMETER
+#> [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT    **ACTIVE GRID** ( 3584  values per variable)
+#> [4]   D6,D9,D8     : STATION_PARAMETERS
+#> [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR
+#> [6]   D1,D8        : DATA_CENTRE
+#> [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE
+#> [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM
+#> [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION
+#> [10]   D6,D8        : PROJECT_NAME, PI_NAME
+#> [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME
+#> [12]   D9,D8        : PARAMETER_DATA_MODE
+#> [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE
+#> [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION
+#> [15]   D5           : DATA_TYPE
+#> [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC
+#> 
+#> Dimensions 14 (4 active): 
+#>   
+#>   dim   name     length   min   max start count  dmin  dmax unlim coord_dim 
+#>   <chr> <chr>     <dbl> <dbl> <dbl> <int> <int> <dbl> <dbl> <lgl> <lgl>     
+#> 1 D7    STRING2…    256     1   256     1   256     1   256 FALSE FALSE     
+#> 2 D8    N_PROF        2     1     2     1     2     1     2 FALSE FALSE     
+#> 3 D9    N_PARAM       7     1     7     1     7     1     7 FALSE FALSE     
+#> 4 D11   N_CALIB       1     1     1     1     1     1     1 FALSE FALSE     
+#>   
+#> Inactive dimensions:
+#>   
+#>    dim   name       length   min   max unlim coord_dim 
+#>    <chr> <chr>       <dbl> <dbl> <dbl> <lgl> <lgl>     
+#>  1 D0    DATE_TIME      14     1    14 FALSE FALSE     
+#>  2 D1    STRING2         2     1     2 FALSE FALSE     
+#>  3 D2    STRING4         4     1     4 FALSE FALSE     
+#>  4 D3    STRING8         8     1     8 FALSE FALSE     
+#>  5 D4    STRING16       16    NA    NA FALSE FALSE     
+#>  6 D5    STRING32       32     1    32 FALSE FALSE     
+#>  7 D6    STRING64       64     1    64 FALSE FALSE     
+#>  8 D10   N_LEVELS      493     1   493 FALSE FALSE     
+#>  9 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
+#> 10 D13   N_VALUES41     41    NA    NA FALSE FALSE
 
 ## pass named expressions to subset dimension by value or index (step)
-tidync(filename) %>% hyper_filter(lat = lat < -30, time = time == 20)
+(subs <- tidync(filename) %>% hyper_filter(N_PROF = N_PROF > 1, STRING256 = index > 10))
+#> Warning in hyper_filter.tidync(., N_PROF = N_PROF > 1, STRING256 = index
+#> > : 'STRING256' not found in active grid, ignoring
+#> 
+#> Data Source (1): MD5903593_001.nc ...
+#> 
+#> Grids (16) <dimension family> : <associated variables> 
+#> 
+#> [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE
+#> [2]   D6,D9,D11,D8 : PARAMETER
+#> [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT
+#> [4]   D6,D9,D8     : STATION_PARAMETERS
+#> [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR    **ACTIVE GRID** ( 986  values per variable)
+#> [6]   D1,D8        : DATA_CENTRE
+#> [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE
+#> [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM
+#> [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION
+#> [10]   D6,D8        : PROJECT_NAME, PI_NAME
+#> [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME
+#> [12]   D9,D8        : PARAMETER_DATA_MODE
+#> [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE
+#> [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION
+#> [15]   D5           : DATA_TYPE
+#> [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC
+#> 
+#> Dimensions 14 (2 active): 
+#>   
+#>   dim   name     length   min   max start count  dmin  dmax unlim coord_dim 
+#>   <chr> <chr>     <dbl> <dbl> <dbl> <int> <int> <dbl> <dbl> <lgl> <lgl>     
+#> 1 D8    N_PROF        2     1     2     2     1     2     2 FALSE FALSE     
+#> 2 D10   N_LEVELS    493     1   493     1   493     1   493 FALSE FALSE     
+#>   
+#> Inactive dimensions:
+#>   
+#>    dim   name       length   min   max unlim coord_dim 
+#>    <chr> <chr>       <dbl> <dbl> <dbl> <lgl> <lgl>     
+#>  1 D0    DATE_TIME      14     1    14 FALSE FALSE     
+#>  2 D1    STRING2         2     1     2 FALSE FALSE     
+#>  3 D2    STRING4         4     1     4 FALSE FALSE     
+#>  4 D3    STRING8         8     1     8 FALSE FALSE     
+#>  5 D4    STRING16       16    NA    NA FALSE FALSE     
+#>  6 D5    STRING32       32     1    32 FALSE FALSE     
+#>  7 D6    STRING64       64     1    64 FALSE FALSE     
+#>  8 D7    STRING256     256     1   256 FALSE FALSE     
+#>  9 D9    N_PARAM         7     1     7 FALSE FALSE     
+#> 10 D11   N_CALIB         1     1     1 FALSE FALSE     
+#> 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
+#> 12 D13   N_VALUES41     41    NA    NA FALSE FALSE
+
+## with the saved filtering from above, choose data frame or tbl_cube output
+## optionally with only selected variables
+subs %>% hyper_tibble()
+#> # A tibble: 493 x 37
+#>     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_E…  TEMP
+#>    <dbl> <chr>           <dbl> <chr>                       <dbl> <dbl>
+#>  1  7.70 1                7.79 1                            2.40  13.2
+#>  2 11.8  1               11.9  1                            2.40  13.2
+#>  3 16.3  1               16.4  1                            2.40  13.2
+#>  4 21.6  1               21.7  1                            2.40  13.2
+#>  5 26.7  1               26.8  1                            2.40  13.2
+#>  6 31.7  1               31.8  1                            2.40  13.2
+#>  7 36.6  1               36.7  1                            2.40  13.2
+#>  8 41.4  1               41.5  1                            2.40  13.2
+#>  9 46.5  1               46.6  1                            2.40  13.2
+#> 10 51.8  1               51.9  1                            2.40  13.2
+#> # … with 483 more rows, and 31 more variables: TEMP_QC <chr>,
+#> #   TEMP_ADJUSTED <dbl>, TEMP_ADJUSTED_QC <chr>,
+#> #   TEMP_ADJUSTED_ERROR <dbl>, PSAL <dbl>, PSAL_QC <chr>,
+#> #   PSAL_ADJUSTED <dbl>, PSAL_ADJUSTED_QC <chr>,
+#> #   PSAL_ADJUSTED_ERROR <dbl>, DOXY <dbl>, DOXY_QC <chr>,
+#> #   DOXY_ADJUSTED <dbl>, DOXY_ADJUSTED_QC <chr>,
+#> #   DOXY_ADJUSTED_ERROR <dbl>, CHLA <dbl>, CHLA_QC <chr>,
+#> #   CHLA_ADJUSTED <dbl>, CHLA_ADJUSTED_QC <chr>,
+#> #   CHLA_ADJUSTED_ERROR <dbl>, BBP700 <dbl>, BBP700_QC <chr>,
+#> #   BBP700_ADJUSTED <dbl>, BBP700_ADJUSTED_QC <chr>,
+#> #   BBP700_ADJUSTED_ERROR <dbl>, NITRATE <dbl>, NITRATE_QC <chr>,
+#> #   NITRATE_ADJUSTED <dbl>, NITRATE_ADJUSTED_QC <chr>,
+#> #   NITRATE_ADJUSTED_ERROR <dbl>, N_PROF <int>, N_LEVELS <int>
+subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
+#> Source: local array [493 x 2]
+#> D: N_LEVELS [int, 493]
+#> D: N_PROF [int, 1]
+#> M: PRES [dbl]
+#> M: PRES_QC [chr]
+#> M: PSAL_ADJUSTED [dbl]
 ```
 
 A grid is a “virtual table” in the sense of a database source. It’s

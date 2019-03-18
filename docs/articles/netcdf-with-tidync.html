@@ -83,7 +83,7 @@
       <h1>NetCDF with tidync</h1>
                         <h4 class="author">Michael D. Sumner</h4>
             
-            <h4 class="date">2019-03-05</h4>
+            <h4 class="date">2019-03-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/hypertidy/tidync/blob/master/vignettes/netcdf-with-tidync.Rmd"><code>vignettes/netcdf-with-tidync.Rmd</code></a></small>
       <div class="hidden name"><code>netcdf-with-tidync.Rmd</code></div>
@@ -92,7 +92,7 @@
 
     
     
-<p>The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient queries to extract arbitrary hyperslabs. The data extracted can be used directly as an array, or in “long form” form as a data frame for “tidy” analysis and visualization contexts.</p>
+<p>The goal of tidync is to ease exploring the contents of a NetCDF source and to easily extract array data in various forms. Expressions relative to array dimensions are used to limit the data to be read, and this can be used interactively to explore the source data. No data is read until explicitly requested, and can be pulled directly as an array, or in long-form as a data frame.</p>
 <p>NetCDF is <strong>Network Common Data Form</strong>, a <a href="https://twitter.com/TedHabermann/status/958034585002041344">data model</a> and an <a href="https://en.wikipedia.org/wiki/Application_programming_interface">API</a>.</p>
 <p>This is a very common, and <em>very general</em> way to store and work with scientific array-based data. NetCDF is defined and provided by <a href="https://www.unidata.ucar.edu/software/netcdf/">Unidata</a>.</p>
 <p>Here we introduce traditional concepts of NetCDF, and show examples with built-in files and online sources to demonstrate tidync functionality.</p>
@@ -170,9 +170,9 @@
 <a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt;   </span></a>
 <a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
 <a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1   632 1032204 1032204 FALSE </span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; 2 D1    nj       664       1     632     1   664       1     632 FALSE </span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; 3 D2    time       1       1     664     1     1       1     664 FALSE </span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE </span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; 2 D1    nj       664       1     664     1   664       1     664 FALSE </span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
 <a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
 <p>Here we see variables are clearly grouped by the <em>grid</em> they exist in, where grid is a specific (and ordered!) set of dimensions. This allows us to see the set of variables that implicitly co-exist, they have the same <em>shape</em>. The first grid “D0,D1,D2” has two variables, <em>concentration</em> and <em>quality_flag</em>, and the second “D2” has only one variable <em>time</em>. There are no general rules here, a file might have any number of dimensions and variables, and any variable might be defined by one or more dimensions.</p>
 <p>In this case the D2 grid has only one variable in its single dimension, and it happens to be a special kind of variable - a “coordinate dimension”, as indicated by the <code>coord_dim</code> flag. In the traditional <code>ncdump</code> summary above it’s easy to see there’s only really one data grid, in <code>ni,nj,time</code> that it holds two variables, and that time is a special coordinate dimension - in contrast neither <code>ni</code> or <code>nj</code> have an explicit 1-dimension variable. When there are many dimensions and/or many variables those patterns are <em>not</em> easy to see.</p>
@@ -189,16 +189,17 @@
 <a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; Dimensions 3 (1 active): </span></a>
 <a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt;   dim   name  length   min   max start count  dmin  dmax unlim coord_dim </span></a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; 1 D2    time       1     1   664     1     1     1   664 FALSE TRUE      </span></a>
-<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt; Inactive dimensions:</span></a>
-<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt;   dim   name  length     min     max unlim coord_dim </span></a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; 2 D1    nj       664       1     632 FALSE FALSE</span></a></code></pre></div>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; 1 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; Inactive dimensions:</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt;   dim   name  length   min   max unlim coord_dim </span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; 1 D0    ni       632     1   632 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt; 2 D1    nj       664     1   664 FALSE FALSE</span></a></code></pre></div>
 <p>It is also possible to choose a grid by <em>variable name</em>, and in tidyverse style here we do not need to quote the name. If we choose a variable in the default grid, then it’s no different to the first case.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/tidync.html">tidync</a></span>(ice_file) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/activate.html">activate</a></span>(time)</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt; </span></a>
@@ -211,54 +212,55 @@
 <a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; Dimensions 3 (1 active): </span></a>
 <a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt;   dim   name  length   min   max start count  dmin  dmax unlim coord_dim </span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; 1 D2    time       1     1   664     1     1     1   664 FALSE TRUE      </span></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt; Inactive dimensions:</span></a>
-<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt;   dim   name  length     min     max unlim coord_dim </span></a>
-<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; 2 D1    nj       664       1     632 FALSE FALSE</span></a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"></a>
-<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">## choose grid by variable name, which happens to be the default grid here</span></a>
-<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="kw"><a href="../reference/tidync.html">tidync</a></span>(ice_file) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/activate.html">activate</a></span>(quality_flag)</a>
-<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-26" data-line-number="26"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
-<a class="sourceLine" id="cb6-27" data-line-number="27"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-28" data-line-number="28"><span class="co">#&gt; Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
-<a class="sourceLine" id="cb6-29" data-line-number="29"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-30" data-line-number="30"><span class="co">#&gt; [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)</span></a>
-<a class="sourceLine" id="cb6-31" data-line-number="31"><span class="co">#&gt; [2]   D2       : time</span></a>
-<a class="sourceLine" id="cb6-32" data-line-number="32"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-33" data-line-number="33"><span class="co">#&gt; Dimensions 3 (all active): </span></a>
-<a class="sourceLine" id="cb6-34" data-line-number="34"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-35" data-line-number="35"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
-<a class="sourceLine" id="cb6-36" data-line-number="36"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb6-37" data-line-number="37"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1   632 1032204 1032204 FALSE </span></a>
-<a class="sourceLine" id="cb6-38" data-line-number="38"><span class="co">#&gt; 2 D1    nj       664       1     632     1   664       1     632 FALSE </span></a>
-<a class="sourceLine" id="cb6-39" data-line-number="39"><span class="co">#&gt; 3 D2    time       1       1     664     1     1       1     664 FALSE </span></a>
-<a class="sourceLine" id="cb6-40" data-line-number="40"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a>
-<a class="sourceLine" id="cb6-41" data-line-number="41"></a>
-<a class="sourceLine" id="cb6-42" data-line-number="42"><span class="co">## same as the default</span></a>
-<a class="sourceLine" id="cb6-43" data-line-number="43"><span class="kw"><a href="../reference/tidync.html">tidync</a></span>(ice_file) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/activate.html">activate</a></span>(<span class="st">"D0,D1,D2"</span>)</a>
-<a class="sourceLine" id="cb6-44" data-line-number="44"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-45" data-line-number="45"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
-<a class="sourceLine" id="cb6-46" data-line-number="46"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-47" data-line-number="47"><span class="co">#&gt; Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
-<a class="sourceLine" id="cb6-48" data-line-number="48"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-49" data-line-number="49"><span class="co">#&gt; [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)</span></a>
-<a class="sourceLine" id="cb6-50" data-line-number="50"><span class="co">#&gt; [2]   D2       : time</span></a>
-<a class="sourceLine" id="cb6-51" data-line-number="51"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-52" data-line-number="52"><span class="co">#&gt; Dimensions 3 (all active): </span></a>
-<a class="sourceLine" id="cb6-53" data-line-number="53"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-54" data-line-number="54"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
-<a class="sourceLine" id="cb6-55" data-line-number="55"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb6-56" data-line-number="56"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1   632 1032204 1032204 FALSE </span></a>
-<a class="sourceLine" id="cb6-57" data-line-number="57"><span class="co">#&gt; 2 D1    nj       664       1     632     1   664       1     632 FALSE </span></a>
-<a class="sourceLine" id="cb6-58" data-line-number="58"><span class="co">#&gt; 3 D2    time       1       1     664     1     1       1     664 FALSE </span></a>
-<a class="sourceLine" id="cb6-59" data-line-number="59"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; 1 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; Inactive dimensions:</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co">#&gt;   dim   name  length   min   max unlim coord_dim </span></a>
+<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; 1 D0    ni       632     1   632 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt; 2 D1    nj       664     1   664 FALSE FALSE</span></a>
+<a class="sourceLine" id="cb6-23" data-line-number="23"></a>
+<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">## choose grid by variable name, which happens to be the default grid here</span></a>
+<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="kw"><a href="../reference/tidync.html">tidync</a></span>(ice_file) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/activate.html">activate</a></span>(quality_flag)</a>
+<a class="sourceLine" id="cb6-26" data-line-number="26"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-27" data-line-number="27"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
+<a class="sourceLine" id="cb6-28" data-line-number="28"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-29" data-line-number="29"><span class="co">#&gt; Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb6-30" data-line-number="30"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-31" data-line-number="31"><span class="co">#&gt; [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)</span></a>
+<a class="sourceLine" id="cb6-32" data-line-number="32"><span class="co">#&gt; [2]   D2       : time</span></a>
+<a class="sourceLine" id="cb6-33" data-line-number="33"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-34" data-line-number="34"><span class="co">#&gt; Dimensions 3 (all active): </span></a>
+<a class="sourceLine" id="cb6-35" data-line-number="35"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb6-36" data-line-number="36"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
+<a class="sourceLine" id="cb6-37" data-line-number="37"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb6-38" data-line-number="38"><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE </span></a>
+<a class="sourceLine" id="cb6-39" data-line-number="39"><span class="co">#&gt; 2 D1    nj       664       1     664     1   664       1     664 FALSE </span></a>
+<a class="sourceLine" id="cb6-40" data-line-number="40"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
+<a class="sourceLine" id="cb6-41" data-line-number="41"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a>
+<a class="sourceLine" id="cb6-42" data-line-number="42"></a>
+<a class="sourceLine" id="cb6-43" data-line-number="43"><span class="co">## same as the default</span></a>
+<a class="sourceLine" id="cb6-44" data-line-number="44"><span class="kw"><a href="../reference/tidync.html">tidync</a></span>(ice_file) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/activate.html">activate</a></span>(<span class="st">"D0,D1,D2"</span>)</a>
+<a class="sourceLine" id="cb6-45" data-line-number="45"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-46" data-line-number="46"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
+<a class="sourceLine" id="cb6-47" data-line-number="47"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-48" data-line-number="48"><span class="co">#&gt; Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb6-49" data-line-number="49"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-50" data-line-number="50"><span class="co">#&gt; [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)</span></a>
+<a class="sourceLine" id="cb6-51" data-line-number="51"><span class="co">#&gt; [2]   D2       : time</span></a>
+<a class="sourceLine" id="cb6-52" data-line-number="52"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-53" data-line-number="53"><span class="co">#&gt; Dimensions 3 (all active): </span></a>
+<a class="sourceLine" id="cb6-54" data-line-number="54"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb6-55" data-line-number="55"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
+<a class="sourceLine" id="cb6-56" data-line-number="56"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb6-57" data-line-number="57"><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE </span></a>
+<a class="sourceLine" id="cb6-58" data-line-number="58"><span class="co">#&gt; 2 D1    nj       664       1     664     1   664       1     664 FALSE </span></a>
+<a class="sourceLine" id="cb6-59" data-line-number="59"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
+<a class="sourceLine" id="cb6-60" data-line-number="60"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
 <p>The data variables available on a grid can be expanded out as a single data frame, which all the coordinates copied out - this is not efficient(!) but if we craft our queries sensibly to read only what we need, it’s a very easy way to explore the data in a file.</p>
 <p>The ‘hyper_filter’ function allows specification of expressions to subset a variable based on each dimension’s coordinate values.</p>
 <p>If no expressions are included we are presented with a table containing a row for each dimension, its extent in coordinates and its length. For convenience we also assign the activate form to an R variable, though we could just chain the entire operation without this.</p>
@@ -276,9 +278,9 @@
 <a class="sourceLine" id="cb7-12" data-line-number="12"><span class="co">#&gt;   </span></a>
 <a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
 <a class="sourceLine" id="cb7-14" data-line-number="14"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1   632 1032204 1032204 FALSE </span></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="co">#&gt; 2 D1    nj       664       1     632     1   664       1     632 FALSE </span></a>
-<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="co">#&gt; 3 D2    time       1       1     664     1     1       1     664 FALSE </span></a>
+<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE </span></a>
+<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="co">#&gt; 2 D1    nj       664       1     664     1   664       1     664 FALSE </span></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
 <a class="sourceLine" id="cb7-18" data-line-number="18"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
 <p>By specifying inequality expressions we see an <em>implicit</em> subsetting of the array. Everything so far is implicit to delay any file-based computation required to actually interact with the file and read from it.</p>
 <p>Notice that these are “name = expr” paired expressions, because the right hand side may be quite general we need the left hand side name to be assured of the name of the dimension referred to.</p>
@@ -295,9 +297,9 @@
 <a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt;   </span></a>
 <a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
 <a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1   632 1032204 1032204 FALSE </span></a>
-<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; 2 D1    nj       664       1     632     1    19       1     632 FALSE </span></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; 3 D2    time       1       1     664     1     1       1      19 FALSE </span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE </span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt; 2 D1    nj       664       1     664     1    19       1      19 FALSE </span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
 <a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
 <p>We can also use the special internal variable ‘index’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">concentration <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -315,9 +317,9 @@
 <a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">#&gt;   </span></a>
 <a class="sourceLine" id="cb9-14" data-line-number="14"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
 <a class="sourceLine" id="cb9-15" data-line-number="15"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1    19 1032204 1032204 FALSE </span></a>
-<a class="sourceLine" id="cb9-17" data-line-number="17"><span class="co">#&gt; 2 D1    nj       664       1     632    30    71       1      19 FALSE </span></a>
-<a class="sourceLine" id="cb9-18" data-line-number="18"><span class="co">#&gt; 3 D2    time       1       1     664     1     1      30     100 FALSE </span></a>
+<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="co">#&gt; 1 D0    ni       632       1     632     1    19       1      19 FALSE </span></a>
+<a class="sourceLine" id="cb9-17" data-line-number="17"><span class="co">#&gt; 2 D1    nj       664       1     664    30    71      30     100 FALSE </span></a>
+<a class="sourceLine" id="cb9-18" data-line-number="18"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
 <a class="sourceLine" id="cb9-19" data-line-number="19"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
 </div>
 <div id="data-extraction" class="section level2">
@@ -366,9 +368,9 @@
 <a class="sourceLine" id="cb10-39" data-line-number="39"><span class="co">#&gt; # … with 5 variables: concentration &lt;int&gt;, quality_flag &lt;int&gt;, ni &lt;int&gt;,</span></a>
 <a class="sourceLine" id="cb10-40" data-line-number="40"><span class="co">#&gt; #   nj &lt;int&gt;, time &lt;dbl&gt;</span></a></code></pre></div>
 </div>
-<div id="interrogating-sea-ice-concentration" class="section level2">
+<div id="interrogating-data-by-dimensions" class="section level2">
 <h2 class="hasAnchor">
-<a href="#interrogating-sea-ice-concentration" class="anchor"></a>Interrogating sea ice concentration</h2>
+<a href="#interrogating-data-by-dimensions" class="anchor"></a>Interrogating data by dimensions</h2>
 <p>The connection object ‘hf’ is available for determining what is available and how we might cut into it. ‘time’ interestingly is of length 1, so perhaps adds nothing to the information about this otherwise 2D data set. If we were to open this file in <code>ncdf4</code> or <code>RNetCDF</code> and wanted to take a subset of the file out, we would have to specify and <code>start</code> of 1 and a <code>count</code> of ` even though it’s completely redundant.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">hf</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; </span></a>
@@ -383,16 +385,52 @@
 <a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt;   </span></a>
 <a class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
 <a class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
-<a class="sourceLine" id="cb11-14" data-line-number="14"><span class="co">#&gt; 1 D0    ni       632 1032204 1032204     1    19 1032204 1032204 FALSE </span></a>
-<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="co">#&gt; 2 D1    nj       664       1     632    30    71       1      19 FALSE </span></a>
-<a class="sourceLine" id="cb11-16" data-line-number="16"><span class="co">#&gt; 3 D2    time       1       1     664     1     1      30     100 FALSE </span></a>
+<a class="sourceLine" id="cb11-14" data-line-number="14"><span class="co">#&gt; 1 D0    ni       632       1     632     1    19       1      19 FALSE </span></a>
+<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="co">#&gt; 2 D1    nj       664       1     664    30    71      30     100 FALSE </span></a>
+<a class="sourceLine" id="cb11-16" data-line-number="16"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
 <a class="sourceLine" id="cb11-17" data-line-number="17"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
 <p>The ‘start’ and ‘count’ values reported are directly useable by the traditional API tools, and in particular by the functions <code><a href="https://www.rdocumentation.org/packages/ncdf4/topics/ncvar_get">ncdf4::ncvar_get()</a></code> (<code>varid</code>, <code>start</code>, <code>count</code>), its counterpart in <code><a href="https://www.rdocumentation.org/packages/RNetCDF/topics/var.get.nc">RNetCDF::var.get.nc()</a></code> and command line tools like CDO.</p>
 <p>But, it’s a pain to have to know the dimension of the variable and specify every slot. Code in the traditional API that looks like this</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">## </span><span class="al">WARNING</span><span class="co">, pseudocode</span></a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">var_get</span>(con, variable, <span class="dt">start =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">10</span>, <span class="dv">5</span>, <span class="dv">1</span>))</a></code></pre></div>
 <p>Obviously, it should be reasonable to specify only the count of any dimensions that <em>we don’t want the entirety of</em>. This problem manifests exactly in R arrays generally, we can’t provide information only about the dimensions we want, they have to be specified explicitly - even if we mean <em>all of it</em>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">## </span><span class="al">WARNING</span><span class="co"> pseudocode</span></a></code></pre></div>
+<p>It does not matter what we include in the filter query, it can be all, some or none of the available dimensions, in any order.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">hf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">nj =</span> index <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>, <span class="dt">ni =</span> ni <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="co">#&gt; Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co">#&gt; [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="co">#&gt; [2]   D2       : time</span></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10"><span class="co">#&gt; Dimensions 3 (all active): </span></a>
+<a class="sourceLine" id="cb13-11" data-line-number="11"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb13-12" data-line-number="12"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
+<a class="sourceLine" id="cb13-13" data-line-number="13"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14"><span class="co">#&gt; 1 D0    ni       632       1     632    21   612      21     632 FALSE </span></a>
+<a class="sourceLine" id="cb13-15" data-line-number="15"><span class="co">#&gt; 2 D1    nj       664       1     664     1    19       1      19 FALSE </span></a>
+<a class="sourceLine" id="cb13-16" data-line-number="16"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
+<a class="sourceLine" id="cb13-17" data-line-number="17"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a>
+<a class="sourceLine" id="cb13-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb13-19" data-line-number="19">hf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">nj =</span> index <span class="op">&lt;</span><span class="st"> </span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb13-20" data-line-number="20"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-21" data-line-number="21"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
+<a class="sourceLine" id="cb13-22" data-line-number="22"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-23" data-line-number="23"><span class="co">#&gt; Grids (2) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb13-24" data-line-number="24"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-25" data-line-number="25"><span class="co">#&gt; [1]   D0,D1,D2 : concentration, quality_flag    **ACTIVE GRID** ( 419648  values per variable)</span></a>
+<a class="sourceLine" id="cb13-26" data-line-number="26"><span class="co">#&gt; [2]   D2       : time</span></a>
+<a class="sourceLine" id="cb13-27" data-line-number="27"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-28" data-line-number="28"><span class="co">#&gt; Dimensions 3 (all active): </span></a>
+<a class="sourceLine" id="cb13-29" data-line-number="29"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb13-30" data-line-number="30"><span class="co">#&gt;   dim   name  length     min     max start count    dmin    dmax unlim </span></a>
+<a class="sourceLine" id="cb13-31" data-line-number="31"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></a>
+<a class="sourceLine" id="cb13-32" data-line-number="32"><span class="co">#&gt; 1 D0    ni       632       1     632     1    19       1      19 FALSE </span></a>
+<a class="sourceLine" id="cb13-33" data-line-number="33"><span class="co">#&gt; 2 D1    nj       664       1     664     1    19       1      19 FALSE </span></a>
+<a class="sourceLine" id="cb13-34" data-line-number="34"><span class="co">#&gt; 3 D2    time       1 1032204 1032204     1     1 1032204 1032204 FALSE </span></a>
+<a class="sourceLine" id="cb13-35" data-line-number="35"><span class="co">#&gt; # … with 1 more variable: coord_dim &lt;lgl&gt;</span></a></code></pre></div>
+<p>The other requirement we have is the ability to automate these task, and so far we have only interacted with the dimensionality information from the print out. For programming, there are functions <code><a href="../reference/hyper_vars.html">hyper_vars()</a></code> and <code><a href="../reference/hyper_vars.html">hyper_dims()</a></code> to pull out a table of variables or dimensions. The value of these functions is restricted to the <em>active</em> grid, and the name of the grid is available via <code><a href="../reference/activate.html">active()</a></code>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw"><a href="../reference/hyper_vars.html">hyper_vars</a></span>(hf)</a>
 <a class="sourceLine" id="cb14-2" data-line-number="2"><span class="co">#&gt; # A tibble: 2 x 6</span></a>
 <a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co">#&gt;      id name          type    ndims natts dim_coord</span></a>
@@ -406,61 +444,66 @@
 <a class="sourceLine" id="cb14-11" data-line-number="11"><span class="co">#&gt; 1 ni       632     1    19     0 FALSE FALSE    </span></a>
 <a class="sourceLine" id="cb14-12" data-line-number="12"><span class="co">#&gt; 2 nj       664    30    71     1 FALSE FALSE    </span></a>
 <a class="sourceLine" id="cb14-13" data-line-number="13"><span class="co">#&gt; 3 time       1     1     1     2 FALSE TRUE</span></a>
-<a class="sourceLine" id="cb14-14" data-line-number="14"><span class="kw"><a href="../reference/hyper_transforms.html">hyper_transforms</a></span>(hf)</a>
-<a class="sourceLine" id="cb14-15" data-line-number="15"><span class="co">#&gt; $ni</span></a>
-<a class="sourceLine" id="cb14-16" data-line-number="16"><span class="co">#&gt; # A tibble: 632 x 6</span></a>
-<a class="sourceLine" id="cb14-17" data-line-number="17"><span class="co">#&gt;       ni index    id name  coord_dim selected</span></a>
-<a class="sourceLine" id="cb14-18" data-line-number="18"><span class="co">#&gt;    &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;lgl&gt;     &lt;lgl&gt;   </span></a>
-<a class="sourceLine" id="cb14-19" data-line-number="19"><span class="co">#&gt;  1     1     1     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-20" data-line-number="20"><span class="co">#&gt;  2     2     2     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-21" data-line-number="21"><span class="co">#&gt;  3     3     3     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-22" data-line-number="22"><span class="co">#&gt;  4     4     4     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-23" data-line-number="23"><span class="co">#&gt;  5     5     5     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-24" data-line-number="24"><span class="co">#&gt;  6     6     6     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-25" data-line-number="25"><span class="co">#&gt;  7     7     7     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-26" data-line-number="26"><span class="co">#&gt;  8     8     8     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-27" data-line-number="27"><span class="co">#&gt;  9     9     9     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-28" data-line-number="28"><span class="co">#&gt; 10    10    10     0 ni    FALSE     TRUE    </span></a>
-<a class="sourceLine" id="cb14-29" data-line-number="29"><span class="co">#&gt; # … with 622 more rows</span></a>
-<a class="sourceLine" id="cb14-30" data-line-number="30"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb14-31" data-line-number="31"><span class="co">#&gt; $nj</span></a>
-<a class="sourceLine" id="cb14-32" data-line-number="32"><span class="co">#&gt; # A tibble: 664 x 6</span></a>
-<a class="sourceLine" id="cb14-33" data-line-number="33"><span class="co">#&gt;       nj index    id name  coord_dim selected</span></a>
-<a class="sourceLine" id="cb14-34" data-line-number="34"><span class="co">#&gt;    &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;lgl&gt;     &lt;lgl&gt;   </span></a>
-<a class="sourceLine" id="cb14-35" data-line-number="35"><span class="co">#&gt;  1     1     1     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-36" data-line-number="36"><span class="co">#&gt;  2     2     2     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-37" data-line-number="37"><span class="co">#&gt;  3     3     3     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-38" data-line-number="38"><span class="co">#&gt;  4     4     4     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-39" data-line-number="39"><span class="co">#&gt;  5     5     5     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-40" data-line-number="40"><span class="co">#&gt;  6     6     6     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-41" data-line-number="41"><span class="co">#&gt;  7     7     7     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-42" data-line-number="42"><span class="co">#&gt;  8     8     8     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-43" data-line-number="43"><span class="co">#&gt;  9     9     9     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-44" data-line-number="44"><span class="co">#&gt; 10    10    10     1 nj    FALSE     FALSE   </span></a>
-<a class="sourceLine" id="cb14-45" data-line-number="45"><span class="co">#&gt; # … with 654 more rows</span></a>
-<a class="sourceLine" id="cb14-46" data-line-number="46"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb14-47" data-line-number="47"><span class="co">#&gt; $time</span></a>
-<a class="sourceLine" id="cb14-48" data-line-number="48"><span class="co">#&gt; # A tibble: 1 x 6</span></a>
-<a class="sourceLine" id="cb14-49" data-line-number="49"><span class="co">#&gt;      time index    id name  coord_dim selected</span></a>
-<a class="sourceLine" id="cb14-50" data-line-number="50"><span class="co">#&gt;     &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;lgl&gt;     &lt;lgl&gt;   </span></a>
-<a class="sourceLine" id="cb14-51" data-line-number="51"><span class="co">#&gt; 1 1032204     1     2 time  TRUE      TRUE</span></a>
-<a class="sourceLine" id="cb14-52" data-line-number="52"><span class="kw"><a href="../reference/hyper_vars.html">hyper_dims</a></span>(hf)</a>
-<a class="sourceLine" id="cb14-53" data-line-number="53"><span class="co">#&gt; # A tibble: 3 x 7</span></a>
-<a class="sourceLine" id="cb14-54" data-line-number="54"><span class="co">#&gt;   name  length start count    id unlim coord_dim</span></a>
-<a class="sourceLine" id="cb14-55" data-line-number="55"><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;    </span></a>
-<a class="sourceLine" id="cb14-56" data-line-number="56"><span class="co">#&gt; 1 ni       632     1    19     0 FALSE FALSE    </span></a>
-<a class="sourceLine" id="cb14-57" data-line-number="57"><span class="co">#&gt; 2 nj       664    30    71     1 FALSE FALSE    </span></a>
-<a class="sourceLine" id="cb14-58" data-line-number="58"><span class="co">#&gt; 3 time       1     1     1     2 FALSE TRUE</span></a>
-<a class="sourceLine" id="cb14-59" data-line-number="59"><span class="kw"><a href="../reference/hyper_tbl_cube.html">hyper_tbl_cube</a></span>(hf)</a>
-<a class="sourceLine" id="cb14-60" data-line-number="60"><span class="co">#&gt; Source: local array [1,349 x 3]</span></a>
-<a class="sourceLine" id="cb14-61" data-line-number="61"><span class="co">#&gt; D: ni [int, 19]</span></a>
-<a class="sourceLine" id="cb14-62" data-line-number="62"><span class="co">#&gt; D: nj [int, 71]</span></a>
-<a class="sourceLine" id="cb14-63" data-line-number="63"><span class="co">#&gt; D: time [dbl, 1]</span></a>
-<a class="sourceLine" id="cb14-64" data-line-number="64"><span class="co">#&gt; M: concentration [int]</span></a>
-<a class="sourceLine" id="cb14-65" data-line-number="65"><span class="co">#&gt; M: quality_flag [int]</span></a>
-<a class="sourceLine" id="cb14-66" data-line-number="66"></a>
-<a class="sourceLine" id="cb14-67" data-line-number="67"><span class="kw"><a href="../reference/activate.html">active</a></span>(hf)</a>
-<a class="sourceLine" id="cb14-68" data-line-number="68"><span class="co">#&gt; [1] "D0,D1,D2"</span></a></code></pre></div>
+<a class="sourceLine" id="cb14-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb14-15" data-line-number="15"><span class="co">## change the active grid</span></a>
+<a class="sourceLine" id="cb14-16" data-line-number="16">hf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/activate.html">activate</a></span>(<span class="st">"D2"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb14-17" data-line-number="17"><span class="st">  </span><span class="kw"><a href="../reference/hyper_vars.html">hyper_vars</a></span>()</a>
+<a class="sourceLine" id="cb14-18" data-line-number="18"><span class="co">#&gt; # A tibble: 1 x 6</span></a>
+<a class="sourceLine" id="cb14-19" data-line-number="19"><span class="co">#&gt;      id name  type   ndims natts dim_coord</span></a>
+<a class="sourceLine" id="cb14-20" data-line-number="20"><span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;    </span></a>
+<a class="sourceLine" id="cb14-21" data-line-number="21"><span class="co">#&gt; 1     0 time  NC_INT     1     2 TRUE</span></a>
+<a class="sourceLine" id="cb14-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb14-23" data-line-number="23"><span class="kw"><a href="../reference/activate.html">active</a></span>(hf)</a>
+<a class="sourceLine" id="cb14-24" data-line-number="24"><span class="co">#&gt; [1] "D0,D1,D2"</span></a>
+<a class="sourceLine" id="cb14-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb14-26" data-line-number="26">hf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/activate.html">activate</a></span>(<span class="st">"D2"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-27" data-line-number="27"><span class="st">  </span><span class="kw"><a href="../reference/activate.html">active</a></span>()</a>
+<a class="sourceLine" id="cb14-28" data-line-number="28"><span class="co">#&gt; [1] "D2"</span></a></code></pre></div>
+</div>
+<div id="transforms" class="section level2">
+<h2 class="hasAnchor">
+<a href="#transforms" class="anchor"></a>Transforms</h2>
+<p>Under the hood tidync manages the relationship between dimensions and coordinates via <em>transforms</em> tables. This is a 1-dimensional mapping between dimension index and its coordinate value (if there’s no explicit value it is assumed to be equal to the 1-based index). These tables are available via the <code><a href="../reference/hyper_transforms.html">hyper_transforms()</a></code> function.</p>
+<p>Each table has columns <code>&lt;dimension-name&gt;</code>, <code>index</code>, <code>id</code>, <code>name</code>, <code>coord_dim</code> (whether the dimension has explicit coordinates, in the <code>&lt;dimension-name&gt;</code> column), and <code>selected</code>. The <code>selected</code> column records which of the dimension elements is currently requested by a <code>hyper_filter</code> query, and by default is set to <code>TRUE</code>. Expressions in the filter function work by updating this column.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="../reference/hyper_transforms.html">hyper_transforms</a></span>(hf)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">#&gt; $ni</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="co">#&gt; # A tibble: 632 x 6</span></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="co">#&gt;       ni index    id name  coord_dim selected</span></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co">#&gt;    &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;lgl&gt;     &lt;lgl&gt;   </span></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="co">#&gt;  1     1     1     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="co">#&gt;  2     2     2     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-8" data-line-number="8"><span class="co">#&gt;  3     3     3     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-9" data-line-number="9"><span class="co">#&gt;  4     4     4     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-10" data-line-number="10"><span class="co">#&gt;  5     5     5     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-11" data-line-number="11"><span class="co">#&gt;  6     6     6     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-12" data-line-number="12"><span class="co">#&gt;  7     7     7     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-13" data-line-number="13"><span class="co">#&gt;  8     8     8     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-14" data-line-number="14"><span class="co">#&gt;  9     9     9     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-15" data-line-number="15"><span class="co">#&gt; 10    10    10     0 ni    FALSE     TRUE    </span></a>
+<a class="sourceLine" id="cb15-16" data-line-number="16"><span class="co">#&gt; # … with 622 more rows</span></a>
+<a class="sourceLine" id="cb15-17" data-line-number="17"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb15-18" data-line-number="18"><span class="co">#&gt; $nj</span></a>
+<a class="sourceLine" id="cb15-19" data-line-number="19"><span class="co">#&gt; # A tibble: 664 x 6</span></a>
+<a class="sourceLine" id="cb15-20" data-line-number="20"><span class="co">#&gt;       nj index    id name  coord_dim selected</span></a>
+<a class="sourceLine" id="cb15-21" data-line-number="21"><span class="co">#&gt;    &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;lgl&gt;     &lt;lgl&gt;   </span></a>
+<a class="sourceLine" id="cb15-22" data-line-number="22"><span class="co">#&gt;  1     1     1     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-23" data-line-number="23"><span class="co">#&gt;  2     2     2     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-24" data-line-number="24"><span class="co">#&gt;  3     3     3     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-25" data-line-number="25"><span class="co">#&gt;  4     4     4     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-26" data-line-number="26"><span class="co">#&gt;  5     5     5     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-27" data-line-number="27"><span class="co">#&gt;  6     6     6     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-28" data-line-number="28"><span class="co">#&gt;  7     7     7     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-29" data-line-number="29"><span class="co">#&gt;  8     8     8     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-30" data-line-number="30"><span class="co">#&gt;  9     9     9     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-31" data-line-number="31"><span class="co">#&gt; 10    10    10     1 nj    FALSE     FALSE   </span></a>
+<a class="sourceLine" id="cb15-32" data-line-number="32"><span class="co">#&gt; # … with 654 more rows</span></a>
+<a class="sourceLine" id="cb15-33" data-line-number="33"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb15-34" data-line-number="34"><span class="co">#&gt; $time</span></a>
+<a class="sourceLine" id="cb15-35" data-line-number="35"><span class="co">#&gt; # A tibble: 1 x 6</span></a>
+<a class="sourceLine" id="cb15-36" data-line-number="36"><span class="co">#&gt;      time index    id name  coord_dim selected</span></a>
+<a class="sourceLine" id="cb15-37" data-line-number="37"><span class="co">#&gt;     &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt; &lt;lgl&gt;     &lt;lgl&gt;   </span></a>
+<a class="sourceLine" id="cb15-38" data-line-number="38"><span class="co">#&gt; 1 1032204     1     2 time  TRUE      TRUE</span></a></code></pre></div>
+<p>Future releases aim to make the handling of these less raw.</p>
 </div>
 <div id="future-improvements" class="section level2">
 <h2 class="hasAnchor">
@@ -486,7 +529,8 @@
 <a href="#netcdf">NetCDF</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#tidync">tidync</a></li>
       <li><a href="#data-extraction">Data extraction</a></li>
-      <li><a href="#interrogating-sea-ice-concentration">Interrogating sea ice concentration</a></li>
+      <li><a href="#interrogating-data-by-dimensions">Interrogating data by dimensions</a></li>
+      <li><a href="#transforms">Transforms</a></li>
       <li><a href="#future-improvements">Future improvements</a></li>
       </ul>
 </li>

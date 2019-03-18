@@ -23,9 +23,7 @@ options(pillar.subtle = FALSE, pillar.sigfig = 4)
 ```
 
 The goal of tidync is to ease exploring the contents of a NetCDF source and
-constructing efficient queries to extract arbitrary hyperslabs. The data
-extracted can be used directly as an array, or in "long form" form as a data
-frame for "tidy" analysis and visualization contexts.
+to easily extract array data in various forms.  Expressions relative to array dimensions are used to limit the data to be read, and this can be used interactively to explore the source data. No data is read until explicitly requested, and can be pulled directly as an array, or in long-form as a data frame. 
 
 NetCDF is **Network Common Data Form**, a [data model][not-a-format] and an
 [API](https://en.wikipedia.org/wiki/Application_programming_interface).
@@ -104,7 +102,6 @@ dimension.  The "active" grid is the one that queries may be made against, and m
 ```{r}
 library(tidync)
 tidync(ice_file)
-
 ```
 
 Here we see variables are clearly grouped by the *grid* they exist in, where
@@ -212,8 +209,7 @@ hf %>%
   dplyr::filter(!is.na(concentration))
 ```
 
-## Interrogating sea ice concentration
-
+## Interrogating data by dimensions
 
 The connection object 'hf' is available for determining what is available and how we might cut into it. 'time' interestingly is of length 1, so perhaps adds nothing to the information about this otherwise 2D data set. If we were to open this file in `ncdf4` or `RNetCDF` and wanted to take a subset of the file out, we would have to specify and `start` of 1 and a `count` of ` even though it's completely redundant. 
 
@@ -238,22 +234,43 @@ var_get(con, variable, start = c(1, 1, 1), count = c(10, 5, 1))
 
 Obviously, it should be reasonable to specify only the count of any dimensions that *we don't want the entirety of*. This problem manifests exactly in R arrays generally, we can't provide information only about the dimensions we want, they have to be specified explicitly - even if we mean *all of it*. 
 
-```{r eval=FALSE}
-## WARNING pseudocode
+It does not matter what we include in the filter query, it can be all, some or none of the available dimensions, in any order. 
 
+```{r dimension-index,eval=TRUE}
+hf %>% hyper_filter(nj = index < 20, ni = ni > 20)
+
+hf %>% hyper_filter(nj = index < 20)
 ```
 
+The other requirement we have is the ability to automate these task, and so far we have only interacted with the dimensionality information from the print out. For programming, there are functions `hyper_vars()` and `hyper_dims()` to pull out a table of variables or dimensions. The value of these functions is restricted to the *active* grid, and the name of the grid is available via `active()`. 
 
 
 ```{r}
 hyper_vars(hf)
 hyper_dims(hf)
-hyper_transforms(hf)
-hyper_dims(hf)
-hyper_tbl_cube(hf)
+
+## change the active grid
+hf %>% activate("D2") %>% 
+  hyper_vars()
 
 active(hf)
+
+hf %>% activate("D2") %>%
+  active()
 ```
+
+## Transforms
+
+Under the hood tidync manages the relationship between dimensions and coordinates via *transforms* tables. This is a 1-dimensional mapping between dimension index and its coordinate value (if there's no explicit value it is assumed to be equal to the 1-based index). These tables are available via the `hyper_transforms()` function. 
+
+Each table has columns `<dimension-name>`, `index`, `id`, `name`, `coord_dim` (whether the dimension has explicit coordinates, in the `<dimension-name>` column), and `selected`. The `selected` column records which of the dimension elements is currently requested by a `hyper_filter` query, and by default is set to `TRUE`. Expressions in the filter function work by updating this column. 
+
+
+```{r}
+hyper_transforms(hf)
+```
+
+Future releases aim to make the handling of these less raw. 
 
 
 ## Future improvements

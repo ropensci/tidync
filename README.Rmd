@@ -98,7 +98,7 @@ tidync(file)
 ```
 
 There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions
-`tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_array` and `hyper_tibble` give raw-array and data frames with-full-coordinates forms respectively. 
+`tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_array`, `hyper_tibble` and `hyper_tbl_cube` give raw-array or data frames. 
 
 Also [http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/](this blog) post by Matteo De Felice. 
 
@@ -107,18 +107,22 @@ Also [http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a
 Use `tidync()` and `hyper_filter()` to discern what variables and dimensions are available, and to craft axis-filtering
 expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name `index` to filter it by its index). 
 
-```{r interactive,eval=FALSE}
+```{r interactive,eval=TRUE}
+filename <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
 ## discover the available entities, and the active grid's dimensions and variables
 tidync(filename)
 
 ## activate a different grid
+grid_identifier <- "D7,D9,D11,D8"
 tidync(filename) %>% activate(grid_identifier)
 
-## get a dimension-focus on the space occupied within a grid
-tidync(filename) %>% hyper_filter()
-
 ## pass named expressions to subset dimension by value or index (step)
-tidync(filename) %>% hyper_filter(lat = lat < -30, time = time == 20)
+(subs <- tidync(filename) %>% hyper_filter(N_PROF = N_PROF > 1, STRING256 = index > 10))
+
+## with the saved filtering from above, choose data frame or tbl_cube output
+## optionally with only selected variables
+subs %>% hyper_tibble()
+subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 ```
 
 
