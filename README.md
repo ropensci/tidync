@@ -23,8 +23,8 @@ simple steps:
   - Connect and summarize `tidync()`.
   - (optionally) Specify source variables `activate()`.
   - (optionally) Specify array sub-setting (slicing) `hyper_filter()`.
-  - Read array data in either native `hyper_array()` or long-form
-    `hyper_tibble()`.
+  - Read array data in native form `hyper_array()` or long-form
+    `hyper_tibble()` or bespoke form `hyper_tbl_cube()`.
 
 NetCDF is **Network Common Data Form** a very common, and very general
 way to store and work with scientific array-based data. NetCDF is

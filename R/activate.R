@@ -1,12 +1,19 @@
 
 #' Activate a NetCDF grid
 #'
-#' A grid is the definition use in NetCDF for the shape and size of array
-#' variables, and if only one exists it is activated by default. A grid must be
-#' selected by name in the form of 'D1,D0' where one or more numbered 
-#' dimensions indicates the grid. The grid definition names are printed 
-#' as part of the summary of in the tidync object and may be obtained 
-#' directly with `tidync(file)$grid$grid` on the tidync object.
+#' A grid in NetCDF is a particular shape and size available for array
+#' variables, and consists of sets of dimensions. To activate a grid is to set
+#' the context for downstream operations, for querying, summarizing and reading
+#' data. There's no sense in performing these operations on more than one grid
+#' at a time, but multiple variables may exist in a single grid. There may be
+#' only one significant grid in a source or many, individual dimensions are
+#' themselves grids.
+#'
+#' There may be more than one grid and one is always activated by default. A
+#' grid may be activated by name in the form of 'D1,D0' where one or more
+#' numbered dimensions indicates the grid. The grid definition names are printed
+#' as part of the summary of in the tidync object and may be obtained directly
+#' with [hyper_grids()] on the tidync object.
 #'
 #' Activation of a grid sets the context for downstream operations (slicing and
 #' reading data) from NetCDF, and as there may be several grids in a single
@@ -14,8 +21,14 @@
 #' default the largest grid is activated. Once activated, all downstream tasks
 #' apply to the set of variables that exist on that grid.
 #'
-#' `activate` puts the named variable first `active` gets and sets the active
-#' variable
+#' If [activate()] is called with a variable name, it puts the variable first.
+#' The function [active()] gets and sets the active grid. To restrict ultimate
+#' read to particular variables use the `select_var` argument to
+#' [hyper_filter()], [hyper_tibble()] and [hyper_tbl_cube()].
+#'
+#' Scalar variables are not currently available to tidync, and it's not obvious
+#' how activation would occur for scalars, but in future perhaps `activate("S")`
+#' could be the right way forward.
 #' @param .data NetCDF object
 #' @param what name of a variable
 #' @param ... reserved, currently ignored
@@ -27,12 +40,13 @@
 #' @aliases active activate active<-
 #' @examples
 #' l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
-#' rnc <- tidync(system.file("extdata", "oceandata", l3file, 
+#' rnc <- tidync(system.file("extdata", "oceandata", l3file,
 #' package = "tidync"))
 #' activate(rnc, "palette")
-#' 
+#'
 #' ## extract available grid names
-#' rnc$grid$grid
+#' hyper_grids(rnc)
+#' @seealso hyper_filter hyper_tibble hyper_tbl_cube
 #' @name activate
 #' @export
 activate <- function(.data, what, ..., select_var = NULL) UseMethod("activate")

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>dplyr tbl cube — hyper_tbl_cube • tidync</title>
+<title>A dplyr cube tbl — hyper_tbl_cube • tidync</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,12 @@
 
 
 
-<meta property="og:title" content="dplyr tbl cube — hyper_tbl_cube" />
+<meta property="og:title" content="A dplyr cube tbl — hyper_tbl_cube" />
 
-<meta property="og:description" content="Produce a dplyr tbl_cube from NetCDF." />
+<meta property="og:description" content="Produce a tbl_cube from NetCDF. This is a
+delay-breaking function and causes data to be read from the source
+into the tbl cube format defined in the dplyr
+package." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -114,14 +117,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>dplyr tbl cube</h1>
+    <h1>A dplyr cube tbl</h1>
     <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/hyper_tbl_cube.R'><code>R/hyper_tbl_cube.R</code></a></small>
     <div class="hidden name"><code>hyper_tbl_cube.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Produce a dplyr <code>tbl_cube</code> from NetCDF.</p>
+    <p>Produce a <a href='https://dplyr.tidyverse.org/reference/tbl_cube.html'>tbl_cube</a> from NetCDF. This is a
+delay-breaking function and causes data to be read from the source
+into the tbl cube format defined in the <a href='https://dplyr.tidyverse.org/reference/tbl_cube.html'>dplyr</a>
+package.</p>
     
     </div>
 
@@ -142,7 +148,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>arguments for <code>hyper_filter</code></p></td>
+      <td><p>arguments for <code><a href='hyper_filter.html'>hyper_filter()</a></code></p></td>
     </tr>
     </table>
     
@@ -153,7 +159,15 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>#'</p>
+    <p>The tbl cube is a very general and arbitrarily-sized array that
+can be used with tidyverse functionality. Dimension coordinates are
+stored with the tbl cube, derived from the grid
+<a href='hyper_transforms.html'>transforms</a>.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='hyper_array.html'>hyper_array()</a></code> and <code><a href='hyper_tibble.html'>hyper_tibble()</a></code> which are also delay-breaking
+functions that cause data to be read</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -187,6 +201,8 @@
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

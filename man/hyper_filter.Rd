@@ -18,19 +18,19 @@ hyper_filter(.x, ...)
 data frame
 }
 \description{
-The 'hyper filter' acts on a 'tidync' object by matching one or more
+The \code{\link[=hyper_filter]{hyper_filter()}} acts on a \link{tidync} object by matching one or more
 filtering expressions like with \code{dplyr::filter}. This allows us to lazily
 specify a subset from a NetCDF array without pulling  any data. The modified
 object may be printed to see the effects of subsetting, or saved for further
 use.
 }
 \details{
-The function \code{hyper_filter} will act on an existing tidync object or a
+The function \code{\link[=hyper_filter]{hyper_filter()}} will act on an existing tidync object or a
 source string.
 
 Filter arguments must be named as per the dimensions in the variable in form
-\code{dimname = dimname < 10}. This is a restrictive variant of \code{dplyr::filter},
-with a syntax more like \code{dplyr::mutate}. This ensures that each element is
+\code{dimname = dimname < 10}. This is a restrictive variant of \code{\link[dplyr:filter]{dplyr::filter()}},
+with a syntax more like \code{\link[dplyr:mutate]{dplyr::mutate()}}. This ensures that each element is
 named, so we know which dimension to apply this to, but also that the
 expression evaluated against can do some extra work for a nuanced test.
 

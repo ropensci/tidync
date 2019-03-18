@@ -3,11 +3,14 @@
 \name{hyper_vars}
 \alias{hyper_vars}
 \alias{hyper_dims}
+\alias{hyper_grids}
 \title{Grid status}
 \usage{
 hyper_vars(x, ...)
 
 hyper_dims(x, ...)
+
+hyper_grids(x, ...)
 }
 \arguments{
 \item{x}{tidync object}
@@ -25,7 +28,7 @@ multiple columns.
 \details{
 The dimensions and variables of the active grid are identified in the
 \link[=print.tidync]{print} method of the tidync object, these functions exist to
-provide that information programmatically.
+provide that information directly.
 
 \code{hyper_vars()} will list the ids, data type, name, dimension number, number
 of attributes and and coordinate status of the variables on the currently
@@ -33,7 +36,10 @@ active grid.
 
 \code{hyper_dims()} will list the names, lengths, start/count index, ids, and
 status of dimensions on the currently active grid. records on the currently
-active dimensions
+active dimensions.
+
+\code{hyper_grids()} will list the names, number of dimension, and number of
+variables and active status of each grid in the source.
 }
 \examples{
 f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"

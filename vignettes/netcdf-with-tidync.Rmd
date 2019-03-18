@@ -242,7 +242,7 @@ hf %>% hyper_filter(nj = index < 20, ni = ni > 20)
 hf %>% hyper_filter(nj = index < 20)
 ```
 
-The other requirement we have is the ability to automate these task, and so far we have only interacted with the dimensionality information from the print out. For programming, there are functions `hyper_vars()` and `hyper_dims()` to pull out a table of variables or dimensions. The value of these functions is restricted to the *active* grid, and the name of the grid is available via `active()`. 
+The other requirement we have is the ability to automate these task, and so far we have only interacted with the dimensionality information from the print out. For programming, there are functions `hyper_vars()`, `hyper_dims()` and `hyper_grids()` to report on elements in the source. The value of `hyper_vars()` and `hyper_dims()` is restricted to the *active* grid. The function `hyper_grids()` reports all available grids, with the currently active one indicated. The name of the current grid is also available via `active()`. 
 
 
 ```{r}

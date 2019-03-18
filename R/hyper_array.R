@@ -1,26 +1,29 @@
 #' Extract NetCDF data as an array
 #'
 #' Extract the raw array data as a list of  one or more arrays. This can be the
-#' entire variable/s or after dimension-slicing using `hyper_filter`
-#' expressions.
+#' entire variable/s or after dimension-slicing using [hyper_filter()]
+#' expressions. This is a delay-breaking function and causes data to be read 
+#' from the source into raw arrays in R's native form. 
 #'
-#' The function `hyper_array` will act on an existing tidync object or a source
+#' The function [hyper_array()] will act on an existing tidync object or a source
 #' string.
 #'
 #' By default all variables in the active grid are returned, use `select_var` to
-#' limit.
+#' specify one or more desired variables.
 #'
-#' The transforms are stored as a list of tables in an attribute "transforms",
-#' access these with `attr(x, "transforms")`.
-#' @param x NetCDF file, connection object, or `tidync` object
+#' The transforms are stored as a list of tables in an attribute `transforms``,
+#' access these with [hyper_transforms()].
+#' @param x NetCDF file, connection object, or [tidync] object
 #' @param drop collapse degenerate dimensions, defaults to `TRUE`
-#' @param ... passed to `hyper_filter`
+#' @param ... passed to [hyper_filter()]
 #' @param select_var optional vector of variable names to select
 #' @param raw_datavals logical to control whether scaling in the NetCDF is
 #'   applied or not
 #' @param force ignore caveats about large extraction and just do it
 #'
 #' @export
+#' @seealso [hyper_tbl_cube()] and [hyper_tibble()] which are also delay-breaking 
+#' functions that cause data to be read 
 #' @examples
 #' f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 #' l3file <- system.file("extdata/oceandata", f, package= "tidync")

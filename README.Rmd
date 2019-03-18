@@ -26,7 +26,7 @@ discover and read the contents of NetCDF, with simple steps:
 * Connect and summarize `tidync()`.
 * (optionally) Specify source variables `activate()`.
 * (optionally) Specify array sub-setting (slicing) `hyper_filter()`.
-* Read array data in either native `hyper_array()` or long-form `hyper_tibble()`. 
+* Read array data in native form `hyper_array()` or long-form `hyper_tibble()` or bespoke form `hyper_tbl_cube()`. 
 
 NetCDF is **Network Common Data Form** a very common, and very general way to store and work with 
 scientific array-based data. NetCDF is defined and provided by [Unidata](https://www.unidata.ucar.edu/software/netcdf/). R has (independent) support for NetCDF via the [ncdf4](https://CRAN.R-project.org/package=ncdf4), [rhdf5](https://bioconductor.org/packages/release/bioc/html/rhdf5.html), [RNetCDF](https://CRAN.R-project.org/package=RNetCDF), [rgdal](https://CRAN.R-project.org/package=rgdal), [sf](https://CRAN.R-project.org/package=sf) and [vapour](https://CRAN.R-project.org/package=vapour) packages. 

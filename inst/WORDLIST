@@ -4,6 +4,8 @@ CDO
 coord
 De
 dev
+dmax
+dmin
 dplyr
 Dplyr
 edu
@@ -19,6 +21,7 @@ hyperslabs
 hypertidy
 libnetcdf
 libudunits
+lifecycle
 MacOS
 Matteo
 matteodefelice
@@ -46,7 +49,9 @@ ucar
 Udunits
 unidata
 Unidata
+unlim
 useable
+vapour
 www
 Xenial
 XYZ

@@ -51,3 +51,7 @@ library(ggplot2)
 ggplot(ht \%>\% filter(!is.na(chlor_a)),
 aes(x = lon, y = lat, fill = chlor_a)) + geom_tile()
 }
+\seealso{
+\code{\link[=hyper_array]{hyper_array()}} and \code{\link[=hyper_tbl_cube]{hyper_tbl_cube()}}  which are also delay-breaking
+functions that cause data to be read
+}

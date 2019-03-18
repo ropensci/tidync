@@ -33,8 +33,9 @@
 <meta property="og:title" content="Extract NetCDF data as an array — hyper_array" />
 
 <meta property="og:description" content="Extract the raw array data as a list of  one or more arrays. This can be the
-entire variable/s or after dimension-slicing using hyper_filter
-expressions." />
+entire variable/s or after dimension-slicing using hyper_filter()
+expressions. This is a delay-breaking function and causes data to be read
+from the source into raw arrays in R's native form." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -124,8 +125,9 @@ expressions." />
     <div class="ref-description">
     
     <p>Extract the raw array data as a list of  one or more arrays. This can be the
-entire variable/s or after dimension-slicing using <code>hyper_filter</code>
-expressions.</p>
+entire variable/s or after dimension-slicing using <code><a href='hyper_filter.html'>hyper_filter()</a></code>
+expressions. This is a delay-breaking function and causes data to be read
+from the source into raw arrays in R's native form.</p>
     
     </div>
 
@@ -148,7 +150,7 @@ expressions.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>NetCDF file, connection object, or <code>tidync</code> object</p></td>
+      <td><p>NetCDF file, connection object, or <a href='tidync.html'>tidync</a> object</p></td>
     </tr>
     <tr>
       <th>select_var</th>
@@ -156,7 +158,7 @@ expressions.</p>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>passed to <code>hyper_filter</code></p></td>
+      <td><p>passed to <code><a href='hyper_filter.html'>hyper_filter()</a></code></p></td>
     </tr>
     <tr>
       <th>raw_datavals</th>
@@ -175,12 +177,17 @@ applied or not</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function <code>hyper_array</code> will act on an existing tidync object or a source
+    <p>The function <code>hyper_array()</code> will act on an existing tidync object or a source
 string.</p>
 <p>By default all variables in the active grid are returned, use <code>select_var</code> to
-limit.</p>
-<p>The transforms are stored as a list of tables in an attribute "transforms",
-access these with <code><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr(x, "transforms")</a></code>.</p>
+specify one or more desired variables.</p>
+<p>The transforms are stored as a list of tables in an attribute `transforms``,
+access these with <code><a href='hyper_transforms.html'>hyper_transforms()</a></code>.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='hyper_tbl_cube.html'>hyper_tbl_cube()</a></code> and <code><a href='hyper_tibble.html'>hyper_tibble()</a></code> which are also delay-breaking
+functions that cause data to be read</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -227,6 +234,8 @@ access these with <code><a href='https://www.rdocumentation.org/packages/base/to
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

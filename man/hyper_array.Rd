@@ -20,11 +20,11 @@ hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
   raw_datavals = FALSE, drop = TRUE)
 }
 \arguments{
-\item{x}{NetCDF file, connection object, or \code{tidync} object}
+\item{x}{NetCDF file, connection object, or \link{tidync} object}
 
 \item{select_var}{optional vector of variable names to select}
 
-\item{...}{passed to \code{hyper_filter}}
+\item{...}{passed to \code{\link[=hyper_filter]{hyper_filter()}}}
 
 \item{raw_datavals}{logical to control whether scaling in the NetCDF is
 applied or not}
@@ -35,18 +35,19 @@ applied or not}
 }
 \description{
 Extract the raw array data as a list of  one or more arrays. This can be the
-entire variable/s or after dimension-slicing using \code{hyper_filter}
-expressions.
+entire variable/s or after dimension-slicing using \code{\link[=hyper_filter]{hyper_filter()}}
+expressions. This is a delay-breaking function and causes data to be read
+from the source into raw arrays in R's native form.
 }
 \details{
-The function \code{hyper_array} will act on an existing tidync object or a source
+The function \code{\link[=hyper_array]{hyper_array()}} will act on an existing tidync object or a source
 string.
 
 By default all variables in the active grid are returned, use \code{select_var} to
-limit.
+specify one or more desired variables.
 
-The transforms are stored as a list of tables in an attribute "transforms",
-access these with \code{attr(x, "transforms")}.
+The transforms are stored as a list of tables in an attribute `transforms``,
+access these with \code{\link[=hyper_transforms]{hyper_transforms()}}.
 }
 \examples{
 f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
@@ -73,4 +74,8 @@ lapply(attr(braw, "transforms"),
    function(x) nrow(dplyr::filter(x, selected)))
 ## the selected axis coordinates should match in order and in size
 lapply(braw, dim)
+}
+\seealso{
+\code{\link[=hyper_tbl_cube]{hyper_tbl_cube()}} and \code{\link[=hyper_tibble]{hyper_tibble()}} which are also delay-breaking
+functions that cause data to be read
 }

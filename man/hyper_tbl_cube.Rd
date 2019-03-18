@@ -4,7 +4,7 @@
 \alias{hyper_tbl_cube}
 \alias{hyper_tbl_cube.tidync}
 \alias{hyper_tbl_cube.character}
-\title{dplyr tbl cube}
+\title{A dplyr cube tbl}
 \usage{
 hyper_tbl_cube(x, ...)
 
@@ -15,7 +15,7 @@ hyper_tbl_cube(x, ...)
 \arguments{
 \item{x}{tidync object}
 
-\item{...}{arguments for \code{hyper_filter}}
+\item{...}{arguments for \code{\link[=hyper_filter]{hyper_filter()}}}
 }
 \value{
 tbl_cube
@@ -23,10 +23,16 @@ tbl_cube
 \code{dplyr::tbl_cube}
 }
 \description{
-Produce a dplyr \code{tbl_cube} from NetCDF.
+Produce a \link[dplyr:tbl_cube]{tbl_cube} from NetCDF. This is a
+delay-breaking function and causes data to be read from the source
+into the tbl cube format defined in the \link[dplyr:tbl_cube]{dplyr}
+package.
 }
 \details{
-#'
+The tbl cube is a very general and arbitrarily-sized array that
+can be used with tidyverse functionality. Dimension coordinates are
+stored with the tbl cube, derived from the grid
+\link[=hyper_transforms]{transforms}.
 }
 \examples{
 f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
@@ -46,4 +52,8 @@ if (!inherits(group_nc, "try-error")) {
  ## the error was
  writeLines(c(group_nc))
 }
+}
+\seealso{
+\code{\link[=hyper_array]{hyper_array()}} and \code{\link[=hyper_tibble]{hyper_tibble()}} which are also delay-breaking
+functions that cause data to be read
 }

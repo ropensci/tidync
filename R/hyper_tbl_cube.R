@@ -1,11 +1,19 @@
-#' dplyr tbl cube 
+#' A dplyr cube tbl 
 #' 
-#' Produce a dplyr `tbl_cube` from NetCDF. 
+#' Produce a [tbl_cube][dplyr::tbl_cube()] from NetCDF. This is a 
+#' delay-breaking function and causes data to be read from the source
+#' into the tbl cube format defined in the [dplyr][dplyr::tbl_cube] 
+#' package. 
 #' 
-#' #'
-#' @param x tidync object
-#' @param ... arguments for `hyper_filter`
+#' The tbl cube is a very general and arbitrarily-sized array that 
+#' can be used with tidyverse functionality. Dimension coordinates are
+#' stored with the tbl cube, derived from the grid 
+#' [transforms][hyper_transforms()]. 
 #'
+#' @param x tidync object
+#' @param ... arguments for [hyper_filter()]
+#' @seealso [hyper_array()] and [hyper_tibble()] which are also delay-breaking 
+#' functions that cause data to be read 
 #' @return tbl_cube
 #' @export
 #'

@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Subset NetCDF variable by expression — hyper_filter" />
 
-<meta property="og:description" content="The 'hyper filter' acts on a 'tidync' object by matching one or more
+<meta property="og:description" content="The hyper filter() acts on a tidync object by matching one or more
 filtering expressions like with dplyr::filter. This allows us to lazily
 specify a subset from a NetCDF array without pulling  any data. The modified
 object may be printed to see the effects of subsetting, or saved for further
@@ -125,7 +125,7 @@ use." />
 
     <div class="ref-description">
     
-    <p>The 'hyper filter' acts on a 'tidync' object by matching one or more
+    <p>The <code>hyper filter()</code> acts on a <a href='tidync.html'>tidync</a> object by matching one or more
 filtering expressions like with <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>. This allows us to lazily
 specify a subset from a NetCDF array without pulling  any data. The modified
 object may be printed to see the effects of subsetting, or saved for further
@@ -157,11 +157,11 @@ use.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function <code>hyper_filter</code> will act on an existing tidync object or a
+    <p>The function <code>hyper_filter()</code> will act on an existing tidync object or a
 source string.</p>
 <p>Filter arguments must be named as per the dimensions in the variable in form
-<code>dimname = dimname &lt; 10</code>. This is a restrictive variant of <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter</a></code>,
-with a syntax more like <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate</a></code>. This ensures that each element is
+<code>dimname = dimname &lt; 10</code>. This is a restrictive variant of <code><a href='https://dplyr.tidyverse.org/reference/filter.html'>dplyr::filter()</a></code>,
+with a syntax more like <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate()</a></code>. This ensures that each element is
 named, so we know which dimension to apply this to, but also that the
 expression evaluated against can do some extra work for a nuanced test.</p>
 <p>There are special columns provided with each axis, one is 'index' so that

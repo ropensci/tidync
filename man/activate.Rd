@@ -42,29 +42,45 @@ name}
 NetCDF object
 }
 \description{
-A grid is the definition use in NetCDF for the shape and size of array
-variables, and if only one exists it is activated by default. A grid must be
-selected by name in the form of 'D1,D0' where one or more numbered
-dimensions indicates the grid. The grid definition names are printed
-as part of the summary of in the tidync object and may be obtained
-directly with \code{tidync(file)$grid$grid} on the tidync object.
+A grid in NetCDF is a particular shape and size available for array
+variables, and consists of sets of dimensions. To activate a grid is to set
+the context for downstream operations, for querying, summarizing and reading
+data. There's no sense in performing these operations on more than one grid
+at a time, but multiple variables may exist in a single grid. There may be
+only one significant grid in a source or many, individual dimensions are
+themselves grids.
 }
 \details{
+There may be more than one grid and one is always activated by default. A
+grid may be activated by name in the form of 'D1,D0' where one or more
+numbered dimensions indicates the grid. The grid definition names are printed
+as part of the summary of in the tidync object and may be obtained directly
+with \code{\link[=hyper_grids]{hyper_grids()}} on the tidync object.
+
 Activation of a grid sets the context for downstream operations (slicing and
 reading data) from NetCDF, and as there may be several grids in a single
 source activation allows a different choice of available variables.  By
 default the largest grid is activated. Once activated, all downstream tasks
 apply to the set of variables that exist on that grid.
 
-\code{activate} puts the named variable first \code{active} gets and sets the active
-variable
+If \code{\link[=activate]{activate()}} is called with a variable name, it puts the variable first.
+The function \code{\link[=active]{active()}} gets and sets the active grid. To restrict ultimate
+read to particular variables use the \code{select_var} argument to
+\code{\link[=hyper_filter]{hyper_filter()}}, \code{\link[=hyper_tibble]{hyper_tibble()}} and \code{\link[=hyper_tbl_cube]{hyper_tbl_cube()}}.
+
+Scalar variables are not currently available to tidync, and it's not obvious
+how activation would occur for scalars, but in future perhaps \code{activate("S")}
+could be the right way forward.
 }
 \examples{
 l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
-rnc <- tidync(system.file("extdata", "oceandata", l3file, 
+rnc <- tidync(system.file("extdata", "oceandata", l3file,
 package = "tidync"))
 activate(rnc, "palette")
 
 ## extract available grid names
-rnc$grid$grid
+hyper_grids(rnc)
+}
+\seealso{
+hyper_filter hyper_tibble hyper_tbl_cube
 }

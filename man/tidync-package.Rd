@@ -10,6 +10,8 @@ manipulation and visualization. NetCDF is Network Common Data Form
 \url{https://www.unidata.ucar.edu/software/netcdf/}.
 }
 \details{
+See \code{\link[=print.tidync]{print.tidync()}} for details on the printed version of a tidync object.
+
 There is a family of functions "hyper_verb" around exploring and
 extracting data.
 \tabular{ll}{
@@ -23,8 +25,9 @@ extracting data.
 \code{\link{hyper_transforms}} \tab extract the active (or all) dimension transforms\cr
 \code{\link{hyper_vars}} \tab information on active variables \cr
 \code{\link{hyper_dims}} \tab information on active dimensions \cr
+\code{\link{hyper_grids}} \tab information on grids \cr
 }
 The scheme generally processes dimension filters into NetCDF extraction
 indexes and these are always available to each function, and are expressed
-in print methods.
+in printed output.
 }

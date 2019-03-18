@@ -2,18 +2,18 @@
 
 #' Subset NetCDF variable by expression
 #'
-#' The 'hyper filter' acts on a 'tidync' object by matching one or more
+#' The [hyper_filter()] acts on a [tidync] object by matching one or more
 #' filtering expressions like with `dplyr::filter`. This allows us to lazily
 #' specify a subset from a NetCDF array without pulling  any data. The modified
 #' object may be printed to see the effects of subsetting, or saved for further
 #' use.
 #'
-#' The function `hyper_filter` will act on an existing tidync object or a 
+#' The function [hyper_filter()] will act on an existing tidync object or a 
 #' source string.
 #'
 #' Filter arguments must be named as per the dimensions in the variable in form
-#' `dimname = dimname < 10`. This is a restrictive variant of `dplyr::filter`,
-#' with a syntax more like `dplyr::mutate`. This ensures that each element is
+#' `dimname = dimname < 10`. This is a restrictive variant of [dplyr::filter()],
+#' with a syntax more like [dplyr::mutate()]. This ensures that each element is
 #' named, so we know which dimension to apply this to, but also that the
 #' expression evaluated against can do some extra work for a nuanced test.
 #'
