@@ -21,14 +21,13 @@ Imports:
     forcats,
     magrittr,
     ncdf4,
-    ncmeta (>= 0.0.3.9002),
+    ncmeta (>= 0.0.4),
     purrr,
     RNetCDF (>= 1.9-1),
     rlang,
     tibble,
     yesno,
     tidyr
-Remotes: hypertidy/ncmeta
 RoxygenNote: 6.1.1
 Suggests: ggplot2,
     knitr,

@@ -2,10 +2,12 @@ context("files")
 
 fname <- paste(sample(unlist(strsplit("somecrazyfile", ""))), collapse = "")
 test_that("file not found is friendly", {
+  skip_on_cran()
   expect_error(tidync(fname), "failed to open")
 })
 
 test_that("files and bad files are handled", {
+  skip_on_cran()
   l3b_file <- system.file("extdata/oceandata/S2008001.L3b_DAY_RRS.nc", 
                           package = "tidync", mustWork = TRUE)
   expect_error(suppressWarnings(tidync(l3b_file)), 
@@ -38,6 +40,7 @@ test_that("files and bad files are handled", {
 })
 
 test_that("verbs have a character method", {
+  skip_on_cran()
   f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
   l3file <- system.file("extdata/oceandata", f, 
                         package= "tidync", mustWork = TRUE)
@@ -59,6 +62,7 @@ test_that("verbs have a character method", {
   
 })
 test_that("RNetCDF fall back works", {
+  skip_on_cran()
   ufile <- system.file("extdata", "unidata", "madis-hydro.nc", 
                        package = "tidync", mustWork = TRUE)
   nc_get(ufile, "invTime") %>% expect_is("array") %>% 
