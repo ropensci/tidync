@@ -33,11 +33,12 @@
 <meta property="og:title" content="Activate a NetCDF grid — activate" />
 
 <meta property="og:description" content="A grid in NetCDF is a particular shape and size available for array
-variables, and consists of sets of dimensions. To activate a grid is to set the
-context for downstream operations, for querying, summarizing and reading data.
-There's no sense in performing these operations on more than one grid at a time,
-but multiple variables may exist in a single grid. There may be only one signficant grid in a source or many, individual dimensions
-are themselves grids." />
+variables, and consists of sets of dimensions. To activate a grid is to set
+the context for downstream operations, for querying, summarizing and reading
+data. There's no sense in performing these operations on more than one grid
+at a time, but multiple variables may exist in a single grid. There may be
+only one significant grid in a source or many, individual dimensions are
+themselves grids." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -127,11 +128,12 @@ are themselves grids." />
     <div class="ref-description">
     
     <p>A grid in NetCDF is a particular shape and size available for array
-variables, and consists of sets of dimensions. To activate a grid is to set the
-context for downstream operations, for querying, summarizing and reading data.
-There's no sense in performing these operations on more than one grid at a time,
-but multiple variables may exist in a single grid. There may be only one signficant grid in a source or many, individual dimensions
-are themselves grids.</p>
+variables, and consists of sets of dimensions. To activate a grid is to set
+the context for downstream operations, for querying, summarizing and reading
+data. There's no sense in performing these operations on more than one grid
+at a time, but multiple variables may exist in a single grid. There may be
+only one significant grid in a source or many, individual dimensions are
+themselves grids.</p>
     
     </div>
 
@@ -189,21 +191,20 @@ name</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There may be more than one
-grid and one is always activated by default. A grid may be
-activated by name in the form of 'D1,D0' where one or more numbered
-dimensions indicates the grid. The grid definition names are printed
-as part of the summary of in the tidync object and may be obtained
-directly with <code><a href='hyper_vars.html'>hyper_grids()</a></code> on the tidync object.</p>
+    <p>There may be more than one grid and one is always activated by default. A
+grid may be activated by name in the form of 'D1,D0' where one or more
+numbered dimensions indicates the grid. The grid definition names are printed
+as part of the summary of in the tidync object and may be obtained directly
+with <code><a href='hyper_vars.html'>hyper_grids()</a></code> on the tidync object.</p>
 <p>Activation of a grid sets the context for downstream operations (slicing and
 reading data) from NetCDF, and as there may be several grids in a single
 source activation allows a different choice of available variables.  By
 default the largest grid is activated. Once activated, all downstream tasks
 apply to the set of variables that exist on that grid.</p>
-<p>If <code>activate()</code> is called with a variable name, it puts the variable
-first. The function <code>active()</code> gets and sets the active grid. To
-restrict ultimate read to particular variables use the <code>select_var</code>
-argument to <code><a href='hyper_filter.html'>hyper_filter()</a></code>, <code><a href='hyper_tibble.html'>hyper_tibble()</a></code> and <code><a href='hyper_tbl_cube.html'>hyper_tbl_cube()</a></code>.</p>
+<p>If <code>activate()</code> is called with a variable name, it puts the variable first.
+The function <code>active()</code> gets and sets the active grid. To restrict ultimate
+read to particular variables use the <code>select_var</code> argument to
+<code><a href='hyper_filter.html'>hyper_filter()</a></code>, <code><a href='hyper_tibble.html'>hyper_tibble()</a></code> and <code><a href='hyper_tbl_cube.html'>hyper_tbl_cube()</a></code>.</p>
 <p>Scalar variables are not currently available to tidync, and it's not obvious
 how activation would occur for scalars, but in future perhaps <code>activate("S")</code>
 could be the right way forward.</p>
@@ -230,24 +231,24 @@ could be the right way forward.</p>
 #&gt; Dimensions 4 (2 active): 
 #&gt;   
 #&gt;   dim   name  length    min   max start count   dmin  dmax unlim coord_dim 
-#&gt;   <span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     
-#&gt; </span><span style='color: #555555;'>1</span><span> D0    lat     </span><span style='text-decoration: underline;'>2</span><span>160  -</span><span style='color: #BB0000;'>90.0</span><span>  90.0     1  </span><span style='text-decoration: underline;'>2</span><span>160  -</span><span style='color: #BB0000;'>90.0</span><span>  90.0 FALSE TRUE      
-#&gt; </span><span style='color: #555555;'>2</span><span> D1    lon     </span><span style='text-decoration: underline;'>4</span><span>320 -</span><span style='color: #BB0000;'>180.</span><span>  180.      1  </span><span style='text-decoration: underline;'>4</span><span>320 -</span><span style='color: #BB0000;'>180.</span><span>  180.  FALSE TRUE      
+#&gt;   <span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>     
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> D0    lat     </span><span style='text-decoration: underline;'>2</span><span>160  -</span><span style='color: #BB0000;'>90.0</span><span>  90.0     1  </span><span style='text-decoration: underline;'>2</span><span>160  -</span><span style='color: #BB0000;'>90.0</span><span>  90.0 FALSE TRUE      
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> D1    lon     </span><span style='text-decoration: underline;'>4</span><span>320 -</span><span style='color: #BB0000;'>180.</span><span>  180.      1  </span><span style='text-decoration: underline;'>4</span><span>320 -</span><span style='color: #BB0000;'>180.</span><span>  180.  FALSE TRUE      
 #&gt;   
 #&gt; Inactive dimensions:
 #&gt;   
 #&gt;   dim   name          length   min   max unlim coord_dim 
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     
-#&gt; </span><span style='color: #555555;'>1</span><span> D2    rgb                3     1     3 FALSE FALSE     
-#&gt; </span><span style='color: #555555;'>2</span><span> D3    eightbitcolor    256     1   256 FALSE FALSE     </div><div class='input'>
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>     
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> D2    rgb                3     1     3 FALSE FALSE     
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> D3    eightbitcolor    256     1   256 FALSE FALSE     </div><div class='input'>
 <span class='co'>## extract available grid names</span>
-<span class='fu'><a href='hyper_vars.html'>hyper_grids</a></span>(<span class='no'>rnc</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 4 x 4</span><span>
+<span class='fu'><a href='hyper_vars.html'>hyper_grids</a></span>(<span class='no'>rnc</span>)</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 4 x 4</span><span>
 #&gt;   grid  ndims nvars active
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> 
-#&gt; </span><span style='color: #555555;'>1</span><span> D1,D0     2     1 TRUE  
-#&gt; </span><span style='color: #555555;'>2</span><span> D3,D2     2     1 FALSE 
-#&gt; </span><span style='color: #555555;'>3</span><span> D0        1     1 FALSE 
-#&gt; </span><span style='color: #555555;'>4</span><span> D1        1     1 FALSE </div></span></pre>
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> 
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> D1,D0     2     1 TRUE  
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> D3,D2     2     1 FALSE 
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> D0        1     1 FALSE 
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> D1        1     1 FALSE </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

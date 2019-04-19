@@ -1,5 +1,7 @@
 # tidync 0.1.0
 
+* FIRST RELEASE, tidync benefitted greatly from the rOpenSci review process. 
+
 * New function `hyper_grids()` to report available grid names. 
 
 * A printing error of dimension value ranges is now fixed, thanks to James Goldie (#84). 
