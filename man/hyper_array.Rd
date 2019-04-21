@@ -2,6 +2,7 @@
 % Please edit documentation in R/hyper_array.R
 \name{hyper_array}
 \alias{hyper_array}
+\alias{tidync_data}
 \alias{hyper_slice}
 \alias{hyper_array.tidync}
 \alias{hyper_array.character}
@@ -37,7 +38,8 @@ applied or not}
 Extract the raw array data as a list of  one or more arrays. This can be the
 entire variable/s or after dimension-slicing using \code{\link[=hyper_filter]{hyper_filter()}}
 expressions. This is a delay-breaking function and causes data to be read
-from the source into raw arrays in R's native form.
+from the source into raw arrays in R's native form. This list of arrays is
+lightly classed as \link{tidync_data}, with methods for \code{\link[=print]{print()}} and \code{\link[=tidync]{tidync()}}.
 }
 \details{
 The function \code{\link[=hyper_array]{hyper_array()}} will act on an existing tidync object or a source
@@ -76,6 +78,7 @@ lapply(attr(braw, "transforms"),
 lapply(braw, dim)
 }
 \seealso{
+\link{print.tidync_data} for a description of the print summary,
 \code{\link[=hyper_tbl_cube]{hyper_tbl_cube()}} and \code{\link[=hyper_tibble]{hyper_tibble()}} which are also delay-breaking
 functions that cause data to be read
 }

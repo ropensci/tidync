@@ -1,3 +1,10 @@
+# tidync 0.1.0.9001
+
+* New class 'tidync_data' for output of 'hyper_array()', no underlying change to the
+ object which is simply a list of arrays from each variable, and with the axis transforms
+ stored in an attribute. 
+
+
 # tidync 0.1.0
 
 * FIRST RELEASE, tidync benefitted greatly from the rOpenSci review process. 
