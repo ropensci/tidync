@@ -270,9 +270,6 @@ Each table has columns `<dimension-name>`, `index`, `id`, `name`, `coord_dim` (w
 hyper_transforms(hf)
 ```
 
-Future releases aim to make the handling of these less raw. 
-
-
 ## Future improvements
 
 * support multiple sources at once for lazy read of a virtual grid

@@ -31,7 +31,7 @@
 #' argo <- tidync(argofile)
 #' argo %>% active()
 #' argo %>% activate("D3,D8") %>% hyper_array()
-#' argo %>% hyper_filter(NLEVELS = index < 4)
+#' argo %>% hyper_filter(N_LEVELS = index < 4)
 #' argo %>% hyper_tbl_cube()
 #' argo %>% hyper_tibble(select_var = c("TEMP_QC"))
 #' argo %>% hyper_transforms()

@@ -175,7 +175,7 @@ in printed output.</p>
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span> STRING8     1     8
 #&gt; </span><span style='color: #BCBCBC;'>2</span><span> N_PROF      1     2
-#&gt; Source: /perm_storage/home/mdsumner/Git/tidync/inst/extdata/argo/MD5903593_001.nc</div><div class='input'><span class='no'>argo</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='hyper_filter.html'>hyper_filter</a></span>(<span class='kw'>NLEVELS</span> <span class='kw'>=</span> <span class='no'>index</span> <span class='kw'>&lt;</span> <span class='fl'>4</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'NLEVELS' not found in active grid, ignoring</span></div><div class='output co'>#&gt; 
+#&gt; Source: /perm_storage/home/mdsumner/Git/tidync/inst/extdata/argo/MD5903593_001.nc</div><div class='input'><span class='no'>argo</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='hyper_filter.html'>hyper_filter</a></span>(<span class='kw'>N_LEVELS</span> <span class='kw'>=</span> <span class='no'>index</span> <span class='kw'>&lt;</span> <span class='fl'>4</span>)</div><div class='output co'>#&gt; 
 #&gt; Data Source (1): MD5903593_001.nc ...
 #&gt; 
 #&gt; Grids (16) &lt;dimension family&gt; : &lt;associated variables&gt; 
@@ -202,7 +202,7 @@ in printed output.</p>
 #&gt;   dim   name     length   min   max start count  dmin  dmax unlim coord_dim 
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>     
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span> D8    N_PROF        2     1     2     1     2     1     2 FALSE FALSE     
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> D10   N_LEVELS    493     1   493     1   493     1   493 FALSE FALSE     
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> D10   N_LEVELS    493     1   493     1     3     1     3 FALSE FALSE     
 #&gt;   
 #&gt; Inactive dimensions:
 #&gt;   
