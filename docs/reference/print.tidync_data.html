@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A dplyr cube tbl — hyper_tbl_cube • tidync</title>
+<title>Print tidync data — print.tidync_data • tidync</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,12 +30,9 @@
 
 
 
-<meta property="og:title" content="A dplyr cube tbl — hyper_tbl_cube" />
+<meta property="og:title" content="Print tidync data — print.tidync_data" />
 
-<meta property="og:description" content="Produce a tbl_cube from NetCDF. This is a
-delay-breaking function and causes data to be read from the source
-into the tbl cube format defined in the dplyr
-package." />
+<meta property="og:description" content="Print method for the 'tidync_data' list of arrays returned by hyper_array()." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -117,81 +114,63 @@ package." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A dplyr cube tbl</h1>
-    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/hyper_tbl_cube.R'><code>R/hyper_tbl_cube.R</code></a></small>
-    <div class="hidden name"><code>hyper_tbl_cube.Rd</code></div>
+    <h1>Print tidync data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/tidync_data.R'><code>R/tidync_data.R</code></a></small>
+    <div class="hidden name"><code>print.tidync_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Produce a <a href='https://dplyr.tidyverse.org/reference/tbl_cube.html'>tbl_cube</a> from NetCDF. This is a
-delay-breaking function and causes data to be read from the source
-into the tbl cube format defined in the <a href='https://dplyr.tidyverse.org/reference/tbl_cube.html'>dplyr</a>
-package.</p>
+    <p>Print method for the 'tidync_data' list of arrays returned by <code><a href='hyper_array.html'>hyper_array()</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>hyper_tbl_cube</span>(<span class='no'>x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for tidync</span>
-<span class='fu'>hyper_tbl_cube</span>(<span class='no'>x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for character</span>
-<span class='fu'>hyper_tbl_cube</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='co'># S3 method for tidync_data</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>tidync object</p></td>
+      <td><p>'tidync_data' object (from <code><a href='hyper_array.html'>hyper_array()</a></code>)</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>arguments for <code><a href='hyper_filter.html'>hyper_filter()</a></code></p></td>
+      <td><p>reserved args</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tbl_cube</p>
-<p><code><a href='https://dplyr.tidyverse.org/reference/tbl_cube.html'>dplyr::tbl_cube</a></code></p>
+    <p>the input object invisibly</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The tbl cube is a very general and arbitrarily-sized array that
-can be used with tidyverse functionality. Dimension coordinates are
-stored with the tbl cube, derived from the grid
-<a href='hyper_transforms.html'>transforms</a>.</p>
+    <p>The output lists the variables and their dimensions of an object from a
+previous call to <code><a href='tidync.html'>tidync()</a></code>, and possibly <code><a href='hyper_filter.html'>hyper_filter()</a></code>. The available
+data will differe from the source in terms of variables (via <code>select_var</code> in
+<a href='hyper_array.html'>hyper_array</a>) and the lengths of each dimension (via named expressions in
+<code><a href='hyper_filter.html'>hyper_filter()</a></code>).</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='hyper_array.html'>hyper_array()</a></code> and <code><a href='hyper_tibble.html'>hyper_tibble()</a></code> which are also delay-breaking
-functions that cause data to be read</p></div>
+    <div class='dont-index'><p>tidync_data</p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='st'>"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span>
-<span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/oceandata"</span>, <span class='no'>f</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"tidync"</span>)
-(<span class='no'>cube</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tbl_cube</span>(<span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>) <span class='kw'>%&gt;%</span>
-<span class='fu'><a href='activate.html'>activate</a></span>(<span class='no'>chlor_a</span>), <span class='kw'>lon</span> <span class='kw'>=</span> <span class='no'>lon</span> <span class='kw'>&gt;</span> <span class='fl'>107</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='no'>lat</span>) <span class='kw'>&lt;</span> <span class='fl'>30</span>))</div><div class='output co'>#&gt; Source: local array [630,720 x 2]
-#&gt; D: lon [dbl, 4320]
-#&gt; D: lat [dbl, 2160]
-#&gt; M: chlor_a [dbl]</div><div class='input'><span class='no'>ufile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"unidata"</span>, <span class='st'>"test_hgroups.nc"</span>,
- <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>, <span class='kw'>mustWork</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-
-<span class='co'>## some versions of NetCDF don't support this file</span>
-<span class='co'>## (4.1.3 https://github.com/hypertidy/tidync/issues/82)</span>
-<span class='no'>group_nc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/try'>try</a></span>(<span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>ufile</span>), <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='kw'>if</span> (!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>inherits</a></span>(<span class='no'>group_nc</span>, <span class='st'>"try-error"</span>)) {
- <span class='no'>res</span> <span class='kw'>&lt;-</span>  <span class='fu'>hyper_tbl_cube</span>(<span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>ufile</span>))
- <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>res</span>)
-} <span class='kw'>else</span> {
- <span class='co'>## the error was</span>
- <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/writeLines'>writeLines</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>group_nc</span>))
-}</div><div class='output co'>#&gt; Source: local array [74 x 1]
-#&gt; D: recNum [int, 74]
-#&gt; M: UTC_time [chr]</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>argofile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/argo/MD5903593_001.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>)
+<span class='no'>argodata</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>argofile</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='hyper_filter.html'>hyper_filter</a></span>(<span class='kw'>N_LEVELS</span> <span class='kw'>=</span> <span class='no'>index</span> <span class='kw'>&lt;</span> <span class='fl'>5</span>) <span class='kw'>%&gt;%</span>
+              <span class='fu'><a href='hyper_array.html'>hyper_array</a></span>(<span class='kw'>select_var</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"TEMP_ADJUSTED"</span>, <span class='st'>"PRES"</span>))
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>argodata</span>)</div><div class='output co'>#&gt; Tidync Data Arrays
+#&gt; Variables (2): 'TEMP_ADJUSTED', 'PRES'
+#&gt; Dimension (2): 4, 2
+#&gt; <span style='color: #949494;'># A tibble: 2 x 3</span><span>
+#&gt;   name       min   max
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> N_PROF       1     2
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> N_LEVELS     1     4
+#&gt; Source: /perm_storage/home/mdsumner/Git/tidync/inst/extdata/argo/MD5903593_001.nc</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

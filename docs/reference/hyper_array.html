@@ -35,7 +35,8 @@
 <meta property="og:description" content="Extract the raw array data as a list of  one or more arrays. This can be the
 entire variable/s or after dimension-slicing using hyper_filter()
 expressions. This is a delay-breaking function and causes data to be read
-from the source into raw arrays in R's native form." />
+from the source into raw arrays in R's native form. This list of arrays is
+lightly classed as tidync_data, with methods for print() and tidync()." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +67,7 @@ from the source into raw arrays in R's native form." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -127,7 +128,8 @@ from the source into raw arrays in R's native form." />
     <p>Extract the raw array data as a list of  one or more arrays. This can be the
 entire variable/s or after dimension-slicing using <code><a href='hyper_filter.html'>hyper_filter()</a></code>
 expressions. This is a delay-breaking function and causes data to be read
-from the source into raw arrays in R's native form.</p>
+from the source into raw arrays in R's native form. This list of arrays is
+lightly classed as tidync_data, with methods for <code><a href='https://www.rdocumentation.org/packages/base/topics/print'>print()</a></code> and <code><a href='tidync.html'>tidync()</a></code>.</p>
     
     </div>
 
@@ -186,7 +188,8 @@ access these with <code><a href='hyper_transforms.html'>hyper_transforms()</a></
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='hyper_tbl_cube.html'>hyper_tbl_cube()</a></code> and <code><a href='hyper_tibble.html'>hyper_tibble()</a></code> which are also delay-breaking
+    <div class='dont-index'><p><a href='print.tidync_data.html'>print.tidync_data</a> for a description of the print summary,
+<code><a href='hyper_tbl_cube.html'>hyper_tbl_cube()</a></code> and <code><a href='hyper_tibble.html'>hyper_tibble()</a></code> which are also delay-breaking
 functions that cause data to be read</p></div>
     
 
