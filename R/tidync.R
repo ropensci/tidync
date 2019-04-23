@@ -185,6 +185,15 @@ first_numeric_var <- function(x) {
 #' @importFrom dplyr %>% arrange distinct inner_join desc
 #' @importFrom utils head
 #' @importFrom rlang .data
+#' @examples
+#' argofile <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
+#' argo <- tidync(argofile)
+#' print(argo)
+#' 
+#' ## the print is modified by choosing a new grid or running filters
+#' argo %>% activate("D7,D9,D11,D8")
+#' 
+#' argo %>% hyper_filter(N_LEVELS = index > 300)
 print.tidync <- function(x, ...) {
   ushapes <- dplyr::distinct(x$grid, .data$grid) %>% 
     dplyr::arrange(desc(nchar(.data$grid)))

@@ -1,3 +1,10 @@
+## tidync 0.1.1
+
+* Clarified Description. 
+* Added examples. 
+
+Thanks! 
+
 ## Test environments
 * local Ubuntu 18.04 install, R 3.5.3
 * ubuntu 14.04 (on travis-ci)

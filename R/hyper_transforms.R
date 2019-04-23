@@ -28,13 +28,8 @@
 hyper_transforms <- function(x, all = FALSE, ...) {
   UseMethod("hyper_transforms")
 }
-#' Deprecated functions in tidync
-#' 
-#' @inheritParams hyper_transforms
-#' @export
-#' @name deprecated-tidync
 axis_transforms <- function(x, ...) {
-  .Deprecated("hyper_transforms")
+  .Defunct("hyper_transforms")
   UseMethod("hyper_transforms")
 }
 active_axis_transforms <- function(x, ...) {

@@ -12,7 +12,11 @@
 #' @seealso tidync_data
 #' @return the input object invisibly
 #' @export
-#'
+#' @examples 
+#' argofile <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
+#' argodata <- tidync(argofile) %>% hyper_filter(N_LEVELS = index < 5) %>% 
+#'               hyper_array(select_var = c("TEMP_ADJUSTED", "PRES"))
+#' print(argodata)
 print.tidync_data <- function(x, ...) {
   cat("Tidync Data Arrays\n")
   cat(sprintf("Variables (%i): %s\n", length(x), paste(sprintf("'%s'", names(x)), collapse = ", ")))

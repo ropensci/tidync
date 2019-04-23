@@ -5,6 +5,10 @@
 \alias{reexports}
 \alias{\%>\%}
 \title{Objects exported from other packages}
+\examples{
+system.file("extdata/argo/MD5903593_001.nc", package = "tidync") \%>\% 
+     tidync()
+}
 \keyword{internal}
 \description{
 These objects are imported from other packages. Follow the links

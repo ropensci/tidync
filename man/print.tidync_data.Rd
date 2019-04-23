@@ -24,6 +24,12 @@ data will differe from the source in terms of variables (via \code{select_var} i
 \link{hyper_array}) and the lengths of each dimension (via named expressions in
 \code{\link[=hyper_filter]{hyper_filter()}}).
 }
+\examples{
+argofile <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
+argodata <- tidync(argofile) \%>\% hyper_filter(N_LEVELS = index < 5) \%>\% 
+              hyper_array(select_var = c("TEMP_ADJUSTED", "PRES"))
+print(argodata)
+}
 \seealso{
 tidync_data
 }

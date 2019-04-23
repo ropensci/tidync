@@ -31,3 +31,16 @@ The scheme generally processes dimension filters into NetCDF extraction
 indexes and these are always available to each function, and are expressed
 in printed output.
 }
+\examples{
+argofile <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
+argo <- tidync(argofile)
+argo \%>\% active()
+argo \%>\% activate("D3,D8") \%>\% hyper_array()
+argo \%>\% hyper_filter(NLEVELS = index < 4)
+argo \%>\% hyper_tbl_cube()
+argo \%>\% hyper_tibble(select_var = c("TEMP_QC"))
+argo \%>\% hyper_transforms()
+argo \%>\% hyper_vars()
+argo \%>\% hyper_dims()
+argo \%>\% hyper_grids()
+}
