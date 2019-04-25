@@ -7,10 +7,10 @@ Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c(
              person("Ben", "Raymond", role = "ctb"))
 Description: Tidy tools for 'NetCDF' data sources. Explore the contents of a 
  'NetCDF' source (file or URL) presented as variables organized by grid with a 
- database-like interface. The 'hyper_filter()' interactive function translates the 
+ database-like interface. The hyper_filter() interactive function translates the 
  filter value or index expressions to array-slicing form. No data is read until 
- explicitly requested, as a data frame or list of arrays via 'hyper_tibble()' or 
- 'hyper_array()'. 
+ explicitly requested, as a data frame or list of arrays via hyper_tibble() or 
+ hyper_array(). 
 Depends: R (>= 3.3.0)
 License: GPL-3
 Encoding: UTF-8
