@@ -29,7 +29,6 @@ print.tidync_data <- function(x, ...) {
             v <- dims[[a]][[a]]; 
             tibble::tibble(name = a, min = min(v), max = max(v))}
             ))
-  print(dims)
   cat(sprintf("Source: %s\n", attr(x, "source")$source[1L]))
   invisible(x)
 }

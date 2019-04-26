@@ -56,7 +56,6 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
   if (missing(what)) return(.data)
   vargrids <- tidyr::unnest(.data$grid) 
   what_name <- deparse(substitute(what))
-  #print(what_name)
   #if (what_name %in% var_names(.data)) what <- what_name
   if (what_name %in% vargrids$variable) {
     ## use the variable to find the grid
