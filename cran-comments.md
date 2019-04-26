@@ -2,6 +2,7 @@
 
 * Clarified Description. 
 * Added examples. 
+* Removed cat and print calls. 
 
 Thanks! 
 

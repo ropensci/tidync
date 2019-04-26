@@ -85,15 +85,14 @@ tidync.character <- function(x, what, ...) {
   fexists <- file.exists(x)
   
   if (!fexists) {
-    cat(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", 
+    message(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", 
                 x))
   }
   safemeta <- purrr::safely(ncmeta::nc_meta)
   meta <- safemeta(x)
 
   if (is.null(meta$result)) {
-    cat("Oops, connection to source failed. \n")
-    print(x)
+    warning(sprintf("Oops, connection to source failed.\n %s", x))
     stop(meta$error)
   }
 
@@ -112,7 +111,7 @@ tidync.character <- function(x, what, ...) {
     stop("no variables or dimension recognizable \n  
          (is this a source with compound-types? Try h5, rhdf5, or hdf5r)")
   }
-  if (!fexists) cat("Connection succeeded. \n")      
+  if (!fexists) message("Connection succeeded.")      
   meta <- meta$result
   variable <- dplyr::mutate(meta[["variable"]], active = FALSE)
 

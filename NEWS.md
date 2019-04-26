@@ -1,7 +1,7 @@
 # tidync 0.1.1
 
 * Package improvements thanks to CRAN feedback, clarified Description and added
- more examples. 
+ more examples. Replaced `cat` and `print()` calls with message() and `warning()`. 
 
 * New class 'tidync_data' for output of 'hyper_array()', no underlying change 
  to the object which is simply a list of arrays from each variable, and axis
