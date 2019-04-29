@@ -3,7 +3,7 @@
 #' Extract the raw array data as a list of  one or more arrays. This can be the
 #' entire variable/s or after dimension-slicing using [hyper_filter()]
 #' expressions. This is a delay-breaking function and causes data to be read 
-#' from the source into raw arrays in R's native form. This list of arrays is 
+#' from the source into R native arrays. This list of arrays is 
 #' lightly classed as [tidync_data], with methods for [print()] and [tidync()]. 
 #'
 #' The function [hyper_array()] will act on an existing tidync object or a source
