@@ -1,3 +1,8 @@
+# tidync 0.1.1.9001
+
+* Deal with warnings from tidyr version > 0.8.3. 
+
+
 # tidync 0.1.1
 
 * Package improvements thanks to CRAN feedback, clarified Description and added

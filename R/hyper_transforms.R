@@ -33,7 +33,11 @@ axis_transforms <- function(x, ...) {
   UseMethod("hyper_transforms")
 }
 active_axis_transforms <- function(x, ...) {
-  grid <- x$grid %>% tidyr::unnest()
+  if (utils::packageVersion("tidyr") > "0.8.3" ) {
+    grid <- x$grid %>% tidyr::unnest(c(.data$variables))
+  } else {
+    grid <- x$grid %>% tidyr::unnest()
+  }
   axis <- x$axis
   dimension <- x$dimension
   active_x <- active(x)

@@ -54,7 +54,11 @@ activate <- function(.data, what, ..., select_var = NULL) UseMethod("activate")
 #' @export
 activate.tidync <- function(.data, what, ..., select_var = NULL) {
   if (missing(what)) return(.data)
-  vargrids <- tidyr::unnest(.data$grid) 
+  if (utils::packageVersion("tidyr") > "0.8.3" ) {
+   vargrids <- tidyr::unnest(.data$grid, cols = c(.data$variables)) 
+  } else {
+   vargrids <- tidyr::unnest(.data$grid) 
+  }
   what_name <- deparse(substitute(what))
   #if (what_name %in% var_names(.data)) what <- what_name
   if (what_name %in% vargrids$variable) {

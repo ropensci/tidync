@@ -127,7 +127,11 @@ tidync.character <- function(x, what, ...) {
   if (nrow(out$axis) < 1) return(out)
   if (missing(what)) {
     varg  <- first_numeric_var(out)
-    gg <- tidyr::unnest(out$grid)
+    if (utils::packageVersion("tidyr") > "0.8.3" ) {
+      gg <- tidyr::unnest(out$grid, c(.data$variables))
+    } else {
+      gg <- tidyr::unnest(out$grid)
+    }
     what <- gg$grid[match(varg, gg$variable)]
    
   }
@@ -212,7 +216,11 @@ print.tidync <- function(x, ...) {
   active_sh <- active(x)
   nms <- if(nrow(ushapes) > 0)  nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
-  vargrids <- tidyr::unnest(x$grid)
+  if (utils::packageVersion("tidyr") > "0.8.3" ) {
+    vargrids <- tidyr::unnest(x$grid, c(.data$variables))
+  } else {
+    vargrids <- tidyr::unnest(x$grid)
+  }
   estimatebigtime <- vargrids %>% 
     dplyr::filter(.data$grid == active(x)) %>% 
     dplyr::inner_join(x$axis, "variable") %>% 
