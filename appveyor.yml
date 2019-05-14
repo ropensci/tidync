@@ -13,18 +13,14 @@ install:
 cache:
   - C:\RLibrary
 
-# Adapt as necessary starting from here
-
-
 environment:
-  global:
-    WARNINGS_ARE_ERRORS: 1
+  NOT_CRAN: true
+  # env vars that may need to be set, at least temporarily, from time to time
+  # see https://github.com/krlmlr/r-appveyor#readme for details
+  # USE_RTOOLS: true
+  # R_REMOTES_STANDALONE: true
 
-  matrix:
-  - R_VERSION: release
-    R_ARCH: x64
-    BUILD_NAME: x64_release
-    DETAILS: release_build
+# Adapt as necessary starting from here
 
 build_script:
   - travis-tool.sh install_deps

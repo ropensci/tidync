@@ -3,17 +3,21 @@
 
 # tidync
 
+<!-- badges: start -->
+
 [![Travis-CI Build
-Status](http://badges.herokuapp.com/travis/ropensci/tidync?branch=master&env=BUILD_NAME=xenial_release&label=linux)](https://travis-ci.org/ropensci/tidync)
+Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=xenial_release&label=linux)](https://travis-ci.org/ropensci/tidync)
 [![Build
-Status](http://badges.herokuapp.com/travis/ropensci/tidync?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/ropensci/tidync)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/tidync-3m5h7)
+Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/ropensci/tidync)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/ropensci/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/ropensci/tidync)
 [![Coverage
-status](https://codecov.io/gh/ropensci/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/ropensci/tidync?branch=master)[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)
+status](https://codecov.io/gh/ropensci/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/ropensci/tidync?branch=master)
+[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
 [![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
+<!-- badges: end -->
 
 The goal of tidync is to ease exploring the contents of a NetCDF source
 and to simplify the process of data extraction.
