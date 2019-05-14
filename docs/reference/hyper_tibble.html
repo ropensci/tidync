@@ -100,7 +100,7 @@ row per element)." />
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/hypertidy/tidync">
+  <a href="https://github.com/ropensci/tidync">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -118,7 +118,7 @@ row per element)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract NetCDF data as an expanded table.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/hyper_tibble.R'><code>R/hyper_tibble.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/tidync/blob/master/R/hyper_tibble.R'><code>R/hyper_tibble.R</code></a></small>
     <div class="hidden name"><code>hyper_tibble.Rd</code></div>
     </div>
 
@@ -205,7 +205,7 @@ functions that cause data to be read</p></div>
 #&gt; [1] 1320 1080
 #&gt; </div><div class='input'>
  <span class='no'>ht</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tibble</span>(<span class='no'>rnc</span>) <span class='kw'>%&gt;%</span>
- <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/NA'>is.na</a></span>(<span class='no'>chlor_a</span>))
+ <span class='fu'><a href='https://www.rdocumentation.org/packages/dplyr/topics/filter'>filter</a></span>(!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/NA'>is.na</a></span>(<span class='no'>chlor_a</span>))
 <span class='no'>ht</span></div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 11 x 3</span><span>
 #&gt;    chlor_a   lat   lon
 #&gt;      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -223,7 +223,7 @@ functions that cause data to be read</p></div>
 #&gt; <span class='message'>  method         from </span>
 #&gt; <span class='message'>  [.quosures     rlang</span>
 #&gt; <span class='message'>  c.quosures     rlang</span>
-#&gt; <span class='message'>  print.quosures rlang</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/NA'>is.na</a></span>(<span class='no'>chlor_a</span>)),
+#&gt; <span class='message'>  print.quosures rlang</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/dplyr/topics/filter'>filter</a></span>(!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/NA'>is.na</a></span>(<span class='no'>chlor_a</span>)),
 <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>lon</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>lat</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>chlor_a</span>)) + <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_tile</a></span>()</div><div class='img'><img src='hyper_tibble-1.png' alt='' width='700' height='433' /></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

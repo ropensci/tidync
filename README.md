@@ -55,7 +55,7 @@ You can install the development version from github with:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("hypertidy/tidync", dependencies = TRUE)
+remotes::install_github("ropensci/tidync", dependencies = TRUE)
 ```
 
 The package packages ncdf4 and RNetCDF are required, so first make sure
@@ -104,11 +104,11 @@ Then in R
 
 ``` r
 install.packages("remotes")
-remotes::install_github("hypertidy/tidync")
+remotes::install_github("ropensci/tidync")
 ```
 
 At the time of writing the [travis install
-configuration](https://github.com/hypertidy/tidync/blob/master/.travis.yml)
+configuration](https://github.com/ropensci/tidync/blob/master/.travis.yml)
 was set up for “xenial”, Ubuntu 16.04 which was required for using
 [NetCDF sources with
 groups](https://www.unidata.ucar.edu/software/netcdf/workshops/2011/groups-types/GroupsIntro.html).

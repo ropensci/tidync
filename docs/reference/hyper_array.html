@@ -101,7 +101,7 @@ lightly classed as tidync_data, with methods for print() and tidync()." />
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/hypertidy/tidync">
+  <a href="https://github.com/ropensci/tidync">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -119,7 +119,7 @@ lightly classed as tidync_data, with methods for print() and tidync()." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract NetCDF data as an array</h1>
-    <small class="dont-index">Source: <a href='https://github.com/hypertidy/tidync/blob/master/R/hyper_array.R'><code>R/hyper_array.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ropensci/tidync/blob/master/R/hyper_array.R'><code>R/hyper_array.R</code></a></small>
     <div class="hidden name"><code>hyper_array.Rd</code></div>
     </div>
 
@@ -206,8 +206,8 @@ functions that cause data to be read</p></div>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='no'>araw1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>) <span class='kw'>%&gt;%</span>
- <span class='fu'><a href='hyper_filter.html'>hyper_filter</a></span>(<span class='kw'>lat</span> <span class='kw'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/between.html'>between</a></span>(<span class='no'>lat</span>, -<span class='fl'>78</span>, -<span class='fl'>75.8</span>),
-              <span class='kw'>lon</span> <span class='kw'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/between.html'>between</a></span>(<span class='no'>lon</span>, <span class='fl'>165</span>, <span class='fl'>171</span>)) <span class='kw'>%&gt;%</span>
+ <span class='fu'><a href='hyper_filter.html'>hyper_filter</a></span>(<span class='kw'>lat</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/dplyr/topics/between'>between</a></span>(<span class='no'>lat</span>, -<span class='fl'>78</span>, -<span class='fl'>75.8</span>),
+              <span class='kw'>lon</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/dplyr/topics/between'>between</a></span>(<span class='no'>lon</span>, <span class='fl'>165</span>, <span class='fl'>171</span>)) <span class='kw'>%&gt;%</span>
  <span class='fu'>hyper_array</span>()
 
 <span class='no'>araw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>) <span class='kw'>%&gt;%</span>
@@ -221,7 +221,7 @@ functions that cause data to be read</p></div>
 
 <span class='co'>## get the transforms tables (the axis coordinates)</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>braw</span>, <span class='st'>"transforms"</span>),
-   <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>x</span>, <span class='no'>selected</span>)))</div><div class='output co'>#&gt; $lat
+   <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/dplyr/topics/filter'>filter</a></span>(<span class='no'>x</span>, <span class='no'>selected</span>)))</div><div class='output co'>#&gt; $lat
 #&gt; [1] 240
 #&gt; 
 #&gt; $lon

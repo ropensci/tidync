@@ -94,7 +94,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/hypertidy/tidync">
+  <a href="https://github.com/ropensci/tidync">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -112,7 +112,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/hypertidy/tidync/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+      <small>Source: <a href='https://github.com/ropensci/tidync/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
     <div id="tidync-0-1-2" class="section level1">
@@ -143,7 +143,7 @@
 <ul>
 <li><p>FIRST RELEASE, tidync was greatly improved via help from the rOpenSci review process.</p></li>
 <li><p>New function <code><a href="../reference/hyper_vars.html">hyper_grids()</a></code> to report available grid names.</p></li>
-<li><p>A printing error of dimension value ranges is now fixed, thanks to James Goldie (<a href='https://github.com/hypertidy/tidync/issues/84'>#84</a>).</p></li>
+<li><p>A printing error of dimension value ranges is now fixed, thanks to James Goldie (<a href='https://github.com/ropensci/tidync/issues/84'>#84</a>).</p></li>
 <li><p>Now supports ‘NC_CHAR’ type, by exploding these into the array size expected.</p></li>
 <li><p>Breaking change: when using <code>tidync$grid</code>it’s now expected that this must be <code><a href="https://tidyr.tidyverse.org/reference/unnest.html">tidyr::unnest()</a></code>ed in order to expand out the grid list per variable, in line with <a href="https://github.com/hypertidy/ncmeta/issues/26" class="uri">https://github.com/hypertidy/ncmeta/issues/26</a>.</p></li>
 <li><p>The <code>hyper_array</code> function now stores the relevant transforms table as an attribute “transforms” so that objects can be constructed directly from the raw array output.</p></li>

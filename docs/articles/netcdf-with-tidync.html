@@ -63,7 +63,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/hypertidy/tidync">
+  <a href="https://github.com/ropensci/tidync">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -85,7 +85,7 @@
             
             <h4 class="date">2019-05-14</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/hypertidy/tidync/blob/master/vignettes/netcdf-with-tidync.Rmd"><code>vignettes/netcdf-with-tidync.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/tidync/blob/master/vignettes/netcdf-with-tidync.Rmd"><code>vignettes/netcdf-with-tidync.Rmd</code></a></small>
       <div class="hidden name"><code>netcdf-with-tidync.Rmd</code></div>
 
     </div>
@@ -304,7 +304,7 @@
 <p>We can also use the special internal variable ‘index’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">concentration <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">ni =</span> index <span class="op">&lt;</span><span class="st"> </span><span class="dv">50</span>, </a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">               <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/between.html">between</a></span>(index, <span class="dv">30</span>, <span class="dv">100</span>))</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">               <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/dplyr/topics/between">between</a></span>(index, <span class="dv">30</span>, <span class="dv">100</span>))</a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></a>
 <a class="sourceLine" id="cb9-6" data-line-number="6"><span class="co">#&gt; </span></a>
@@ -329,7 +329,7 @@
 <p>We can now exercise these variable choice and dimension filters to return actual data, either in by slicing out a “slab” in array-form, or as a data frame.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">hf &lt;-<span class="st"> </span>concentration <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">ni =</span> index <span class="op">&gt;</span><span class="st"> </span><span class="dv">150</span>, </a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">               <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/between.html">between</a></span>(index, <span class="dv">30</span>, <span class="dv">100</span>))</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">               <span class="dt">nj =</span> dplyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/dplyr/topics/between">between</a></span>(index, <span class="dv">30</span>, <span class="dv">100</span>))</a>
 <a class="sourceLine" id="cb10-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">## as an array</span></a>
 <a class="sourceLine" id="cb10-6" data-line-number="6">arr &lt;-<span class="st"> </span>hf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/hyper_array.html">hyper_array</a></span>()</a>
@@ -360,14 +360,14 @@
 <a class="sourceLine" id="cb10-31" data-line-number="31"><span class="co">#&gt;   .. ..$ coord_dim: logi TRUE</span></a>
 <a class="sourceLine" id="cb10-32" data-line-number="32"><span class="co">#&gt;   .. ..$ selected : logi TRUE</span></a>
 <a class="sourceLine" id="cb10-33" data-line-number="33"><span class="co">#&gt;  - attr(*, "source")=Classes 'tbl_df', 'tbl' and 'data.frame':   1 obs. of  2 variables:</span></a>
-<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2019-05-14 04:17:36"</span></a>
+<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2019-05-14 21:07:03"</span></a>
 <a class="sourceLine" id="cb10-35" data-line-number="35"><span class="co">#&gt;   ..$ source: chr "/perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/ifremer/20171002.nc"</span></a>
 <a class="sourceLine" id="cb10-36" data-line-number="36"><span class="co">#&gt;  - attr(*, "class")= chr "tidync_data"</span></a>
 <a class="sourceLine" id="cb10-37" data-line-number="37"></a>
 <a class="sourceLine" id="cb10-38" data-line-number="38"><span class="co">## as a data frame</span></a>
 <a class="sourceLine" id="cb10-39" data-line-number="39">hf <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-40" data-line-number="40"><span class="st">  </span><span class="kw"><a href="../reference/hyper_tibble.html">hyper_tibble</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-41" data-line-number="41"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(concentration)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span>(concentration, quality_flag)</a>
+<a class="sourceLine" id="cb10-41" data-line-number="41"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/dplyr/topics/filter">filter</a></span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(concentration)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/dplyr/topics/distinct">distinct</a></span>(concentration, quality_flag)</a>
 <a class="sourceLine" id="cb10-42" data-line-number="42"><span class="co">#&gt; # A tibble: 105 x 2</span></a>
 <a class="sourceLine" id="cb10-43" data-line-number="43"><span class="co">#&gt;    concentration quality_flag</span></a>
 <a class="sourceLine" id="cb10-44" data-line-number="44"><span class="co">#&gt;            &lt;int&gt;        &lt;int&gt;</span></a>

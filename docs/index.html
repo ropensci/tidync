@@ -68,7 +68,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/hypertidy/tidync">
+  <a href="https://github.com/ropensci/tidync">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -107,12 +107,10 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>Install tidync from CRAN.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"tidync"</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; Installing package into '/perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6'</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt; (as 'lib' is unspecified)</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"tidync"</span>)</a></code></pre></div>
 <p>You can install the development version from github with:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># install.packages("remotes")</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb2-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"ropensci/tidync"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>The package packages ncdf4 and RNetCDF are required, so first make sure you can install and use these if it doesn’t work the first time.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"ncdf4"</span>)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"RNetCDF"</span>)</a></code></pre></div>
@@ -141,8 +139,8 @@
 <a class="sourceLine" id="cb4-8" data-line-number="8"><span class="ex">apt</span> install libssl-dev</a></code></pre></div>
 <p>Then in R</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"remotes"</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>)</a></code></pre></div>
-<p>At the time of writing the <a href="https://github.com/hypertidy/tidync/blob/master/.travis.yml">travis install configuration</a> was set up for “trusty”, Ubuntu 14.04 so also provides a record.</p>
+<a class="sourceLine" id="cb5-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"ropensci/tidync"</span>)</a></code></pre></div>
+<p>At the time of writing the <a href="https://github.com/ropensci/tidync/blob/master/.travis.yml">travis install configuration</a> was set up for “xenial”, Ubuntu 16.04 which was required for using <a href="https://www.unidata.ucar.edu/software/netcdf/workshops/2011/groups-types/GroupsIntro.html">NetCDF sources with groups</a>.</p>
 <p>More general information about system dependencies libnetcdf-dev and libudunits2-dev is available from <a href="https://www.unidata.ucar.edu/software/netcdf/docs/getting_and_building_netcdf.html">Unidata NetCDF</a> and <a href="https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html#Installation">Unidata Udunits2</a>.</p>
 </div>
 </div>
@@ -448,9 +446,9 @@
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=tidync">https://​cloud.r-project.org/​package=tidync</a>
 </li>
-<li>Browse source code at <br><a href="https://github.com/hypertidy/tidync">https://​github.com/​hypertidy/​tidync</a>
+<li>Browse source code at <br><a href="https://github.com/ropensci/tidync">https://​github.com/​ropensci/​tidync</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/hypertidy/tidync/issues">https://​github.com/​hypertidy/​tidync/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/ropensci/tidync/issues">https://​github.com/​ropensci/​tidync/​issues</a>
 </li>
 </ul>
 </div>

@@ -36,6 +36,6 @@ Suggests: ggplot2,
     testthat,
     covr
 Roxygen: list(markdown = TRUE)
-URL: https://github.com/hypertidy/tidync
-BugReports: https://github.com/hypertidy/tidync/issues
+URL: https://github.com/ropensci/tidync
+BugReports: https://github.com/ropensci/tidync/issues
 VignetteBuilder: knitr
