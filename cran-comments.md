@@ -1,7 +1,8 @@
 ## tidync 0.2.0
 
-Hello, this is a little early for an update, but I hoped to fix some
-confusing documentation problems. This updates should also remove the Solaris errors on CRAN checks. 
+Hello, this is a little early for an update (2019-04-27), but I hoped to fix some
+confusing documentation problems. This updates should also remove the Solaris errors 
+on CRAN checks. 
 
 Thank you. 
 

@@ -1,4 +1,6 @@
-# tidync 0.1.2
+# tidync 0.2.0
+
+* tidync is now part of the rOpenSci project. 
 
 * Fixes in tests and examples to avoid version-incapable NetCDF problems
  on Solaris. 
@@ -7,7 +9,7 @@
 
 * Deal with warnings from tidyr version > 0.8.3. 
 
-* A belated thank you to all rOpenSci contributions, especially very helpful reviews from [&#x0040;Nowosad](https://github.com/Nowosad) and [&#x0040;timcdlucas](https://github.com/timcdlucas) as well as organizers [&#x0040;karthik](https://github.com/karthik) and [&#x0040;sckott](https://github.com/sckott). Helpful input was also provided via issues  from [&#x0040;adrfantini](https://github.com/adrfantini),  [&#x0040;JustBerkhout](https://github.com/JustBerkhout), [&#x0040;matteodefelice](https://github.com/matteodefelice), [&#x0040;rensa](https://github.com/rensa), [&#x0040;rmendels](https://github.com/rmendels), [&#x0040;sw-rifai](https://github.com/sw-rifai), and [&#x0040;tremenyi](https://github.com/tremenyi), and pull requests [&#x0040;dlebauer](https://github.com/dlebauer), [&#x0040;edzer](https://github.com/edzer). 
+* A huge you to all rOpenSci contributions, especially very helpful reviews from [&#x0040;Nowosad](https://github.com/Nowosad) and [&#x0040;timcdlucas](https://github.com/timcdlucas) as well as organizers [&#x0040;karthik](https://github.com/karthik) and [&#x0040;sckott](https://github.com/sckott). Helpful input was also provided via issues  from [&#x0040;adrfantini](https://github.com/adrfantini),  [&#x0040;JustBerkhout](https://github.com/JustBerkhout), [&#x0040;matteodefelice](https://github.com/matteodefelice), [&#x0040;rensa](https://github.com/rensa), [&#x0040;rmendels](https://github.com/rmendels), [&#x0040;sw-rifai](https://github.com/sw-rifai), and [&#x0040;tremenyi](https://github.com/tremenyi), and pull requests [&#x0040;dlebauer](https://github.com/dlebauer), [&#x0040;edzer](https://github.com/edzer). 
 
 # tidync 0.1.1
 
