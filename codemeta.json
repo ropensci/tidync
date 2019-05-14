@@ -1,5 +1,8 @@
 {
-  "@context": ["https://doi.org/10.5063/schema/codemeta-2.0", "http://schema.org"],
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "http://schema.org"
+  ],
   "@type": "SoftwareSourceCode",
   "identifier": "tidync",
   "description": "Tidy tools for 'NetCDF' data sources. Explore the contents of a \n 'NetCDF' source (file or URL) presented as variables organized by grid with a \n database-like interface. The hyper_filter() interactive function translates the \n filter value or index expressions to array-slicing form. No data is read until \n explicitly requested, as a data frame or list of arrays via hyper_tibble() or \n hyper_array(). ",
@@ -260,9 +263,14 @@
     }
   ],
   "releaseNotes": "https://github.com/ropensci/tidync/blob/master/NEWS.md",
-  "readme": "https://github.com/hypertidy/tidync/blob/master/README.md",
+  "readme": "https://github.com/ropensci/tidync/blob/master/README.md",
   "fileSize": "351.145KB",
-  "contIntegration": ["https://travis-ci.org/hypertidy/tidync", "https://travis-ci.org/hypertidy/tidync", "https://ci.appveyor.com/project/mdsumner/tidync-3m5h7", "https://codecov.io/github/hypertidy/tidync?branch=master"],
+  "contIntegration": [
+    "https://travis-ci.org/hypertidy/tidync",
+    "https://travis-ci.org/hypertidy/tidync",
+    "https://ci.appveyor.com/project/mdsumner/tidync-3m5h7",
+    "https://codecov.io/github/hypertidy/tidync?branch=master"
+  ],
   "developmentStatus": "https://www.tidyverse.org/lifecycle/#maturing",
   "review": {
     "@type": "Review",
