@@ -271,7 +271,7 @@ print.tidync <- function(x, ...) {
 
   idxnm <- match(names(x$transforms), dims$name)
   dims$dmin <- dims$dmax <- dims$min <- dims$max <- NA_real_
-  ## fix https://github.com/hypertidy/tidync/issues/84
+  ## fix tidync/issues/84
   ## idxnm was used on the LHS here as well, garbling the order
   
   dims[idxnm, c("dmin", "dmax")] <- as.data.frame(filter_ranges)

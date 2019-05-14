@@ -74,7 +74,7 @@ hyper_transforms.default <- function(x, all = FALSE, ...) {
     axis <- tibble::as_tibble(ll)
     names(axis)  <- dims$name[i]
     ## axis might have a column called "i"  
-    ## https://github.com/hypertidy/tidync/issues/74
+    ## tidync/issues/74
     id_value <- dims$dimension[i]
     dim_name <- dims$name[i]
     dim_coord <- dims$coord_dim[i]

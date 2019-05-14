@@ -49,8 +49,6 @@ Install tidync from CRAN.
 
 ``` r
 install.packages("tidync")
-#> Installing package into '/perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6'
-#> (as 'lib' is unspecified)
 ```
 
 You can install the development version from github with:
@@ -111,7 +109,9 @@ remotes::install_github("hypertidy/tidync")
 
 At the time of writing the [travis install
 configuration](https://github.com/hypertidy/tidync/blob/master/.travis.yml)
-was set up for “trusty”, Ubuntu 14.04 so also provides a record.
+was set up for “xenial”, Ubuntu 16.04 which was required for using
+[NetCDF sources with
+groups](https://www.unidata.ucar.edu/software/netcdf/workshops/2011/groups-types/GroupsIntro.html).
 
 More general information about system dependencies libnetcdf-dev and
 libudunits2-dev is available from [Unidata

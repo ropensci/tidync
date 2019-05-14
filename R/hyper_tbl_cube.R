@@ -26,7 +26,7 @@
 #'  package = "tidync", mustWork = TRUE)
 #'  
 #' ## some versions of NetCDF don't support this file
-#' ## (4.1.3 https://github.com/hypertidy/tidync/issues/82)
+#' ## (4.1.3 tidync/issues/82)
 #' group_nc <- try(tidync(ufile), silent = TRUE)
 #' if (!inherits(group_nc, "try-error")) {
 #'  res <-  hyper_tbl_cube(tidync(ufile))
