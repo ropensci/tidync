@@ -261,7 +261,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/tidync/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/tidync/blob/master/README.md",
-  "fileSize": "351.174KB",
+  "fileSize": "351.175KB",
   "contIntegration": ["https://travis-ci.org/ropensci/tidync", "https://travis-ci.org/ropensci/tidync", "https://ci.appveyor.com/project/mdsumner/tidync-3m5h7", "https://codecov.io/github/ropensciy/tidync?branch=master"],
   "developmentStatus": "https://www.tidyverse.org/lifecycle/#maturing",
   "review": {
