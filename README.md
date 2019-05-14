@@ -347,7 +347,7 @@ subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 #> D: N_LEVELS [int, 493]
 #> D: N_PROF [int, 1]
 #> M: PRES [dbl]
-#> M: PRES_QC [chr]
+#> M: PRES_QC [chr[,1]]
 #> M: PSAL_ADJUSTED [dbl]
 ```
 
@@ -424,8 +424,13 @@ explored that here and it may or may not be a good idea:
   - **activation** - choice of a given grid to apply subsetting and read
     operations to
 
+-----
+
 ## Code of conduct
 
 Please note that this project is released with a [Contributor Code of
 Conduct](CONDUCT.md). By participating in this project you agree to
-abide by its terms.
+abide by its
+terms.
+
+[![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

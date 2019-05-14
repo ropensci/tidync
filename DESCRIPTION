@@ -1,10 +1,12 @@
 Package: tidync
 Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.1.1.9001
+Version: 0.1.1.9002
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
-             person("Ben", "Raymond", role = "ctb"))
+             person("Ben", "Raymond", role = "ctb"), 
+             person("Jakub", "Nowosad", role = "ctb"), 
+             person("Tim", "Lucas", role = "ctb"))
 Description: Tidy tools for 'NetCDF' data sources. Explore the contents of a 
  'NetCDF' source (file or URL) presented as variables organized by grid with a 
  database-like interface. The hyper_filter() interactive function translates the 
