@@ -28,13 +28,10 @@
 hyper_transforms <- function(x, all = FALSE, ...) {
   UseMethod("hyper_transforms")
 }
-axis_transforms <- function(x, ...) {
-  .Defunct("hyper_transforms")
-  UseMethod("hyper_transforms")
-}
+
 active_axis_transforms <- function(x, ...) {
   if (utils::packageVersion("tidyr") > "0.8.3" ) {
-    grid <- x$grid %>% tidyr::unnest(c(.data$variables))
+    grid <- x$grid %>% tidyr::unnest(cols = c(.data$variables))
   } else {
     grid <- x$grid %>% tidyr::unnest()
   }

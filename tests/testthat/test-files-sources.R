@@ -3,7 +3,7 @@ context("files")
 fname <- paste(sample(unlist(strsplit("somecrazyfile", ""))), collapse = "")
 test_that("file not found is friendly", {
   skip_on_cran()
-  expect_error(tidync(fname), "failed to open")
+  expect_warning(expect_error(tidync(fname), "failed to open"))
 })
 
 test_that("files and bad files are handled", {

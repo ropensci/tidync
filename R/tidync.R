@@ -128,7 +128,8 @@ tidync.character <- function(x, what, ...) {
   if (missing(what)) {
     varg  <- first_numeric_var(out)
     if (utils::packageVersion("tidyr") > "0.8.3" ) {
-      gg <- tidyr::unnest(out$grid, c(.data$variables))
+      gg <- tidyr::unnest(out$grid, cols = c(.data$variables))
+      
     } else {
       gg <- tidyr::unnest(out$grid)
     }
@@ -217,7 +218,7 @@ print.tidync <- function(x, ...) {
   nms <- if(nrow(ushapes) > 0)  nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
   if (utils::packageVersion("tidyr") > "0.8.3" ) {
-    vargrids <- tidyr::unnest(x$grid, c(.data$variables))
+    vargrids <- tidyr::unnest(x$grid, cols = c(.data$variables))
   } else {
     vargrids <- tidyr::unnest(x$grid)
   }

@@ -29,7 +29,6 @@ test_that("dimension matchup works", {
 })
 
 test_that("deprecation is working", {
-  expect_error(axis_transforms(x), "Use 'hyper_transforms' instead") 
   expect_named(hyper_transforms(x), c("N_LEVELS", "N_PROF"))
   expect_named(hyper_transforms(x, all = TRUE), 
                c("STRING32", "STRING4", "DATE_TIME", "STRING8", 
