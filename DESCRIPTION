@@ -28,7 +28,6 @@ Imports:
     RNetCDF (>= 1.9-1),
     rlang,
     tibble,
-    yesno,
     tidyr
 RoxygenNote: 6.1.1
 Suggests: ggplot2,
