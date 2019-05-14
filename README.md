@@ -10,7 +10,7 @@ Status](http://badges.herokuapp.com/travis/ropensci/tidync?branch=master&env=BUI
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/tidync-3m5h7)
 [![Coverage
-status](https://codecov.io/gh/ropensci/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/ropensciy/tidync?branch=master)[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)
+status](https://codecov.io/gh/ropensci/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/ropensci/tidync?branch=master)[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
 [![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
