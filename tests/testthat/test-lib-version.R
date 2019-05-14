@@ -1,6 +1,7 @@
 context("test-lib-version")
 
 test_that("robust to version capabilites", {
+  skip_on_os("solaris")
   ufile <- system.file("extdata", "unidata", "test_hgroups.nc", 
     package = "tidync", mustWork = TRUE)
   ## some versions of NetCDF 4.. don't support this file

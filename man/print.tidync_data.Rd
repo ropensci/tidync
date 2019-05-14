@@ -20,7 +20,7 @@ Print method for the 'tidync_data' list of arrays returned by \code{\link[=hyper
 \details{
 The output lists the variables and their dimensions of an object from a
 previous call to \code{\link[=tidync]{tidync()}}, and possibly \code{\link[=hyper_filter]{hyper_filter()}}. The available
-data will differe from the source in terms of variables (via \code{select_var} in
+data will differ from the source in terms of variables (via \code{select_var} in
 \link{hyper_array}) and the lengths of each dimension (via named expressions in
 \code{\link[=hyper_filter]{hyper_filter()}}).
 }

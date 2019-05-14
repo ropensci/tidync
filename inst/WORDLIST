@@ -1,5 +1,5 @@
 AppVeyor
-authorative
+args
 CDO
 coord
 De
@@ -39,10 +39,13 @@ rgdal
 rhdf
 RNetCDF
 ROMs
+ropensci
+rOpenSci
 schemas
 tbl
 Thredds
 tibble
+tidyr
 tidyverse
 travis
 ucar

@@ -17,6 +17,7 @@ test_that("unidata file", {
   })
 
 test_that("indexing works", {
+  skip_on_os("solaris")
   l3file <- system.file("extdata/oceandata", 
               "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc", 
               package = "tidync")

@@ -1,6 +1,7 @@
 context("hyper-slice")
 
 test_that("slicing works", {
+  skip_on_os("solaris")
   l3file <- system.file("extdata/oceandata", 
               "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc", package= "tidync")
   expect_warning(tidync(l3file) %>% hyper_filter() %>% hyper_slice())

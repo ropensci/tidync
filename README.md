@@ -13,9 +13,9 @@ status](https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg)](h
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
 
 The goal of tidync is to ease exploring the contents of a NetCDF source
-and constructing efficient queries to extract arbitrary sub-arrays.
+and to simplify the process of data extraction.
 
-The data extracted can be used directly as an array, or in long-form
+When extracting, data can be accessed as array/s, or in long-form as a
 data frame. In contrast to other packages tidync helps reduce the volume
 of code required to discover and read the contents of NetCDF, with
 simple steps:
@@ -45,15 +45,23 @@ to obtain information about data sources.
 
 ## Installation
 
-You can install tidync from github with:
+Install tidync from CRAN.
+
+``` r
+install.packages("tidync")
+#> Installing package into '/perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6'
+#> (as 'lib' is unspecified)
+```
+
+You can install the development version from github with:
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("hypertidy/tidync", dependencies = TRUE)
 ```
 
-Also required are packages ncdf4 and RNetCDF, so first make sure you can
-install and use these.
+The package packages ncdf4 and RNetCDF are required, so first make sure
+you can install and use these if it doesn’t work the first time.
 
 ``` r
 install.packages("ncdf4")
@@ -75,8 +83,8 @@ Windows (not 32-bit), and so tidync will work for those sources too.
 ### MacOS
 
 On MacOS, it should also be easy as there are binaries for ncdf4 and
-RNetCDF available on CRAN. As far as I know, these binaries won’t
-support OpenDAP/Thredds.
+RNetCDF available on CRAN. As far as I know, only RNetCDF will support
+Thredds.
 
 ### Ubuntu/Debian
 
@@ -362,21 +370,39 @@ by NetCDF itself.
 ### Extractive
 
 Use what we learned interactively to extract the data, either in data
-frame or raw-array (hyper slice)
-form.
+frame or raw-array (hyper slice) form.
 
 ``` r
-## we'll see a column for sst, lat, time, and whatever other dimensions sst has
-## and whatever other variable's the grid has
-tidync(filename) %>% activate("sst") %>% 
-  hyper_filter(lat = lat < -30, time = time == 20) %>% 
+## we'll see a column for the variable activated, and whatever other 
+## variables the grid has
+tidync(filename) %>% activate("JULD") %>% 
+  hyper_filter(N_PROF = N_PROF == 1) %>% 
   hyper_tibble()
+#> # A tibble: 98 x 5
+#>    SCIENTIFIC_CALIB_DATE DATE_TIME N_PROF N_PARAM N_CALIB
+#>    <chr>                     <int>  <int>   <int>   <int>
+#>  1 2                             1      1       1       1
+#>  2 0                             2      1       1       1
+#>  3 1                             3      1       1       1
+#>  4 7                             4      1       1       1
+#>  5 0                             5      1       1       1
+#>  6 4                             6      1       1       1
+#>  7 1                             7      1       1       1
+#>  8 0                             8      1       1       1
+#>  9 1                             9      1       1       1
+#> 10 4                            10      1       1       1
+#> # … with 88 more rows
 
 
-## raw array form, we'll see a (list of) R arrays with a dimension for each seen by tidync(filename) %>% activate("sst"")
-tidync(filename) %>% activate("sst") %>% 
-  hyper_filter(lat = lat < -30, time = time == 20) %>% 
+## native array form, we'll see a (list of) R arrays with a dimension for 
+## each seen by tidync(filename) %>% activate("JULD")
+tidync(filename) %>% activate("JULD") %>% 
+  hyper_filter(N_PROF = N_PROF == 1) %>% 
   hyper_array()
+#> Tidync Data Arrays
+#> Variables (1): 'SCIENTIFIC_CALIB_DATE'
+#> Dimension (4): 14, 7, 1, 1
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the
@@ -393,8 +419,6 @@ or not.
 See the vignettes for more:
 
 ``` r
-vignette("tidync-examples")
-
 browseVignettes(package = "tidync")
 ```
 

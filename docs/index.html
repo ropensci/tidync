@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -93,8 +93,8 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#tidync" class="anchor"></a>tidync</h1></div>
 
-<p>The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient queries to extract arbitrary sub-arrays.</p>
-<p>The data extracted can be used directly as an array, or in long-form data frame. In contrast to other packages tidync helps reduce the volume of code required to discover and read the contents of NetCDF, with simple steps:</p>
+<p>The goal of tidync is to ease exploring the contents of a NetCDF source and to simplify the process of data extraction.</p>
+<p>When extracting, data can be accessed as array/s, or in long-form as a data frame. In contrast to other packages tidync helps reduce the volume of code required to discover and read the contents of NetCDF, with simple steps:</p>
 <ul>
 <li>Connect and summarize <code><a href="reference/tidync.html">tidync()</a></code>.</li>
 <li>(optionally) Specify source variables <code><a href="reference/activate.html">activate()</a></code>.</li>
@@ -106,12 +106,16 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install tidync from github with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># install.packages("remotes")</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<p>Also required are packages ncdf4 and RNetCDF, so first make sure you can install and use these.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"ncdf4"</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"RNetCDF"</span>)</a></code></pre></div>
+<p>Install tidync from CRAN.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"tidync"</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; Installing package into '/perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6'</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt; (as 'lib' is unspecified)</span></a></code></pre></div>
+<p>You can install the development version from github with:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># install.packages("remotes")</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p>The package packages ncdf4 and RNetCDF are required, so first make sure you can install and use these if it doesn’t work the first time.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"ncdf4"</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"RNetCDF"</span>)</a></code></pre></div>
 <p>If you have problems, please see the <a href="https://CRAN.R-project.org/package=RNetCDF/INSTALL">INSTALL instructions for RNetCDF</a>, these should work as well for ncdf4. Below I note specifics for different operating systems, notably Ubuntu/Debian where I work the most - these aren’t comprehensive details but might be helpful.</p>
 <div id="windows" class="section level3">
 <h3 class="hasAnchor">
@@ -121,23 +125,23 @@
 <div id="macos" class="section level3">
 <h3 class="hasAnchor">
 <a href="#macos" class="anchor"></a>MacOS</h3>
-<p>On MacOS, it should also be easy as there are binaries for ncdf4 and RNetCDF available on CRAN. As far as I know, these binaries won’t support OpenDAP/Thredds.</p>
+<p>On MacOS, it should also be easy as there are binaries for ncdf4 and RNetCDF available on CRAN. As far as I know, only RNetCDF will support Thredds.</p>
 </div>
 <div id="ubuntudebian" class="section level3">
 <h3 class="hasAnchor">
 <a href="#ubuntudebian" class="anchor"></a>Ubuntu/Debian</h3>
 <p>On Linux you will need at least the following installed by an administrator, here tested on Ubuntu Xenial 16.04.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">apt</span> update </a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ex">apt</span> upgrade --assume-yes</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## Install 3rd parties for NetCDF</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="ex">apt</span> install libnetcdf-dev libudunits2-dev</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">## install 3rd parties needed for devtools + openssl git2r httr</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="ex">apt</span> install libssl-dev</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">apt</span> update </a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="ex">apt</span> upgrade --assume-yes</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">## Install 3rd parties for NetCDF</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="ex">apt</span> install libnetcdf-dev libudunits2-dev</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">## install 3rd parties needed for devtools + openssl git2r httr</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="ex">apt</span> install libssl-dev</a></code></pre></div>
 <p>Then in R</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"remotes"</span>)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"remotes"</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"hypertidy/tidync"</span>)</a></code></pre></div>
 <p>At the time of writing the <a href="https://github.com/hypertidy/tidync/blob/master/.travis.yml">travis install configuration</a> was set up for “trusty”, Ubuntu 14.04 so also provides a record.</p>
 <p>More general information about system dependencies libnetcdf-dev and libudunits2-dev is available from <a href="https://www.unidata.ucar.edu/software/netcdf/docs/getting_and_building_netcdf.html">Unidata NetCDF</a> and <a href="https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html#Installation">Unidata Udunits2</a>.</p>
 </div>
@@ -146,245 +150,262 @@
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>This is a basic example which shows how to connect to a file.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">file &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="st">"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidync)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(file) </a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; Grids (4) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; [1]   D1,D0 : chlor_a    **ACTIVE GRID** ( 9331200  values per variable)</span></a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; [2]   D3,D2 : palette</span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt; [3]   D0    : lat</span></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt; [4]   D1    : lon</span></a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; Dimensions 4 (2 active): </span></a>
-<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;   dim   name  length    min   max start count   dmin  dmax unlim coord_dim </span></a>
-<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; 1 D0    lat     2160  -90.0  90.0     1  2160  -90.0  90.0 FALSE TRUE      </span></a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; 2 D1    lon     4320 -180.  180.      1  4320 -180.  180.  FALSE TRUE      </span></a>
-<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; Inactive dimensions:</span></a>
-<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt;   dim   name          length   min   max unlim coord_dim </span></a>
-<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; 1 D2    rgb                3     1     3 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#&gt; 2 D3    eightbitcolor    256     1   256 FALSE FALSE</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">file &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="st">"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidync)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(file) </a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt; Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; Grids (4) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; [1]   D1,D0 : chlor_a    **ACTIVE GRID** ( 9331200  values per variable)</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; [2]   D3,D2 : palette</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; [3]   D0    : lat</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; [4]   D1    : lon</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; Dimensions 4 (2 active): </span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt;   dim   name  length    min   max start count   dmin  dmax unlim coord_dim </span></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt; 1 D0    lat     2160  -90.0  90.0     1  2160  -90.0  90.0 FALSE TRUE      </span></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co">#&gt; 2 D1    lon     4320 -180.  180.      1  4320 -180.  180.  FALSE TRUE      </span></a>
+<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; Inactive dimensions:</span></a>
+<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">#&gt;   dim   name          length   min   max unlim coord_dim </span></a>
+<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="co">#&gt; 1 D2    rgb                3     1     3 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb6-26" data-line-number="26"><span class="co">#&gt; 2 D3    eightbitcolor    256     1   256 FALSE FALSE</span></a></code></pre></div>
 <p>There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions <code>tidync</code> and <code>activate</code> and <code>hyper_filter</code> allow us to hone in on the part/s of the data we want, and functions <code>hyper_array</code>, <code>hyper_tibble</code> and <code>hyper_tbl_cube</code> give raw-array or data frames.</p>
 <p>Also <a href="this%20blog">http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/</a> post by Matteo De Felice.</p>
 <div id="interactive" class="section level3">
 <h3 class="hasAnchor">
 <a href="#interactive" class="anchor"></a>Interactive</h3>
 <p>Use <code><a href="reference/tidync.html">tidync()</a></code> and <code><a href="reference/hyper_filter.html">hyper_filter()</a></code> to discern what variables and dimensions are available, and to craft axis-filtering expressions by value or by index. (Use the name of the variable on the LHS to target it, use its name to filter by value and the special name <code>index</code> to filter it by its index).</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">filename &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"extdata/argo/MD5903593_001.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">## discover the available entities, and the active grid's dimensions and variables</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt; Data Source (1): MD5903593_001.nc ...</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt; Grids (16) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt; [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE</span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt; [2]   D6,D9,D11,D8 : PARAMETER</span></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt; [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT</span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt; [4]   D6,D9,D8     : STATION_PARAMETERS</span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt; [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR    **ACTIVE GRID** ( 986  values per variable)</span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt; [6]   D1,D8        : DATA_CENTRE</span></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt; [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE</span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt; [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM</span></a>
-<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION</span></a>
-<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt; [10]   D6,D8        : PROJECT_NAME, PI_NAME</span></a>
-<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co">#&gt; [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME</span></a>
-<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="co">#&gt; [12]   D9,D8        : PARAMETER_DATA_MODE</span></a>
-<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="co">#&gt; [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE</span></a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">#&gt; [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION</span></a>
-<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co">#&gt; [15]   D5           : DATA_TYPE</span></a>
-<a class="sourceLine" id="cb6-24" data-line-number="24"><span class="co">#&gt; [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC</span></a>
-<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-26" data-line-number="26"><span class="co">#&gt; Dimensions 14 (2 active): </span></a>
-<a class="sourceLine" id="cb6-27" data-line-number="27"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-28" data-line-number="28"><span class="co">#&gt;   dim   name     length   min   max start count  dmin  dmax unlim coord_dim </span></a>
-<a class="sourceLine" id="cb6-29" data-line-number="29"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb6-30" data-line-number="30"><span class="co">#&gt; 1 D8    N_PROF        2     1     2     1     2     1     2 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-31" data-line-number="31"><span class="co">#&gt; 2 D10   N_LEVELS    493     1   493     1   493     1   493 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-32" data-line-number="32"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-33" data-line-number="33"><span class="co">#&gt; Inactive dimensions:</span></a>
-<a class="sourceLine" id="cb6-34" data-line-number="34"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-35" data-line-number="35"><span class="co">#&gt;    dim   name       length   min   max unlim coord_dim </span></a>
-<a class="sourceLine" id="cb6-36" data-line-number="36"><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb6-37" data-line-number="37"><span class="co">#&gt;  1 D0    DATE_TIME      14     1    14 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-38" data-line-number="38"><span class="co">#&gt;  2 D1    STRING2         2     1     2 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-39" data-line-number="39"><span class="co">#&gt;  3 D2    STRING4         4     1     4 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-40" data-line-number="40"><span class="co">#&gt;  4 D3    STRING8         8     1     8 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-41" data-line-number="41"><span class="co">#&gt;  5 D4    STRING16       16    NA    NA FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-42" data-line-number="42"><span class="co">#&gt;  6 D5    STRING32       32     1    32 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-43" data-line-number="43"><span class="co">#&gt;  7 D6    STRING64       64     1    64 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-44" data-line-number="44"><span class="co">#&gt;  8 D7    STRING256     256     1   256 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-45" data-line-number="45"><span class="co">#&gt;  9 D9    N_PARAM         7     1     7 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-46" data-line-number="46"><span class="co">#&gt; 10 D11   N_CALIB         1     1     1 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-47" data-line-number="47"><span class="co">#&gt; 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></a>
-<a class="sourceLine" id="cb6-48" data-line-number="48"><span class="co">#&gt; 12 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></a>
-<a class="sourceLine" id="cb6-49" data-line-number="49"></a>
-<a class="sourceLine" id="cb6-50" data-line-number="50"><span class="co">## activate a different grid</span></a>
-<a class="sourceLine" id="cb6-51" data-line-number="51">grid_identifier &lt;-<span class="st"> "D7,D9,D11,D8"</span></a>
-<a class="sourceLine" id="cb6-52" data-line-number="52"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(grid_identifier)</a>
-<a class="sourceLine" id="cb6-53" data-line-number="53"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-54" data-line-number="54"><span class="co">#&gt; Data Source (1): MD5903593_001.nc ...</span></a>
-<a class="sourceLine" id="cb6-55" data-line-number="55"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-56" data-line-number="56"><span class="co">#&gt; Grids (16) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
-<a class="sourceLine" id="cb6-57" data-line-number="57"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-58" data-line-number="58"><span class="co">#&gt; [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE</span></a>
-<a class="sourceLine" id="cb6-59" data-line-number="59"><span class="co">#&gt; [2]   D6,D9,D11,D8 : PARAMETER</span></a>
-<a class="sourceLine" id="cb6-60" data-line-number="60"><span class="co">#&gt; [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT    **ACTIVE GRID** ( 3584  values per variable)</span></a>
-<a class="sourceLine" id="cb6-61" data-line-number="61"><span class="co">#&gt; [4]   D6,D9,D8     : STATION_PARAMETERS</span></a>
-<a class="sourceLine" id="cb6-62" data-line-number="62"><span class="co">#&gt; [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR</span></a>
-<a class="sourceLine" id="cb6-63" data-line-number="63"><span class="co">#&gt; [6]   D1,D8        : DATA_CENTRE</span></a>
-<a class="sourceLine" id="cb6-64" data-line-number="64"><span class="co">#&gt; [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE</span></a>
-<a class="sourceLine" id="cb6-65" data-line-number="65"><span class="co">#&gt; [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM</span></a>
-<a class="sourceLine" id="cb6-66" data-line-number="66"><span class="co">#&gt; [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION</span></a>
-<a class="sourceLine" id="cb6-67" data-line-number="67"><span class="co">#&gt; [10]   D6,D8        : PROJECT_NAME, PI_NAME</span></a>
-<a class="sourceLine" id="cb6-68" data-line-number="68"><span class="co">#&gt; [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME</span></a>
-<a class="sourceLine" id="cb6-69" data-line-number="69"><span class="co">#&gt; [12]   D9,D8        : PARAMETER_DATA_MODE</span></a>
-<a class="sourceLine" id="cb6-70" data-line-number="70"><span class="co">#&gt; [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE</span></a>
-<a class="sourceLine" id="cb6-71" data-line-number="71"><span class="co">#&gt; [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION</span></a>
-<a class="sourceLine" id="cb6-72" data-line-number="72"><span class="co">#&gt; [15]   D5           : DATA_TYPE</span></a>
-<a class="sourceLine" id="cb6-73" data-line-number="73"><span class="co">#&gt; [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC</span></a>
-<a class="sourceLine" id="cb6-74" data-line-number="74"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-75" data-line-number="75"><span class="co">#&gt; Dimensions 14 (4 active): </span></a>
-<a class="sourceLine" id="cb6-76" data-line-number="76"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-77" data-line-number="77"><span class="co">#&gt;   dim   name     length   min   max start count  dmin  dmax unlim coord_dim </span></a>
-<a class="sourceLine" id="cb6-78" data-line-number="78"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb6-79" data-line-number="79"><span class="co">#&gt; 1 D7    STRING2…    256     1   256     1   256     1   256 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-80" data-line-number="80"><span class="co">#&gt; 2 D8    N_PROF        2     1     2     1     2     1     2 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-81" data-line-number="81"><span class="co">#&gt; 3 D9    N_PARAM       7     1     7     1     7     1     7 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-82" data-line-number="82"><span class="co">#&gt; 4 D11   N_CALIB       1     1     1     1     1     1     1 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-83" data-line-number="83"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-84" data-line-number="84"><span class="co">#&gt; Inactive dimensions:</span></a>
-<a class="sourceLine" id="cb6-85" data-line-number="85"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-86" data-line-number="86"><span class="co">#&gt;    dim   name       length   min   max unlim coord_dim </span></a>
-<a class="sourceLine" id="cb6-87" data-line-number="87"><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb6-88" data-line-number="88"><span class="co">#&gt;  1 D0    DATE_TIME      14     1    14 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-89" data-line-number="89"><span class="co">#&gt;  2 D1    STRING2         2     1     2 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-90" data-line-number="90"><span class="co">#&gt;  3 D2    STRING4         4     1     4 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-91" data-line-number="91"><span class="co">#&gt;  4 D3    STRING8         8     1     8 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-92" data-line-number="92"><span class="co">#&gt;  5 D4    STRING16       16    NA    NA FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-93" data-line-number="93"><span class="co">#&gt;  6 D5    STRING32       32     1    32 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-94" data-line-number="94"><span class="co">#&gt;  7 D6    STRING64       64     1    64 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-95" data-line-number="95"><span class="co">#&gt;  8 D10   N_LEVELS      493     1   493 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-96" data-line-number="96"><span class="co">#&gt;  9 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></a>
-<a class="sourceLine" id="cb6-97" data-line-number="97"><span class="co">#&gt; 10 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></a>
-<a class="sourceLine" id="cb6-98" data-line-number="98"></a>
-<a class="sourceLine" id="cb6-99" data-line-number="99"><span class="co">## pass named expressions to subset dimension by value or index (step)</span></a>
-<a class="sourceLine" id="cb6-100" data-line-number="100">(subs &lt;-<span class="st"> </span><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">N_PROF =</span> N_PROF <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">STRING256 =</span> index <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>))</a>
-<a class="sourceLine" id="cb6-101" data-line-number="101"><span class="co">#&gt; Warning in hyper_filter.tidync(., N_PROF = N_PROF &gt; 1, STRING256 = index</span></a>
-<a class="sourceLine" id="cb6-102" data-line-number="102"><span class="co">#&gt; &gt; : 'STRING256' not found in active grid, ignoring</span></a>
-<a class="sourceLine" id="cb6-103" data-line-number="103"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-104" data-line-number="104"><span class="co">#&gt; Data Source (1): MD5903593_001.nc ...</span></a>
-<a class="sourceLine" id="cb6-105" data-line-number="105"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-106" data-line-number="106"><span class="co">#&gt; Grids (16) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
-<a class="sourceLine" id="cb6-107" data-line-number="107"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-108" data-line-number="108"><span class="co">#&gt; [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE</span></a>
-<a class="sourceLine" id="cb6-109" data-line-number="109"><span class="co">#&gt; [2]   D6,D9,D11,D8 : PARAMETER</span></a>
-<a class="sourceLine" id="cb6-110" data-line-number="110"><span class="co">#&gt; [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT</span></a>
-<a class="sourceLine" id="cb6-111" data-line-number="111"><span class="co">#&gt; [4]   D6,D9,D8     : STATION_PARAMETERS</span></a>
-<a class="sourceLine" id="cb6-112" data-line-number="112"><span class="co">#&gt; [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR    **ACTIVE GRID** ( 986  values per variable)</span></a>
-<a class="sourceLine" id="cb6-113" data-line-number="113"><span class="co">#&gt; [6]   D1,D8        : DATA_CENTRE</span></a>
-<a class="sourceLine" id="cb6-114" data-line-number="114"><span class="co">#&gt; [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE</span></a>
-<a class="sourceLine" id="cb6-115" data-line-number="115"><span class="co">#&gt; [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM</span></a>
-<a class="sourceLine" id="cb6-116" data-line-number="116"><span class="co">#&gt; [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION</span></a>
-<a class="sourceLine" id="cb6-117" data-line-number="117"><span class="co">#&gt; [10]   D6,D8        : PROJECT_NAME, PI_NAME</span></a>
-<a class="sourceLine" id="cb6-118" data-line-number="118"><span class="co">#&gt; [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME</span></a>
-<a class="sourceLine" id="cb6-119" data-line-number="119"><span class="co">#&gt; [12]   D9,D8        : PARAMETER_DATA_MODE</span></a>
-<a class="sourceLine" id="cb6-120" data-line-number="120"><span class="co">#&gt; [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE</span></a>
-<a class="sourceLine" id="cb6-121" data-line-number="121"><span class="co">#&gt; [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION</span></a>
-<a class="sourceLine" id="cb6-122" data-line-number="122"><span class="co">#&gt; [15]   D5           : DATA_TYPE</span></a>
-<a class="sourceLine" id="cb6-123" data-line-number="123"><span class="co">#&gt; [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC</span></a>
-<a class="sourceLine" id="cb6-124" data-line-number="124"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb6-125" data-line-number="125"><span class="co">#&gt; Dimensions 14 (2 active): </span></a>
-<a class="sourceLine" id="cb6-126" data-line-number="126"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-127" data-line-number="127"><span class="co">#&gt;   dim   name     length   min   max start count  dmin  dmax unlim coord_dim </span></a>
-<a class="sourceLine" id="cb6-128" data-line-number="128"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb6-129" data-line-number="129"><span class="co">#&gt; 1 D8    N_PROF        2     1     2     2     1     2     2 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-130" data-line-number="130"><span class="co">#&gt; 2 D10   N_LEVELS    493     1   493     1   493     1   493 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-131" data-line-number="131"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-132" data-line-number="132"><span class="co">#&gt; Inactive dimensions:</span></a>
-<a class="sourceLine" id="cb6-133" data-line-number="133"><span class="co">#&gt;   </span></a>
-<a class="sourceLine" id="cb6-134" data-line-number="134"><span class="co">#&gt;    dim   name       length   min   max unlim coord_dim </span></a>
-<a class="sourceLine" id="cb6-135" data-line-number="135"><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
-<a class="sourceLine" id="cb6-136" data-line-number="136"><span class="co">#&gt;  1 D0    DATE_TIME      14     1    14 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-137" data-line-number="137"><span class="co">#&gt;  2 D1    STRING2         2     1     2 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-138" data-line-number="138"><span class="co">#&gt;  3 D2    STRING4         4     1     4 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-139" data-line-number="139"><span class="co">#&gt;  4 D3    STRING8         8     1     8 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-140" data-line-number="140"><span class="co">#&gt;  5 D4    STRING16       16    NA    NA FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-141" data-line-number="141"><span class="co">#&gt;  6 D5    STRING32       32     1    32 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-142" data-line-number="142"><span class="co">#&gt;  7 D6    STRING64       64     1    64 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-143" data-line-number="143"><span class="co">#&gt;  8 D7    STRING256     256     1   256 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-144" data-line-number="144"><span class="co">#&gt;  9 D9    N_PARAM         7     1     7 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-145" data-line-number="145"><span class="co">#&gt; 10 D11   N_CALIB         1     1     1 FALSE FALSE     </span></a>
-<a class="sourceLine" id="cb6-146" data-line-number="146"><span class="co">#&gt; 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></a>
-<a class="sourceLine" id="cb6-147" data-line-number="147"><span class="co">#&gt; 12 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></a>
-<a class="sourceLine" id="cb6-148" data-line-number="148"></a>
-<a class="sourceLine" id="cb6-149" data-line-number="149"><span class="co">## with the saved filtering from above, choose data frame or tbl_cube output</span></a>
-<a class="sourceLine" id="cb6-150" data-line-number="150"><span class="co">## optionally with only selected variables</span></a>
-<a class="sourceLine" id="cb6-151" data-line-number="151">subs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_tibble.html">hyper_tibble</a></span>()</a>
-<a class="sourceLine" id="cb6-152" data-line-number="152"><span class="co">#&gt; # A tibble: 493 x 37</span></a>
-<a class="sourceLine" id="cb6-153" data-line-number="153"><span class="co">#&gt;     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_E…  TEMP</span></a>
-<a class="sourceLine" id="cb6-154" data-line-number="154"><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt; &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb6-155" data-line-number="155"><span class="co">#&gt;  1  7.70 1                7.79 1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-156" data-line-number="156"><span class="co">#&gt;  2 11.8  1               11.9  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-157" data-line-number="157"><span class="co">#&gt;  3 16.3  1               16.4  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-158" data-line-number="158"><span class="co">#&gt;  4 21.6  1               21.7  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-159" data-line-number="159"><span class="co">#&gt;  5 26.7  1               26.8  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-160" data-line-number="160"><span class="co">#&gt;  6 31.7  1               31.8  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-161" data-line-number="161"><span class="co">#&gt;  7 36.6  1               36.7  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-162" data-line-number="162"><span class="co">#&gt;  8 41.4  1               41.5  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-163" data-line-number="163"><span class="co">#&gt;  9 46.5  1               46.6  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-164" data-line-number="164"><span class="co">#&gt; 10 51.8  1               51.9  1                            2.40  13.2</span></a>
-<a class="sourceLine" id="cb6-165" data-line-number="165"><span class="co">#&gt; # … with 483 more rows, and 31 more variables: TEMP_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-166" data-line-number="166"><span class="co">#&gt; #   TEMP_ADJUSTED &lt;dbl&gt;, TEMP_ADJUSTED_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-167" data-line-number="167"><span class="co">#&gt; #   TEMP_ADJUSTED_ERROR &lt;dbl&gt;, PSAL &lt;dbl&gt;, PSAL_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-168" data-line-number="168"><span class="co">#&gt; #   PSAL_ADJUSTED &lt;dbl&gt;, PSAL_ADJUSTED_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-169" data-line-number="169"><span class="co">#&gt; #   PSAL_ADJUSTED_ERROR &lt;dbl&gt;, DOXY &lt;dbl&gt;, DOXY_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-170" data-line-number="170"><span class="co">#&gt; #   DOXY_ADJUSTED &lt;dbl&gt;, DOXY_ADJUSTED_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-171" data-line-number="171"><span class="co">#&gt; #   DOXY_ADJUSTED_ERROR &lt;dbl&gt;, CHLA &lt;dbl&gt;, CHLA_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-172" data-line-number="172"><span class="co">#&gt; #   CHLA_ADJUSTED &lt;dbl&gt;, CHLA_ADJUSTED_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-173" data-line-number="173"><span class="co">#&gt; #   CHLA_ADJUSTED_ERROR &lt;dbl&gt;, BBP700 &lt;dbl&gt;, BBP700_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-174" data-line-number="174"><span class="co">#&gt; #   BBP700_ADJUSTED &lt;dbl&gt;, BBP700_ADJUSTED_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-175" data-line-number="175"><span class="co">#&gt; #   BBP700_ADJUSTED_ERROR &lt;dbl&gt;, NITRATE &lt;dbl&gt;, NITRATE_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-176" data-line-number="176"><span class="co">#&gt; #   NITRATE_ADJUSTED &lt;dbl&gt;, NITRATE_ADJUSTED_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb6-177" data-line-number="177"><span class="co">#&gt; #   NITRATE_ADJUSTED_ERROR &lt;dbl&gt;, N_PROF &lt;int&gt;, N_LEVELS &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb6-178" data-line-number="178">subs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_tbl_cube.html">hyper_tbl_cube</a></span>(<span class="dt">select_var =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"PRES"</span>, <span class="st">"PRES_QC"</span>, <span class="st">"PSAL_ADJUSTED"</span>))</a>
-<a class="sourceLine" id="cb6-179" data-line-number="179"><span class="co">#&gt; Source: local array [493 x 2]</span></a>
-<a class="sourceLine" id="cb6-180" data-line-number="180"><span class="co">#&gt; D: N_LEVELS [int, 493]</span></a>
-<a class="sourceLine" id="cb6-181" data-line-number="181"><span class="co">#&gt; D: N_PROF [int, 1]</span></a>
-<a class="sourceLine" id="cb6-182" data-line-number="182"><span class="co">#&gt; M: PRES [dbl]</span></a>
-<a class="sourceLine" id="cb6-183" data-line-number="183"><span class="co">#&gt; M: PRES_QC [chr]</span></a>
-<a class="sourceLine" id="cb6-184" data-line-number="184"><span class="co">#&gt; M: PSAL_ADJUSTED [dbl]</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">filename &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"extdata/argo/MD5903593_001.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## discover the available entities, and the active grid's dimensions and variables</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename)</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; Data Source (1): MD5903593_001.nc ...</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; Grids (16) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">#&gt; [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co">#&gt; [2]   D6,D9,D11,D8 : PARAMETER</span></a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co">#&gt; [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT</span></a>
+<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="co">#&gt; [4]   D6,D9,D8     : STATION_PARAMETERS</span></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co">#&gt; [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR    **ACTIVE GRID** ( 986  values per variable)</span></a>
+<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="co">#&gt; [6]   D1,D8        : DATA_CENTRE</span></a>
+<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="co">#&gt; [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE</span></a>
+<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="co">#&gt; [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM</span></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="co">#&gt; [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION</span></a>
+<a class="sourceLine" id="cb7-18" data-line-number="18"><span class="co">#&gt; [10]   D6,D8        : PROJECT_NAME, PI_NAME</span></a>
+<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="co">#&gt; [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME</span></a>
+<a class="sourceLine" id="cb7-20" data-line-number="20"><span class="co">#&gt; [12]   D9,D8        : PARAMETER_DATA_MODE</span></a>
+<a class="sourceLine" id="cb7-21" data-line-number="21"><span class="co">#&gt; [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE</span></a>
+<a class="sourceLine" id="cb7-22" data-line-number="22"><span class="co">#&gt; [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION</span></a>
+<a class="sourceLine" id="cb7-23" data-line-number="23"><span class="co">#&gt; [15]   D5           : DATA_TYPE</span></a>
+<a class="sourceLine" id="cb7-24" data-line-number="24"><span class="co">#&gt; [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC</span></a>
+<a class="sourceLine" id="cb7-25" data-line-number="25"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-26" data-line-number="26"><span class="co">#&gt; Dimensions 14 (2 active): </span></a>
+<a class="sourceLine" id="cb7-27" data-line-number="27"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-28" data-line-number="28"><span class="co">#&gt;   dim   name     length   min   max start count  dmin  dmax unlim coord_dim </span></a>
+<a class="sourceLine" id="cb7-29" data-line-number="29"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb7-30" data-line-number="30"><span class="co">#&gt; 1 D8    N_PROF        2     1     2     1     2     1     2 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-31" data-line-number="31"><span class="co">#&gt; 2 D10   N_LEVELS    493     1   493     1   493     1   493 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-32" data-line-number="32"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-33" data-line-number="33"><span class="co">#&gt; Inactive dimensions:</span></a>
+<a class="sourceLine" id="cb7-34" data-line-number="34"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-35" data-line-number="35"><span class="co">#&gt;    dim   name       length   min   max unlim coord_dim </span></a>
+<a class="sourceLine" id="cb7-36" data-line-number="36"><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb7-37" data-line-number="37"><span class="co">#&gt;  1 D0    DATE_TIME      14     1    14 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-38" data-line-number="38"><span class="co">#&gt;  2 D1    STRING2         2     1     2 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-39" data-line-number="39"><span class="co">#&gt;  3 D2    STRING4         4     1     4 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-40" data-line-number="40"><span class="co">#&gt;  4 D3    STRING8         8     1     8 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-41" data-line-number="41"><span class="co">#&gt;  5 D4    STRING16       16    NA    NA FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-42" data-line-number="42"><span class="co">#&gt;  6 D5    STRING32       32     1    32 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-43" data-line-number="43"><span class="co">#&gt;  7 D6    STRING64       64     1    64 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-44" data-line-number="44"><span class="co">#&gt;  8 D7    STRING256     256     1   256 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-45" data-line-number="45"><span class="co">#&gt;  9 D9    N_PARAM         7     1     7 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-46" data-line-number="46"><span class="co">#&gt; 10 D11   N_CALIB         1     1     1 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-47" data-line-number="47"><span class="co">#&gt; 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></a>
+<a class="sourceLine" id="cb7-48" data-line-number="48"><span class="co">#&gt; 12 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></a>
+<a class="sourceLine" id="cb7-49" data-line-number="49"></a>
+<a class="sourceLine" id="cb7-50" data-line-number="50"><span class="co">## activate a different grid</span></a>
+<a class="sourceLine" id="cb7-51" data-line-number="51">grid_identifier &lt;-<span class="st"> "D7,D9,D11,D8"</span></a>
+<a class="sourceLine" id="cb7-52" data-line-number="52"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(grid_identifier)</a>
+<a class="sourceLine" id="cb7-53" data-line-number="53"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-54" data-line-number="54"><span class="co">#&gt; Data Source (1): MD5903593_001.nc ...</span></a>
+<a class="sourceLine" id="cb7-55" data-line-number="55"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-56" data-line-number="56"><span class="co">#&gt; Grids (16) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb7-57" data-line-number="57"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-58" data-line-number="58"><span class="co">#&gt; [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE</span></a>
+<a class="sourceLine" id="cb7-59" data-line-number="59"><span class="co">#&gt; [2]   D6,D9,D11,D8 : PARAMETER</span></a>
+<a class="sourceLine" id="cb7-60" data-line-number="60"><span class="co">#&gt; [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT    **ACTIVE GRID** ( 3584  values per variable)</span></a>
+<a class="sourceLine" id="cb7-61" data-line-number="61"><span class="co">#&gt; [4]   D6,D9,D8     : STATION_PARAMETERS</span></a>
+<a class="sourceLine" id="cb7-62" data-line-number="62"><span class="co">#&gt; [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR</span></a>
+<a class="sourceLine" id="cb7-63" data-line-number="63"><span class="co">#&gt; [6]   D1,D8        : DATA_CENTRE</span></a>
+<a class="sourceLine" id="cb7-64" data-line-number="64"><span class="co">#&gt; [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE</span></a>
+<a class="sourceLine" id="cb7-65" data-line-number="65"><span class="co">#&gt; [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM</span></a>
+<a class="sourceLine" id="cb7-66" data-line-number="66"><span class="co">#&gt; [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION</span></a>
+<a class="sourceLine" id="cb7-67" data-line-number="67"><span class="co">#&gt; [10]   D6,D8        : PROJECT_NAME, PI_NAME</span></a>
+<a class="sourceLine" id="cb7-68" data-line-number="68"><span class="co">#&gt; [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME</span></a>
+<a class="sourceLine" id="cb7-69" data-line-number="69"><span class="co">#&gt; [12]   D9,D8        : PARAMETER_DATA_MODE</span></a>
+<a class="sourceLine" id="cb7-70" data-line-number="70"><span class="co">#&gt; [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE</span></a>
+<a class="sourceLine" id="cb7-71" data-line-number="71"><span class="co">#&gt; [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION</span></a>
+<a class="sourceLine" id="cb7-72" data-line-number="72"><span class="co">#&gt; [15]   D5           : DATA_TYPE</span></a>
+<a class="sourceLine" id="cb7-73" data-line-number="73"><span class="co">#&gt; [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC</span></a>
+<a class="sourceLine" id="cb7-74" data-line-number="74"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-75" data-line-number="75"><span class="co">#&gt; Dimensions 14 (4 active): </span></a>
+<a class="sourceLine" id="cb7-76" data-line-number="76"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-77" data-line-number="77"><span class="co">#&gt;   dim   name     length   min   max start count  dmin  dmax unlim coord_dim </span></a>
+<a class="sourceLine" id="cb7-78" data-line-number="78"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb7-79" data-line-number="79"><span class="co">#&gt; 1 D7    STRING2…    256     1   256     1   256     1   256 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-80" data-line-number="80"><span class="co">#&gt; 2 D8    N_PROF        2     1     2     1     2     1     2 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-81" data-line-number="81"><span class="co">#&gt; 3 D9    N_PARAM       7     1     7     1     7     1     7 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-82" data-line-number="82"><span class="co">#&gt; 4 D11   N_CALIB       1     1     1     1     1     1     1 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-83" data-line-number="83"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-84" data-line-number="84"><span class="co">#&gt; Inactive dimensions:</span></a>
+<a class="sourceLine" id="cb7-85" data-line-number="85"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-86" data-line-number="86"><span class="co">#&gt;    dim   name       length   min   max unlim coord_dim </span></a>
+<a class="sourceLine" id="cb7-87" data-line-number="87"><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb7-88" data-line-number="88"><span class="co">#&gt;  1 D0    DATE_TIME      14     1    14 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-89" data-line-number="89"><span class="co">#&gt;  2 D1    STRING2         2     1     2 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-90" data-line-number="90"><span class="co">#&gt;  3 D2    STRING4         4     1     4 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-91" data-line-number="91"><span class="co">#&gt;  4 D3    STRING8         8     1     8 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-92" data-line-number="92"><span class="co">#&gt;  5 D4    STRING16       16    NA    NA FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-93" data-line-number="93"><span class="co">#&gt;  6 D5    STRING32       32     1    32 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-94" data-line-number="94"><span class="co">#&gt;  7 D6    STRING64       64     1    64 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-95" data-line-number="95"><span class="co">#&gt;  8 D10   N_LEVELS      493     1   493 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-96" data-line-number="96"><span class="co">#&gt;  9 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></a>
+<a class="sourceLine" id="cb7-97" data-line-number="97"><span class="co">#&gt; 10 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></a>
+<a class="sourceLine" id="cb7-98" data-line-number="98"></a>
+<a class="sourceLine" id="cb7-99" data-line-number="99"><span class="co">## pass named expressions to subset dimension by value or index (step)</span></a>
+<a class="sourceLine" id="cb7-100" data-line-number="100">(subs &lt;-<span class="st"> </span><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">N_PROF =</span> N_PROF <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">STRING256 =</span> index <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb7-101" data-line-number="101"><span class="co">#&gt; Warning in hyper_filter.tidync(., N_PROF = N_PROF &gt; 1, STRING256 = index</span></a>
+<a class="sourceLine" id="cb7-102" data-line-number="102"><span class="co">#&gt; &gt; : 'STRING256' not found in active grid, ignoring</span></a>
+<a class="sourceLine" id="cb7-103" data-line-number="103"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-104" data-line-number="104"><span class="co">#&gt; Data Source (1): MD5903593_001.nc ...</span></a>
+<a class="sourceLine" id="cb7-105" data-line-number="105"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-106" data-line-number="106"><span class="co">#&gt; Grids (16) &lt;dimension family&gt; : &lt;associated variables&gt; </span></a>
+<a class="sourceLine" id="cb7-107" data-line-number="107"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-108" data-line-number="108"><span class="co">#&gt; [1]   D0,D9,D11,D8 : SCIENTIFIC_CALIB_DATE</span></a>
+<a class="sourceLine" id="cb7-109" data-line-number="109"><span class="co">#&gt; [2]   D6,D9,D11,D8 : PARAMETER</span></a>
+<a class="sourceLine" id="cb7-110" data-line-number="110"><span class="co">#&gt; [3]   D7,D9,D11,D8 : SCIENTIFIC_CALIB_EQUATION, SCIENTIFIC_CALIB_COEFFICIENT, SCIENTIFIC_CALIB_COMMENT</span></a>
+<a class="sourceLine" id="cb7-111" data-line-number="111"><span class="co">#&gt; [4]   D6,D9,D8     : STATION_PARAMETERS</span></a>
+<a class="sourceLine" id="cb7-112" data-line-number="112"><span class="co">#&gt; [5]   D10,D8       : PRES, PRES_QC, PRES_ADJUSTED, PRES_ADJUSTED_QC, PRES_ADJUSTED_ERROR, TEMP, TEMP_QC, TEMP_ADJUSTED, TEMP_ADJUSTED_QC, TEMP_ADJUSTED_ERROR, PSAL, PSAL_QC, PSAL_ADJUSTED, PSAL_ADJUSTED_QC, PSAL_ADJUSTED_ERROR, DOXY, DOXY_QC, DOXY_ADJUSTED, DOXY_ADJUSTED_QC, DOXY_ADJUSTED_ERROR, CHLA, CHLA_QC, CHLA_ADJUSTED, CHLA_ADJUSTED_QC, CHLA_ADJUSTED_ERROR, BBP700, BBP700_QC, BBP700_ADJUSTED, BBP700_ADJUSTED_QC, BBP700_ADJUSTED_ERROR, NITRATE, NITRATE_QC, NITRATE_ADJUSTED, NITRATE_ADJUSTED_QC, NITRATE_ADJUSTED_ERROR    **ACTIVE GRID** ( 986  values per variable)</span></a>
+<a class="sourceLine" id="cb7-113" data-line-number="113"><span class="co">#&gt; [6]   D1,D8        : DATA_CENTRE</span></a>
+<a class="sourceLine" id="cb7-114" data-line-number="114"><span class="co">#&gt; [7]   D2,D8        : DATA_STATE_INDICATOR, WMO_INST_TYPE</span></a>
+<a class="sourceLine" id="cb7-115" data-line-number="115"><span class="co">#&gt; [8]   D3,D8        : PLATFORM_NUMBER, POSITIONING_SYSTEM</span></a>
+<a class="sourceLine" id="cb7-116" data-line-number="116"><span class="co">#&gt; [9]   D5,D8        : DC_REFERENCE, PLATFORM_TYPE, FLOAT_SERIAL_NO, FIRMWARE_VERSION</span></a>
+<a class="sourceLine" id="cb7-117" data-line-number="117"><span class="co">#&gt; [10]   D6,D8        : PROJECT_NAME, PI_NAME</span></a>
+<a class="sourceLine" id="cb7-118" data-line-number="118"><span class="co">#&gt; [11]   D7,D8        : VERTICAL_SAMPLING_SCHEME</span></a>
+<a class="sourceLine" id="cb7-119" data-line-number="119"><span class="co">#&gt; [12]   D9,D8        : PARAMETER_DATA_MODE</span></a>
+<a class="sourceLine" id="cb7-120" data-line-number="120"><span class="co">#&gt; [13]   D0           : REFERENCE_DATE_TIME, DATE_CREATION, DATE_UPDATE</span></a>
+<a class="sourceLine" id="cb7-121" data-line-number="121"><span class="co">#&gt; [14]   D2           : FORMAT_VERSION, HANDBOOK_VERSION</span></a>
+<a class="sourceLine" id="cb7-122" data-line-number="122"><span class="co">#&gt; [15]   D5           : DATA_TYPE</span></a>
+<a class="sourceLine" id="cb7-123" data-line-number="123"><span class="co">#&gt; [16]   D8           : CYCLE_NUMBER, DIRECTION, DATA_MODE, JULD, JULD_QC, JULD_LOCATION, LATITUDE, LONGITUDE, POSITION_QC, CONFIG_MISSION_NUMBER, PROFILE_PRES_QC, PROFILE_TEMP_QC, PROFILE_PSAL_QC, PROFILE_DOXY_QC, PROFILE_CHLA_QC, PROFILE_BBP700_QC, PROFILE_NITRATE_QC</span></a>
+<a class="sourceLine" id="cb7-124" data-line-number="124"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb7-125" data-line-number="125"><span class="co">#&gt; Dimensions 14 (2 active): </span></a>
+<a class="sourceLine" id="cb7-126" data-line-number="126"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-127" data-line-number="127"><span class="co">#&gt;   dim   name     length   min   max start count  dmin  dmax unlim coord_dim </span></a>
+<a class="sourceLine" id="cb7-128" data-line-number="128"><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb7-129" data-line-number="129"><span class="co">#&gt; 1 D8    N_PROF        2     1     2     2     1     2     2 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-130" data-line-number="130"><span class="co">#&gt; 2 D10   N_LEVELS    493     1   493     1   493     1   493 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-131" data-line-number="131"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-132" data-line-number="132"><span class="co">#&gt; Inactive dimensions:</span></a>
+<a class="sourceLine" id="cb7-133" data-line-number="133"><span class="co">#&gt;   </span></a>
+<a class="sourceLine" id="cb7-134" data-line-number="134"><span class="co">#&gt;    dim   name       length   min   max unlim coord_dim </span></a>
+<a class="sourceLine" id="cb7-135" data-line-number="135"><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></a>
+<a class="sourceLine" id="cb7-136" data-line-number="136"><span class="co">#&gt;  1 D0    DATE_TIME      14     1    14 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-137" data-line-number="137"><span class="co">#&gt;  2 D1    STRING2         2     1     2 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-138" data-line-number="138"><span class="co">#&gt;  3 D2    STRING4         4     1     4 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-139" data-line-number="139"><span class="co">#&gt;  4 D3    STRING8         8     1     8 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-140" data-line-number="140"><span class="co">#&gt;  5 D4    STRING16       16    NA    NA FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-141" data-line-number="141"><span class="co">#&gt;  6 D5    STRING32       32     1    32 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-142" data-line-number="142"><span class="co">#&gt;  7 D6    STRING64       64     1    64 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-143" data-line-number="143"><span class="co">#&gt;  8 D7    STRING256     256     1   256 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-144" data-line-number="144"><span class="co">#&gt;  9 D9    N_PARAM         7     1     7 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-145" data-line-number="145"><span class="co">#&gt; 10 D11   N_CALIB         1     1     1 FALSE FALSE     </span></a>
+<a class="sourceLine" id="cb7-146" data-line-number="146"><span class="co">#&gt; 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></a>
+<a class="sourceLine" id="cb7-147" data-line-number="147"><span class="co">#&gt; 12 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></a>
+<a class="sourceLine" id="cb7-148" data-line-number="148"></a>
+<a class="sourceLine" id="cb7-149" data-line-number="149"><span class="co">## with the saved filtering from above, choose data frame or tbl_cube output</span></a>
+<a class="sourceLine" id="cb7-150" data-line-number="150"><span class="co">## optionally with only selected variables</span></a>
+<a class="sourceLine" id="cb7-151" data-line-number="151">subs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_tibble.html">hyper_tibble</a></span>()</a>
+<a class="sourceLine" id="cb7-152" data-line-number="152"><span class="co">#&gt; # A tibble: 493 x 37</span></a>
+<a class="sourceLine" id="cb7-153" data-line-number="153"><span class="co">#&gt;     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_E…  TEMP</span></a>
+<a class="sourceLine" id="cb7-154" data-line-number="154"><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt; &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb7-155" data-line-number="155"><span class="co">#&gt;  1  7.70 1                7.79 1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-156" data-line-number="156"><span class="co">#&gt;  2 11.8  1               11.9  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-157" data-line-number="157"><span class="co">#&gt;  3 16.3  1               16.4  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-158" data-line-number="158"><span class="co">#&gt;  4 21.6  1               21.7  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-159" data-line-number="159"><span class="co">#&gt;  5 26.7  1               26.8  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-160" data-line-number="160"><span class="co">#&gt;  6 31.7  1               31.8  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-161" data-line-number="161"><span class="co">#&gt;  7 36.6  1               36.7  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-162" data-line-number="162"><span class="co">#&gt;  8 41.4  1               41.5  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-163" data-line-number="163"><span class="co">#&gt;  9 46.5  1               46.6  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-164" data-line-number="164"><span class="co">#&gt; 10 51.8  1               51.9  1                            2.40  13.2</span></a>
+<a class="sourceLine" id="cb7-165" data-line-number="165"><span class="co">#&gt; # … with 483 more rows, and 31 more variables: TEMP_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-166" data-line-number="166"><span class="co">#&gt; #   TEMP_ADJUSTED &lt;dbl&gt;, TEMP_ADJUSTED_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-167" data-line-number="167"><span class="co">#&gt; #   TEMP_ADJUSTED_ERROR &lt;dbl&gt;, PSAL &lt;dbl&gt;, PSAL_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-168" data-line-number="168"><span class="co">#&gt; #   PSAL_ADJUSTED &lt;dbl&gt;, PSAL_ADJUSTED_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-169" data-line-number="169"><span class="co">#&gt; #   PSAL_ADJUSTED_ERROR &lt;dbl&gt;, DOXY &lt;dbl&gt;, DOXY_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-170" data-line-number="170"><span class="co">#&gt; #   DOXY_ADJUSTED &lt;dbl&gt;, DOXY_ADJUSTED_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-171" data-line-number="171"><span class="co">#&gt; #   DOXY_ADJUSTED_ERROR &lt;dbl&gt;, CHLA &lt;dbl&gt;, CHLA_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-172" data-line-number="172"><span class="co">#&gt; #   CHLA_ADJUSTED &lt;dbl&gt;, CHLA_ADJUSTED_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-173" data-line-number="173"><span class="co">#&gt; #   CHLA_ADJUSTED_ERROR &lt;dbl&gt;, BBP700 &lt;dbl&gt;, BBP700_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-174" data-line-number="174"><span class="co">#&gt; #   BBP700_ADJUSTED &lt;dbl&gt;, BBP700_ADJUSTED_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-175" data-line-number="175"><span class="co">#&gt; #   BBP700_ADJUSTED_ERROR &lt;dbl&gt;, NITRATE &lt;dbl&gt;, NITRATE_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-176" data-line-number="176"><span class="co">#&gt; #   NITRATE_ADJUSTED &lt;dbl&gt;, NITRATE_ADJUSTED_QC &lt;chr&gt;,</span></a>
+<a class="sourceLine" id="cb7-177" data-line-number="177"><span class="co">#&gt; #   NITRATE_ADJUSTED_ERROR &lt;dbl&gt;, N_PROF &lt;int&gt;, N_LEVELS &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb7-178" data-line-number="178">subs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_tbl_cube.html">hyper_tbl_cube</a></span>(<span class="dt">select_var =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"PRES"</span>, <span class="st">"PRES_QC"</span>, <span class="st">"PSAL_ADJUSTED"</span>))</a>
+<a class="sourceLine" id="cb7-179" data-line-number="179"><span class="co">#&gt; Source: local array [493 x 2]</span></a>
+<a class="sourceLine" id="cb7-180" data-line-number="180"><span class="co">#&gt; D: N_LEVELS [int, 493]</span></a>
+<a class="sourceLine" id="cb7-181" data-line-number="181"><span class="co">#&gt; D: N_PROF [int, 1]</span></a>
+<a class="sourceLine" id="cb7-182" data-line-number="182"><span class="co">#&gt; M: PRES [dbl]</span></a>
+<a class="sourceLine" id="cb7-183" data-line-number="183"><span class="co">#&gt; M: PRES_QC [chr[,1]]</span></a>
+<a class="sourceLine" id="cb7-184" data-line-number="184"><span class="co">#&gt; M: PSAL_ADJUSTED [dbl]</span></a></code></pre></div>
 <p>A grid is a “virtual table” in the sense of a database source. It’s possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. “D1,D0” and can otherwise be activated by their count identifier (starting at 1). The “D0” is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself.</p>
 </div>
 <div id="extractive" class="section level3">
 <h3 class="hasAnchor">
 <a href="#extractive" class="anchor"></a>Extractive</h3>
 <p>Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">## we'll see a column for sst, lat, time, and whatever other dimensions sst has</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## and whatever other variable's the grid has</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"sst"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">lat =</span> lat <span class="op">&lt;</span><span class="st"> </span><span class="dv">-30</span>, <span class="dt">time =</span> time <span class="op">==</span><span class="st"> </span><span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="reference/hyper_tibble.html">hyper_tibble</a></span>()</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">## raw array form, we'll see a (list of) R arrays with a dimension for each seen by tidync(filename) %&gt;% activate("sst"")</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"sst"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">lat =</span> lat <span class="op">&lt;</span><span class="st"> </span><span class="dv">-30</span>, <span class="dt">time =</span> time <span class="op">==</span><span class="st"> </span><span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="st">  </span><span class="kw"><a href="reference/hyper_array.html">hyper_array</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">## we'll see a column for the variable activated, and whatever other </span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">## variables the grid has</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"JULD"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">N_PROF =</span> N_PROF <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="reference/hyper_tibble.html">hyper_tibble</a></span>()</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; # A tibble: 98 x 5</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt;    SCIENTIFIC_CALIB_DATE DATE_TIME N_PROF N_PARAM N_CALIB</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt;    &lt;chr&gt;                     &lt;int&gt;  &lt;int&gt;   &lt;int&gt;   &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt;  1 2                             1      1       1       1</span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt;  2 0                             2      1       1       1</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt;  3 1                             3      1       1       1</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;  4 7                             4      1       1       1</span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;  5 0                             5      1       1       1</span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt;  6 4                             6      1       1       1</span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt;  7 1                             7      1       1       1</span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt;  8 0                             8      1       1       1</span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt;  9 1                             9      1       1       1</span></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; 10 4                            10      1       1       1</span></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">#&gt; # … with 88 more rows</span></a>
+<a class="sourceLine" id="cb8-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb8-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">## native array form, we'll see a (list of) R arrays with a dimension for </span></a>
+<a class="sourceLine" id="cb8-23" data-line-number="23"><span class="co">## each seen by tidync(filename) %&gt;% activate("JULD")</span></a>
+<a class="sourceLine" id="cb8-24" data-line-number="24"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"JULD"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-25" data-line-number="25"><span class="st">  </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">N_PROF =</span> N_PROF <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-26" data-line-number="26"><span class="st">  </span><span class="kw"><a href="reference/hyper_array.html">hyper_array</a></span>()</a>
+<a class="sourceLine" id="cb8-27" data-line-number="27"><span class="co">#&gt; Tidync Data Arrays</span></a>
+<a class="sourceLine" id="cb8-28" data-line-number="28"><span class="co">#&gt; Variables (1): 'SCIENTIFIC_CALIB_DATE'</span></a>
+<a class="sourceLine" id="cb8-29" data-line-number="29"><span class="co">#&gt; Dimension (4): 14, 7, 1, 1</span></a>
+<a class="sourceLine" id="cb8-30" data-line-number="30"><span class="co">#&gt; Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/argo/MD5903593_001.nc</span></a></code></pre></div>
 <p>It’s important to not actual request the data extraction until the expressions above would result in an efficient size (don’t try a data frame version of a 20Gb ROMs variable …). Use the interactive modes to determine the likely size of the output you will receive.</p>
 <p>Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each <code>hyper_*</code> function can take the filtering expressions, but it’s not obvious if this is a good idea or not.</p>
 <p>See the vignettes for more:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/vignette">vignette</a></span>(<span class="st">"tidync-examples"</span>)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/browseVignettes">browseVignettes</a></span>(<span class="dt">package =</span> <span class="st">"tidync"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/browseVignettes">browseVignettes</a></span>(<span class="dt">package =</span> <span class="st">"tidync"</span>)</a></code></pre></div>
 </div>
 </div>
 <div id="limitations" class="section level2">
@@ -410,11 +431,13 @@
 <li>
 <strong>activation</strong> - choice of a given grid to apply subsetting and read operations to</li>
 </ul>
+<hr>
 </div>
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-of-conduct" class="anchor"></a>Code of conduct</h2>
 <p>Please note that this project is released with a <a href="CONDUCT.html">Contributor Code of Conduct</a>. By participating in this project you agree to abide by its terms.</p>
+<p><a href="https://ropensci.org"><img src="https://ropensci.org/public_images/ropensci_footer.png" alt="ropensci_footer"></a></p>
 </div>
 </div>
   </div>
@@ -423,6 +446,8 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=tidync">https://​cloud.r-project.org/​package=tidync</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/hypertidy/tidync">https://​github.com/​hypertidy/​tidync</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/hypertidy/tidync/issues">https://​github.com/​hypertidy/​tidync/​issues</a>
@@ -453,6 +478,7 @@
 <li><a href="https://github.com/ropensci/onboarding/issues/174"><img src="https://badges.ropensci.org/174_status.svg"></a></li>
 <li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
 <li><a href="https://cran.r-project.org/package=tidync"><img src="http://www.r-pkg.org/badges/version/tidync" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://cran.r-project.org/package=tidync"><img src="http://cranlogs.r-pkg.org/badges/tidync" alt="CRAN_Download_Badge"></a></li>
 </ul>
 </div>
 </div>

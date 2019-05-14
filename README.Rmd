@@ -1,5 +1,7 @@
 ---
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -17,12 +19,10 @@ knitr::opts_chunk$set(
 [![Travis-CI Build Status](http://badges.herokuapp.com/travis/hypertidy/tidync?branch=master&env=BUILD_NAME=xenial_release&label=linux)](https://travis-ci.org/hypertidy/tidync)[![Build Status](http://badges.herokuapp.com/travis/hypertidy/tidync?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/hypertidy/tidync) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/hypertidy/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/tidync-3m5h7) [![Coverage status](https://codecov.io/gh/hypertidy/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/hypertidy/tidync?branch=master)[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing) [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
 
 
-The goal of tidync is to ease exploring the contents of a NetCDF source and constructing efficient 
-queries to extract arbitrary sub-arrays. 
+The goal of tidync is to ease exploring the contents of a NetCDF source and to simplify the process of data extraction. 
 
-The data extracted can be used directly as an array, or in long-form data frame.
-In contrast to other packages tidync helps reduce the volume of code required to
-discover and read the contents of NetCDF, with simple steps:
+When extracting, data can be accessed as array/s, or in long-form as a data frame.
+In contrast to other packages tidync helps reduce the volume of code required to discover and read the contents of NetCDF, with simple steps:
 
 * Connect and summarize `tidync()`.
 * (optionally) Specify source variables `activate()`.
@@ -36,14 +36,20 @@ This project uses RNetCDF for the primary access to the NetCDF library, as well 
 
 ## Installation
 
-You can install tidync from github with:
+Install tidync from CRAN. 
+
+```{r cran}
+install.packages("tidync")
+```
+
+You can install the development version from github with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("remotes")
 remotes::install_github("hypertidy/tidync", dependencies = TRUE)
 ```
 
-Also required are packages ncdf4 and RNetCDF, so first make sure you can install and use these. 
+The package packages ncdf4 and RNetCDF are required, so first make sure you can install and use these if it doesn't work the first time. 
 
 ```{r,eval=FALSE}
 install.packages("ncdf4")
@@ -58,7 +64,7 @@ On Windows, everything should be easy as ncdf4 and RNetCDF are supported by CRAN
 
 ### MacOS
 
-On MacOS, it should also be easy as there are binaries for ncdf4 and RNetCDF available on CRAN. As far as I know, these binaries won't support OpenDAP/Thredds. 
+On MacOS, it should also be easy as there are binaries for ncdf4 and RNetCDF available on CRAN. As far as I know, only RNetCDF will support Thredds. 
 
 ### Ubuntu/Debian
 
@@ -83,7 +89,7 @@ install.packages("remotes")
 remotes::install_github("hypertidy/tidync")
 ```
 
- At the time of writing the [travis install configuration](https://github.com/hypertidy/tidync/blob/master/.travis.yml) was set up for "trusty", Ubuntu 14.04 so also provides a record. 
+At the time of writing the [travis install configuration](https://github.com/hypertidy/tidync/blob/master/.travis.yml) was set up for "trusty", Ubuntu 14.04 so also provides a record. 
 
 More general information about system dependencies libnetcdf-dev and libudunits2-dev is available from [Unidata NetCDF](https://www.unidata.ucar.edu/software/netcdf/docs/getting_and_building_netcdf.html) and [Unidata Udunits2](https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html#Installation). 
 
@@ -92,7 +98,7 @@ More general information about system dependencies libnetcdf-dev and libudunits2
 
 This is a basic example which shows how to connect to a file. 
 
-```{r}
+```{r start}
 file <- system.file("extdata", "oceandata", "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc", package = "tidync")
 library(tidync)
 tidync(file) 
@@ -133,17 +139,18 @@ A grid is a "virtual table" in the sense of a database source. It's possible to 
 
 Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form. 
 
-```{r extraction, eval=FALSE}
-## we'll see a column for sst, lat, time, and whatever other dimensions sst has
-## and whatever other variable's the grid has
-tidync(filename) %>% activate("sst") %>% 
-  hyper_filter(lat = lat < -30, time = time == 20) %>% 
+```{r extraction, eval=TRUE}
+## we'll see a column for the variable activated, and whatever other 
+## variables the grid has
+tidync(filename) %>% activate("JULD") %>% 
+  hyper_filter(N_PROF = N_PROF == 1) %>% 
   hyper_tibble()
 
 
-## raw array form, we'll see a (list of) R arrays with a dimension for each seen by tidync(filename) %>% activate("sst"")
-tidync(filename) %>% activate("sst") %>% 
-  hyper_filter(lat = lat < -30, time = time == 20) %>% 
+## native array form, we'll see a (list of) R arrays with a dimension for 
+## each seen by tidync(filename) %>% activate("JULD")
+tidync(filename) %>% activate("JULD") %>% 
+  hyper_filter(N_PROF = N_PROF == 1) %>% 
   hyper_array()
 
 ```
@@ -156,8 +163,6 @@ Functions seamlessly build the actual index values required by the NetCDF librar
 See the vignettes for more: 
 
 ```R
-vignette("tidync-examples")
-
 browseVignettes(package = "tidync")
 ```
 

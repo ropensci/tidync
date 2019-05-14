@@ -22,8 +22,7 @@ knitr::opts_chunk$set(
 options(pillar.subtle = FALSE, pillar.sigfig = 4)
 ```
 
-The goal of tidync is to ease exploring the contents of a NetCDF source and
-to easily extract array data in various forms and automate complex extraction tasks. 
+The goal of tidync is to ease exploring the contents of a NetCDF source and to simplify the process of data extraction.  
 
 Array dimension expressions virtually *slice* (i.e. *index*) into data arrays with immediate feedback, and ease programming for automating data extraction. No data is read until explicitly requested, and can be pulled directly as an array, or in long-form as a data frame. 
 

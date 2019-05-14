@@ -2,6 +2,7 @@
  context("activate")
 
  test_that("generic meaningless activation works", {
+   skip_on_os("solaris")
    l <- list(a = 1, b = 2)
    expect_warning(l <- activate(l, "b"))
    expect_warning(active(l) <- "b")

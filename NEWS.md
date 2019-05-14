@@ -1,4 +1,9 @@
-# tidync 0.1.1.9001
+# tidync 0.1.2
+
+* Fixes in tests and examples to avoid version-incapable NetCDF problems
+ on Solaris. 
+ 
+* A number of improved tests and documentation fixes. 
 
 * Deal with warnings from tidyr version > 0.8.3. 
 
@@ -18,7 +23,7 @@
 
 # tidync 0.1.0
 
-* FIRST RELEASE, tidync benefitted greatly from the rOpenSci review process. 
+* FIRST RELEASE, tidync was greatly improved via help from the rOpenSci review process. 
 
 * New function `hyper_grids()` to report available grid names. 
 

@@ -1,18 +1,16 @@
-## tidync 0.1.1
+## tidync 0.2.0
 
-* Clarified Description. 
-* Added examples. 
-* Removed cat and print calls. 
+Hello, this is a little early for an update, but I hoped to fix some
+confusing documentation problems. This updates should also remove the Solaris errors on CRAN checks. 
 
-Thanks! 
+Thank you. 
 
 ## Test environments
-* local Ubuntu 18.04 install, R 3.5.3
+* local Ubuntu 18.04 install, R 3.6.0
 * ubuntu 14.04 (on travis-ci)
-* win-builder (devel and release)
+* win-builder (devel)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-* This is a new release.

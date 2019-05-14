@@ -4,7 +4,7 @@
 #'
 #' The output lists the variables and their dimensions of an object from a  
 #' previous call to [tidync()], and possibly [hyper_filter()]. The available
-#' data will differe from the source in terms of variables (via `select_var` in 
+#' data will differ from the source in terms of variables (via `select_var` in 
 #' [hyper_array]) and the lengths of each dimension (via named expressions in
 #' [hyper_filter()]). 
 #' @param x 'tidync_data' object (from [hyper_array()])

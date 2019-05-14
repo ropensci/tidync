@@ -74,8 +74,11 @@ Major use of compound types is made by \url{https://github.com/sosoc/croc}.
 ## for 31 day period January 2008 (S20080012008031) 
 f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 l3file <- system.file("extdata/oceandata", f, package= "tidync")
+## skip on Solaris
+if (!tolower(Sys.info()[["sysname"]]) == "sunos") {
 tnc <- tidync(l3file)
 print(tnc)
+}
 
 ## very simple Unidata example file, with one dimension
 \dontrun{

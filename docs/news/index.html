@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -115,20 +115,33 @@
       <small>Source: <a href='https://github.com/hypertidy/tidync/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="tidync-0-1-2" class="section level1">
+<h1 class="page-header">
+<a href="#tidync-0-1-2" class="anchor"></a>tidync 0.1.2<small> Unreleased </small>
+</h1>
+<ul>
+<li><p>Fixes in tests and examples to avoid version-incapable NetCDF problems on Solaris.</p></li>
+<li><p>A number of improved tests and documentation fixes.</p></li>
+<li><p>Deal with warnings from tidyr version &gt; 0.8.3.</p></li>
+<li><p>A belated thank you to all rOpenSci contributions, especially very helpful reviews from <a href="https://github.com/Nowosad">@Nowosad</a> and <a href="https://github.com/timcdlucas">@timcdlucas</a> as well as organizers <a href="https://github.com/karthik">@karthik</a> and <a href="https://github.com/sckott">@sckott</a>. Helpful input was also provided via issues from <a href="https://github.com/adrfantini">@adrfantini</a>, <a href="https://github.com/JustBerkhout">@JustBerkhout</a>, <a href="https://github.com/matteodefelice">@matteodefelice</a>, <a href="https://github.com/rensa">@rensa</a>, <a href="https://github.com/rmendels">@rmendels</a>, <a href="https://github.com/sw-rifai">@sw-rifai</a>, and <a href="https://github.com/tremenyi">@tremenyi</a>, and pull requests <a href="https://github.com/dlebauer">@dlebauer</a>, <a href="https://github.com/edzer">@edzer</a>.</p></li>
+</ul>
+</div>
     <div id="tidync-0-1-1" class="section level1">
 <h1 class="page-header">
-<a href="#tidync-0-1-1" class="anchor"></a>tidync 0.1.1</h1>
+<a href="#tidync-0-1-1" class="anchor"></a>tidync 0.1.1<small> 2019-04-27 </small>
+</h1>
 <ul>
-<li><p>Package improvements thanks to CRAN feedback, clarified Description and added more examples.</p></li>
+<li><p>Package improvements thanks to CRAN feedback, clarified Description and added more examples. Replaced <code>cat</code> and <code><a href="https://www.rdocumentation.org/packages/base/topics/print">print()</a></code> calls with message() and <code><a href="https://www.rdocumentation.org/packages/base/topics/warning">warning()</a></code>.</p></li>
 <li><p>New class ‘tidync_data’ for output of ‘hyper_array()’, no underlying change to the object which is simply a list of arrays from each variable, and axis transforms stored in an attribute.</p></li>
 <li><p>Old deprecated function ‘axis_transforms()’ now Defunct.</p></li>
 </ul>
 </div>
     <div id="tidync-0-1-0" class="section level1">
 <h1 class="page-header">
-<a href="#tidync-0-1-0" class="anchor"></a>tidync 0.1.0</h1>
+<a href="#tidync-0-1-0" class="anchor"></a>tidync 0.1.0<small> Unreleased </small>
+</h1>
 <ul>
-<li><p>FIRST RELEASE, tidync benefitted greatly from the rOpenSci review process.</p></li>
+<li><p>FIRST RELEASE, tidync was greatly improved via help from the rOpenSci review process.</p></li>
 <li><p>New function <code><a href="../reference/hyper_vars.html">hyper_grids()</a></code> to report available grid names.</p></li>
 <li><p>A printing error of dimension value ranges is now fixed, thanks to James Goldie (<a href='https://github.com/hypertidy/tidync/issues/84'>#84</a>).</p></li>
 <li><p>Now supports ‘NC_CHAR’ type, by exploding these into the array size expected.</p></li>
@@ -138,7 +151,8 @@
 </div>
     <div id="tidync-0-0-3" class="section level1">
 <h1 class="page-header">
-<a href="#tidync-0-0-3" class="anchor"></a>tidync 0.0.3</h1>
+<a href="#tidync-0-0-3" class="anchor"></a>tidync 0.0.3<small> Unreleased </small>
+</h1>
 <ul>
 <li><p>Function rename <code>hyper_array</code> now matches <code>hyper_tibble</code> indicating the form of the output (rather than the action used, was <code>hyper_slice</code>).</p></li>
 <li><p>New utilities <code>hyper_vars</code> and <code>hyper_dims</code> for reporting on the currently active variables and dimensions and their <code>hyper_filter</code> status.</p></li>
@@ -148,7 +162,8 @@
 </div>
     <div id="tidync-0-0-2" class="section level1">
 <h1 class="page-header">
-<a href="#tidync-0-0-2" class="anchor"></a>tidync 0.0.2</h1>
+<a href="#tidync-0-0-2" class="anchor"></a>tidync 0.0.2<small> Unreleased </small>
+</h1>
 <ul>
 <li><p>hyper_filter now uses a selection idiom, to record the state of the axis rather than explicitly filter it. This means we can have more flexibility on what the axis transform tables can be used for, and removes some unwieldy handling code. All the available axes are on the object from first contact, which means we can program against the entire space in the source which will help for complex mapping scenarios.</p></li>
 <li><p>hyper filter print now handles the case of char-type coordinate values by setting the min and max to NA_real_</p></li>
@@ -161,7 +176,8 @@
 </div>
     <div id="tidync-0-0-1" class="section level1">
 <h1 class="page-header">
-<a href="#tidync-0-0-1" class="anchor"></a>tidync 0.0.1</h1>
+<a href="#tidync-0-0-1" class="anchor"></a>tidync 0.0.1<small> Unreleased </small>
+</h1>
 <ul>
 <li><p>imports ncdump &gt; 0.0.3</p></li>
 <li><p>Installed external example data from <a href="https://www.unidata.ucar.edu/software/netcdf/examples/files.html">Unidata website</a></p></li>
@@ -175,6 +191,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#tidync-0-1-2">0.1.2</a></li>
         <li><a href="#tidync-0-1-1">0.1.1</a></li>
         <li><a href="#tidync-0-1-0">0.1.0</a></li>
         <li><a href="#tidync-0-0-3">0.0.3</a></li>
