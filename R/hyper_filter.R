@@ -27,7 +27,6 @@
 #'
 #' @return data frame
 #' @export
-#' @importFrom purrr map
 #' @importFrom dplyr group_by mutate summarize
 #' @examples
 #' f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
