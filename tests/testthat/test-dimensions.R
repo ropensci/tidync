@@ -4,7 +4,7 @@ x <- tidync(system.file("extdata/argo/MD5903593_001.nc",
 
 test_that("dimension matchup works", {
   expect_named(x %>% hyper_tibble(select_var = c("PRES", "PRES_QC")), 
-               c("PRES", "PRES_QC", "N_PROF", "N_LEVELS")) %>% nrow() %>% 
+               c("PRES", "PRES_QC",  "N_LEVELS", "N_PROF")) %>% nrow() %>% 
     expect_equal(986L)
   
   tab <- x %>% hyper_filter(N_LEVELS = N_LEVELS < 20) %>%  
@@ -14,8 +14,9 @@ test_that("dimension matchup works", {
   expect_equal(purrr::map_chr(tab, typeof), c(TEMP_ADJUSTED_QC = "character",
                                               NITRATE_ADJUSTED = "double",
                                               CHLA_ADJUSTED_ERROR = "double",
-                                              N_PROF = "integer", 
-                                              N_LEVELS = "integer"
+                                              N_LEVELS = "integer",
+                                              N_PROF = "integer" 
+                                              
   ))
   expect_equivalent(tab$CHLA_ADJUSTED_ERROR, 
   c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 

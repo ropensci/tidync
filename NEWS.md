@@ -1,3 +1,10 @@
+# tidync 0.2.9001
+
+* Found a really bad bug in `hyper_array()`, now fixed. Axis order in transforms 
+ was sometimes reversed, which caused garbled results from `hyper_tibble()`. The effect
+ is to ruin any ggplot2 figures for some source files. It's very likely that no other 
+ system yet uses the `hyper_array()` format so impact is low.  (#92)
+
 # tidync 0.2.0
 
 * tidync is now part of the rOpenSci project. 

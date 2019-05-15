@@ -123,9 +123,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
       return(invisible(NULL))
     }
   }
-  transforms <- x[["transforms"]][x[["dimension"]] %>% 
-                                    dplyr::filter(.data$active) %>% 
-                                    dplyr::pull(.data$name)]
+  transforms <- active_axis_transforms(x)
   datalist <- lapply(varnames, get_vara)
   
   

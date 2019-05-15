@@ -10,7 +10,7 @@
   "codeRepository": "https://github.com/ropensci/tidync",
   "issueTracker": "https://github.com/ropensci/tidync/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.2.0",
+  "version": "0.2.0.9001",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -264,7 +264,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/tidync/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/tidync/blob/master/README.md",
-  "fileSize": "351.162KB",
+  "fileSize": "351.314KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/tidync",
     "https://travis-ci.org/ropensci/tidync",
