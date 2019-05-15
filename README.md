@@ -10,7 +10,7 @@ Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=x
 [![Build
 Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/ropensci/tidync)
 [![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/ropensci/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/ropensci/tidync)
+status](https://ci.appveyor.com/api/projects/status/github/ropensci/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/tidync-nvwwt)
 [![Coverage
 status](https://codecov.io/gh/ropensci/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/ropensci/tidync?branch=master)
 [![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)

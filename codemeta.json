@@ -264,7 +264,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/tidync/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/tidync/blob/master/README.md",
-  "fileSize": "351.17KB",
+  "fileSize": "351.162KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/tidync",
     "https://travis-ci.org/ropensci/tidync",
