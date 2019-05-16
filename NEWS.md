@@ -1,4 +1,6 @@
-# tidync 0.2.9001
+# tidync 0.2.9002
+
+* Fixed tidync method for `hyper_array()` output. 
 
 * Found a really bad bug in `hyper_array()`, now fixed. Axis order in transforms 
  was sometimes reversed, which caused garbled results from `hyper_tibble()`. The effect
