@@ -18,10 +18,11 @@
 #'               hyper_array(select_var = c("TEMP_ADJUSTED", "PRES"))
 #' print(argodata)
 print.tidync_data <- function(x, ...) {
-  cat("Tidync Data Arrays\n")
+  cat("Class: tidync_data (list of tidync data arrays)\n")
   cat(sprintf("Variables (%i): %s\n", length(x), paste(sprintf("'%s'", names(x)), collapse = ", ")))
-  cat(sprintf("Dimension (%i): %s\n", length(dim(x[[1]])), paste(dim(x[[1]]), collapse = ", ")))
   dims <- attr(x, "transforms")
+  cat(sprintf("Dimension (%i): %s (%s)\n", length(dim(x[[1]])), paste(names(dims), collapse = ","), paste(dim(x[[1]]), collapse = ", ")))
+  
   dims <- lapply(dims, function(d) d %>% dplyr::filter(.data$selected))
   nams <- names(dims)
   dims<- do.call(rbind, 
@@ -39,5 +40,5 @@ print.tidync_data <- function(x, ...) {
 #' @name tidync
 #' @export
 tidync.tidync_data <- function(x, what, ...) {
-  tidync(x$source$source[1L], what = what, ...)
+  tidync(attr(x, "source")$source[1L], what = what, ...)
 }

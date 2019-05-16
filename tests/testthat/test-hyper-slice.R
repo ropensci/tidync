@@ -31,5 +31,7 @@ test_that("slicing works", {
                     "precipAccumQCD"))
   a <- hyper_array(tidync(ufile) %>% activate(precip3hrQCD))
   expect_named(a, c("precip3hrQCD"))
+  
+  expect_s3_class(tidync(a), "tidync")
 })
 

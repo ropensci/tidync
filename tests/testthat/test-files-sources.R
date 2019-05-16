@@ -70,5 +70,9 @@ test_that("RNetCDF fall back works", {
   nc_get(ufile, "invTime", test = TRUE) %>% expect_is("array") %>% 
     expect_length(1176) #%>% expect_type("integer")
   
+  expect_output({
+  expect_error(nc_get(ufile, "notavariable"))
+  expect_error(nc_get(ufile, "notavariable", test = TRUE))
+  })
 })
 

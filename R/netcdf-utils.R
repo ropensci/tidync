@@ -19,13 +19,14 @@ nc_get.character <- function(x, v, test = FALSE, ...) {
   on.exit(ncdf4::nc_close(con4), add = TRUE)
   safe_get4 <- purrr::safely(nc_get.ncdf4)
   val <- safe_get4(con4, v)
-  if (!is.null(val$result)) {
-    return(val$result)
+  if (is.null(val[["result"]])) {
+    stop(sprintf("no variable found %s", v))
   } else {
-    warning("dimension has no coordinates, returning index")
-    return()
+    return(val[["result"]])
   }
+  
   }
+  stop(sprintf("no variable found %s", v))
 }
 nc_get.NetCDF <- function(x, v) {
   RNetCDF::var.get.nc(x, v)
