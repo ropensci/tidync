@@ -1,6 +1,7 @@
 ## tidync 0.2.1
 
-Hello, another bug fix, and Solaris check fix. 
+Hello, another bug fix, my apologies but this is pretty critical. Also a
+Solaris check fix. 
 
 Thank you very much. 
 

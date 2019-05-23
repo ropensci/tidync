@@ -1,5 +1,9 @@
 # tidync 0.2.1
 
+* Now depends on R 3.5.0. 
+
+* Removed obscure numeric 'what' logic for `activate()`. 
+
 * Fixed tidync method for `hyper_array()` output. 
 
 * Found a really bad bug in `hyper_array()` (#92), now fixed. Axis order in 

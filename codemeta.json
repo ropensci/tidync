@@ -136,7 +136,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.3.0"
+      "version": ">= 3.5.0"
     },
     {
       "@type": "SoftwareApplication",
@@ -264,7 +264,7 @@
   ],
   "releaseNotes": "https://github.com/ropensci/tidync/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci/tidync/blob/master/README.md",
-  "fileSize": "352.378KB",
+  "fileSize": "352.398KB",
   "contIntegration": [
     "https://travis-ci.org/ropensci/tidync",
     "https://travis-ci.org/ropensci/tidync",
