@@ -73,13 +73,15 @@ how activation would occur for scalars, but in future perhaps \code{activate("S"
 could be the right way forward.
 }
 \examples{
-l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
-rnc <- tidync(system.file("extdata", "oceandata", l3file,
-package = "tidync"))
-activate(rnc, "palette")
+if (!tolower(Sys.info()[["sysname"]]) == "sunos") {
+ l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
+ rnc <- tidync(system.file("extdata", "oceandata", l3file,
+ package = "tidync"))
+ activate(rnc, "palette")
 
-## extract available grid names
-hyper_grids(rnc)
+ ## extract available grid names
+ hyper_grids(rnc)
+}
 }
 \seealso{
 hyper_filter hyper_tibble hyper_tbl_cube
