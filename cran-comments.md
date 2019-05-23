@@ -8,8 +8,8 @@ Thank you very much.
 
 ## Test environments
 * local Ubuntu 18.04 install, R 3.6.0
-* ubuntu 14.04 (on travis-ci)
-* win-builder (devel)
+* R-hub (devel)
+* win-builder (release)
 
 ## R CMD check results
 
