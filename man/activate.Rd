@@ -27,7 +27,7 @@ active(x) <- value
 \arguments{
 \item{.data}{NetCDF object}
 
-\item{what}{name of a variable}
+\item{what}{name of a grid or variable}
 
 \item{...}{reserved, currently ignored}
 

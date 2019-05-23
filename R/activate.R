@@ -30,7 +30,7 @@
 #' how activation would occur for scalars, but in future perhaps `activate("S")`
 #' could be the right way forward.
 #' @param .data NetCDF object
-#' @param what name of a variable
+#' @param what name of a grid or variable
 #' @param ... reserved, currently ignored
 #' @param select_var optional argument to set selected state of variable/s by
 #'   name
@@ -75,6 +75,7 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
   }
 
   if (is.numeric(what)) {
+    stop("numeric 'what' is not supported, use grid name or variable name")
     ## this pattern is copied from print
     ## remove $variables because it a list 
     ushapes <- dplyr::distinct(.data$grid %>% 

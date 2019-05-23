@@ -30,17 +30,14 @@
   tnc1 <-  tnc %>% activate(handbook5Id)
   expect_equal(active(tnc1),  "D1,D12")
   
-  ## use number to find grid
-  
-  tnc2 <- tnc %>% activate(3)
-  expect_equal(active(tnc2), "D10,D9")
-  
-  expect_error(activate(tnc2, 0))
+  ## use number to find grid, is defunct
+  expect_error(tnc %>% activate(3))
+  expect_error(activate(tnc, 0))
 
   
-  expect_error(activate(tnc2, snarfleglobber), "not found")
+  expect_error(activate(tnc, snarfleglobber), "not found")
   snarfleglobber <-   "snarfleglobber "
-  expect_error(activate(tnc2, snarfleglobber), "Activate grids by name")
+  expect_error(activate(tnc, snarfleglobber), "Activate grids by name")
   
   expect_warning(activate(1, "a"))
   expect_true(sum(activate(tnc, "D11")$variable$active) == 2L) 
