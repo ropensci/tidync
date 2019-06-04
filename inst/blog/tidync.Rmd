@@ -1,0 +1,100 @@
+---
+title: "tidync package for NetCDF data"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidync)
+```
+
+The `tidync` package recently hit CRAN after a fairly long review process on [rOpenSci](https://github.com/ropensci/software-review/issues/174). In early 2018 I just wasn't sure if it was really going to be wrapped up in a neat way, but thanks to very helpful reviewers and some key insights after much suffering it was done. 
+
+This post is not a comprehensive introduction to NetCDF, the hope is that tidync will provide easier ways to explore your particular data. 
+
+There's a tension between the **tidyverse** and **scientific array data** in R. In short it comes down to *coordinates*, array data live inside a *space* and if that is more than the rows and columns (and slices ...) of the array then there's three ways to specify them. 
+
+* affine transform
+* rectilinear transform
+* curvlinear transform
+
+If we store data in *long form* as per the tidyverse, it really expects us to not only store every variable but also *every coordinate* of the array elements. This is what leads to (sometimes angry) complaints about the efficiency and scalability of parts of the tidyverse for scientific array data. 
+
+There are several approaches to this, and tidync tries to insert itself into the middle. 
+
+
+## NetCDF
+
+NetCDF is a very widely used file format for storing array-based data as
+*variables*. The **space** occupied by a **variable** is defined by its
+**dimensions** and their metadata. Dimensions are by definition
+*one-dimensional* (i.e. an atomic vector in R of length 1 or more), an array with coordinate metadata, units,
+type and interpretation. The **space** of a variable is defined as one or more
+of the dimensions in the file. A given variable won't necessarily use all the
+available dimensions and no dimensions are mandatory or particularly special.
+
+NetCDF is very general, but it's quite common to see subcultures that rally around the way their particular domain's data are used and stored without encompassing very many other valid ways of using NetCDF. Tidync really tries to be as general as possible, sacrificing high level interpretations for lower-level control. 
+
+## Tidync limitations
+
+No groups, a group can be specified by providing the group-within-a-source *as a source*. 
+
+No compound types. 
+
+No attribute metadata, coordinates of 1D axes are stored as *transform tables*, but coordinates of pairs (or higher sets) of axes are not explicitly linked to their array data.  
+
+## Different kinds of NetCDF
+
+basic raster  "stars/nc/reduced.nc"
+
+time series raster "stars/nc/tos_O1_2001-2002.nc"
+
+```{r time-series}
+tos <- tidync(system.file("nc/tos_O1_2001-2002.nc", package = "stars"))
+library(dplyr)
+stos <- tos %>% hyper_filter(lon = between(lon, 140, 220), 
+                     lat = between(lat, -60, 0)) %>% hyper_tibble()
+
+library(ggplot2)
+ggplot(stos, aes(lon, lat, fill = tos)) + facet_wrap(~tos)
+
+```
+
+curvi "ncmeta/extdata/guam.nc
+
+Argo "rgdal/pictures/MR5905167_372.nc"
+
+arbitrary "ncmeta/extdata/madishydro.nc"
+
+geometry  - use the Durand fronts
+
+## tidync verbs
+
+Use a raster and the fronts (or Argo) to demonstrate. 
+
+### tidync
+
+### activate, active
+
+## hyper_filter 
+
+### hyper_array
+
+## hyper_tibble
+
+## hyper_tbl_cube
+
+
+
+## Transforms concept for dimensions
+
+Affine degeneracy
+
+## Use with tidyverse
+
+## Attributes aren't fully exposed
+
+ncmeta::nc_atts
+
