@@ -18,7 +18,7 @@ There's a tension between the **tidyverse** and **scientific array data** in R. 
 
 * affine transform
 * rectilinear transform
-* curvlinear transform
+* curvilinear transform
 
 If we store data in *long form* as per the tidyverse, it really expects us to not only store every variable but also *every coordinate* of the array elements. This is what leads to (sometimes angry) complaints about the efficiency and scalability of parts of the tidyverse for scientific array data. 
 
