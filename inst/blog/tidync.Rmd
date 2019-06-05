@@ -153,7 +153,7 @@ raster::brick(oisstfile, varname = "anom")
 stars::read_stars(oisstfile)
 ```
 
-Tidync is *scared of doing this automatically for you*, but in combination the `ncmeta` package and `tidync` package provides the tools to program around the vagaries presented by NetCDF sources. 
+Tidync is *scared of doing this automatically for you*, but in combination the `ncmeta` package and `tidync` package provides the tools to program around the vagaries presented by NetCDF sources. If you want software that aims to interpret all this for you then check out [stars](https://CRAN.r-project.org/package=stars), [GDAL](https://gdal.org/), [ferret](https://ferret.pmel.noaa.gov/Ferret/), [Panoply](https://www.giss.nasa.gov/tools/panoply/). 
 
 
 ### Degenerate dimensions
@@ -191,10 +191,155 @@ for (i in seq_along(oisst_data)) {
 par(op)
 ```
 
+## Transforms
+
+We have done nothing with the spatial side of these data, ignoring the lon and lat values completely. 
+
+```{r oisst-data-dims}
+oisst_data
+
+lapply(oisst_data, dim)
+```
+
+The print summary of the `oisst_data` object shows that it knows there are four variable and that they each have 2 dimensions (zlev and time were *dropped*), this is now stored as a list of native R arrays, but there is also the transforms attribute available with `hyper_transforms()`. 
+
+The values on each transform table may be used directly. 
+
+```{r oisst-data-transforms}
+(trans <- attr(oisst_data, "transforms"))
+
+image(trans$lon$lon, trans$lat$lat,  oisst_data[[1]])
+maps::map("world2", add = TRUE)
+```
 
 
+In this case these *transforms* are somewhat redundant, there is a value stored for every step in `lon` and every step in `lat` and they are completely regular, whereas the usual approach in graphics is to store an *offset and scale* rather than each dimension's coordinate. Sometimes though these coordinate values are not reducible this way. 
 
+## Slicing
+
+We can slice into these dimensions using a tidyverse approach. For example, say we wanted to slice out only the data for the waters of the Pacific Ocean, we need a range in longitude and a range in latitude. 
+
+We can put these ranges directly on our raw plot from earlier. 
+
+
+```{r slicing-long-lat}
+lonrange <- c(144, 247)
+latrange <- c(-46, 47)
+
+image(trans$lon$lon, trans$lat$lat,  oisst_data[[1]])
+#abline(v = lonrange, h = latrange)
+rect(lonrange[1], latrange[1], lonrange[2], latrange[2])
+```
+
+It's common on the internet to see posts that explain how to drive the NetCDF library with *start* and *count* indices, to do that we need to compare our ranges with the *transforms* of each dimension. 
+
+```{r start-count}
+xs <- findInterval(lonrange, trans$lon$lon)
+ys <- findInterval(latrange, trans$lat$lat)
+print(xs)
+print(ys)
+start <- c(xs[1], ys[1])
+count <- c(diff(xs), diff(ys))
+
+print(start)
+print(count)
+
+
+```
+
+The idea here is that `xs` and `ys` tell us the columns and rows of interest, based on our geographic input in longitude latitude values that we understand. 
+
+Let's try to read with NetCDF.  Hmmm .... what goes wrong. 
+
+```{r read-RNetCDF-fail}
+con <- RNetCDF::open.nc(oisstfile)
+sst_matrix <- RNetCDF::var.get.nc(con, "sst", start = start, count = count)
+```
+
+We have been bitten by thinking that this source data is 2D!  So we just add start and count of 1 for each extra dimension (but what if it was 3D, or 5D, or time comes first - all of these things complicate these *simple solutions*). 
+
+```{r read-RNetCDF-succeed}
 time series raster "stars/nc/tos_O1_2001-2002.nc"
+start <- c(start, 1, 1)
+count <- c(count, 1, 1)
+sst_matrix <- RNetCDF::var.get.nc(con, "sst", start = start, count = count)
+
+```
+
+And we're good! Except, we now don't have the coordinates for the mapping. We have to slice the lon and lat values as well, but let's cut to the chase and go back to tidync. 
+
+Rather than slice the arrays read into memory, we can *filter* the object that understands the source and it does *not do any data slicing at all*, but records slices *to be done in future*.  This is the lazy beauty of the tidyverse, applied to NetCDF. 
+
+Here I used `between()` for lon and standard R inequality syntax for lat simply to show that both kinds of expression are available. *We don't have to specify the redundant slice into zlev or time*. 
+
+```{r tidync-slice}
+library(dplyr)
+oisst_slice <- oisst %>% hyper_filter(lon = between(lon, lonrange[1], lonrange[2]), 
+                       lat = lat > latrange[1] & lat <= latrange[2])
+
+oisst_slice
+```
+
+
+The print summary has updated the `start` and `count` columns now to match our labouriously acquired versions above (they are slightly different because of the difference between `findInterval()` and our inequality expressions). 
+
+The `dmin` and `dmax` columns are also updated, reporting the coordinate value a the start and end of the slice we have specified. 
+
+Now we can break the lazy chain and call for the data. 
+
+```{r hyper-array}
+oisst_slice_data <- oisst_slice %>% hyper_array()
+trans <- attr(oisst_slice_data, "transforms")
+```
+
+One unfortunate issue here is that we cannot use the transforms directly, they *have* been updated but not in the obvious way. 
+
+First filter the lon and lat transforms based on the `selected` column. 
+
+```{r hyper-array-slice}
+
+lon <- trans$lon %>% dplyr::filter(selected)
+lat <- trans$lat %>% dplyr::filter(selected)
+
+image(lon$lon, lat$lat, oisst_slice_data[[1]])
+maps::map("world2", add = TRUE)
+```
+
+It is laborious to work with `hyper_array()` but it does give total control over what we can get. 
+
+It's much easier to use other output types. 
+
+```{r tbl-cube}
+tcube <- tidync(oisstfile) %>% 
+  hyper_filter(lon = between(lon, lonrange[1], lonrange[2]), 
+                       lat = lat > latrange[1] & lat <= latrange[2]) %>% 
+  hyper_tbl_cube()
+
+library(ggplot2)
+ggplot(as_tibble(tcube)) + geom_raster(aes(lon, lat, fill = sst))
+```
+
+For those that prefer old-school ggplot2 we can read our slice in directly as a tibble. 
+
+```{r geom_raster}
+tcube <- tidync(oisstfile) %>% 
+  hyper_filter(lon = between(lon, lonrange[1], lonrange[2]), 
+                       lat = lat > latrange[1] & lat <= latrange[2]) %>% 
+  hyper_tibble()
+
+ggplot(tcube, aes(lon, lat, fill = anom)) + geom_raster()
+```
+
+By default, all variables are available but we can limit with `select_var`. 
+
+
+```{r select-var}
+tidync(oisstfile) %>% 
+  hyper_filter(lon = between(lon, lonrange[1], lonrange[2]), 
+                       lat = lat > latrange[1] & lat <= latrange[2]) %>% 
+  hyper_tibble(select_var = c("err", "ice"))
+
+```
 
 ```{r time-series}
 tos <- tidync(system.file("nc/tos_O1_2001-2002.nc", package = "stars"))
