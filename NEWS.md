@@ -1,3 +1,8 @@
+# tidync 0.2.1.9001
+
+* Added example to readme and docs, and checks for non-unique `hyper_filter()` names, as per #93. 
+ Thanks to @everydayduffy for the suggestion. 
+
 # tidync 0.2.1
 
 * Now depends on R 3.5.0. 
