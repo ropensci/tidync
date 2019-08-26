@@ -36,6 +36,9 @@
 #' ## filter by index
 #' tidync(l3file) %>% hyper_filter(lon = index < 100)
 #'
+#' ## be careful that multiple comparisons must occur in one expression
+#'  tidync(l3file) %>% hyper_filter(lon = lon < 100 & lon > 50)
+#' 
 #' ## filter in combination/s
 #' tidync(l3file) %>% hyper_filter(lat = abs(lat) < 10, lon = index < 100)
 hyper_filter <- function(.x, ...) {
@@ -54,9 +57,11 @@ hyper_filter.tidync <- function(.x, ...) {
            'lon = lon > 100' or 'lat = index > 10'")
   }
   quo_noname <- unname(quo_named)
-
+  ## check that named subexpressions are unique
+  names1 <- names(quo_named)
+  if (length(unique(names1)) < length(names1)) warning("named expressions must be unique, found repeated names and only the later of a duplicate will be applied")
   for (i in seq_along(quo_named)) {
-    iname <- names(quo_named)[i]
+    iname <- names1[i]
     if (!iname %in% names(trans0)) {
       warning(sprintf("'%s' not found in active grid, ignoring", iname))
       next

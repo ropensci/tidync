@@ -144,6 +144,21 @@ subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 
 A grid is a "virtual table" in the sense of a database source. It's possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. "D1,D0" and can otherwise be activated by their count identifier (starting at 1). The "D0" is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself. 
 
+Please note that `hyper_filter()` expressions must be unique, unlike with `dplyr::filter()` we cannot load multiple comparisons into one. 
+
+While dplyr filter can load up multiple comparisons: 
+
+```{r pseudo1, eval=FALSE}
+df %>% dplyr::filter(longitude > 100, longitude < 150)
+```
+
+in hyper_filter we must load them into one named expression.  
+
+```{r pseudo2, eval=FALSE}
+tidync(filename) %>% hyper_filter(longitude = longitude > 100 & longitude < 150)
+```
+
+
 ### Extractive
 
 Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form. 

@@ -48,6 +48,9 @@ tidync(l3file) \%>\% hyper_filter(lon = lon < 100)
 ## filter by index
 tidync(l3file) \%>\% hyper_filter(lon = index < 100)
 
+## be careful that multiple comparisons must occur in one expression
+ tidync(l3file) \%>\% hyper_filter(lon = lon < 100 & lon > 50)
+
 ## filter in combination/s
 tidync(l3file) \%>\% hyper_filter(lat = abs(lat) < 10, lon = index < 100)
 }
