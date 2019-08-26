@@ -21,7 +21,7 @@
 
 * Deal with warnings from tidyr version > 0.8.3. 
 
-* A huge you to all rOpenSci contributions, especially very helpful reviews from   
+* A huge thank you to all rOpenSci contributions, especially very helpful reviews from   
   [&#x0040;Nowosad](https://github.com/Nowosad) and [&#x0040;timcdlucas](https://github.com/timcdlucas) as well as organizers [&#x0040;karthik](https://github.com/karthik), [&#x0040;stefaniebutland](https://github.com/stefaniebutland)  and [&#x0040;sckott](https://github.com/sckott). 
   
   Helpful input was also provided via issues  from [&#x0040;adrfantini](https://github.com/adrfantini), [&#x0040;JustBerkhout](https://github.com/JustBerkhout), [&#x0040;matteodefelice](https://github.com/matteodefelice), [&#x0040;rensa](https://github.com/rensa), 
