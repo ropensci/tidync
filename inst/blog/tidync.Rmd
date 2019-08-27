@@ -1,8 +1,22 @@
 ---
-title: "tidync package for NetCDF data"
-output: html_document
-editor_options: 
-  chunk_output_type: console
+slug: "tidync"
+title: Using the tidync package for NetCDF data
+package_version: 0.2.1
+authors:
+  - Michael Sumner
+date: 2019-06-18
+categories: blog
+topicid:
+tags:
+- Software Peer Review
+- R
+- community
+- software
+- packages
+- tidync
+- NetCDF
+- array
+- tidyverse
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +24,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidync)
 ```
 
-The `tidync` package recently hit CRAN after a fairly long review process on [rOpenSci](https://github.com/ropensci/software-review/issues/174). In early 2018 I just wasn't sure if it was really going to be wrapped up in a neat way, but thanks to very helpful reviewers and some key insights about [obscure types](https://github.com/ropensci/tidync/issues/75#issuecomment-468064627) it was done. 
 
 There's a tension between the **tidyverse** and **scientific array data** in R. In short it comes down to *coordinates*, array data live inside a *space* and if that is more than the rows and columns (and slices ...) of the array then there's three ways to specify them. 
 
@@ -22,9 +35,9 @@ If we store data in *long form* as per the tidyverse, it really expects us to no
 
 There are several approaches to this, and tidync tries to insert itself into the middle. 
 
-*NB: This post is not a comprehensive introduction to NetCDF, the hope is that tidync will provide easier ways to explore your data.* 
+*NB: This post is not a comprehensive introduction to NetCDF, but does explore some of the problems encountered in some detail. The hope is that tidync will provide easier ways to explore your data, and allow array extraction or expansion into a data frame that is easier than coding from scratch.* 
 
-In particular tidync exists in order to reduce the amount of plumbing code required to get to the data required. 
+In particular tidync exists in order to reduce the amount of plumbing code required to get to the data. 
 
 
 ## NetCDF
@@ -48,6 +61,8 @@ No groups, a group can be specified by providing the group-within-a-source *as a
 No compound types. 
 
 No attribute metadata, coordinates of 1D axes are stored as *transform tables*, but coordinates of pairs (or higher sets) of axes are not explicitly linked to their array data.  
+
+Curvilinear coordinates are not automatically expanded, this is because they exist (usually) on a different grid to the active one. 
 
 ## Different kinds of NetCDF
 
@@ -253,14 +268,13 @@ Let's try to read with NetCDF.  Hmmm .... what goes wrong.
 
 ```{r read-RNetCDF-fail}
 con <- RNetCDF::open.nc(oisstfile)
-sst_matrix <- RNetCDF::var.get.nc(con, "sst", start = start, count = count)
+try(sst_matrix <- RNetCDF::var.get.nc(con, "sst", start = start, count = count))
 ```
 
 We have been bitten by thinking that this source data is 2D!  So we just add start and count of 1 for each extra dimension (but what if it was 3D, or 5D, or time comes first - all of these things complicate these *simple solutions*). 
 
 ```{r read-RNetCDF-succeed}
-time series raster "stars/nc/tos_O1_2001-2002.nc"
-start <- c(start, 1, 1)
+2Astart <- c(start, 1, 1)
 count <- c(count, 1, 1)
 sst_matrix <- RNetCDF::var.get.nc(con, "sst", start = start, count = count)
 
@@ -283,7 +297,7 @@ oisst_slice
 
 The print summary has updated the `start` and `count` columns now to match our labouriously acquired versions above (they are slightly different because of the difference between `findInterval()` and our inequality expressions). 
 
-The `dmin` and `dmax` columns are also updated, reporting the coordinate value a the start and end of the slice we have specified. 
+The `dmin` and `dmax` (data-min, data-max) columns are also updated, reporting the coordinate value at the start and end of the slice we have specified. 
 
 Now we can break the lazy chain and call for the data. 
 
@@ -292,7 +306,7 @@ oisst_slice_data <- oisst_slice %>% hyper_array()
 trans <- attr(oisst_slice_data, "transforms")
 ```
 
-One unfortunate issue here is that we cannot use the transforms directly, they *have* been updated but not in the obvious way. 
+One unfortunate issue here is that we cannot use the transforms directly, they *have* been updated but not in the obvious way (this is something that should probably be fixed in tidync). 
 
 First filter the lon and lat transforms based on the `selected` column. 
 
@@ -322,12 +336,12 @@ ggplot(as_tibble(tcube)) + geom_raster(aes(lon, lat, fill = sst))
 For those that prefer old-school ggplot2 we can read our slice in directly as a tibble. 
 
 ```{r geom_raster}
-tcube <- tidync(oisstfile) %>% 
+tdata <- tidync(oisstfile) %>% 
   hyper_filter(lon = between(lon, lonrange[1], lonrange[2]), 
                        lat = lat > latrange[1] & lat <= latrange[2]) %>% 
   hyper_tibble()
 
-ggplot(tcube, aes(lon, lat, fill = anom)) + geom_raster()
+ggplot(tdata, aes(lon, lat, fill = anom)) + geom_raster()
 ```
 
 By default, all variables are available but we can limit with `select_var`. 
@@ -352,39 +366,11 @@ ggplot(stos, aes(lon, lat, fill = tos)) + facet_wrap(~tos)
 
 ```
 
-curvi "ncmeta/extdata/guam.nc
 
-Argo "rgdal/pictures/MR5905167_372.nc"
+## Thanks!
 
-arbitrary "ncmeta/extdata/madishydro.nc"
+The `tidync` package recently hit CRAN after a fairly long review process on [rOpenSci](https://github.com/ropensci/software-review/issues/174). In early 2018 I just wasn't sure if it was really going to be wrapped up in a neat way, but thanks to very helpful reviewers and some key insights about [obscure types](https://github.com/ropensci/tidync/issues/75#issuecomment-468064627) it was done. 
 
-geometry  - use the Durand fronts
+The package benefitted greatly from feedback provided by [Jakub Nowosad](https://github.com/Nowosad) and [Tim Lucas](https://github.com/timcdlucas). 
 
-## tidync verbs
-
-Use a raster and the fronts (or Argo) to demonstrate. 
-
-### tidync
-
-### activate, active
-
-## hyper_filter 
-
-### hyper_array
-
-## hyper_tibble
-
-## hyper_tbl_cube
-
-
-
-## Transforms concept for dimensions
-
-Affine degeneracy
-
-## Use with tidyverse
-
-## Attributes aren't fully exposed
-
-ncmeta::nc_atts
 
