@@ -258,7 +258,7 @@ tidync(filename) %>% activate(grid_identifier)
 #>   
 #>   dim   name     length   min   max start count  dmin  dmax unlim coord_dim 
 #>   <chr> <chr>     <dbl> <dbl> <dbl> <int> <int> <dbl> <dbl> <lgl> <lgl>     
-#> 1 D7    STRING2~    256     1   256     1   256     1   256 FALSE FALSE     
+#> 1 D7    STRING2…    256     1   256     1   256     1   256 FALSE FALSE     
 #> 2 D8    N_PROF        2     1     2     1     2     1     2 FALSE FALSE     
 #> 3 D9    N_PARAM       7     1     7     1     7     1     7 FALSE FALSE     
 #> 4 D11   N_CALIB       1     1     1     1     1     1     1 FALSE FALSE     
@@ -332,7 +332,7 @@ tidync(filename) %>% activate(grid_identifier)
 ## optionally with only selected variables
 subs %>% hyper_tibble()
 #> # A tibble: 493 x 37
-#>     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_E~  TEMP
+#>     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_E…  TEMP
 #>    <dbl> <chr>           <dbl> <chr>                       <dbl> <dbl>
 #>  1  7.70 1                7.79 1                            2.40  13.2
 #>  2 11.8  1               11.9  1                            2.40  13.2
@@ -344,7 +344,7 @@ subs %>% hyper_tibble()
 #>  8 41.4  1               41.5  1                            2.40  13.2
 #>  9 46.5  1               46.6  1                            2.40  13.2
 #> 10 51.8  1               51.9  1                            2.40  13.2
-#> # ... with 483 more rows, and 31 more variables: TEMP_QC <chr>,
+#> # … with 483 more rows, and 31 more variables: TEMP_QC <chr>,
 #> #   TEMP_ADJUSTED <dbl>, TEMP_ADJUSTED_QC <chr>,
 #> #   TEMP_ADJUSTED_ERROR <dbl>, PSAL <dbl>, PSAL_QC <chr>,
 #> #   PSAL_ADJUSTED <dbl>, PSAL_ADJUSTED_QC <chr>,
@@ -369,7 +369,7 @@ subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 A grid is a “virtual table” in the sense of a database source. It’s
 possible to activate a grid via a variable within it, so all variables
 are available by default. Grids have identifiers based on which
-dimensions they are defined with, so use i.e. “D1,D0” and can otherwise
+dimensions they are defined with, so use i.e. “D1,D0” and can otherwise
 be activated by their count identifier (starting at 1). The “D0” is an
 identifier, it matches the internal 0-based indexing and identity used
 by NetCDF itself.
@@ -414,7 +414,7 @@ tidync(filename) %>% activate("JULD") %>%
 #>  8 0                             8       1       1      1
 #>  9 1                             9       1       1      1
 #> 10 4                            10       1       1      1
-#> # ... with 88 more rows
+#> # … with 88 more rows
 
 
 ## native array form, we'll see a (list of) R arrays with a dimension for 
@@ -425,7 +425,7 @@ tidync(filename) %>% activate("JULD") %>%
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (1): 'SCIENTIFIC_CALIB_DATE'
 #> Dimension (4): DATE_TIME,N_PARAM,N_CALIB,N_PROF (14, 7, 1, 1)
-#> Source: C:/inst/R/R/library/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the

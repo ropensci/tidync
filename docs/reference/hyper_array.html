@@ -67,7 +67,7 @@ lightly classed as tidync_data, with methods for print() and tidync()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9001</span>
       </span>
     </div>
 
@@ -100,12 +100,7 @@ lightly classed as tidync_data, with methods for print() and tidync()." />
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/ropensci/tidync">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -119,7 +114,7 @@ lightly classed as tidync_data, with methods for print() and tidync()." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract NetCDF data as an array</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ropensci/tidync/blob/master/R/hyper_array.R'><code>R/hyper_array.R</code></a></small>
+    
     <div class="hidden name"><code>hyper_array.Rd</code></div>
     </div>
 
@@ -221,11 +216,11 @@ functions that cause data to be read</p></div>
 
 <span class='co'>## get the transforms tables (the axis coordinates)</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>braw</span>, <span class='st'>"transforms"</span>),
-   <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>x</span>, <span class='no'>selected</span>)))</div><div class='output co'>#&gt; $lat
-#&gt; [1] 240
-#&gt; 
-#&gt; $lon
+   <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>x</span>, <span class='no'>selected</span>)))</div><div class='output co'>#&gt; $lon
 #&gt; [1] 99
+#&gt; 
+#&gt; $lat
+#&gt; [1] 240
 #&gt; </div><div class='input'><span class='co'>## the selected axis coordinates should match in order and in size</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='no'>braw</span>, <span class='no'>dim</span>)</div><div class='output co'>#&gt; $chlor_a
 #&gt; [1]  99 240

@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9001</span>
       </span>
     </div>
 
@@ -66,14 +66,7 @@
   <a href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/ropensci/tidync">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -357,7 +350,7 @@
 <a class="sourceLine" id="cb7-174" data-line-number="174"><span class="co">#&gt; #   BBP700_ADJUSTED &lt;dbl&gt;, BBP700_ADJUSTED_QC &lt;chr&gt;,</span></a>
 <a class="sourceLine" id="cb7-175" data-line-number="175"><span class="co">#&gt; #   BBP700_ADJUSTED_ERROR &lt;dbl&gt;, NITRATE &lt;dbl&gt;, NITRATE_QC &lt;chr&gt;,</span></a>
 <a class="sourceLine" id="cb7-176" data-line-number="176"><span class="co">#&gt; #   NITRATE_ADJUSTED &lt;dbl&gt;, NITRATE_ADJUSTED_QC &lt;chr&gt;,</span></a>
-<a class="sourceLine" id="cb7-177" data-line-number="177"><span class="co">#&gt; #   NITRATE_ADJUSTED_ERROR &lt;dbl&gt;, N_PROF &lt;int&gt;, N_LEVELS &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb7-177" data-line-number="177"><span class="co">#&gt; #   NITRATE_ADJUSTED_ERROR &lt;dbl&gt;, N_LEVELS &lt;int&gt;, N_PROF &lt;int&gt;</span></a>
 <a class="sourceLine" id="cb7-178" data-line-number="178">subs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_tbl_cube.html">hyper_tbl_cube</a></span>(<span class="dt">select_var =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"PRES"</span>, <span class="st">"PRES_QC"</span>, <span class="st">"PSAL_ADJUSTED"</span>))</a>
 <a class="sourceLine" id="cb7-179" data-line-number="179"><span class="co">#&gt; Source: local array [493 x 2]</span></a>
 <a class="sourceLine" id="cb7-180" data-line-number="180"><span class="co">#&gt; D: N_LEVELS [int, 493]</span></a>
@@ -366,45 +359,50 @@
 <a class="sourceLine" id="cb7-183" data-line-number="183"><span class="co">#&gt; M: PRES_QC [chr[,1]]</span></a>
 <a class="sourceLine" id="cb7-184" data-line-number="184"><span class="co">#&gt; M: PSAL_ADJUSTED [dbl]</span></a></code></pre></div>
 <p>A grid is a “virtual table” in the sense of a database source. It’s possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. “D1,D0” and can otherwise be activated by their count identifier (starting at 1). The “D0” is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself.</p>
+<p>Please note that <code><a href="reference/hyper_filter.html">hyper_filter()</a></code> expressions must be unique, unlike with <code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code> we cannot load multiple comparisons into one.</p>
+<p>While dplyr filter can load up multiple comparisons:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(longitude <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span>, longitude <span class="op">&lt;</span><span class="st"> </span><span class="dv">150</span>)</a></code></pre></div>
+<p>in hyper_filter we must load them into one named expression.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">longitude =</span> longitude <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>longitude <span class="op">&lt;</span><span class="st"> </span><span class="dv">150</span>)</a></code></pre></div>
 </div>
 <div id="extractive" class="section level3">
 <h3 class="hasAnchor">
 <a href="#extractive" class="anchor"></a>Extractive</h3>
 <p>Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">## we'll see a column for the variable activated, and whatever other </span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">## variables the grid has</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"JULD"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">N_PROF =</span> N_PROF <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="reference/hyper_tibble.html">hyper_tibble</a></span>()</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">#&gt; # A tibble: 98 x 5</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co">#&gt;    SCIENTIFIC_CALIB_DATE DATE_TIME N_PROF N_PARAM N_CALIB</span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">#&gt;    &lt;chr&gt;                     &lt;int&gt;  &lt;int&gt;   &lt;int&gt;   &lt;int&gt;</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">#&gt;  1 2                             1      1       1       1</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">#&gt;  2 0                             2      1       1       1</span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">#&gt;  3 1                             3      1       1       1</span></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">#&gt;  4 7                             4      1       1       1</span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">#&gt;  5 0                             5      1       1       1</span></a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">#&gt;  6 4                             6      1       1       1</span></a>
-<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co">#&gt;  7 1                             7      1       1       1</span></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="co">#&gt;  8 0                             8      1       1       1</span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="co">#&gt;  9 1                             9      1       1       1</span></a>
-<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#&gt; 10 4                            10      1       1       1</span></a>
-<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co">#&gt; # … with 88 more rows</span></a>
-<a class="sourceLine" id="cb8-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb8-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="co">## native array form, we'll see a (list of) R arrays with a dimension for </span></a>
-<a class="sourceLine" id="cb8-23" data-line-number="23"><span class="co">## each seen by tidync(filename) %&gt;% activate("JULD")</span></a>
-<a class="sourceLine" id="cb8-24" data-line-number="24"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"JULD"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-25" data-line-number="25"><span class="st">  </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">N_PROF =</span> N_PROF <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-26" data-line-number="26"><span class="st">  </span><span class="kw"><a href="reference/hyper_array.html">hyper_array</a></span>()</a>
-<a class="sourceLine" id="cb8-27" data-line-number="27"><span class="co">#&gt; Tidync Data Arrays</span></a>
-<a class="sourceLine" id="cb8-28" data-line-number="28"><span class="co">#&gt; Variables (1): 'SCIENTIFIC_CALIB_DATE'</span></a>
-<a class="sourceLine" id="cb8-29" data-line-number="29"><span class="co">#&gt; Dimension (4): 14, 7, 1, 1</span></a>
-<a class="sourceLine" id="cb8-30" data-line-number="30"><span class="co">#&gt; Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/argo/MD5903593_001.nc</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co">## we'll see a column for the variable activated, and whatever other </span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">## variables the grid has</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"JULD"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">N_PROF =</span> N_PROF <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="reference/hyper_tibble.html">hyper_tibble</a></span>()</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; # A tibble: 98 x 5</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt;    SCIENTIFIC_CALIB_DATE DATE_TIME N_PARAM N_CALIB N_PROF</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt;    &lt;chr&gt;                     &lt;int&gt;   &lt;int&gt;   &lt;int&gt;  &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt;  1 2                             1       1       1      1</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt;  2 0                             2       1       1      1</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt;  3 1                             3       1       1      1</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt;  4 7                             4       1       1      1</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#&gt;  5 0                             5       1       1      1</span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt;  6 4                             6       1       1      1</span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt;  7 1                             7       1       1      1</span></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt;  8 0                             8       1       1      1</span></a>
+<a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co">#&gt;  9 1                             9       1       1      1</span></a>
+<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="co">#&gt; 10 4                            10       1       1      1</span></a>
+<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="co">#&gt; # … with 88 more rows</span></a>
+<a class="sourceLine" id="cb10-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb10-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb10-22" data-line-number="22"><span class="co">## native array form, we'll see a (list of) R arrays with a dimension for </span></a>
+<a class="sourceLine" id="cb10-23" data-line-number="23"><span class="co">## each seen by tidync(filename) %&gt;% activate("JULD")</span></a>
+<a class="sourceLine" id="cb10-24" data-line-number="24"><span class="kw"><a href="reference/tidync.html">tidync</a></span>(filename) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="reference/activate.html">activate</a></span>(<span class="st">"JULD"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="st">  </span><span class="kw"><a href="reference/hyper_filter.html">hyper_filter</a></span>(<span class="dt">N_PROF =</span> N_PROF <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-26" data-line-number="26"><span class="st">  </span><span class="kw"><a href="reference/hyper_array.html">hyper_array</a></span>()</a>
+<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="co">#&gt; Class: tidync_data (list of tidync data arrays)</span></a>
+<a class="sourceLine" id="cb10-28" data-line-number="28"><span class="co">#&gt; Variables (1): 'SCIENTIFIC_CALIB_DATE'</span></a>
+<a class="sourceLine" id="cb10-29" data-line-number="29"><span class="co">#&gt; Dimension (4): DATE_TIME,N_PARAM,N_CALIB,N_PROF (14, 7, 1, 1)</span></a>
+<a class="sourceLine" id="cb10-30" data-line-number="30"><span class="co">#&gt; Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc</span></a></code></pre></div>
 <p>It’s important to not actual request the data extraction until the expressions above would result in an efficient size (don’t try a data frame version of a 20Gb ROMs variable …). Use the interactive modes to determine the likely size of the output you will receive.</p>
 <p>Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each <code>hyper_*</code> function can take the filtering expressions, but it’s not obvious if this is a good idea or not.</p>
 <p>See the vignettes for more:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/browseVignettes">browseVignettes</a></span>(<span class="dt">package =</span> <span class="st">"tidync"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/browseVignettes">browseVignettes</a></span>(<span class="dt">package =</span> <span class="st">"tidync"</span>)</a></code></pre></div>
 </div>
 </div>
 <div id="limitations" class="section level2">
@@ -446,8 +444,6 @@
 <h2>Links</h2>
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=tidync">https://​cloud.r-project.org/​package=tidync</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/ropensci/tidync">https://​github.com/​ropensci/​tidync</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/ropensci/tidync/issues">https://​github.com/​ropensci/​tidync/​issues</a>
 </li>

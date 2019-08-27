@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9001</span>
       </span>
     </div>
 
@@ -93,12 +93,7 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/ropensci/tidync">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -112,19 +107,42 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/ropensci/tidync/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+      
     </div>
 
+    <div id="tidync-0-2-1-9001" class="section level1">
+<h1 class="page-header">
+<a href="#tidync-0-2-1-9001" class="anchor"></a>tidync 0.2.1.9001<small> Unreleased </small>
+</h1>
+<ul>
+<li>Added example to readme and docs, and checks for non-unique <code><a href="../reference/hyper_filter.html">hyper_filter()</a></code> names, as per #93. Thanks to <a href='https://github.com/everydayduffy'>@everydayduffy</a> for the suggestion.</li>
+</ul>
+</div>
+    <div id="tidync-0-2-1" class="section level1">
+<h1 class="page-header">
+<a href="#tidync-0-2-1" class="anchor"></a>tidync 0.2.1<small> 2019-05-23 </small>
+</h1>
+<ul>
+<li><p>Now depends on R 3.5.0.</p></li>
+<li><p>Removed obscure numeric ‘what’ logic for <code><a href="../reference/activate.html">activate()</a></code>.</p></li>
+<li><p>Fixed tidync method for <code><a href="../reference/hyper_array.html">hyper_array()</a></code> output.</p></li>
+<li><p>Found a really bad bug in <code><a href="../reference/hyper_array.html">hyper_array()</a></code> (#92), now fixed. Axis order in transforms was sometimes reversed, which caused garbled results from <code><a href="../reference/hyper_tibble.html">hyper_tibble()</a></code>. The effect is to ruin any ggplot2 figures for some source files. It’s very likely that no other system yet uses the <code><a href="../reference/hyper_array.html">hyper_array()</a></code> format so impact is low.</p></li>
+</ul>
+</div>
     <div id="tidync-0-2-0" class="section level1">
 <h1 class="page-header">
-<a href="#tidync-0-2-0" class="anchor"></a>tidync 0.2.0<small> Unreleased </small>
+<a href="#tidync-0-2-0" class="anchor"></a>tidync 0.2.0<small> 2019-05-14 </small>
 </h1>
 <ul>
 <li><p>tidync is now part of the rOpenSci project.</p></li>
 <li><p>Fixes in tests and examples to avoid version-incapable NetCDF problems on Solaris.</p></li>
 <li><p>A number of improved tests and documentation fixes.</p></li>
 <li><p>Deal with warnings from tidyr version &gt; 0.8.3.</p></li>
-<li><p>A huge you to all rOpenSci contributions, especially very helpful reviews from <a href="https://github.com/Nowosad">@Nowosad</a> and <a href="https://github.com/timcdlucas">@timcdlucas</a> as well as organizers <a href="https://github.com/karthik">@karthik</a> and <a href="https://github.com/sckott">@sckott</a>. Helpful input was also provided via issues from <a href="https://github.com/adrfantini">@adrfantini</a>, <a href="https://github.com/JustBerkhout">@JustBerkhout</a>, <a href="https://github.com/matteodefelice">@matteodefelice</a>, <a href="https://github.com/rensa">@rensa</a>, <a href="https://github.com/rmendels">@rmendels</a>, <a href="https://github.com/sw-rifai">@sw-rifai</a>, and <a href="https://github.com/tremenyi">@tremenyi</a>, and pull requests <a href="https://github.com/dlebauer">@dlebauer</a>, <a href="https://github.com/edzer">@edzer</a>.</p></li>
+<li>
+<p>A huge thank you to all rOpenSci contributions, especially very helpful reviews from<br><a href="https://github.com/Nowosad">@Nowosad</a> and <a href="https://github.com/timcdlucas">@timcdlucas</a> as well as organizers <a href="https://github.com/karthik">@karthik</a>, <a href="https://github.com/stefaniebutland">@stefaniebutland</a> and <a href="https://github.com/sckott">@sckott</a>.</p>
+<p>Helpful input was also provided via issues from <a href="https://github.com/adrfantini">@adrfantini</a>, <a href="https://github.com/JustBerkhout">@JustBerkhout</a>, <a href="https://github.com/matteodefelice">@matteodefelice</a>, <a href="https://github.com/rensa">@rensa</a>, <a href="https://github.com/rmendels">@rmendels</a>, <a href="https://github.com/sw-rifai">@sw-rifai</a>, and <a href="https://github.com/tremenyi">@tremenyi</a>.</p>
+<p>Pull requests were contributed by <a href="https://github.com/dlebauer">@dlebauer</a>, <a href="https://github.com/edzer">@edzer</a>.</p>
+</li>
 </ul>
 </div>
     <div id="tidync-0-1-1" class="section level1">
@@ -132,9 +150,9 @@
 <a href="#tidync-0-1-1" class="anchor"></a>tidync 0.1.1<small> 2019-04-27 </small>
 </h1>
 <ul>
-<li><p>Package improvements thanks to CRAN feedback, clarified Description and added more examples. Replaced <code>cat</code> and <code><a href="https://www.rdocumentation.org/packages/base/topics/print">print()</a></code> calls with message() and <code><a href="https://www.rdocumentation.org/packages/base/topics/warning">warning()</a></code>.</p></li>
-<li><p>New class ‘tidync_data’ for output of ‘hyper_array()’, no underlying change to the object which is simply a list of arrays from each variable, and axis transforms stored in an attribute.</p></li>
-<li><p>Old deprecated function ‘axis_transforms()’ now Defunct.</p></li>
+<li><p>Package improvements thanks to CRAN feedback, clarified Description and added more examples. Replaced <code><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat()</a></code> and <code><a href="https://www.rdocumentation.org/packages/base/topics/print">print()</a></code> calls with <code><a href="https://www.rdocumentation.org/packages/base/topics/message">message()</a></code> and <code><a href="https://www.rdocumentation.org/packages/base/topics/warning">warning()</a></code>.</p></li>
+<li><p>New class ‘tidync_data’ for output of <code><a href="../reference/hyper_array.html">hyper_array()</a></code>, no underlying change to the object which is simply a list of arrays from each variable, and axis transforms stored in an attribute.</p></li>
+<li><p>Old deprecated function <code>axis_transforms()</code> now Defunct.</p></li>
 </ul>
 </div>
     <div id="tidync-0-1-0" class="section level1">
@@ -144,10 +162,10 @@
 <ul>
 <li><p>FIRST RELEASE, tidync was greatly improved via help from the rOpenSci review process.</p></li>
 <li><p>New function <code><a href="../reference/hyper_vars.html">hyper_grids()</a></code> to report available grid names.</p></li>
-<li><p>A printing error of dimension value ranges is now fixed, thanks to James Goldie (<a href='https://github.com/ropensci/tidync/issues/84'>#84</a>).</p></li>
+<li><p>A printing error of dimension value ranges is now fixed, thanks to James Goldie (#84).</p></li>
 <li><p>Now supports ‘NC_CHAR’ type, by exploding these into the array size expected.</p></li>
-<li><p>Breaking change: when using <code>tidync$grid</code>it’s now expected that this must be <code><a href="https://tidyr.tidyverse.org/reference/unnest.html">tidyr::unnest()</a></code>ed in order to expand out the grid list per variable, in line with <a href="https://github.com/hypertidy/ncmeta/issues/26" class="uri">https://github.com/hypertidy/ncmeta/issues/26</a>.</p></li>
-<li><p>The <code>hyper_array</code> function now stores the relevant transforms table as an attribute “transforms” so that objects can be constructed directly from the raw array output.</p></li>
+<li><p>Breaking change: when using <code>tidync$grid</code>it’s now expected that this must be<br><code><a href="https://tidyr.tidyverse.org/reference/unnest.html">tidyr::unnest()</a></code>ed in order to expand out the grid list per variable, in line with <a href="https://github.com/hypertidy/ncmeta/issues/26" class="uri">https://github.com/hypertidy/ncmeta/issues/26</a>.</p></li>
+<li><p>The <code>hyper_array</code> function now stores the relevant transforms table as an attribute <code>transforms</code> so that objects can be constructed directly from the native array output.</p></li>
 </ul>
 </div>
     <div id="tidync-0-0-3" class="section level1">
@@ -155,10 +173,10 @@
 <a href="#tidync-0-0-3" class="anchor"></a>tidync 0.0.3<small> Unreleased </small>
 </h1>
 <ul>
-<li><p>Function rename <code>hyper_array</code> now matches <code>hyper_tibble</code> indicating the form of the output (rather than the action used, was <code>hyper_slice</code>).</p></li>
-<li><p>New utilities <code>hyper_vars</code> and <code>hyper_dims</code> for reporting on the currently active variables and dimensions and their <code>hyper_filter</code> status.</p></li>
-<li><p>dependent on ncmeta &gt;= 0.0.2, partly to avoid crashing on invalid source/file strings</p></li>
-<li><p>removed hyper_index and incorporated that into hyper_filter, there’s now only one delay-capable class which is “tidync”</p></li>
+<li><p>Function rename <code><a href="../reference/hyper_array.html">hyper_array()</a></code> now matches <code><a href="../reference/hyper_tibble.html">hyper_tibble()</a></code> indicating the form of the output (rather than the action used, was <code><a href="../reference/hyper_array.html">hyper_slice()</a></code>).</p></li>
+<li><p>New functions <code><a href="../reference/hyper_vars.html">hyper_vars()</a></code> and <code><a href="../reference/hyper_vars.html">hyper_dims()</a></code> for reporting on the currently active variables and dimensions and their status.</p></li>
+<li><p>Now dependent on ncmeta &gt;= 0.0.2, partly to avoid crashing on invalid source or file strings</p></li>
+<li><p>Removed <code>hyper_index()</code> and incorporated that into <code><a href="../reference/hyper_filter.html">hyper_filter()</a></code>, there’s now only one delay-capable class which is ‘tidync’</p></li>
 </ul>
 </div>
     <div id="tidync-0-0-2" class="section level1">
@@ -166,13 +184,13 @@
 <a href="#tidync-0-0-2" class="anchor"></a>tidync 0.0.2<small> Unreleased </small>
 </h1>
 <ul>
-<li><p>hyper_filter now uses a selection idiom, to record the state of the axis rather than explicitly filter it. This means we can have more flexibility on what the axis transform tables can be used for, and removes some unwieldy handling code. All the available axes are on the object from first contact, which means we can program against the entire space in the source which will help for complex mapping scenarios.</p></li>
-<li><p>hyper filter print now handles the case of char-type coordinate values by setting the min and max to NA_real_</p></li>
-<li><p>various improvements and fixes for the print method for tidync</p></li>
-<li><p>support coordinate-less dimensions has been added, there is new information in the print summary about which dimensions are a “coord_dim” and this results in the axis transform tables using the index as the ‘coordinate value’</p></li>
-<li><p>hyper_slice and hyper_tibble now return all variables that exist within a grid</p></li>
-<li><p>This version sees a new model is applied where activation is on ‘grids’, effectively a ‘space’ composed of dimensions. In addition to the variables, dimension, attributes we add “grid” defined by a set of dimensions, and “axis” which is an instance of a particular dimension as used by a variable.</p></li>
-<li><p>files without recognizable variables now gracefully handled, with help from ncmeta</p></li>
+<li><p>Function <code><a href="../reference/hyper_filter.html">hyper_filter()</a></code> now uses a selection idiom, to record the state of the axis rather than explicitly filter it. This means we can have more flexibility on what the axis transform tables can be used for, and removes some unwieldy handling code. All the available axes are on the object from first contact, which means we can program against the entire space in the source which will help for complex mapping scenarios.</p></li>
+<li><p>Function <code>hyper filter()</code> print now handles the case of char-type coordinate values by setting the min and max to NA_real_</p></li>
+<li><p>Various improvements and fixes for the print method for tidync</p></li>
+<li><p>Support coordinate-less dimensions has been added, there is new information in the print summary about which dimensions are a “coord_dim” and this results in the axis transform tables using the index as the coordinate value.</p></li>
+<li><p>Functions <code><a href="../reference/hyper_array.html">hyper_slice()</a></code> and <code><a href="../reference/hyper_tibble.html">hyper_tibble()</a></code> now return all variables that exist within a grid</p></li>
+<li><p>This version sees a new model where activation is on ‘grids’, effectively a space composed of dimensions. In addition to the variables, dimension, and attributes entities we add ‘grid’ defined by a set of dimensions, and ‘axis’ which is an instance of a particular dimension as used by a variable.</p></li>
+<li><p>Sources without recognizable variables now gracefully handled, with help from ncmeta.</p></li>
 </ul>
 </div>
     <div id="tidync-0-0-1" class="section level1">
@@ -180,9 +198,9 @@
 <a href="#tidync-0-0-1" class="anchor"></a>tidync 0.0.1<small> Unreleased </small>
 </h1>
 <ul>
-<li><p>imports ncdump &gt; 0.0.3</p></li>
+<li><p>Now imports ncdump &gt; 0.0.3.</p></li>
 <li><p>Installed external example data from <a href="https://www.unidata.ucar.edu/software/netcdf/examples/files.html">Unidata website</a></p></li>
-<li><p>First working version now has ‘tidync’, and ‘hyper_’ family of functions.</p></li>
+<li><p>First working version now has <code><a href="../reference/tidync.html">tidync()</a></code>, and <code>hyper_*()</code> family of functions.</p></li>
 <li><p>Migrated from ncdump.</p></li>
 </ul>
 </div>
@@ -192,6 +210,8 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#tidync-0-2-1-9001">0.2.1.9001</a></li>
+        <li><a href="#tidync-0-2-1">0.2.1</a></li>
         <li><a href="#tidync-0-2-0">0.2.0</a></li>
         <li><a href="#tidync-0-1-1">0.1.1</a></li>
         <li><a href="#tidync-0-1-0">0.1.0</a></li>

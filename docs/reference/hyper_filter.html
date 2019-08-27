@@ -67,7 +67,7 @@ use." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9001</span>
       </span>
     </div>
 
@@ -100,12 +100,7 @@ use." />
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/ropensci/tidync">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -119,7 +114,7 @@ use." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Subset NetCDF variable by expression</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ropensci/tidync/blob/master/R/hyper_filter.R'><code>R/hyper_filter.R</code></a></small>
+    
     <div class="hidden name"><code>hyper_filter.Rd</code></div>
     </div>
 
@@ -214,6 +209,30 @@ values along that dimension.</p>
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     
 #&gt; </span><span style='color: #555555;'>1</span><span> D0    lat     </span><span style='text-decoration: underline;'>2</span><span>160  -</span><span style='color: #BB0000;'>90.0</span><span>  90.0     1  </span><span style='text-decoration: underline;'>2</span><span>160  -</span><span style='color: #BB0000;'>90.0</span><span>   90.0 FALSE TRUE      
 #&gt; </span><span style='color: #555555;'>2</span><span> D1    lon     </span><span style='text-decoration: underline;'>4</span><span>320 -</span><span style='color: #BB0000;'>180.</span><span>  180.      1    99 -</span><span style='color: #BB0000;'>180.</span><span>  -</span><span style='color: #BB0000;'>172.</span><span>  FALSE TRUE      
+#&gt;   
+#&gt; Inactive dimensions:
+#&gt;   
+#&gt;   dim   name          length   min   max unlim coord_dim 
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     
+#&gt; </span><span style='color: #555555;'>1</span><span> D2    rgb                3     1     3 FALSE FALSE     
+#&gt; </span><span style='color: #555555;'>2</span><span> D3    eightbitcolor    256     1   256 FALSE FALSE     </div><div class='input'>
+<span class='co'>## be careful that multiple comparisons must occur in one expression</span>
+ <span class='fu'><a href='tidync.html'>tidync</a></span>(<span class='no'>l3file</span>) <span class='kw'>%&gt;%</span> <span class='fu'>hyper_filter</span>(<span class='kw'>lon</span> <span class='kw'>=</span> <span class='no'>lon</span> <span class='kw'>&lt;</span> <span class='fl'>100</span> <span class='kw'>&amp;</span> <span class='no'>lon</span> <span class='kw'>&gt;</span> <span class='fl'>50</span>)</div><div class='output co'>#&gt; 
+#&gt; Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...
+#&gt; 
+#&gt; Grids (4) &lt;dimension family&gt; : &lt;associated variables&gt; 
+#&gt; 
+#&gt; [1]   D1,D0 : chlor_a    **ACTIVE GRID** ( 9331200  values per variable)
+#&gt; [2]   D3,D2 : palette
+#&gt; [3]   D0    : lat
+#&gt; [4]   D1    : lon
+#&gt; 
+#&gt; Dimensions 4 (2 active): 
+#&gt;   
+#&gt;   dim   name  length    min   max start count  dmin  dmax unlim coord_dim 
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     
+#&gt; </span><span style='color: #555555;'>1</span><span> D0    lat     </span><span style='text-decoration: underline;'>2</span><span>160  -</span><span style='color: #BB0000;'>90.0</span><span>  90.0     1  </span><span style='text-decoration: underline;'>2</span><span>160 -</span><span style='color: #BB0000;'>90.0</span><span>  90.0 FALSE TRUE      
+#&gt; </span><span style='color: #555555;'>2</span><span> D1    lon     </span><span style='text-decoration: underline;'>4</span><span>320 -</span><span style='color: #BB0000;'>180.</span><span>  180.   </span><span style='text-decoration: underline;'>2</span><span>761   600  50.0 100.0 FALSE TRUE      
 #&gt;   
 #&gt; Inactive dimensions:
 #&gt;   

@@ -66,7 +66,7 @@ row per element)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9001</span>
       </span>
     </div>
 
@@ -99,12 +99,7 @@ row per element)." />
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/ropensci/tidync">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -118,7 +113,7 @@ row per element)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract NetCDF data as an expanded table.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ropensci/tidync/blob/master/R/hyper_tibble.R'><code>R/hyper_tibble.R</code></a></small>
+    
     <div class="hidden name"><code>hyper_tibble.Rd</code></div>
     </div>
 
@@ -207,24 +202,21 @@ functions that cause data to be read</p></div>
  <span class='no'>ht</span> <span class='kw'>&lt;-</span> <span class='fu'>hyper_tibble</span>(<span class='no'>rnc</span>) <span class='kw'>%&gt;%</span>
  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/NA'>is.na</a></span>(<span class='no'>chlor_a</span>))
 <span class='no'>ht</span></div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 11 x 3</span><span>
-#&gt;    chlor_a   lat   lon
+#&gt;    chlor_a   lon   lat
 #&gt;      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span>   1.71  -</span><span style='color: #BB0000;'>80.4</span><span>  152.
-#&gt; </span><span style='color: #555555;'> 2</span><span>   1.71  -</span><span style='color: #BB0000;'>80.5</span><span>  152.
-#&gt; </span><span style='color: #555555;'> 3</span><span>   1.71  -</span><span style='color: #BB0000;'>80.5</span><span>  152.
-#&gt; </span><span style='color: #555555;'> 4</span><span>   1.71  -</span><span style='color: #BB0000;'>80.6</span><span>  152.
-#&gt; </span><span style='color: #555555;'> 5</span><span>   1.71  -</span><span style='color: #BB0000;'>80.7</span><span>  152.
-#&gt; </span><span style='color: #555555;'> 6</span><span>   0.759 -</span><span style='color: #BB0000;'>75.1</span><span>  155.
-#&gt; </span><span style='color: #555555;'> 7</span><span>   0.759 -</span><span style='color: #BB0000;'>75.2</span><span>  155.
-#&gt; </span><span style='color: #555555;'> 8</span><span>   0.759 -</span><span style='color: #BB0000;'>75.3</span><span>  155.
-#&gt; </span><span style='color: #555555;'> 9</span><span>   0.759 -</span><span style='color: #BB0000;'>75.4</span><span>  155.
-#&gt; </span><span style='color: #555555;'>10</span><span>   0.759 -</span><span style='color: #BB0000;'>75.5</span><span>  155.
-#&gt; </span><span style='color: #555555;'>11</span><span>   0.759 -</span><span style='color: #BB0000;'>75.5</span><span>  155.</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='message'>Registered S3 methods overwritten by 'ggplot2':</span>
-#&gt; <span class='message'>  method         from </span>
-#&gt; <span class='message'>  [.quosures     rlang</span>
-#&gt; <span class='message'>  c.quosures     rlang</span>
-#&gt; <span class='message'>  print.quosures rlang</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/NA'>is.na</a></span>(<span class='no'>chlor_a</span>)),
-<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>lon</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>lat</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>chlor_a</span>)) + <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_tile</a></span>()</div><div class='img'><img src='hyper_tibble-1.png' alt='' width='700' height='433' /></div></span></pre>
+#&gt; </span><span style='color: #555555;'> 1</span><span>   1.71   170. -</span><span style='color: #BB0000;'>76.0</span><span>
+#&gt; </span><span style='color: #555555;'> 2</span><span>   1.71   170. -</span><span style='color: #BB0000;'>76.0</span><span>
+#&gt; </span><span style='color: #555555;'> 3</span><span>   1.71   171. -</span><span style='color: #BB0000;'>76.0</span><span>
+#&gt; </span><span style='color: #555555;'> 4</span><span>   1.71   171. -</span><span style='color: #BB0000;'>76.0</span><span>
+#&gt; </span><span style='color: #555555;'> 5</span><span>   1.71   171. -</span><span style='color: #BB0000;'>76.0</span><span>
+#&gt; </span><span style='color: #555555;'> 6</span><span>   0.759  165. -</span><span style='color: #BB0000;'>77.4</span><span>
+#&gt; </span><span style='color: #555555;'> 7</span><span>   0.759  165. -</span><span style='color: #BB0000;'>77.4</span><span>
+#&gt; </span><span style='color: #555555;'> 8</span><span>   0.759  165. -</span><span style='color: #BB0000;'>77.4</span><span>
+#&gt; </span><span style='color: #555555;'> 9</span><span>   0.759  165. -</span><span style='color: #BB0000;'>77.4</span><span>
+#&gt; </span><span style='color: #555555;'>10</span><span>   0.759  165. -</span><span style='color: #BB0000;'>77.4</span><span>
+#&gt; </span><span style='color: #555555;'>11</span><span>   0.759  166. -</span><span style='color: #BB0000;'>77.4</span><span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>ht</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/NA'>is.na</a></span>(<span class='no'>chlor_a</span>)),
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>lon</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>lat</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>chlor_a</span>)) + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_tile</a></span>()</div><div class='img'><img src='hyper_tibble-1.png' alt='' width='700' height='433' /></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
