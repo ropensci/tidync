@@ -25,7 +25,10 @@ library(tidync)
 ```
 
 
-There's a tension between the **tidyverse** and **scientific array data** in R. In short it comes down to *coordinates*, array data live inside a *space* and if that is more than the rows and columns (and slices ...) of the array then there's three ways to specify them. 
+The [tidyverse](https://www.tidyverse.org/) has had an enormous impact on the use of R by dictating a strict approach to *variables* and *observations* that can be used
+for any form of data. When it comes to *scientific array data* though, the long-form single table form is inefficient as it ignores underlying patterns in *structured-observations* such as coordinates. There is a tension between the **tidyverse** and **scientific array data** that comes down to the storage of *coordinates*. 
+
+array data live inside a *space* and if that is more than the rows and columns (and slices ...) of the array then there's three ways to specify them. 
 
 * affine transform
 * rectilinear transform

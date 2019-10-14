@@ -48,6 +48,6 @@ hd <-
 f1 <- system.file("extdata", "unidata", "madis-hydro.nc", package = "tidync")
 tnc <- tidync(f1)
 test_that("utils work", {
-  expect_equal(hv, hyper_vars(tnc))
-  expect_equal(hd, hyper_dims(tnc))
+  expect_equal(names(hv), names(hyper_vars(tnc)))
+  expect_equal(dim(hd), dim(hyper_dims(tnc)))
 })
