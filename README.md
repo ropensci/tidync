@@ -166,9 +166,8 @@ is there, and for extraction. The functions `tidync` and `activate` and
 and functions `hyper_array`, `hyper_tibble` and `hyper_tbl_cube` give
 raw-array or data frames.
 
-Also
-[http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/](this%20blog)
-post by Matteo De Felice.
+Also \[this blog post by Matteo De
+Felice(<http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/>).
 
 ### Interactive
 
@@ -425,7 +424,7 @@ tidync(filename) %>% activate("JULD") %>%
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (1): 'SCIENTIFIC_CALIB_DATE'
 #> Dimension (4): DATE_TIME,N_PARAM,N_CALIB,N_PROF (14, 7, 1, 1)
-#> Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the
@@ -476,8 +475,8 @@ explored that here and it may or may not be a good idea:
 ## Code of conduct
 
 Please note that this project is released with a [Contributor Code of
-Conduct](CONDUCT.md). By participating in this project you agree to
-abide by its
+Conduct](https://github.com/ropensci/tidync/blob/master/CONDUCT.md). By
+participating in this project you agree to abide by its
 terms.
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

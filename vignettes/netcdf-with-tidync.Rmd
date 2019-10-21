@@ -54,7 +54,7 @@ tools used are ncdf4 and raster (which uses ncdf4).
 
 Both the RNetCDF and ncdf4 packages provide a traditional summary format,
 familiar to many NetCDF users as the output of the command line program
-[`ncdump`](https://www.unidata.ucar.edu/software/netcdf/netcdf-4/newdocs/netcdf/NetCDF-Utilities.html#NetCDF-Utilities).
+[`ncdump`](https://www.unidata.ucar.edu/software/netcdf/workshops/most-recent/utilities/Ncdump.html).
 
 
 ```{r}

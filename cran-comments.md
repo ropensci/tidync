@@ -1,15 +1,13 @@
-## tidync 0.2.1
+## tidync 0.2.2
 
-Hello, another bug fix, my apologies but this is pretty critical. Also a
-Solaris check fix. 
+Hello, patch fix to avoid over-zealous tests that now cause problems with the new
+RNetCDF version. 
 
-Thank you very much. 
-
+Thank you. 
 
 ## Test environments
-* local Ubuntu 18.04 install, R 3.6.0
-* R-hub (devel)
-* win-builder (release)
+* local Ubuntu 18.04 install, R 3.6.1
+* win-builder (release and devel)
 
 ## R CMD check results
 

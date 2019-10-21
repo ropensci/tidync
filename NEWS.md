@@ -1,6 +1,6 @@
-# tidync 0.2.1.9001
+# tidync 0.2.2
 
-* Fix broken tests due to changes in RNetCDF. 
+* Fix broken tests due to changes in RNetCDF, thanks to CRAN for notification. 
 
 * Added example to readme and docs, and checks for non-unique `hyper_filter()` names, as per #93. 
  Thanks to @everydayduffy for the suggestion. 

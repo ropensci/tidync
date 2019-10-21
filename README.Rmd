@@ -116,7 +116,7 @@ tidync(file)
 There are two main ways of using tidync, interactively to explore what is there, and for extraction. The functions
 `tidync` and `activate` and `hyper_filter` allow us to hone in on the part/s of the data we want, and functions `hyper_array`, `hyper_tibble` and `hyper_tbl_cube` give raw-array or data frames. 
 
-Also [http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/](this blog) post by Matteo De Felice. 
+Also [this blog post by Matteo De Felice(http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/). 
 
 ### Interactive
 
@@ -213,7 +213,7 @@ https://github.com/hypertidy/ncapi
 
 ## Code of conduct
 
-Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](https://github.com/ropensci/tidync/blob/master/CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 
 
