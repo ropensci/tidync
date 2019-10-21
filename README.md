@@ -166,9 +166,6 @@ is there, and for extraction. The functions `tidync` and `activate` and
 and functions `hyper_array`, `hyper_tibble` and `hyper_tbl_cube` give
 raw-array or data frames.
 
-Also \[this blog post by Matteo De
-Felice(<http://www.matteodefelice.name/research/2018/01/14/tidyverse-and-netcdfs-a-first-exploration/>).
-
 ### Interactive
 
 Use `tidync()` and `hyper_filter()` to discern what variables and
