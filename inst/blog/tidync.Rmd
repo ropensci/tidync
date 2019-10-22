@@ -1,10 +1,10 @@
 ---
 slug: "tidync"
 title: Using the tidync package for NetCDF data
-package_version: 0.2.1
+package_version: 0.2.2
 authors:
   - Michael Sumner
-date: 2019-06-18
+date: 2019-11-05
 categories: blog
 topicid:
 tags:
