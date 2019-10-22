@@ -27,20 +27,20 @@ library(tidync)
 ```
 
 
+# tidync
+
 The [tidyverse](https://www.tidyverse.org/) has had an enormous impact on the use of R by dictating a strict approach to *variables* and *observations*. This very general insight can be used for any form of data but when it comes to large data obviously we can't store everything in one table. 
 
 There is a tension between the **tidyverse** and **scientific array data** that comes down to data storage, and the intermediate forms used to get between one form and another. 
 
 The tidync package provides a compromise position, allowing efficient array slicing by dimension coordinate or index, and delaying any data-reading until the output format is chosen. In particular tidync exists in order to reduce the amount of plumbing code required to get to the data, and allows an interactive way to convert between coordinate spaces and index spaces. 
 
-To follow along with the code below requires all of the following packages. 
+To follow along with the code below requires all of the following packages, and we assume that recent versions are in use particularly `ncmeta (>= 0.2.0)`, 
+`tidync (>= 0.2.2)`, and `tidyr (>= 1.0.0)`. 
 
 ```R
-install.packages(c("tidync", "maps", "stars", "ggplot2", "devtools", 
-                   "stars", "RNetCDF", "raster", "dplyr"))
-devtools::install_github("hypertidy/ncmeta")
-                   
-                   
+install.packages(c("ncmeta", "tidync", "maps", "stars", "ggplot2", "devtools", 
+                   "stars", "RNetCDF", "raster", "dplyr", "tidyr"))
 ```
 
 
@@ -57,17 +57,6 @@ available dimensions and no dimensions are mandatory or particularly special.
 
 NetCDF is very general, but it's quite common to see subcultures that rally around the way their particular domain's data are used and stored without encompassing very many other valid ways of using NetCDF. Tidync really tries to be as general as possible, sacrificing high level interpretations for lower-level control. 
 
-## Tidync limitations
-
-There are some limitations, specific to the tidync R package that are unrelated to the capabilities of the latest NetCDF library. 
-
-No groups, a group can be specified by providing the group-within-a-source *as a source*. 
-
-No compound types. 
-
-No attribute metadata, coordinates of 1D axes are stored as *transform tables*, but coordinates of pairs (or higher sets) of axes are not explicitly linked to their array data.  
-
-Curvilinear coordinates are not automatically expanded, this is because they exist (usually) on a different grid to the active one. 
 
 ## Different kinds of NetCDF
 
@@ -87,7 +76,7 @@ To connect to this file we use `tidync()`.
 oisst <- tidync(oisstfile)
 ```
 
-*NB: this is not a real connection, like that used by ncdf4 or RNetCDF - tidync functions always open the file in read-only mode, extract information and/or data, and then close the open file connection.*
+*NB: this is not a [file connection](https://stat.ethz.ch/R-manual/R-devel/library/base/html/connections.html), like that used by ncdf4 or RNetCDF - tidync functions always open the file in read-only mode, extract information and/or data, and then close the open file connection.*
 
 To see the available data in the file print a summmary of the source. 
 
@@ -109,18 +98,11 @@ The dimensions label, name, length, min and max value are seen in the Dimensions
 
 The other Dimensions columns `start`, `count`, `dmin`, `dmax` apply when we slice into data variables with `hyper_filter()`. 
 
-### Relationship to ncmeta
+## Relationship to ncmeta
 
-Tidync relies on the package [ncmeta](https://CRAN.r-project.org/) to extract information about NetCDF sources. There are functions to find available Grids, Dimensions and Attributes in ncmeta. 
+NetCDF is such a general form for storing data there are many ways to approach its use. We wanted to focus on a "tidy approach to NetCDF" and so it builds on existing packages to do the lower level tasks. It relies on the package [ncmeta](https://CRAN.r-project.org/package=ncmeta) to extract information about NetCDF sources. There are functions to find available variables, dimensions, attributes, grids, and axes in ncmeta. 
 
-Each grid has a name, size (ndims), and set of variables. Each grid is listed only once, which is an important pattern for each kind of entity when we are programming, the same applies to variables. See that there are 5 grids and 8 variables, with a row for each. 
-
-
-PLEASE NOTE: some of the code that follows relies on the Github-version of ncmeta to be installed. This can be done with
-
-```R
-devtools::install_github("hypertidy/ncmeta")
-```
+We also want functions that return information about each kind of entity in a straigtforward way, and since there is a complex relationship between variables and dimensions and grids we cannot simply store this information well in a single structure.  See that there are 5 grids and 8 variables, with a row for each. 
 
 ```{r ncmeta-grids}
 ncmeta::nc_grids(oisstfile)
@@ -128,11 +110,13 @@ ncmeta::nc_grids(oisstfile)
 ncmeta::nc_vars(oisstfile)
 ```
 
+Each grid has a name, size (ndims), and set of variables. Each grid is listed only once, which is an important pattern for each kind of entity when we are programming, the same applies to variables.
+
 Some grids have more than one variable, so they are nested in the grid rows - use unnest to see all variables with their parent grid. 
 
 
 ```{r ncemeta-grids-expandvars}
-ncmeta::nc_grids(oisstfile) %>% tidyr::unnest()
+ncmeta::nc_grids(oisstfile) %>% tidyr::unnest(cols = c(variables))
 ```
 
 Similar functions exist for dimensions and variables. 
@@ -160,13 +144,13 @@ ncmeta::nc_atts(oisstfile, "zlev")
 And we can find the internal metadata for each variable by expanding the value. 
 
 ```{r ncmeta-time-attributes}
-ncmeta::nc_atts(oisstfile, "time") %>% tidyr::unnest()
+ncmeta::nc_atts(oisstfile, "time") %>% tidyr::unnest(cols = c(value))
 ```
 
 With this information we may now apply the right interpretation to the time values
 
 ```{r ncmeta-time-atts}
-tunit <- ncmeta::nc_atts(oisstfile, "time") %>% tidyr::unnest() %>% dplyr::filter(name == "units")
+tunit <- ncmeta::nc_atts(oisstfile, "time") %>% tidyr::unnest(cols = c(value)) %>% dplyr::filter(name == "units")
 RNetCDF::utcal.nc(tunit$value, 1460)
 
 ## alternatively we can do this by hand
@@ -180,7 +164,7 @@ raster::brick(oisstfile, varname = "anom")
 stars::read_stars(oisstfile)
 ```
 
-Tidync is *scared of doing this automatically for you*, but in combination the `ncmeta` package and `tidync` package provides the tools to program around the vagaries presented by NetCDF sources. If you want software that aims to interpret all this for you then check out [stars](https://CRAN.r-project.org/package=stars), [GDAL](https://gdal.org/), [ferret](https://ferret.pmel.noaa.gov/Ferret/), [Panoply](https://www.giss.nasa.gov/tools/panoply/). 
+In terms of *interpreting the meaning of stored metadata*, we are *scared of doing this automatically for you*. There are simply too many ways for automatic tools to get intentions wrong. So, used in combination the `ncmeta` package and `tidync` package provides the tools to program around the vagaries presented by NetCDF sources. If what you want is software that aims to interpret all this for you then check out [stars](https://CRAN.r-project.org/package=stars), [GDAL](https://gdal.org/), [ferret](https://ferret.pmel.noaa.gov/Ferret/), and [Panoply](https://www.giss.nasa.gov/tools/panoply/). 
 
 
 ### Degenerate dimensions
@@ -206,7 +190,8 @@ dim(oisst_data[[1]])
 image(oisst_data[[1]])
 ```
 
-This is exactly the data data provided by `ncdf4::ncvar_get()` or `RNetCDF::var.get.nc()` but we can do it in a single line of code. 
+This is exactly the data data provided by `ncdf4::ncvar_get()` or `RNetCDF::var.get.nc()` but we can do it in a single line of code without finding the
+variable names and looping over them. We automatically get variables from the largest grid that is available, `activate()`-d by default. 
 
 ```{r oisst-data-single-line}
 oisst_data <- tidync(oisstfile) %>% hyper_array()
@@ -240,7 +225,7 @@ maps::map("world2", add = TRUE)
 ```
 
 
-In this case these *transforms* are somewhat redundant, there is a value stored for every step in `lon` and every step in `lat` and they are completely regular, whereas the usual approach in graphics is to store an *offset and scale* rather than each dimension's coordinate. Sometimes though these coordinate values are not reducible this way. 
+In this case these *transforms* are somewhat redundant, there is a value stored for every step in `lon` and every step in `lat` and they are completely regular, whereas the usual approach in graphics is to store an *offset and scale* rather than each dimension's coordinate. Sometimes though these coordinate values are not reducible this way and we would call them *rectilinear* (we have to store the sequence of each 1D coordinate dimension). 
 
 ## Slicing
 
@@ -257,6 +242,10 @@ image(trans$lon$lon, trans$lat$lat,  oisst_data[[1]])
 #abline(v = lonrange, h = latrange)
 rect(lonrange[1], latrange[1], lonrange[2], latrange[2])
 ```
+<!--
+https://rpubs.com/boyerag/297592
+https://cran.r-project.org/web/packages/futureheatwaves/vignettes/starting_from_netcdf.html
+-->
 
 It's common on the internet to see posts that explain how to drive the NetCDF library with *start* and *count* indices, to do that we need to compare our ranges with the *transforms* of each dimension. 
 
@@ -376,6 +365,19 @@ library(ggplot2)
 ggplot(stos, aes(lon, lat, fill = tos)) + geom_raster() + facet_wrap(~time)
 
 ```
+
+## Tidync limitations
+
+There are some limitations, specific to the tidync R package that are unrelated to the capabilities of the latest NetCDF library. 
+
+No groups, a group can be specified by providing the group-within-a-source *as a source*. 
+
+No compound types. 
+
+No attribute metadata, coordinates of 1D axes are stored as *transform tables*, but coordinates of pairs (or higher sets) of axes are not explicitly linked to their array data.  
+
+Curvilinear coordinates are not automatically expanded, this is because they exist (usually) on a different grid to the active one. 
+
 
 ## Future helpers 
 
