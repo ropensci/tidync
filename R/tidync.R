@@ -95,7 +95,6 @@ tidync.character <- function(x, what, ...) {
   meta <- safemeta(x)
 
   if (is.null(meta$result)) {
-    warning(sprintf("Oops, connection to source failed.\n %s", x))
     stop(meta$error)
   }
 
