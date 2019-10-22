@@ -421,7 +421,7 @@ tidync(filename) %>% activate("JULD") %>%
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (1): 'SCIENTIFIC_CALIB_DATE'
 #> Dimension (4): DATE_TIME,N_PARAM,N_CALIB,N_PROF (14, 7, 1, 1)
-#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the

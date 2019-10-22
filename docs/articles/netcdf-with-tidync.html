@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1>NetCDF with tidync</h1>
                         <h4 class="author">Michael D. Sumner</h4>
             
-            <h4 class="date">2019-08-27</h4>
+            <h4 class="date">2019-10-23</h4>
       
       
       <div class="hidden name"><code>netcdf-with-tidync.Rmd</code></div>
@@ -96,7 +96,7 @@
 <p>NetCDF is a very widely used file format for storing array-based data as <em>variables</em>. The <strong>space</strong> occupied by a <strong>variable</strong> is defined by its <strong>dimensions</strong> and their metadata. Dimensions are by definition <em>one-dimensional</em> (i.e. an atomic vector in R of length 1 or more), an array with coordinate metadata, units, type and interpretation. The <strong>space</strong> of a variable is defined as one or more of the dimensions in the file. A given variable won’t necessarily use all the available dimensions and no dimensions are mandatory or particularly special.</p>
 <p>Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many and varied, and not always adhered to. Tidync does not provide a data interpretation as it is intended for general use, including by tools that create data formats.</p>
 <p>The R community is not particularly strong with use of NetCDF, though it is common and widely used it pales compared to use in general climate science work, and there the most used tool is the <a href="https://code.mpimet.mpg.de/projects/cdo">CDO Climate Data Operators</a>. In R the most common tools used are ncdf4 and raster (which uses ncdf4).</p>
-<p>Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the command line program <a href="https://www.unidata.ucar.edu/software/netcdf/netcdf-4/newdocs/netcdf/NetCDF-Utilities.html#NetCDF-Utilities"><code>ncdump</code></a>.</p>
+<p>Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the command line program <a href="https://www.unidata.ucar.edu/software/netcdf/workshops/most-recent/utilities/Ncdump.html"><code>ncdump</code></a>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">ice_file &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"ifremer"</span>, <span class="st">"20171002.nc"</span>, <span class="dt">package =</span> <span class="st">"tidync"</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(RNetCDF)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/RNetCDF/topics/print.nc">print.nc</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/RNetCDF/topics/open.nc">open.nc</a></span>(ice_file))</a>
@@ -353,7 +353,7 @@
 <a class="sourceLine" id="cb10-31" data-line-number="31"><span class="co">#&gt;   .. ..$ coord_dim: logi TRUE</span></a>
 <a class="sourceLine" id="cb10-32" data-line-number="32"><span class="co">#&gt;   .. ..$ selected : logi TRUE</span></a>
 <a class="sourceLine" id="cb10-33" data-line-number="33"><span class="co">#&gt;  - attr(*, "source")=Classes 'tbl_df', 'tbl' and 'data.frame':   1 obs. of  2 variables:</span></a>
-<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2019-08-27 21:13:43"</span></a>
+<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2019-10-23 00:13:47"</span></a>
 <a class="sourceLine" id="cb10-35" data-line-number="35"><span class="co">#&gt;   ..$ source: chr "/usr/local/lib/R/site-library/tidync/extdata/ifremer/20171002.nc"</span></a>
 <a class="sourceLine" id="cb10-36" data-line-number="36"><span class="co">#&gt;  - attr(*, "class")= chr "tidync_data"</span></a>
 <a class="sourceLine" id="cb10-37" data-line-number="37"></a>
