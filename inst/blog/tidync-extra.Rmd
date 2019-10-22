@@ -1,0 +1,45 @@
+<!--
+We must produce these tables on demand in whatever most efficient process is required. There are also types of forms that do not need to be stored in a single table, drawing a matrix of pixel values on screen being one clear example. When it comes to *scientific array data* in R, if we ignore underlying patterns in *structured-observations* such as coordinates or use the long-form single table form naively then it is very inefficient. 
+
+The first significant tidyverse package was ggplot2 and this had an enormouse influence on graphics in R, but from the beginning required an inefficient intermediate form for both raster and vector spatial graphics. This was pilloried by powerful voices in R and the community has never bridged the divide, with most users repelled by the toxic communications on display. 
+
+Similar tensions exist between imagery used in a GIS (Geographical Information System) context and scientific array data used in environmental observations and physical modelling. In general, GIS contexts use an *affine transformation* and modelling contexts will use a rectilinear or curvilinear transform. There's no clearer illustration of this divide than that the *NetCDF format* does not support the affine transformation method, even when the use of rectilinear or curvilinear coordinates is degenerate or redundant [^1]. 
+
+# Array spaces
+
+Array data live inside a *space* and if that is more than the rows and columns (and slices ...) of the array then there's three ways to specify them. 
+
+* affine transform
+* rectilinear transform
+* curvilinear transform. 
+
+Consider a simple matrix of 12 values. 
+
+```{r matrix}
+m <- matrix(1:12, nrow = 3L, ncol 4L)
+```
+
+
+Let's assume that these define data points that exist in the following intervals. 
+
+```{r intervals}
+xi <- c(1, 4)
+yi <- c(1, 3)
+```
+
+We have everything needed to plot these data as if it were a spatial image. 
+
+```{r image}
+image(x = seq(xi[1L], xi[2L], length.out = nrow(m) + 1L), 
+      y = seq(yi[1L], yi[2L]), length.out = ncol(m) + 1), z = m)
+```
+If we store data in *long form* as per the tidyverse, it really expects us to not only store every variable but also *every coordinate* of the array elements. This is what leads to (sometimes angry) complaints about the efficiency and scalability of parts of the tidyverse for scientific array data. 
+
+There are several approaches to this, and tidync tries to insert itself into the middle. 
+
+*NB: This post is not a comprehensive introduction to NetCDF, but does explore some of the problems encountered in some detail. The hope is that tidync will provide easier ways to explore your data, and allow array extraction or expansion into a data frame that is easier than coding from scratch.* 
+
+
+[^1]: NetCDF *can be used to store an affine transformation*. It can be used to store anything as you will often hear - it's just not terribly well suited to some tasks, and this usage is rare and usually bumps against the usual assumptions made by users of the format.  The GMT variant of NetCDF does use a form of affine transformation, but also stores arrays in long form 1D vectors with the dimensional metadata stored seaprately. 
+
+-->
