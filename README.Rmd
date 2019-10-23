@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 # tidync
 
 <!-- badges: start -->
-[![Travis-CI Build Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=xenial_release&label=linux)](https://travis-ci.org/ropensci/tidync)
+[![Travis-CI Build Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=trusty_release&label=linux)](https://travis-ci.org/ropensci/tidync)
 [![Build Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/ropensci/tidync)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/ropensci/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/tidync-nvwwt)
 [![Coverage status](https://codecov.io/gh/ropensci/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/ropensci/tidync?branch=master)

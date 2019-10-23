@@ -11,7 +11,7 @@ test_that("files and bad files are handled", {
   l3b_file <- system.file("extdata/oceandata/S2008001.L3b_DAY_RRS.nc", 
                           package = "tidync", mustWork = TRUE)
   expect_error(suppressWarnings(tidync(l3b_file)), 
-               "no variables or dimension recognizable") 
+               "no variables or dimensions") 
   expect_warning(try(tidync(l3b_file), silent = TRUE), 
                  "no dimensions found")
   expect_warning(try(tidync(l3b_file), silent = TRUE), 
@@ -29,14 +29,12 @@ test_that("files and bad files are handled", {
   RNetCDF::close.nc(nothingfile)
   
   expect_warning(ouch <- try(tidync::tidync(tfile), silent = TRUE), 
-                 sample(c("no variables recognizable", 
-                          "no dimensions found", 
-                          "no variables found"), 1))
+                 "no dimensions found")
   
   
   tnc <- tidync(l3file)
   tnc$grid <- tnc$grid[0, ]
-  expect_output(print(tnc), "No recognizable dimensions or variables")
+  expect_output(print(tnc))
 })
 
 test_that("verbs have a character method", {

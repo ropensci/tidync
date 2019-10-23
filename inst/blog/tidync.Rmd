@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidync)
 ```
 
-NetCDF is a very widely used data system for scientific array data. If you want to automate your own workflow around a series of NetCDF source data then [tidync](https://ropensci.github.io/tidync/index.html) provides all the flexibility and power required, with as little pain as possible. 
+NetCDF is a very widely used data system for scientific array data. If you want to automate your own workflow around a series of NetCDF source data then [tidync](https://docs.ropensci.org/tidync/) provides all the flexibility and power required, with as little pain as possible. 
 
 The [tidyverse](https://www.tidyverse.org/) has had an enormous impact on the use of R with a strict approach to [*variables* and *observations*](https://r4ds.had.co.nz/tidy-data.html). This insight can be used for any form of data but when it comes to large data obviously we can't store everything in one table. A single table also does not know that it represents *arrays with dimension*, and this inherent property of the original data may well be lost. There is a tension between the **tidyverse** and **scientific array data** that comes down to data storage, and the intermediate forms used to get between one form and another. We also think this *tension* has been exaggerated in unproductive ways. 
 
@@ -43,7 +43,7 @@ install.packages(c("ncmeta", "tidync", "maps", "stars", "ggplot2", "devtools",
                    "stars", "RNetCDF", "raster", "dplyr", "tidyr"))
 ```
 
-The official website for tidync is https://ropensci.github.io/tidync/index.html and the latest release can be found on [CRAN](https://CRAN.R-project.org/package=tidync). 
+The official website for tidync is https://docs.ropensci.org/tidync/ and the latest release can be found on [CRAN](https://CRAN.R-project.org/package=tidync). 
 
 ### NetCDF
 
@@ -433,6 +433,8 @@ The [stars project](https://github.com/r-spatial/stars/) takes another perspecti
 The `tidync` package made it to CRANafter a fairly long review process on [rOpenSci](https://github.com/ropensci/software-review/issues/174). In early 2018 I really wasn't sure if it could be finished at all in a neat way, but thanks to very helpful reviewers and also some key insights about [obscure types](https://github.com/ropensci/tidync/issues/75#issuecomment-468064627) it was done. 
 
 The package benefitted greatly from feedback provided by [Jakub Nowosad](https://github.com/Nowosad) and [Tim Lucas](https://github.com/timcdlucas). 
+
+Thanks to [rOpenSci](https://ropensci.org/) community members for encouragement and support!
 
 
 

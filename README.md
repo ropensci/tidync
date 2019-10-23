@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![Travis-CI Build
-Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=xenial_release&label=linux)](https://travis-ci.org/ropensci/tidync)
+Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=trusty_release&label=linux)](https://travis-ci.org/ropensci/tidync)
 [![Build
 Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/ropensci/tidync)
 [![AppVeyor build
@@ -421,7 +421,7 @@ tidync(filename) %>% activate("JULD") %>%
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (1): 'SCIENTIFIC_CALIB_DATE'
 #> Dimension (4): DATE_TIME,N_PARAM,N_CALIB,N_PROF (14, 7, 1, 1)
-#> Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the

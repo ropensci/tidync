@@ -106,11 +106,11 @@ tidync.character <- function(x, what, ...) {
   if (bad_dim) {
     warning("no dimensions found")
   }
-  if (bad_dim) {
+  if (bad_var) {
     warning("no variables found")
   }
   if (bad_dim && bad_var) {
-    stop("no variables or dimension recognizable \n  
+    stop("no variables or dimensions \n  
          (is this a source with compound-types? Try h5, rhdf5, or hdf5r)")
   }
   if (!fexists) message("Connection succeeded.")      
