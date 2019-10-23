@@ -380,6 +380,8 @@ Curvilinear coordinates are not automatically expanded, this is because they exi
 
 ### Future helpers 
 
+#### Coordinate expansion
+
 A feature being considered for an upcoming version is to expand out all available linked coordinates. This occurs when an array has a dimension but only stores its index. When a dimension stores values directly this is known as a *dim-coord*, and usually occurs for time values. One way to expand this out would be to include an `expand_coords` argument to `hyper_tibble()` and have it run the following code: 
 
 ```{r internal-expand}
@@ -417,11 +419,18 @@ full_expand(tidync(huc))
 hyper_tibble(tidync(huc))
 ```
 
+#### Tidy approaches to other data sources
+
+This approach could be applied to other array-based data systems, such as the [ff package](https://CRAN.r-project.org/package=ff), the [matter package](https://CRAN.r-project.org/package=matter) GDAL [raster](https://gdal.org/tutorials/index.html#raster) or [multi-dimensional](https://gdal.org/tutorials/index.html#multidimensional-raster) data sources, and [HDF5](https://www.hdfgroup.org/solutions/hdf5/) or [GRIB](https://en.wikipedia.org/wiki/GRIB) sources. 
+
+We have experimented with this for non-NetCDF formats, please get in touch if you are interested.  
+
+The [stars project](https://github.com/r-spatial/stars/) takes another perspective on the tidy approach to scientific array data. 
 
 
 ### Acknowledgements
 
-The `tidync` package recently hit CRAN after a fairly long review process on [rOpenSci](https://github.com/ropensci/software-review/issues/174). In early 2018 I just wasn't sure if it was really going to be wrapped up in a neat way, but thanks to very helpful reviewers and also some key insights about [obscure types](https://github.com/ropensci/tidync/issues/75#issuecomment-468064627) it was done. 
+The `tidync` package made it to CRANafter a fairly long review process on [rOpenSci](https://github.com/ropensci/software-review/issues/174). In early 2018 I really wasn't sure if it could be finished at all in a neat way, but thanks to very helpful reviewers and also some key insights about [obscure types](https://github.com/ropensci/tidync/issues/75#issuecomment-468064627) it was done. 
 
 The package benefitted greatly from feedback provided by [Jakub Nowosad](https://github.com/Nowosad) and [Tim Lucas](https://github.com/timcdlucas). 
 
