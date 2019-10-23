@@ -369,14 +369,12 @@ ggplot(stos, aes(lon, lat, fill = tos)) + geom_raster() + facet_wrap(~time)
 
 There are some limitations, specific to the tidync R package that are unrelated to the capabilities of the latest NetCDF library. 
 
-No groups, a group can be specified by providing the group-within-a-source *as a source*. 
-
-No compound types. 
-
-No attribute metadata, coordinates of 1D axes are stored as *transform tables*, but coordinates of pairs (or higher sets) of axes are not explicitly linked to their array data.  
-
-Curvilinear coordinates are not automatically expanded, this is because they exist (usually) on a different grid to the active one. 
-
+* No groups, a group can be specified by providing the group-within-a-source *as a source*. 
+* No compound types. 
+* No attribute metadata, coordinates of 1D axes are stored as *transform tables*, but coordinates of pairs (or higher sets) of axes are not explicitly linked to their array data.  
+* Curvilinear coordinates are not automatically expanded, this is because they exist (usually) on a different grid to the active one. 
+* Unknowns about what is supported on what platforms. This is surprisingly tricky and unstable, there are a lot of things that are possible on one operating system at a given time, but not on others. The situtation changes fairly slowly but is
+always changing due to library versions and releases, package and tooling support on CRAN, and operating system details. If you have problems with a given source please get in touch so we can learn more about the overall landscape. 
 
 ### Future helpers 
 
