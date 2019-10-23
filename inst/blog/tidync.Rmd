@@ -1,6 +1,6 @@
 ---
 slug: tidync
-title: 'Using the tidync package for NetCDF data'
+title: 'The tidync package for NetCDF data'
 package_version: 0.2.2
 authors:
   - Michael Sumner
@@ -19,9 +19,7 @@ tags:
 - tidyverse
 editor_options: 
   chunk_output_type: console
-output:
-  html_document:
-    toc: true
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -29,14 +27,13 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidync)
 ```
 
+NetCDF is a very widely used data system for scientific array data. If you want to automate your own workflow around a series of NetCDF source data then [tidync](https://ropensci.github.io/tidync/index.html) provides all the flexibility and power required, with as little pain as possible. 
+
+The [tidyverse](https://www.tidyverse.org/) has had an enormous impact on the use of R with a strict approach to [*variables* and *observations*](https://r4ds.had.co.nz/tidy-data.html). This insight can be used for any form of data but when it comes to large data obviously we can't store everything in one table. A single table also does not know that it represents *arrays with dimension*, and this inherent property of the original data may well be lost. There is a tension between the **tidyverse** and **scientific array data** that comes down to data storage, and the intermediate forms used to get between one form and another. We also think this *tension* has been exaggerated in unproductive ways. 
 
 ### tidync
 
-The [tidyverse](https://www.tidyverse.org/) has had an enormous impact on the use of R by dictating a strict approach to *variables* and *observations*. This very general insight can be used for any form of data but when it comes to large data obviously we can't store everything in one table. 
-
-There is a tension between the **tidyverse** and **scientific array data** that comes down to data storage, and the intermediate forms used to get between one form and another. 
-
-The tidync package provides a compromise position, allowing efficient array slicing by dimension coordinate or index, and delaying any data-reading until the output format is chosen. In particular tidync exists in order to reduce the amount of plumbing code required to get to the data, and allows an interactive way to convert between coordinate spaces and index spaces. 
+The tidync package provides a compromise position, allowing efficient array slicing by dimension coordinate or index, producing native-array *or* tidy-data-frame output as desired, delaying any data-reading until after the output format is chosen. In particular tidync exists in order to reduce the amount of plumbing code required to get to the data, and allows an interactive way to convert between coordinate spaces and index spaces.  
 
 To follow along with the code below requires all of the following packages, and we assume that recent versions are in use particularly `ncmeta (>= 0.2.0)`, 
 `tidync (>= 0.2.2)`, and `tidyr (>= 1.0.0)`. 
@@ -46,7 +43,7 @@ install.packages(c("ncmeta", "tidync", "maps", "stars", "ggplot2", "devtools",
                    "stars", "RNetCDF", "raster", "dplyr", "tidyr"))
 ```
 
-
+The official website for tidync is https://ropensci.github.io/tidync/index.html and the latest release can be found on [CRAN](https://CRAN.R-project.org/package=tidync). 
 
 ### NetCDF
 
@@ -56,7 +53,7 @@ NetCDF is a very widely used file format for storing array-based data as
 The *space* (or ***grid***) occupied by a **variable** is defined by its **dimensions** and their **attributes**. Dimensions are by definition
 *one-dimensional* (i.e. an atomic vector in R of length 1 or more) arrays with coordinate metadata, units, type, and interpretation. **Attributes** ostensibly define all of this extra information for dimensions and variables.  The *space* of a variable (the ***grid*** it lives in) is defined by one or more of the dimensions in the file. 
 
-A given variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special, and so we consider the existence of a dimension within a grid to be an *instance of that dimension* and call that an **axis**, subtley different to the dimension on its own.
+A given variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special, and so we consider the existence of a dimension within a grid to be an *instance of that dimension* and call that an ***axis***, subtley different to the dimension on its own.
 
 NetCDF is very general, and it's quite common to see subcultures that rally around the way their particular domain's data are used and stored but ignoring many other valid ways of using NetCDF. The tidync approach is to be as general as possible, sacrificing high level interpretations for lower-level control if that generality is at risk. 
 
@@ -113,10 +110,9 @@ ncmeta::nc_grids(oisstfile)
 ncmeta::nc_vars(oisstfile)
 ```
 
-Each grid has a name, size (ndims), and set of variables. Each grid is listed only once, which is an important pattern for each kind of entity when we are programming, the same applies to variables.
+Each grid has a name, size (ndims), and set of variables. Each grid is listed only once, which is an important pattern for each kind of entity when we are programming, the same applies to variables. The relationship to the tidyverse starts here with the metadata, there are five grids observed and we have four columns of information for each grid - its name, number of dimensions, the NetCDF-variables defined with it, and their number. 
 
-Some grids have more than one variable, so they are nested in the grid rows - use unnest to see all variables with their parent grid. 
-
+Some grids have more than one variable, so they are nested in the grid rows - use `tidyr::unnest()` to see all variables with their parent grid. 
 
 ```{r ncemeta-grids-expandvars}
 ncmeta::nc_grids(oisstfile) %>% tidyr::unnest(cols = c(variables))
