@@ -6,9 +6,9 @@
 <!-- badges: start -->
 
 [![Travis-CI Build
-Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=trusty_release&label=linux)](https://travis-ci.org/ropensci/tidync)
+Status](http://badges.herokuapp.com/travis/ropensci/tidync?branch=master&env=BUILD_NAME=trusty_release&label=linux)](https://travis-ci.org/ropensci/tidync)
 [![Build
-Status](https://travis-ci.org/ropensci/tidync.svg?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/ropensci/tidync)
+Status](http://badges.herokuapp.com/travis/ropensci/tidync?branch=master&env=BUILD_NAME=osx_release&label=osx)](https://travis-ci.org/ropensci/tidync)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/ropensci/tidync?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/tidync-nvwwt)
 [![Coverage
