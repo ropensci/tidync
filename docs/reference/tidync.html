@@ -8,21 +8,25 @@
 
 <title>Tidy NetCDF — tidync • tidync</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,13 +34,14 @@
 
 
 
-<meta property="og:title" content="Tidy NetCDF — tidync" />
 
+<meta property="og:title" content="Tidy NetCDF — tidync" />
 <meta property="og:description" content="Connect to a NetCDF source and allow use of hyper_* verbs for slicing with
 hyper_filter(), extracting data with hyper_array() and  [hyper_tibble()
 from an activated grid. By default the largest grid encountered is
 activated, seeactivate()." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -48,6 +53,7 @@ activated, seeactivate()." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -74,7 +80,7 @@ activated, seeactivate()." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -97,7 +103,6 @@ activated, seeactivate()." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -107,6 +112,7 @@ activated, seeactivate()." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -118,12 +124,10 @@ activated, seeactivate()." />
     </div>
 
     <div class="ref-description">
-    
     <p>Connect to a NetCDF source and allow use of <code>hyper_*</code> verbs for slicing with
 <code><a href='hyper_filter.html'>hyper_filter()</a></code>, extracting data with <code><a href='hyper_array.html'>hyper_array()</a></code> and  [hyper_tibble()
 from an activated grid. By default the largest <em>grid</em> encountered is
 activated, see<code><a href='activate.html'>activate()</a></code>.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>tidync</span>(<span class='no'>x</span>, <span class='no'>what</span>, <span class='no'>...</span>)
@@ -133,7 +137,7 @@ activated, see<code><a href='activate.html'>activate()</a></code>.</p>
 
 <span class='co'># S3 method for tidync_data</span>
 <span class='fu'>tidync</span>(<span class='no'>x</span>, <span class='no'>what</span>, <span class='no'>...</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -143,8 +147,8 @@ activated, see<code><a href='activate.html'>activate()</a></code>.</p>
     </tr>
     <tr>
       <th>what</th>
-      <td><p>(optional) character name of grid (see <code><a href='https://www.rdocumentation.org/packages/ncmeta/topics/nc_grids'>ncmeta::nc_grids</a></code>) or
-(bare) name of variable (see <code><a href='https://www.rdocumentation.org/packages/ncmeta/topics/nc_vars'>ncmeta::nc_vars</a></code>) or index of grid to
+      <td><p>(optional) character name of grid (see <code><a href='https://rdrr.io/pkg/ncmeta/man/nc_grids.html'>ncmeta::nc_grids</a></code>) or
+(bare) name of variable (see <code><a href='https://rdrr.io/pkg/ncmeta/man/nc_vars.html'>ncmeta::nc_vars</a></code>) or index of grid to
 <code>activate</code></p></td>
     </tr>
     <tr>
@@ -152,7 +156,7 @@ activated, see<code><a href='activate.html'>activate()</a></code>.</p>
       <td><p>reserved for arguments to methods, currently ignored</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The print method for tidync includes a lot of information about which
@@ -171,7 +175,6 @@ variables that exist on that grid.</p>
 'NC_CHAR' type variables are on the largest grid. When read any 'NC_CHAR'
 type variables are exploded into single character elements so that dimensions
 match the source.</p>
-    
     <h2 class="hasAnchor" id="grids"><a class="anchor" href="#grids"></a>Grids</h2>
 
     <p>A grid is an instance of a particular set of dimensions,
@@ -182,14 +185,12 @@ formality around the concept of 'shape', as far as we know.</p>
 <p>A dimension may have length zero, but this is a special case for a
 "measure" dimension, we think. (It doesn't mean the product of the
 dimensions is zero, for example).</p>
-    
     <h2 class="hasAnchor" id="limitations"><a class="anchor" href="#limitations"></a>Limitations</h2>
 
     <p>Files with compound types are not yet supported and
 should fail gracefully. Groups are not yet supported.</p>
 <p>We haven't yet explored 'HDF5' in detail, so any feedback is appreciated.
 Major use of compound types is made by <a href='https://github.com/sosoc/croc'>https://github.com/sosoc/croc</a>.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## a SeaWiFS (S) Level-3 Mapped (L3m) monthly (MO) chlorophyll-a (CHL)</span>
@@ -197,11 +198,11 @@ Major use of compound types is made by <a href='https://github.com/sosoc/croc'>h
 <span class='co'>## from the NASA ocean colour group in NetCDF4 format (.nc)</span>
 <span class='co'>## for 31 day period January 2008 (S20080012008031) </span>
 <span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='st'>"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span>
-<span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/oceandata"</span>, <span class='no'>f</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"tidync"</span>)
+<span class='no'>l3file</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/oceandata"</span>, <span class='no'>f</span>, <span class='kw'>package</span><span class='kw'>=</span> <span class='st'>"tidync"</span>)
 <span class='co'>## skip on Solaris</span>
-<span class='kw'>if</span> (!<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/chartr'>tolower</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Sys.info'>Sys.info</a></span>()<span class='kw'>[[</span><span class='st'>"sysname"</span>]]) <span class='kw'>==</span> <span class='st'>"sunos"</span>) {
+<span class='kw'>if</span> (!<span class='fu'><a href='https://rdrr.io/r/base/chartr.html'>tolower</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.info.html'>Sys.info</a></span>()<span class='kw'>[[</span><span class='st'>"sysname"</span>]]) <span class='kw'>==</span> <span class='st'>"sunos"</span>) {
 <span class='no'>tnc</span> <span class='kw'>&lt;-</span> <span class='fu'>tidync</span>(<span class='no'>l3file</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>tnc</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>tnc</span>)
 }</div><div class='output co'>#&gt; 
 #&gt; Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...
 #&gt; 
@@ -225,19 +226,20 @@ Major use of compound types is made by <a href='https://github.com/sosoc/croc'>h
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>     
 #&gt; </span><span style='color: #555555;'>1</span><span> D2    rgb                3     1     3 FALSE FALSE     
 #&gt; </span><span style='color: #555555;'>2</span><span> D3    eightbitcolor    256     1   256 FALSE FALSE     </div><div class='input'>
-## very simple Unidata example file, with one dimension
-</div></span><span class='co'># NOT RUN {</span>
-<span class='no'>uf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/unidata"</span>, <span class='st'>"test_hgroups.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>)
+<span class='co'>## very simple Unidata example file, with one dimension</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>uf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/unidata"</span>, <span class='st'>"test_hgroups.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>)
 <span class='no'>recNum</span> <span class='kw'>&lt;-</span> <span class='fu'>tidync</span>(<span class='no'>uf</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='hyper_tibble.html'>hyper_tibble</a></span>()
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>recNum</span>)
-<span class='co'># }</span><div class='input'><span class='co'>## a raw grid of Southern Ocean sea ice concentration from IFREMER</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>recNum</span>)
+}
+<span class='co'>## a raw grid of Southern Ocean sea ice concentration from IFREMER</span>
 <span class='co'>## it is 12.5km resolution passive microwave concentration values</span>
 <span class='co'>## on a polar stereographic grid, on 2 October 2017, displaying the </span>
 <span class='co'>## "hole in the ice" made famous here:</span>
 <span class='co'>## https://tinyurl.com/ycbchcgn</span>
-<span class='no'>ifr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/ifremer"</span>, <span class='st'>"20171002.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>)
+<span class='no'>ifr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/ifremer"</span>, <span class='st'>"20171002.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"tidync"</span>)
 <span class='no'>ifrnc</span> <span class='kw'>&lt;-</span> <span class='fu'>tidync</span>(<span class='no'>ifr</span>)
-<span class='no'>ifrnc</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='hyper_tibble.html'>hyper_tibble</a></span>(<span class='kw'>select_var</span> <span class='kw'>=</span> <span class='st'>"concentration"</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 207,195 x 4</span><span>
+<span class='no'>ifrnc</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='hyper_tibble.html'>hyper_tibble</a></span>(<span class='kw'>select_var</span> <span class='kw'>=</span> <span class='st'>"concentration"</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 207,195 x 4</span><span>
 #&gt;    concentration    ni    nj    time
 #&gt;            </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span>             0   291     5 1</span><span style='text-decoration: underline;'>032</span><span>204
@@ -256,18 +258,15 @@ Major use of compound types is made by <a href='https://github.com/sosoc/croc'>h
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#details">Details</a></li>
-
       <li><a href="#grids">Grids</a></li>
-
       <li><a href="#limitations">Limitations</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -275,13 +274,16 @@ Major use of compound types is made by <a href='https://github.com/sosoc/croc'>h
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
