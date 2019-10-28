@@ -1,6 +1,6 @@
 ---
 slug: tidync
-title: 'tidync: working with scientific array data from NetCDF in R'
+title: 'tidync: scientific array data from NetCDF in R'
 package_version: 0.2.2
 authors:
   - Michael Sumner
@@ -26,11 +26,11 @@ output:
 
 
 
-In May 2019 version 0.2.0 of [tidync](https://docs.ropensci.org/tidync/) was approved by rOpenSci and submitted to CRAN. Here we detail the challenges faced by R users with [NetCDF data sources](https://www.unidata.ucar.edu/software/netcdf/) and how tidync is designed to help. 
+In May 2019 version 0.2.0 of [tidync](https://docs.ropensci.org/tidync/) was approved by rOpenSci and submitted to CRAN. Here we provide a quick overview of the typical workflow, then detail some of challenges faced by R users with [NetCDF data sources](https://www.unidata.ucar.edu/software/netcdf/) and how tidync is focussed on *efficient data extraction* for developing your own software. 
 
 ### NetCDF in R
 
-NetCDF is a very widely used system for storing and distributing scientific array data. A NetCDF data source typically stores one or more arrays of data, along with metadata that describe the space (grid) occupied by the data, coordinate metadata, units, type, and interpretation. If you want to automate your own workflow around a series of NetCDF data sources then [tidync](https://docs.ropensci.org/tidync/) provides all the flexibility and power required, with as little pain as possible.
+NetCDF is a very widely used system for storing and distributing scientific array data. A NetCDF data source typically stores one or more arrays of data, along with metadata that describe the data array space (grid), and any metadata describing array coordinates, units, and interpretation. A NetCDF source may be a file or an online URL. If you want to automate your own workflow around a series of NetCDF data sources then [tidync](https://docs.ropensci.org/tidync/) provides all the flexibility and power required, with as little pain as possible.
 
 The [tidyverse](https://www.tidyverse.org/) has had an enormous impact on the use of R with a strict approach to [*variables* and *observations*](https://r4ds.had.co.nz/tidy-data.html) (in short, tidy data are tabular, with each variable having its own column and each observation having its own row). This tidy-data-frame form can be used for a wide range of data, but it does have some shortcomings. It can be inefficient in terms of storage, which may be problematic with large data. Furthermore, if the data are accompanied by additional metadata (as is generally the case with NetCDF data) there is often no neat way to store this information in the same table, and these inherent properties of the original data can be lost. 
 
@@ -39,6 +39,38 @@ There is a tension between the **tidyverse** and **scientific array data** that 
 ### tidync
 
 The tidync package provides a compromise position, allowing efficient interaction with NetCDF files, producing native-array *or* tidy-data-frame output as desired. It delays any data-reading activity until after the output format is chosen. In particular, tidync exists in order to reduce the amount of plumbing code required to get to the data, and allows an interactive way to convert between the different spaces (coordinates and indices) in which the data can be referenced.  
+
+In pseudo-code, there only a few simple steps, at each step we can save the result and explore a summary. 
+
+1. Connect to a data source and retrieve metadata, and read a summary: 
+
+```R
+src <- tidync(<netcdf-source>)
+print(src)
+```
+
+2. By default the largest array-space (grid) is *activated* and usually this will be the right choice - if required we can nominate a different grid using `activate()`. 
+
+```R
+src <- src %>% activate(<a different grid>)
+```
+
+3. Apply subsetting to to *slice arrays* by coordinate or index, this step is optional but very important for large and complicated data sources. 
+
+```R
+## lazy subsetting by value or index
+src_slc <- src %>% hyper_filter(<filter expressions on dimensions>)
+```
+
+4. Finally, choose an output format - list of arrays, a data frame, or a `tbl_cube`. 
+
+```R
+src_slc %>% hyper_array()
+
+src_slc %>% hyper_tibble()
+
+src_slc %>% hyper_tbl_cube()
+```
 
 There are various other packages for NetCDF in R, the main ones being [RNetCDF](https://CRAN.r-project.org/package=RNetCDF) and [ncdf4](https://CRAN.r-project.org/package=ncdf4). These are both *lower-level* tools than tidync - they are interfaces to the underlying NetCDF library, and tidync uses RNetCDF to read information and data. The [raster](https://CRAN.r-project.org/package=raster), and [stars](https://CRAN.r-project.org/package=stars) packages are both *higher-level* packages than tidync with quite different approaches. 
 
