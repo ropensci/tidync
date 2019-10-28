@@ -19,8 +19,8 @@ to store this information in the same table, and these inherent
 properties of the original data can be lost. There is a tension between
 the **tidyverse** and **scientific array data** that comes down to this
 difference in data storage, and the intermediate forms used to get
-between one form and another. (I also think this tension has been exaggerated
-in unproductive ways at times). 
+between one form and another. I think this tension has been exaggerated
+in unproductive ways.
 
 ### tidync
 
