@@ -26,8 +26,8 @@ output:
 
 ```{r setup, include=FALSE}
 ## build the blog, Knit, then 
-# file.copy("~/Git/tidync/inst/blog-01/tidync.md", "~/Git/roweb2/content/blog/2019-11-05-tidync.md", overwrite = TRUE)
 ## remove ../../../roweb2/themes/ropensci/static from the .md
+## remove local path from raster
 knitr::opts_chunk$set(echo = TRUE, fig.path = "../../../roweb2/themes/ropensci/static/img/blog-images/2019-11-05-tidync/")
 knitr::opts_chunk$set(root.dir=normalizePath(here::here("../../themes/ropensci/static")))
 library(tidync)
@@ -38,19 +38,27 @@ library(stars)
 library(raster)
 ```
 
-In May 2019 version 0.2.0 of [tidync](https://docs.ropensci.org/tidync/) was approved by rOpenSci and submitted to CRAN. Here we provide a quick overview of the typical workflow, then detail some of challenges faced by R users with [NetCDF data sources](https://www.unidata.ucar.edu/software/netcdf/) and how tidync is focussed on *efficient data extraction* for developing your own software. 
+In May 2019 version 0.2.0 of [tidync](https://docs.ropensci.org/tidync/) was approved by rOpenSci and accepted to CRAN. Here we provide a [quick overview](#overview) of the typical workflow with some pseudo-code for the main functions in tidync. This overview is enough to read if you just want to try out the package on your own data.  The tidync package is focussed on *efficient data extraction* for developing your own software, and this somewhat long post takes the time to explain the concepts in detail.  
 
-### NetCDF in R
+There is a section about the [NetCDF](#netcdf)  data model itself. Then there is  a [detailed illustration](#raster-data-in-netcdf) of a raster data set in R including some of the challenges faced by R users. This is followed by sections on how tidync sees [metadata](#metadata) and [coordinates](#transforms) in NetCDF, how we can [slice a dataset](#slicing) and control the format of the output. We then discuss [some limitations](#limitations) and [future work](#future) , and then (most importantly) reflect on the [rOpenSci process](#review) of package review. 
 
-NetCDF is a very widely used system for storing and distributing scientific array data. A NetCDF data source typically stores one or more arrays of data, along with metadata that describe the data array space (grid), and any metadata describing array coordinates, units, and interpretation. A NetCDF source may be a file or an online URL. If you want to automate your own workflow around a series of NetCDF data sources then [tidync](https://docs.ropensci.org/tidync/) provides all the flexibility and power required, with as little pain as possible.
+<br>
 
-The [tidyverse](https://www.tidyverse.org/) has had an enormous impact on the use of R with a strict approach to [*variables* and *observations*](https://r4ds.had.co.nz/tidy-data.html) (in short, tidy data are tabular, with each variable having its own column and each observation having its own row). This tidy-data-frame form can be used for a wide range of data, but it does have some shortcomings. It can be inefficient in terms of storage, which may be problematic with large data. Furthermore, if the data are accompanied by additional metadata (as is generally the case with NetCDF data) there is often no neat way to store this information in the same table, and these inherent properties of the original data can be lost. 
+### NetCDF in R {#netcdf-in-R}
+
+[NetCDF](https://www.unidata.ucar.edu/software/netcdf/) is a very widely used system for storing and distributing scientific array data. A NetCDF data source typically stores one or more arrays of data, along with metadata that describe the data array space (grid), and any metadata describing array coordinates, units, and interpretation. A NetCDF source may be a file or an online URL. If you want to automate your own workflow around a series of NetCDF data sources then [tidync](https://docs.ropensci.org/tidync/) provides all the flexibility and power required with as little pain as possible.
+
+The [tidyverse](https://www.tidyverse.org/) has had an enormous impact on the use of R with a strict approach to [*variables* and *observations*](https://r4ds.had.co.nz/tidy-data.html) (in short, tidy data are tabular, with each variable having its own column and each observation having its own row). This tidy-data-frame form can be used for a wide range of data, but it does have some shortcomings. It can be inefficient in terms of storage, which may be problematic with large data. If the data are accompanied by additional metadata (as is generally the case with NetCDF data) there is often no neat way to store this information in the same table, and these inherent properties of the original data can be lost. 
 
 There is a tension between the **tidyverse** and **scientific array data** that comes down to this difference in data storage, and the intermediate forms used to get between one form and another. We also think this tension has been exaggerated in unproductive ways. 
 
-### tidync
+<br>
 
-The tidync package provides a compromise position, allowing efficient interaction with NetCDF files, producing native-array *or* tidy-data-frame output as desired. It delays any data-reading activity until after the output format is chosen. In particular, tidync exists in order to reduce the amount of plumbing code required to get to the data, and allows an interactive way to convert between the different spaces (coordinates and indices) in which the data can be referenced.  
+### tidync {#overview}
+
+The official website for tidync is https://docs.ropensci.org/tidync/ and the latest release can be found on [CRAN](https://CRAN.R-project.org/package=tidync). 
+
+The tidync package provides a compromise position, allowing efficient interaction with NetCDF files.  It will produce native-array *or* tidy-data-frame output as desired. It delays any data-reading activity until after the output format is chosen. In particular, tidync exists in order to reduce the amount of plumbing code required to get to the data. It allows an interactive way to convert between the different spaces (coordinates and indices) in which the data can be referenced.  
 
 In pseudo-code, there are only a few simple steps, at each step we can save the result and explore a summary. 
 
@@ -67,7 +75,7 @@ print(src)
 src <- src %>% activate(<a different grid>)
 ```
 
-3. Apply subsetting to to *slice arrays* by coordinate or index, this step is optional but very important for large and complicated data sources. 
+3. Apply subsetting to *slice arrays* by coordinate or index, this step is optional but very important for large and complicated data sources. 
 
 ```R
 ## lazy subsetting by value or index
@@ -84,7 +92,7 @@ src_slc %>% hyper_tibble()
 src_slc %>% hyper_tbl_cube()
 ```
 
-There are various other packages for NetCDF in R, the main ones being [RNetCDF](https://CRAN.r-project.org/package=RNetCDF) and [ncdf4](https://CRAN.r-project.org/package=ncdf4). These are both *lower-level* tools than tidync - they are interfaces to the underlying NetCDF library, and tidync uses both to read information and data. The [raster](https://CRAN.r-project.org/package=raster), and [stars](https://CRAN.r-project.org/package=stars) packages provide quite different approaches and stars is more general than raster, but is similarly *higher-level* than tidync. 
+There are various other packages for NetCDF in R, the main ones being [RNetCDF](https://CRAN.r-project.org/package=RNetCDF) and [ncdf4](https://CRAN.r-project.org/package=ncdf4). These are both *lower-level* tools than tidync - they are interfaces to the [underlying NetCDF library](https://github.com/Unidata/netcdf-c), and tidync uses both to read information and data. The [raster](https://CRAN.r-project.org/package=raster) and [stars](https://CRAN.r-project.org/package=stars) packages provide quite different approaches and stars is more general than raster, but is similarly *higher-level* than tidync. 
 
 To follow along with the code below requires all of the following packages, and we assume that recent versions are in use, particularly `ncmeta (>= 0.2.0)`, 
 `tidync (>= 0.2.2)`, and `tidyr (>= 1.0.0)`. 
@@ -94,26 +102,32 @@ install.packages(c("ncmeta", "tidync", "maps", "stars", "ggplot2", "devtools",
                    "stars", "RNetCDF", "raster", "dplyr", "tidyr"))
 ```
 
-The official website for tidync is https://docs.ropensci.org/tidync/ and the latest release can be found on [CRAN](https://CRAN.R-project.org/package=tidync). 
 
-### NetCDF
+<br>
+
+### NetCDF {#netcdf}
 
 NetCDF is a very widely used file format for storing array-based data as
 **variables** with **dimensions** and **attributes**. 
 
 The *space* (or ***grid***) occupied by a **variable** is defined by its **dimensions** and their **attributes**. Dimensions are by definition
-*one-dimensional* (i.e. an atomic vector in R of length 1 or more) arrays with coordinate metadata, units, type, and interpretation. **Attributes** ostensibly define all of this extra information for dimensions and variables.  The *space* of a variable (the ***grid*** it lives in) is defined by one or more of the dimensions in the file. 
+*one-dimensional arrays* (i.e. an atomic vector in R of length 1 or more). An array can include coordinate metadata, units, type, and interpretation; **attributes** define all of this extra information for dimensions and variables.  The *space* of a variable (the ***grid*** it lives in) is defined by one or more of the dimensions in the file. 
 
-A given variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special, and so we consider the existence of a dimension within a grid to be an *instance of that dimension* and call that an ***axis***, subtly different to the dimension on its own.
+A given variable won't necessarily use all the available dimensions and no dimensions are mandatory or particularly special. We consider the existence of a dimension within a grid to be an *instance of that dimension* and call that an ***axis***, subtly different to the dimension on its own.
 
-NetCDF is very general, and it's quite common to see subcultures that rally around the way their particular domain's data are used and stored but ignoring many other valid ways of using NetCDF. The tidync approach is to be as general as possible, sacrificing high level interpretations for lower-level control if that generality is at risk. 
+NetCDF is very general and used in many different ways. It is quite common to see subcultures that rally around the way their particular domain's data are used and stored while ignoring many other valid ways of using NetCDF. The tidync approach is to be as general as possible, sacrificing high level interpretations for lower-level control if that generality is at risk. 
 
+<br>
 
-### Raster data in NetCDF 
+### Raster data in NetCDF {#raster-data-in-netcdf}
 
-NetCDF can be used to store *raster data*, and very commonly data are provided as a global grid of scientific data. Here we use a snapshot of global ocean surface temperature generated by blending remote sensing, local observations and physical model output (the file `reduced.nc` in the stars package, derived from the daily [OISSTV2 product](https://www.esrl.noaa.gov/psd/data/gridded/data.noaa.oisst.v2.highres.html)). 
+NetCDF can be used to store *raster data*, and very commonly data are provided as a global grid of scientific data. Here we use a snapshot of global ocean surface temperature for a single day. The file used is called `reduced.nc` in the stars package, derived from the daily [OISSTV2 product](https://www.esrl.noaa.gov/psd/data/gridded/data.noaa.oisst.v2.highres.html). 
 
-We will explore the description of this source in detail to give an introduction to the tidync summary. 
+We will explore this data set in detail to give an introduction to the tidync summary and functions. The data set is very commonly used in marine research as it includes a very long time series of daily global maps of sea surface temperatures. The spatial resolution is 0.25 degree (1/4°) and the coverage is complete for the entire world's oceans because it is a blend of remote sensing and direct observations. We call it **OISST** (or *oisst*) after its [official description](https://www.ncdc.noaa.gov/oisst). 
+
+> The NOAA 1/4° daily *Optimum Interpolation Sea Surface Temperature* (or daily OISST) is an analysis constructed by combining observations from different platforms (satellites, ships, buoys) on a regular global grid. A spatially complete SST map is produced by interpolating to fill in gaps. 
+
+The file we use is a simplified version from 1981-12-31 (the series started in 1981-09-01). This has been reduced in resolution so that it can be stored in an R package. There are four variables in the data **sst** (sea surface temperature, in Celsius), **anom** (anomaly of sst of this day from the long term mean), **err** (estimated error standard deviation of sst), and **ice** (sea ice concentration). The ice concentration acts as a mask, if there is sea ice present in the pixel then the temperature is undefined. 
 
 ```{r basic-raster}
 oisstfile <- system.file("nc/reduced.nc", package = "stars")
@@ -126,7 +140,7 @@ library(tidync)
 oisst <- tidync(oisstfile)
 ```
 
-*NB: this is not a [file connection](https://stat.ethz.ch/R-manual/R-devel/library/base/html/connections.html), like that used by ncdf4 or RNetCDF - tidync functions always open the file in read-only mode, extract information and/or data, and then close the open file connection.*
+*Note: this is not a [file connection](https://stat.ethz.ch/R-manual/R-devel/library/base/html/connections.html), like that used by ncdf4 or RNetCDF; tidync functions always open the file in read-only mode, extract information and/or data, and then close the open file connection.*
 
 To see the available data in the file print a summmary of the source. 
 
@@ -144,17 +158,21 @@ There is only one grid available for multidimensional data in this file, the fir
 
 *Note: it's only a coincidence that this 4D grid also has 4 variables*. 
 
-The 1D grids have a corresponding named dimension and name variable, making these *coordinate dimensions* (see `coord_dim` in the dimensions table). It's not necessarily true that a 1D grid will have a single 1D variable, it may have more than one variable, and it may only have an *index variable*, i.e. only the position values `1:length(dimension)`. 
+The 1D grids have a corresponding dimension `dim` and variable `name`, making these *coordinate dimensions* (see `coord_dim` in the dimensions table). It's not necessarily true that a 1D grid will have a single 1D variable, it may have more than one variable, and it may only have an *index variable*, i.e. only the position values `1:length(dimension)`. 
 
-Each dimension's name, length, valid minimum and maximum values are seen in the Dimensions table and these values can never change, also see flags `unlim` (an unlimited dimension - used when a data time series is spread across multiple files) and `coord_dim`. 
+Each dimension's name, length, valid minimum and maximum values are seen in the Dimensions table and these values can never change, also see flags  `coord_dim` and `unlim`. This refers to an unlimited dimension, used when a data time series is spread across multiple files. 
 
 The other Dimensions columns `start`, `count`, `dmin`, `dmax` apply when we slice into data variables with `hyper_filter()`. 
 
-#### Metadata in tidync: ncmeta
+<br>
 
-NetCDF is such a general form for storing data there are many ways to approach its use. We wanted to focus on a *tidy approach to NetCDF* and so built on existing packages to do the lower level tasks. tidync relies on the package [ncmeta](https://CRAN.r-project.org/package=ncmeta) to extract information about NetCDF sources. There are functions to find available variables, dimensions, attributes, grids, and axes in ncmeta. 
+#### Metadata in tidync: ncmeta {#metadata}
 
-We also want functions that return information about each kind of entity in a straightforward way, and since there is a complex relationship between variables and dimensions and grids we cannot simply store this information well in a single structure.  See that there are 5 grids and 8 variables, with a row for each. 
+NetCDF is such a general form for storing data that there are many ways to approach its use. We wanted to focus on a *tidy approach to NetCDF* and so built on existing packages to do the lower level tasks. tidync relies on the package [ncmeta](https://CRAN.r-project.org/package=ncmeta) to extract information about NetCDF sources. There are functions to find available variables, dimensions, attributes, grids, and axes in ncmeta. 
+
+We also want functions that return information about each kind of entity in a straightforward way. Since there is a complex relationship between variables, dimensions and grids we cannot store this information well in a single structure.  
+
+See that there are 5 grids and 8 variables, with a row for each. 
 
 ```{r ncmeta-grids}
 ncmeta::nc_grids(oisstfile)
@@ -162,7 +180,7 @@ ncmeta::nc_grids(oisstfile)
 ncmeta::nc_vars(oisstfile)
 ```
 
-Each grid has a name, dimensionality (`ndims`), and set of variables. Each grid is listed only once, which is an important pattern for each kind of entity when we are programming, the same applies to variables. The relationship to the tidyverse starts here with the metadata, there are five grids observed and we have four columns of information for each grid - its name, number of dimensions, the NetCDF-variables defined with it, and their number. When dealing with metadata we can also use tidy principles as we do with the data itself. 
+Each grid has a name, dimensionality (`ndims`), and set of variables. Each grid is listed only once, an important pattern when we are programming, and the same applies to variables. The relationship to the tidyverse starts here with the metadata; there are five grids observed and we have four columns of information for each grid. These are the grid's name, number of dimensions, the NetCDF-variables defined with it, and their number. When dealing with metadata we can also use tidy principles as we do with the data itself. 
 
 Some grids have more than one variable, so they are nested in the grid rows - use `tidyr::unnest()` to see all variables with their parent grid. 
 
@@ -175,52 +193,103 @@ Similar functions exist for dimensions and variables.
 ```{r ncmeta-dimensions-variables}
 ncmeta::nc_dims(oisstfile)
 
-ncmeta::nc_atts(oisstfile)
+ncmeta::nc_vars(oisstfile)
 ```
 
-There are corresponding functions to find out more about individual variables, dimensions and attributes by name or by internal index. 
+There are corresponding functions to find out more about individual variables, dimensions and attributes by name or by index. 
+
+
+Note that we can use the *internal index* (a zero-based count) of a variable as well as its name (`anom` is
+the variable at the 5-index  as shown by `nc_vars()` above). 
 
 ```{r ncmeta-variable1}
 ncmeta::nc_var(oisstfile, "anom")
 ncmeta::nc_var(oisstfile, 5)
 
+```
+
+Similarly we can use name or index for dimensions and attributes, but attributes for a variable can only be found by name. 
+
+```{r ncmeta-dimension1}
 ncmeta::nc_dim(oisstfile, "lon")
 ncmeta::nc_dim(oisstfile, 0)
 
 ncmeta::nc_atts(oisstfile)
 ncmeta::nc_atts(oisstfile, "zlev")
-
 ```
 
-And we can find the internal metadata for each variable by expanding the value. 
+We can find the internal metadata for each variable by expanding the value. 
 
 ```{r ncmeta-time-attributes}
 ncmeta::nc_atts(oisstfile, "time") %>% tidyr::unnest(cols = c(value))
 ```
 
-With this information we may now apply the right interpretation to the time values
+With this information we may now apply the right interpretation to the time values. In the print of the tidync object above we see the value `1460`, which is given without context in the dimensions table. 
+
+We can get that value by activating the right grid and extracting, the `time` is
+a single integer value. 
+
+```{r activate-time}
+oisst <- tidync(oisstfile)
+time_ex <- oisst %>% activate("D3") %>% hyper_array()
+time_ex$time
+```
+
+As mentioned, tidync considers time and its metadata a bit dangerous. A record about these can often be wrong, inconsistent, include time zone issues, sometimes *extra seconds* to account for ... and so we prefer to leave these interpretations to be validated manually,  before automation. 
+
+Obtain the time units information and then use it to convert the raw value (`1460`) into a date-time understood by R. 
 
 ```{r ncmeta-time-atts}
 tunit <- ncmeta::nc_atts(oisstfile, "time") %>% tidyr::unnest(cols = c(value)) %>% dplyr::filter(name == "units")
-RNetCDF::utcal.nc(tunit$value, 1460)
 
-## alternatively we can do this by hand
-as.POSIXct("1978-01-01 00:00:00", tz = "UTC") + 1460 * 24 * 3600
+print(tunit)
+
+time_parts <- RNetCDF::utcal.nc(tunit$value, time_ex$time)
+
+## convert to date-time
+ISOdatetime(time_parts[,"year"], 
+            time_parts[,"month"], 
+            time_parts[,"day"], 
+            time_parts[,"hour"], 
+            time_parts[,"minute"], 
+            time_parts[,"second"])
 ```
 
-and check that other independent systems provide the same information. 
+
+Alternatively we can do this by hard-coding. We find that different cases are best handled in different ways, and especially after some careful checking. 
+
+```{r ncmeta-time-conversion}
+as.POSIXct("1978-01-01 00:00:00", tz = "UTC") + time_ex$time * 24 * 3600
+```
+
+Finally, we can check that other independent systems provide the same information. 
 
 ```{r raster-stars}
 raster::brick(oisstfile, varname = "anom")
 stars::read_stars(oisstfile)
 ```
 
-In terms of *interpreting the meaning of stored metadata*, tidync shies away from doing this automatically. There are simply too many ways for automatic tools to get intentions wrong. So, used in combination the ncmeta and tidync packages provide the tools to program around the vagaries presented by NetCDF sources. If what you want is software that aims to interpret all this for you then check out [stars](https://CRAN.r-project.org/package=stars) the R package, and outside of R itself the various high-level applications capable of dealing with NetCDF: [xarray](http://xarray.pydata.org), [GDAL](https://gdal.org/), [ferret](https://ferret.pmel.noaa.gov/Ferret/), and [Panoply](https://www.giss.nasa.gov/tools/panoply/). 
+In terms of *interpreting the meaning of stored metadata*, tidync shies away from doing this automatically. There are simply too many ways for automatic tools to get intentions wrong. So, used in combination the ncmeta and tidync packages provide the tools to program around the vagaries presented by NetCDF sources. If your data is pretty clean and standardized there is higher-level software that can easily interpret these things automatically. Some examples are [stars](https://CRAN.r-project.org/package=stars) the R package, and outside of R itself there is also  [xarray](http://xarray.pydata.org), [GDAL](https://gdal.org/), [ferret](https://ferret.pmel.noaa.gov/Ferret/), and [Panoply](https://www.giss.nasa.gov/tools/panoply/). 
 
+<br>
+
+#### Axes versus dimensions
+
+Previously we mentioned the concept of an ***axis*** as an instance of a dimension. This distinction arose early on, sometimes the dimension on its own is important, at other times we want to know where it occurs. The functions `nc_axes()` and `nc_dims()` make this clear, every instance of a dimension across variables is listed as an axis, but they are derived from only four dimensions. 
+
+```{r axis-vs-dimension}
+ncmeta::nc_axes(oisstfile)
+
+ncmeta::nc_dims(oisstfile)
+```
+
+<br>
 
 #### Degenerate dimensions
 
-See that both `zlev` and `time` are listed as dimensions but have length 1, and also their min and max values are constants. The `zlev` tells us that this grid exists at elevation = 0 (the sea surface) and `time` that the data applies to `time = 1460`, the time is not expressed as a duration (though it presumably applies to the entire day). These are *degenerate dimensions*, i.e. the data are really 2D but we have a record of a 4D space from which they are expressed as a slice. This can cause problems as we would usually treat this data as a matrix in R, and so the ncdf4 and RNetCDF package read functions have arguments that are analogous to R's array indexing argument `drop = TRUE`, if we encounter a dimension of length 1 then drop it. tidync will also drop dimensions by default when reading data, see the `drop` argument in `?hyper_array`. 
+See that both `zlev` and `time` are listed as dimensions but have length 1, and also their min and max values are constants. The `zlev` tells us that this grid exists at elevation = 0 (the sea surface) and `time` that the data applies to `time = 1460`. The time is not expressed as a duration even though it presumably applies to the entire day. These are *degenerate dimensions*, i.e. the data are really 2D but we have a record of a 4D space from which they are expressed as a slice. For time, we know that the neighbouring days exist in other OISST files, but for `zlev` it only records sea-level. This can cause problems as we would usually treat this data as a matrix in R, and so the ncdf4 and RNetCDF package read functions have arguments that are analogous to R's array indexing argument `drop = TRUE`. If a dimension of length 1 is encountered the 'to drop' means to ignore it. tidync will also drop dimensions by default when reading data, see the `drop` argument in `?hyper_array`. 
+
+<br>
 
 #### Reading the OISST data
 
@@ -232,7 +301,7 @@ The fastest way to get all the data is to call the function `hyper_array`, this 
 (oisst_data <- oisst %>% hyper_array())
 ```
 
-What happened there? We got a classed object, `tidync_data` but this is just a list with arrays. 
+What happened there? We got a classed object `tidync_data`; this is a list with arrays. 
 
 ```{r oisst-data}
 length(oisst_data)
@@ -241,8 +310,7 @@ dim(oisst_data[[1]])
 image(oisst_data[[1]])
 ```
 
-This is exactly the data provided by `ncdf4::ncvar_get()` or `RNetCDF::var.get.nc()` but we can do it in a single line of code without finding the
-variable names and looping over them. We automatically get variables from the largest grid that is available, `activate()`-d by default. 
+This is exactly the data provided by `ncdf4::ncvar_get()` or `RNetCDF::var.get.nc()` but we can do it in a single line of code. Without tidync we must find the variable names and loop over them. We automatically get variables from the largest grid that is available, which was `activate()`-d by default. 
 
 ```{r oisst-data-single-line}
 oisst_data <- tidync(oisstfile) %>% hyper_array()
@@ -254,7 +322,11 @@ for (i in seq_along(oisst_data)) {
 par(op)
 ```
 
-### Transforms
+<br>
+
+### Transforms {#transforms}
+
+In this context ***transform*** means the conversion between index and geographic coordinate for grid cells, and in this data set this means the longitude and latitude assigned to the centre of each cell.* 
 
 We have done nothing with the spatial side of these data, ignoring the lon and lat values completely. 
 
@@ -264,7 +336,7 @@ oisst_data
 lapply(oisst_data, dim)
 ```
 
-The print summary of the `oisst_data` object shows that it knows there are four variables and that they each have two dimensions (zlev and time were *dropped*), this is now stored as a list of native R arrays, but there is also the transforms attribute available with `hyper_transforms()`. 
+The print summary of the `oisst_data` object shows that it knows there are four variables and that they each have two dimensions (`zlev` and `time` were *dropped*). This is now stored as a list of native R arrays, but there is also the transforms attribute available with `hyper_transforms()`. 
 
 The values on each transform table may be used directly. 
 
@@ -276,18 +348,19 @@ maps::map("world2", add = TRUE)
 ```
 
 
-In this case these *transforms* are somewhat redundant, there is a value stored for every step in `lon` and every step in `lat` and they are completely regular, whereas the usual approach in graphics is to store an *offset and scale* rather than each dimension's coordinate. Sometimes though these coordinate values are not reducible this way and we would call them *rectilinear* (we have to store the sequence of each 1D coordinate dimension). 
+In this case these *transforms* are somewhat redundant, there is a value stored for every step in `lon` and every step in `lat`. They are completely regular series whereas the usual approach in graphics is to store an *offset and scale* rather than each step's coordinate. Sometimes these coordinate values are not reducible this way and we would call them *rectilinear*, we would have to store the sequence of each 1D coordinate step. 
 
-### Slicing
+<br>
 
-We can slice into these dimensions using a tidyverse approach. For example, say we wanted to slice out only the data for the waters of the Pacific Ocean, we need a range in longitude and a range in latitude. 
+### Slicing {#slicing}
+
+We can slice into these dimensions using a tidyverse approach. For example, to slice out only the data for the waters of the Pacific Ocean, we need a range in longitude and in latitude. 
+
+<br>
 
 #### Old style slicing
 
-This section illustrates the old laborious way to access a subset of data from NetCDF. 
-
-We can put these ranges directly on our raw plot from earlier. 
-
+This section illustrates the old laborious way to access a subset of data from NetCDF, a subset shown in this plot. 
 
 ```{r slicing-long-lat}
 lonrange <- c(144, 247)
@@ -296,10 +369,7 @@ latrange <- c(-46, 47)
 image(trans$lon$lon, trans$lat$lat,  oisst_data[[1]])
 rect(lonrange[1], latrange[1], lonrange[2], latrange[2])
 ```
-<!--
-https://rpubs.com/boyerag/297592
-https://cran.r-project.org/web/packages/futureheatwaves/vignettes/starting_from_netcdf.html
--->
+
 
 It's common on the internet to see posts that explain how to drive the NetCDF library with *start* and *count* indices, to do that we need to compare our ranges with the *transforms* of each dimension. 
 
@@ -326,7 +396,7 @@ con <- RNetCDF::open.nc(oisstfile)
 try(sst_matrix <- RNetCDF::var.get.nc(con, "sst", start = start, count = count))
 ```
 
-We have been bitten by thinking that this source data are 2D!  So we just add start and count of 1 for each extra dimension (but what if it was 3D, or 5D, or time comes first - all of these things complicate these *simple solutions*). 
+We have been bitten by thinking that this source data are 2D!  So we just add start and count of 1 for each extra dimension. (Consider that it could 3D, or 5D, and maybe with different dimension order; all of these things complicate the general case for these otherwise simple solutions). 
 
 ```{r read-RNetCDF-succeed}
 start <- c(start, 1, 1)
@@ -337,22 +407,24 @@ sst_matrix <- RNetCDF::var.get.nc(con, "sst", start = start, count = count)
 
 And we're good! Except, we now don't have the coordinates for the mapping. We have to slice the lon and lat values as well, but let's cut to the chase and go back to tidync. 
 
+<br>
+
 #### tidync style slicing
 
 Rather than slice the arrays read into memory, we can *filter* the object that understands the source and it does *not do any data slicing at all*, but records slices *to be done in future*.  This is the lazy beauty of the tidyverse, applied to NetCDF. 
 
-Here we used `between()` for lon and standard R inequality syntax for lat simply to show that both kinds of expression are available. *We don't have to specify the redundant slice into zlev or time*. 
+Here we use standard R inequality syntax for `lon` and `lat`.  *We don't have to specify the redundant slice into zlev or time*. 
 
 ```{r tidync-slice}
 library(dplyr)
-oisst_slice <- oisst %>% hyper_filter(lon = between(lon, lonrange[1], lonrange[2]), 
+oisst_slice <- oisst %>% hyper_filter(lon = lon > lonrange[1] & lon <= lonrange[2], 
                        lat = lat > latrange[1] & lat <= latrange[2])
 
 oisst_slice
 ```
 
 
-The print summary has updated the `start` and `count` columns now to match our laboriously acquired versions above (they are slightly different because of the difference between `findInterval()` and our inequality expressions). 
+The print summary has updated the `start` and `count` columns now to match our laboriously acquired versions above. 
 
 The `dmin` and `dmax` (data-min, data-max) columns are also updated, reporting the coordinate value at the start and end of the slice we have specified. 
 
@@ -363,7 +435,7 @@ oisst_slice_data <- oisst_slice %>% hyper_array()
 trans <- attr(oisst_slice_data, "transforms")
 ```
 
-One unfortunate issue here is that we cannot use the transforms directly, they *have* been updated by changing the value of the `selected` column from `TRUE` to `FALSE`, but then we have to be aware of using only the values that remain selected (not filtered out).  
+One unfortunate issue here is that we cannot use the transforms directly, they *have* been updated by changing the value of the `selected` column from `TRUE` to `FALSE`. Then we have to be aware of using only the values that remain *selected* (i.e. not filtered out).  
 
 First filter the lon and lat transforms based on the `selected` column. 
 
@@ -379,17 +451,17 @@ We do have to do extra work with `hyper_array()` but it gives total control over
 
 It's much easier to use other output types. 
 
+
 ```{r tbl-cube}
 tcube <- tidync(oisstfile) %>% 
   hyper_filter(lon = between(lon, lonrange[1], lonrange[2]), 
                        lat = lat > latrange[1] & lat <= latrange[2]) %>% 
   hyper_tbl_cube()
 
-library(ggplot2)
-ggplot(as_tibble(tcube)) + geom_raster(aes(lon, lat, fill = sst))
+tcube
 ```
 
-For those that prefer old-school ggplot2 we can read our slice in directly as a tibble data frame. 
+We can also read our slice in directly as a tibble data frame, and plot with `geom_raster()`. 
 
 ```{r geom_raster}
 tdata <- tidync(oisstfile) %>% 
@@ -397,7 +469,8 @@ tdata <- tidync(oisstfile) %>%
                        lat = lat > latrange[1] & lat <= latrange[2]) %>% 
   hyper_tibble()
 
-ggplot(tdata, aes(lon, lat, fill = anom)) + geom_raster()
+library(ggplot2)
+ggplot(tdata, aes(lon, lat, fill = sst)) + geom_raster()
 ```
 
 By default, all variables are available but we can limit with `select_var`. 
@@ -411,7 +484,11 @@ tidync(oisstfile) %>%
 
 ```
 
-As a further example, now open a *time-series* NetCDF file, apply a spatial subset on the `lon` and `lat` dimensions, convert to tidy data frame and plot the `tos` variable spatially with faceted plots on the `time` dimension. 
+<br>
+
+#### slicing into multidimensional time series
+
+As a further example, now open a *time-series* NetCDF file. We apply a spatial subset on the `lon` and `lat` dimensions, convert to tidy data frame and plot the `tos` variable over time. 
 
 ```{r time-series}
 tos <- tidync(system.file("nc/tos_O1_2001-2002.nc", package = "stars"))
@@ -419,22 +496,23 @@ library(dplyr)
 stos <- tos %>% hyper_filter(lon = between(lon, 140, 220), 
                      lat = between(lat, -60, 0)) %>% hyper_tibble()
 
+library(ggplot2)
+ggplot(stos, aes(lon, lat, fill = tos)) + geom_raster() + facet_wrap(~time)
 ```
 
-As an alternative, we can choose the middle value of longitude (it lies at index = 90) and plot the `tos` variable as a function of latitude over time. We can easily re-orient our approach to this data set and it works as well with more complicated multi-dimensional sources as well. 
+We can alternatively choose the middle value of longitude (it lies at index = 90) and plot the `tos` variable as a function of latitude over time. We can easily re-orient our approach to this data set and it works as well with more complicated multi-dimensional sources as well. 
 
 
 ```{r time-lat-series}
-library(ggplot2)
-ggplot(stos, aes(lon, lat, fill = tos)) + geom_raster() + facet_wrap(~time)
-
 lon180 <- tos %>%  hyper_filter(lon = index == 90, 
                      lat = between(lat, -60, 0)) %>% hyper_tibble()
 ggplot(lon180, aes(time, lat, fill = tos)) + geom_raster() 
 
 ```
 
-### Limitations
+<br>
+
+### Limitations {#limitations}
 
 There are some limitations, specific to the tidync R package that are unrelated to the capabilities of the latest NetCDF library. 
 
@@ -442,12 +520,15 @@ There are some limitations, specific to the tidync R package that are unrelated 
 * No compound types. 
 * No attribute metadata, coordinates of 1D axes are stored as *transform tables*, but coordinates of pairs (or higher sets) of axes are not explicitly linked to their array data.  
 * Curvilinear coordinates are not automatically expanded, this is because they exist (usually) on a different grid to the active one. 
-* Unknowns about what is supported on what platforms. This is surprisingly tricky and unstable, there are a lot of things that are possible on one operating system at a given time, but not on others. The situation changes fairly slowly but is
-always changing due to library versions and releases, package and tooling support on CRAN, and operating system details. 
+* Unknowns about what is supported on what platforms. This is surprisingly tricky and unstable, there are a lot of things that are possible on one operating system at a given time, but not on others. The situation changes fairly slowly but is always changing due to library versions and releases, package and tooling support on CRAN, and operating system details. 
 
-If you have problems with a given source please get in touch so we can learn more about the overall landscape. 
+If you have problems with a given source please get in touch ([open an issue on Github issues](https://github.com/ropensci/tidync/), [chat on twitter](https://twitter.com/mdsumner/)) so we can learn more about the overall landscape. 
 
-### Future helpers 
+<br>
+
+### Future helpers  {#future}
+
+<br>
 
 #### Coordinate expansion
 
@@ -488,16 +569,19 @@ full_expand(tidync(huc))
 hyper_tibble(tidync(huc))
 ```
 
+<br>
+
 #### Tidy approaches to other data sources
 
 This approach could be applied to other array-based data systems, such as the [ff package](https://CRAN.r-project.org/package=ff), the [matter package](https://CRAN.r-project.org/package=matter) GDAL [raster](https://gdal.org/tutorials/index.html#raster) or [multi-dimensional](https://gdal.org/tutorials/index.html#multidimensional-raster) data sources, and [HDF5](https://www.hdfgroup.org/solutions/hdf5/) or [GRIB](https://en.wikipedia.org/wiki/GRIB) sources. 
 
-We have experimented with this for non-NetCDF formats, please get in touch if you are interested.  
+We have experimented with this for non-NetCDF formats, please get in touch ([open an issue on Github issues](https://github.com/ropensci/tidync/), [chat on twitter](https://twitter.com/mdsumner/)) if you are interested.  
 
-The [stars project](https://github.com/r-spatial/stars/) takes another perspective on a tidy approach to scientific array data, it's very high-level and may be a drop-in solution for your workflow so I'd recommend trying it as well. 
+The [stars project](https://github.com/r-spatial/stars/) takes another perspective on a tidy approach to scientific array data. It is very high-level and may be a drop-in solution for well-behaved data so I'd recommend trying it as well. 
 
+<br>
 
-### rOpenSci package review 
+### rOpenSci package review {#review}
 
 The `tidync` package made it to CRAN after a fairly long review process on [rOpenSci](https://github.com/ropensci/software-review/issues/174). The package itself was inspired by many years of experience and discussions with [Tom Remenyi](https://github.com/tremenyi/), [Simon Wotherspoon](https://github.com/SWotherspoon/), [Sophie Bestley](https://github.com/snowpeaSoho/), and [Ben Raymond](https://github.com/raymondben/). In early 2018 I really wasn't sure if it could be finished at all in a neat way and was a bit overwhelmed, but thanks to very helpful reviewers and also some key insights about [obscure types](https://github.com/ropensci/tidync/issues/75#issuecomment-468064627) it was done. The package benefitted greatly from the review feedback provided by [Jakub Nowosad](https://github.com/Nowosad) and [Tim Lucas](https://github.com/timcdlucas). I really appreciated the clarity provided by these reviews, it helped to finalize some design decisions on the naming of functions and their intended use. There are various aspects that I thought were obstacles in completing the project, and having reviews that did not share my concerns and also gave positive feedback and suggestions for more relevant changes was extremely helpful. 
 
