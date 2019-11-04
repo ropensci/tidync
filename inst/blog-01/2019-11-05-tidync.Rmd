@@ -326,7 +326,7 @@ par(op)
 
 ### Transforms {#transforms}
 
-In this context ***transform*** means the conversion between index and geographic coordinate for grid cells, and in this data set this means the longitude and latitude assigned to the centre of each cell.* 
+In this context ***transform*** means the conversion between index and geographic coordinate for grid cells, and in this data set this means the longitude and latitude assigned to the centre of each cell.
 
 We have done nothing with the spatial side of these data, ignoring the lon and lat values completely. 
 
