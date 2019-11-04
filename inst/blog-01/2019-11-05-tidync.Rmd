@@ -557,7 +557,7 @@ full_expand <- function(x, ...) {
 }
 ```
 
-It's not clear to me how consistently this fits in the wider variants found in the NetCDF world, so any feedback is welcome. 
+It's not clear how consistently this fits in the wider variants found in the NetCDF world, so any feedback is welcome. 
 
 A real world example is available in the `ncdfgeom` package. This package provides much more in terms of storing geometry within a NetCDF file, but here we only extract the lon, lat and station name that `hyper_tibble()` isn't seeing by default. 
 
@@ -577,7 +577,7 @@ This approach could be applied to other array-based data systems, such as the [f
 
 We have experimented with this for non-NetCDF formats, please get in touch ([open an issue on Github issues](https://github.com/ropensci/tidync/), [chat on twitter](https://twitter.com/mdsumner/)) if you are interested.  
 
-The [stars project](https://github.com/r-spatial/stars/) takes another perspective on a tidy approach to scientific array data. It is very high-level and may be a drop-in solution for well-behaved data so I'd recommend trying it as well. 
+The [stars project](https://github.com/r-spatial/stars/) takes another perspective on a tidy approach to scientific array data. It is very high-level and may be a drop-in solution for well-behaved data so it's recommended to try that as well. 
 
 <br>
 
