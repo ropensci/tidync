@@ -1,7 +1,7 @@
-## tidync 0.2.2
+## tidync 0.2.3
 
-Hello, patch fix to avoid over-zealous tests that now cause problems with the new
-RNetCDF version. 
+Hello, attempt to return to CRAN. Cross platform tests that cause problems
+have been removed. 
 
 Thank you. 
 

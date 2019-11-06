@@ -1,3 +1,7 @@
+# tidync 0.2.3
+
+* Remove test burden. 
+
 # tidync 0.2.2
 
 * Fix broken tests due to changes in RNetCDF, thanks to CRAN for notification. 
