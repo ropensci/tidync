@@ -70,7 +70,10 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
   } else if (what %in% .data$variable$name){
     if (!is.null(select_var)) {
       vargrids <- vargrids[vargrids$variable == select_var, , drop = FALSE]
+    } else {
+      vargrids <- vargrids[vargrids$variable == what, , drop = FALSE]
     }
+    
     what <- vargrids$grid[1L]
   }
 

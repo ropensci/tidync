@@ -1,3 +1,8 @@
+# tidync dev
+
+* Can now activate with a bare variable name. As per https://github.com/ropensci/tidync/issues/95
+
+
 # tidync 0.2.3
 
 * Remove test burden. 
