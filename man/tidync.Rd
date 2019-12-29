@@ -22,7 +22,7 @@ tidync(x, what, ...)
 \item{...}{reserved for arguments to methods, currently ignored}
 }
 \description{
-Connect to a NetCDF source and allow use of \code{hyper_*} verbs for slicing with
+Connect to a NetCDF source and allow use of \verb{hyper_*} verbs for slicing with
 \code{\link[=hyper_filter]{hyper_filter()}}, extracting data with \code{\link[=hyper_array]{hyper_array()}} and  [hyper_tibble()
 from an activated grid. By default the largest \emph{grid} encountered is
 activated, see\code{\link[=activate]{activate()}}.
