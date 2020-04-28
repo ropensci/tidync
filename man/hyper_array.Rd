@@ -8,17 +8,34 @@
 \alias{hyper_array.character}
 \title{Extract NetCDF data as an array}
 \usage{
-hyper_array(x, select_var = NULL, ..., raw_datavals = FALSE,
-  force = FALSE, drop = TRUE)
+hyper_array(
+  x,
+  select_var = NULL,
+  ...,
+  raw_datavals = FALSE,
+  force = FALSE,
+  drop = TRUE
+)
 
-hyper_slice(x, select_var = NULL, ..., raw_datavals = FALSE,
-  force = FALSE, drop = TRUE)
+hyper_slice(
+  x,
+  select_var = NULL,
+  ...,
+  raw_datavals = FALSE,
+  force = FALSE,
+  drop = TRUE
+)
 
-\method{hyper_array}{tidync}(x, select_var = NULL, ...,
-  raw_datavals = FALSE, force = FALSE, drop = TRUE)
+\method{hyper_array}{tidync}(
+  x,
+  select_var = NULL,
+  ...,
+  raw_datavals = FALSE,
+  force = FALSE,
+  drop = TRUE
+)
 
-\method{hyper_array}{character}(x, select_var = NULL, ...,
-  raw_datavals = FALSE, drop = TRUE)
+\method{hyper_array}{character}(x, select_var = NULL, ..., raw_datavals = FALSE, drop = TRUE)
 }
 \arguments{
 \item{x}{NetCDF file, connection object, or \link{tidync} object}
