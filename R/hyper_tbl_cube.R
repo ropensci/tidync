@@ -1,8 +1,8 @@
 #' A dplyr cube tbl 
 #' 
-#' Produce a [tbl_cube][dplyr::tbl_cube()] from NetCDF. This is a 
+#' Produce a [tbl_cube][cubelyr::tbl_cube()] from NetCDF. This is a 
 #' delay-breaking function and causes data to be read from the source
-#' into the tbl cube format defined in the [dplyr][dplyr::tbl_cube] 
+#' into the tbl cube format defined in the [dplyr][cubelyr::tbl_cube] 
 #' package. 
 #' 
 #' The tbl cube is a very general and arbitrarily-sized array that 

@@ -23,9 +23,9 @@ tbl_cube
 \code{dplyr::tbl_cube}
 }
 \description{
-Produce a \link[dplyr:tbl_cube]{tbl_cube} from NetCDF. This is a
+Produce a \link[cubelyr:tbl_cube]{tbl_cube} from NetCDF. This is a
 delay-breaking function and causes data to be read from the source
-into the tbl cube format defined in the \link[dplyr:tbl_cube]{dplyr}
+into the tbl cube format defined in the \link[cubelyr:tbl_cube]{dplyr}
 package.
 }
 \details{
