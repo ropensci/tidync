@@ -97,11 +97,9 @@ install.packages("remotes")
 remotes::install_github("ropensci/tidync")
 ```
 
-At the time of writing the [travis install configuration](https://github.com/ropensci/tidync/blob/master/.travis.yml) was set up for "xenial", Ubuntu 16.04 which was required for using [NetCDF sources with groups](https://www.unidata.ucar.edu/software/netcdf/workshops/2011/groups-types/GroupsIntro.html). 
 
 
-More general information about system dependencies libnetcdf-dev and libudunits2-dev is available from [Unidata NetCDF](https://www.unidata.ucar.edu/software/netcdf/docs/getting_and_building_netcdf.html) and [Unidata Udunits2](https://www.unidata.ucar.edu/software/udunits/udunits-current/doc/udunits/udunits2.html#Installation). 
-
+More general information about system dependencies libnetcdf-dev and libudunits2-dev is available from [Unidata](https://www.unidata.ucar.edu). 
 
 ## Usage
 
