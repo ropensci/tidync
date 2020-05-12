@@ -1,3 +1,7 @@
+# tidync 0.2.4
+
+* Now inports cubelyr rather than dplyr for `tbl_cube()` thanks to Hadley Wickham PR #102. 
+
 # tidync 0.2.3
 
 * Remove test burden. 

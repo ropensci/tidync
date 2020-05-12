@@ -1,16 +1,14 @@
-## tidync 0.2.3
+## tidync 0.2.4
 
-Hello, attempt to return to CRAN. Cross platform tests that cause problems
-have been removed. 
+Hello, update to link to cubelyr rather than dplyr, for dplyr 1.0.0. 
 
 Thank you. 
 
 ## Test environments
-* local Ubuntu 18.04 install, R 3.6.1
+* local Ubuntu 18.04 install, R 3.6.3
 * win-builder (release and devel)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 notes
+0 errors | 0 warnings | 0 notes
 
-* This is a resubmission after being archived. 
