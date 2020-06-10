@@ -6,11 +6,11 @@
 \alias{hyper_tibble.tidync}
 \title{Extract NetCDF data as an expanded table.}
 \usage{
-hyper_tibble(x, ..., na.rm = TRUE)
+hyper_tibble(x, ..., na.rm = TRUE, force = FALSE)
 
-\method{hyper_tibble}{character}(x, ..., na.rm = TRUE)
+\method{hyper_tibble}{character}(x, ..., na.rm = TRUE, force = FALSE)
 
-\method{hyper_tibble}{tidync}(x, ..., na.rm = TRUE)
+\method{hyper_tibble}{tidync}(x, ..., na.rm = TRUE, force = FALSE)
 }
 \arguments{
 \item{x}{NetCDF file, connection object, or \code{tidync} object}
@@ -19,18 +19,26 @@ hyper_tibble(x, ..., na.rm = TRUE)
 
 \item{na.rm}{if \code{TRUE} these rows are not included in the output when all
 variables are \code{NA}}
+
+\item{force}{ignore caveats about large extraction and just do it}
 }
 \value{
 a \code{tbl_df}
 }
 \description{
 Extract the raw array data as an expanded data frame. This can be the entire
-variable/s or after dimension-slicing using \code{hyper_filter} expressions with
+variable/s or after dimension-slicing using \code{\link[=hyper_filter]{hyper_filter()}} expressions with
 dimension values expanded appropriately for each element in the arrays (one
 row per element).
 }
 \details{
-The function \code{hyper_array} will act on an existing tidync object or a source
+The size of an extraction is checked and if \emph{quite large} there is an a user-controlled
+prompt to proceed or cancel. This can be disabled with \code{options(tidync.large.data.check = FALSE)}
+\itemize{
+\item please see \code{\link[=hyper_array]{hyper_array()}} for more details.
+}
+
+The function \code{\link[=hyper_tibble]{hyper_tibble()}} will act on an existing tidync object or a source
 string.
 
 By default all variables in the active grid are returned, use \code{select_var} to

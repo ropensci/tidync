@@ -1,3 +1,8 @@
+# tidync 0.2.5
+
+* Improved documentation for large data check in `hyper_array()` and `hyper_tibble()` and `hyper_tbl_cube()`, 
+and allowed user-controlled option to avoid this check. Thanks to Alessandro Bigi for feedback. 
+
 # tidync 0.2.4
 
 * Now inports cubelyr rather than dplyr for `tbl_cube()` thanks to Hadley Wickham PR #102. 

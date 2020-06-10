@@ -6,6 +6,12 @@
 #' from the source into R native arrays. This list of arrays is 
 #' lightly classed as [tidync_data], with methods for [print()] and [tidync()]. 
 #'
+#' The function [hyper_array()] is used by [hyper_tibble()] and [hyper_tbl_cube()]
+#' to actually extract data arrays from NetCDF, if a result would be particularly large
+#' there is a check made and user-opportunity to cancel. This is controllable as an 
+#' option `getOption('tidync.large.data.check')`, and can be set to never check with
+#' `options(tidync.large.data.check = FALSE)`. 
+#' 
 #' The function [hyper_array()] will act on an existing tidync object or a source
 #' string.
 #'
@@ -115,12 +121,18 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
                   length(varnames))
   
   #browser()
-  if ((prod(dimension[["count"]]) * length(varnames)) * 4 > 1e9 && 
+  opt <- getOption("tidync.large.data.check")
+  if (!isTRUE(opt)) {
+    opt <- FALSE
+  }
+  if (opt && (prod(dimension[["count"]]) * length(varnames)) * 4 > 1e9 && 
         interactive() && !force) {
+    message("please confirm data extraction, Y(es) to proceed ... use 'force = TRUE' to avoid size check\n (  see '?hyper_array')")
+    
     yes <- utils::askYesNo(mess)
     if (!yes) {
-      message("aborting data extraction, use 'force = TRUE' to avoid size check")
-      return(invisible(NULL))
+      stop("extraction cancelled by user", call. = FALSE)
+##       return(invisible(NULL))
     }
   }
   transforms <- active_axis_transforms(x)

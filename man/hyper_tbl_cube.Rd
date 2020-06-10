@@ -6,16 +6,18 @@
 \alias{hyper_tbl_cube.character}
 \title{A dplyr cube tbl}
 \usage{
-hyper_tbl_cube(x, ...)
+hyper_tbl_cube(x, ..., force = FALSE)
 
-\method{hyper_tbl_cube}{tidync}(x, ...)
+\method{hyper_tbl_cube}{tidync}(x, ..., force = FALSE)
 
-\method{hyper_tbl_cube}{character}(x, ...)
+\method{hyper_tbl_cube}{character}(x, ..., force = FALSE)
 }
 \arguments{
 \item{x}{tidync object}
 
 \item{...}{arguments for \code{\link[=hyper_filter]{hyper_filter()}}}
+
+\item{force}{ignore caveats about large extraction and just do it}
 }
 \value{
 tbl_cube
@@ -29,6 +31,12 @@ into the tbl cube format defined in the \link[cubelyr:tbl_cube]{dplyr}
 package.
 }
 \details{
+The size of an extraction is checked and if \emph{quite large} there is an a user-controlled
+prompt to proceed or cancel. This can be disabled with \code{options(tidync.large.data.check = FALSE)}
+\itemize{
+\item please see \code{\link[=hyper_array]{hyper_array()}} for more details.
+}
+
 The tbl cube is a very general and arbitrarily-sized array that
 can be used with tidyverse functionality. Dimension coordinates are
 stored with the tbl cube, derived from the grid
