@@ -157,7 +157,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
 #' @name hyper_array
 #' @export
 hyper_array.character <- function(x,  select_var = NULL, ...,
-                                  raw_datavals = FALSE, drop = TRUE) {
+                                  raw_datavals = FALSE, force = FALSE, drop = TRUE) {
   tidync(x) %>% 
     hyper_filter(...) %>%  
     hyper_array(select_var = select_var, 

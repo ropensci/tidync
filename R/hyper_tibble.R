@@ -52,7 +52,7 @@ hyper_tibble.character <- function(x, ..., na.rm = TRUE, force = FALSE) {
 #' @export
 hyper_tibble.tidync<- function(x, ..., na.rm = TRUE, force = FALSE) {
   
-  slabs <- hyper_array(x, ..., na.rm = na.rm, force = force)
+  slabs <- hyper_array(x, ...,  force = force)
   if (na.rm) all_na <- Reduce(`&`, lapply(slabs, 
                                           function(a) is.na(as.vector(a))))
   total_prod <- prod(dim(slabs[[1]]))
