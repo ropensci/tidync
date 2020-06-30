@@ -72,7 +72,7 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
- - name: MacOS brew system dependencies
+      - name: MacOS brew system dependencies
         if: runner.os == 'macOS'
         run: |
            brew install netcdf
