@@ -37,6 +37,7 @@ Suggests: ggplot2,
     testthat,
     covr,    
     cubelyr
+SystemRequirements:	netcdf udunits-2
 Roxygen: list(markdown = TRUE)
 URL: https://docs.ropensci.org/tidync/
 BugReports: https://github.com/ropensci/tidync/issues
