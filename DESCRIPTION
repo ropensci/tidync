@@ -7,7 +7,8 @@ Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c(
              person("Ben", "Raymond", role = "ctb"), 
              person("Jakub", "Nowosad", role = "ctb"), 
              person("Tim", "Lucas", role = "ctb"), 
-             person("Hadley", "Wickham", role = "ctb"))
+             person("Hadley", "Wickham", role = "ctb"), 
+             person("Adrian", "Odenweller", role = "ctb"))
 Description: Tidy tools for 'NetCDF' data sources. Explore the contents of a 
  'NetCDF' source (file or URL) presented as variables organized by grid with a 
  database-like interface. The hyper_filter() interactive function translates the 

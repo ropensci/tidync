@@ -129,15 +129,14 @@ makes a distinction based on which dimensions are *active*.
 tidync(ice_file) %>% activate("D2")
 ```
 
-It is also possible to choose a grid by *variable name*, and in tidyverse style
-here we do not need to quote the name. If we choose a variable in the default
+It is also possible to choose a grid by *variable name*. If we choose a variable in the default
 grid, then it's no different to the first case.
 
 ```{r  NSE-activate}
-tidync(ice_file) %>% activate(time)
+tidync(ice_file) %>% activate("time")
 
 ## choose grid by variable name, which happens to be the default grid here
-tidync(ice_file) %>% activate(quality_flag)
+tidync(ice_file) %>% activate("quality_flag")
 
 ## same as the default
 tidync(ice_file) %>% activate("D0,D1,D2")
