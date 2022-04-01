@@ -15,8 +15,9 @@ status](https://ci.appveyor.com/api/projects/status/github/ropensci/tidync?branc
 status](https://codecov.io/gh/ropensci/tidync/branch/master/graph/badge.svg)](https://codecov.io/github/ropensci/tidync?branch=master)
 [![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
-[![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
+[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
+[![R-CMD-check](https://github.com/ropensci/tidync/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/tidync/actions)
 <!-- badges: end -->
 
 The goal of tidync is to ease exploring the contents of a NetCDF source
@@ -27,10 +28,10 @@ data frame. In contrast to other packages tidync helps reduce the volume
 of code required to discover and read the contents of NetCDF, with
 simple steps:
 
-  - Connect and summarize `tidync()`.
-  - (optionally) Specify source variables `activate()`.
-  - (optionally) Specify array sub-setting (slicing) `hyper_filter()`.
-  - Read array data in native form `hyper_array()` or long-form
+-   Connect and summarize `tidync()`.
+-   (optionally) Specify source variables `activate()`.
+-   (optionally) Specify array sub-setting (slicing) `hyper_filter()`.
+-   Read array data in native form `hyper_array()` or long-form
     `hyper_tibble()` or bespoke form `hyper_tbl_cube()`.
 
 NetCDF is **Network Common Data Form** a very common, and very general
@@ -317,36 +318,32 @@ tidync(filename) %>% activate(grid_identifier)
 ## with the saved filtering from above, choose data frame or tbl_cube output
 ## optionally with only selected variables
 subs %>% hyper_tibble()
-#> # A tibble: 493 x 37
-#>     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_E…  TEMP TEMP_QC
-#>    <dbl> <chr>           <dbl> <chr>                       <dbl> <dbl> <chr>  
-#>  1  7.70 1                7.79 1                            2.40  13.2 1      
-#>  2 11.8  1               11.9  1                            2.40  13.2 1      
-#>  3 16.3  1               16.4  1                            2.40  13.2 1      
-#>  4 21.6  1               21.7  1                            2.40  13.2 1      
-#>  5 26.7  1               26.8  1                            2.40  13.2 1      
-#>  6 31.7  1               31.8  1                            2.40  13.2 1      
-#>  7 36.6  1               36.7  1                            2.40  13.2 1      
-#>  8 41.4  1               41.5  1                            2.40  13.2 1      
-#>  9 46.5  1               46.6  1                            2.40  13.2 1      
-#> 10 51.8  1               51.9  1                            2.40  13.2 1      
+#> # A tibble: 493 × 37
+#>     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_ERR…  TEMP TEMP_QC
+#>    <dbl> <chr>           <dbl> <chr>                         <dbl> <dbl> <chr>  
+#>  1  7.70 1                7.79 1                              2.40  13.2 1      
+#>  2 11.8  1               11.9  1                              2.40  13.2 1      
+#>  3 16.3  1               16.4  1                              2.40  13.2 1      
+#>  4 21.6  1               21.7  1                              2.40  13.2 1      
+#>  5 26.7  1               26.8  1                              2.40  13.2 1      
+#>  6 31.7  1               31.8  1                              2.40  13.2 1      
+#>  7 36.6  1               36.7  1                              2.40  13.2 1      
+#>  8 41.4  1               41.5  1                              2.40  13.2 1      
+#>  9 46.5  1               46.6  1                              2.40  13.2 1      
+#> 10 51.8  1               51.9  1                              2.40  13.2 1      
 #> # … with 483 more rows, and 30 more variables: TEMP_ADJUSTED <dbl>,
 #> #   TEMP_ADJUSTED_QC <chr>, TEMP_ADJUSTED_ERROR <dbl>, PSAL <dbl>,
 #> #   PSAL_QC <chr>, PSAL_ADJUSTED <dbl>, PSAL_ADJUSTED_QC <chr>,
 #> #   PSAL_ADJUSTED_ERROR <dbl>, DOXY <dbl>, DOXY_QC <chr>, DOXY_ADJUSTED <dbl>,
 #> #   DOXY_ADJUSTED_QC <chr>, DOXY_ADJUSTED_ERROR <dbl>, CHLA <dbl>,
 #> #   CHLA_QC <chr>, CHLA_ADJUSTED <dbl>, CHLA_ADJUSTED_QC <chr>,
-#> #   CHLA_ADJUSTED_ERROR <dbl>, BBP700 <dbl>, BBP700_QC <chr>,
-#> #   BBP700_ADJUSTED <dbl>, BBP700_ADJUSTED_QC <chr>,
-#> #   BBP700_ADJUSTED_ERROR <dbl>, NITRATE <dbl>, NITRATE_QC <chr>,
-#> #   NITRATE_ADJUSTED <dbl>, NITRATE_ADJUSTED_QC <chr>,
-#> #   NITRATE_ADJUSTED_ERROR <dbl>, N_LEVELS <int>, N_PROF <int>
+#> #   CHLA_ADJUSTED_ERROR <dbl>, BBP700 <dbl>, BBP700_QC <chr>, …
 subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 #> $mets
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (3): 'PRES', 'PRES_QC', 'PSAL_ADJUSTED'
 #> Dimension (1): N_LEVELS,N_PROF (493)
-#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc
 #> 
 #> $dims
 #> $dims$N_LEVELS
@@ -404,7 +401,7 @@ While dplyr filter can load up multiple comparisons:
 df %>% dplyr::filter(longitude > 100, longitude < 150)
 ```
 
-in hyper\_filter we must load them into one named expression.
+in hyper_filter we must load them into one named expression.
 
 ``` r
 tidync(filename) %>% hyper_filter(longitude = longitude > 100 & longitude < 150)
@@ -421,7 +418,7 @@ frame or raw-array (hyper slice) form.
 tidync(filename) %>% activate("JULD") %>% 
   hyper_filter(N_PROF = N_PROF == 1) %>% 
   hyper_tibble()
-#> # A tibble: 98 x 5
+#> # A tibble: 98 × 5
 #>    SCIENTIFIC_CALIB_DATE DATE_TIME N_PARAM N_CALIB N_PROF
 #>    <chr>                     <int>   <int>   <int>  <int>
 #>  1 2                             1       1       1      1
@@ -445,7 +442,7 @@ tidync(filename) %>% activate("JULD") %>%
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (1): 'SCIENTIFIC_CALIB_DATE'
 #> Dimension (4): DATE_TIME,N_PARAM,N_CALIB,N_PROF (14, 7, 1, 1)
-#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/3.6/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the
@@ -468,13 +465,13 @@ browseVignettes(package = "tidync")
 ## Limitations
 
 Please get in touch if you have specific workflows that `tidync` is not
-providing. There’s a lot of room for improvement\!
+providing. There’s a lot of room for improvement!
 
-  - we can’t do “grouped filters”" (i.e. polygon-overlay extraction),
+-   we can’t do “grouped filters”” (i.e. polygon-overlay extraction),
     but it’s in the works
-  - compound types are not supported, though see the “rhdf5” branch on
+-   compound types are not supported, though see the “rhdf5” branch on
     Github
-  - NetCDF groups are not exposed (groups are like a “files within a
+-   NetCDF groups are not exposed (groups are like a “files within a
     file”, analogous to a file system directory)
 
 I’m interested in lighter and rawer access to the NetCDF library, I’ve
@@ -484,14 +481,14 @@ explored that here and it may or may not be a good idea:
 
 ## Terminology
 
-  - **slab**, **hyperslab** - array variable that may be read from a
+-   **slab**, **hyperslab** - array variable that may be read from a
     NetCDF
-  - **shape**, **grid** - set of dimensions that define variables in
+-   **shape**, **grid** - set of dimensions that define variables in
     NetCDF
-  - **activation** - choice of a given grid to apply subsetting and read
+-   **activation** - choice of a given grid to apply subsetting and read
     operations to
 
------
+------------------------------------------------------------------------
 
 ## Code of conduct
 
@@ -499,4 +496,4 @@ Please note that this project is released with a [Contributor Code of
 Conduct](https://github.com/ropensci/tidync/blob/master/CONDUCT.md). By
 participating in this project you agree to abide by its terms.
 
-[![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
+[![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

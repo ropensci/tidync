@@ -30,14 +30,14 @@ Imports:
     rlang,
     tibble,
     tidyr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.2
 Suggests: ggplot2,
     knitr,
     rmarkdown,
     testthat,
     covr,    
     cubelyr
-SystemRequirements:	netcdf udunits-2
+SystemRequirements: netcdf udunits-2
 Roxygen: list(markdown = TRUE)
 URL: https://docs.ropensci.org/tidync/
 BugReports: https://github.com/ropensci/tidync/issues
