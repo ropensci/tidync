@@ -35,7 +35,14 @@ hyper_slice(
   drop = TRUE
 )
 
-\method{hyper_array}{character}(x, select_var = NULL, ..., raw_datavals = FALSE, drop = TRUE)
+\method{hyper_array}{character}(
+  x,
+  select_var = NULL,
+  ...,
+  raw_datavals = FALSE,
+  force = FALSE,
+  drop = TRUE
+)
 }
 \arguments{
 \item{x}{NetCDF file, connection object, or \link{tidync} object}
