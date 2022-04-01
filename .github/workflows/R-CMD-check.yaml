@@ -2,9 +2,11 @@ on:
   push:
     branches:
       - master
+      - update-br
   pull_request:
     branches:
       - master
+      
 
 name: R-CMD-check
 
