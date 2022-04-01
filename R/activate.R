@@ -61,7 +61,10 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
   } else {
    vargrids <- tidyr::unnest(.data$grid) 
   }
-  what_name <- deparse(substitute(what))
+  # Try to set what_name to what (in case it's a string)
+  what_name <- try(what, silent = T)
+  # If it fails, use deparse(substitute(what)) to turn into string
+  if (class(what_name) == "try-error") what_name <- deparse(substitute(what))
   #if (what_name %in% var_names(.data)) what <- what_name
   if (what_name %in% vargrids$variable) {
     ## use the variable to find the grid
