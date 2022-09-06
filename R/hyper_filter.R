@@ -59,11 +59,18 @@ hyper_filter.tidync <- function(.x, ...) {
   quo_noname <- unname(quo_named)
   ## check that named subexpressions are unique
   names1 <- names(quo_named)
-  if (length(unique(names1)) < length(names1)) warning("named expressions must be unique, found repeated names and only the later of a duplicate will be applied")
+  if (length(unique(names1)) < length(names1)) {
+    if (!isTRUE(getOption("tidync.silent"))) {
+  
+    warning("named expressions must be unique, found repeated names and only the later of a duplicate will be applied")
+  }}
   for (i in seq_along(quo_named)) {
     iname <- names1[i]
     if (!iname %in% names(trans0)) {
-      warning(sprintf("'%s' not found in active grid, ignoring", iname))
+      if (!isTRUE(getOption("tidync.silent"))) {
+  
+       warning(sprintf("'%s' not found in active grid, ignoring", iname))
+      }
       next
     }
     SELECTION <- dplyr::filter(trans0[[iname]], !!!quo_noname[i])
@@ -98,7 +105,10 @@ update_slices <- function(x) {
   counts <- ends - starts + 1L
   ## todo make this more informative
   if (!all(counts == actual_counts)) {
-    warning("arbitrary indexing within dimension is not yet supported")
+    if (!isTRUE(getOption("tidync.silent"))) {
+  
+     warning("arbitrary indexing within dimension is not yet supported")
+    }
   }                        
  idx <- match(names(starts), x[["dimension"]][["name"]])
  x[["dimension"]][["start"]] <- NA

@@ -30,6 +30,12 @@ extracting data.
 The scheme generally processes dimension filters into NetCDF extraction
 indexes and these are always available to each function, and are expressed
 in printed output.
+
+The following options are available.
+\tabular{ll}{
+\code{tidync.large.data.check = TRUE/FALSE} \tab check for large data extraction (default \code{TRUE}) \cr
+\code{tidync.silent = FALSE/TRUE} \tab emit warnings,messages or be silent (default \code{FALSE}) \cr
+}
 }
 \examples{
 argofile <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
@@ -43,4 +49,12 @@ argo \%>\% hyper_transforms()
 argo \%>\% hyper_vars()
 argo \%>\% hyper_dims()
 argo \%>\% hyper_grids()
+
+## some global options
+getOption("tidync.large.data.check")
+
+getOption("tidync.silent")
+op <- options(tidync.silent = TRUE)
+getOption("tidync.silent")
+options(op)
 }

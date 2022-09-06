@@ -1,3 +1,8 @@
+# tidync dev
+
+* Add option to silence all warnings and messages. See #115, suggestion of @markpayneatwork. 
+
+
 # tidync 0.2.5
 
 * Improved documentation for large data check in `hyper_array()` and `hyper_tibble()` and `hyper_tbl_cube()`, 

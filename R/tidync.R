@@ -82,14 +82,19 @@ tidync <- function(x, what, ...) {
 #' @importFrom ncmeta nc_meta
 tidync.character <- function(x, what, ...) {
   if (length(x) > 1) {
-    warning("only one source allowed, first supplied chosen")
+    if (!isTRUE(getOption("tidync.silent"))) {
+  
+      warning("only one source allowed, first supplied chosen")
+    }
     x <- x[1L]
   }
   fexists <- file.exists(x)
   
   if (!fexists) {
+     if (!isTRUE(getOption("tidync.silent"))) {
     message(sprintf("not a file: \n' %s '\n\n... attempting remote connection\n", 
                 x))
+     }
   }
   safemeta <- purrr::safely(ncmeta::nc_meta)
   meta <- safemeta(x)
@@ -103,17 +108,27 @@ tidync.character <- function(x, what, ...) {
   if (is.null(bad_dim) || is.na(bad_dim) || length(bad_dim) < 1) bad_dim <- TRUE
   if (is.null(bad_var) || is.na(bad_var) || length(bad_var) < 1) bad_var <- TRUE
 
+  
   if (bad_dim) {
-    warning("no dimensions found")
+      if (!isTRUE(getOption("tidync.silent"))) {
+
+       warning("no dimensions found")
+      }
   }
   if (bad_var) {
-    warning("no variables found")
+      if (!isTRUE(getOption("tidync.silent"))) {
+        warning("no variables found")
+      }
   }
   if (bad_dim && bad_var) {
     stop("no variables or dimensions \n  
          (is this a source with compound-types? Try h5, rhdf5, or hdf5r)")
   }
-  if (!fexists) message("Connection succeeded.")      
+  if (!fexists) {
+     if (!isTRUE(getOption("tidync.silent"))) {
+    message("Connection succeeded.")    
+     }
+  }
   meta <- meta$result
   variable <- dplyr::mutate(meta[["variable"]], active = FALSE)
 

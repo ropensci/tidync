@@ -1,5 +1,5 @@
 tidync_default_options <- function() {
-  list(tidync.large.data.check = TRUE)
+  list(tidync.large.data.check = TRUE, tidync.silent = FALSE)
 }
 
 

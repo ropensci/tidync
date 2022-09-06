@@ -24,6 +24,12 @@
 #'  The scheme generally processes dimension filters into NetCDF extraction
 #'  indexes and these are always available to each function, and are expressed
 #'  in printed output.
+#'  
+#' The following options are available. 
+#' \tabular{ll}{
+#' \code{tidync.large.data.check = TRUE/FALSE} \tab check for large data extraction (default `TRUE`) \cr
+#' \code{tidync.silent = FALSE/TRUE} \tab emit warnings,messages or be silent (default `FALSE`) \cr
+#' }
 #' @name tidync-package
 #' @docType package
 #' @examples 
@@ -38,4 +44,12 @@
 #' argo %>% hyper_vars()
 #' argo %>% hyper_dims()
 #' argo %>% hyper_grids()
+#' 
+#' ## some global options
+#' getOption("tidync.large.data.check")
+#' 
+#' getOption("tidync.silent")
+#' op <- options(tidync.silent = TRUE)
+#' getOption("tidync.silent")
+#' options(op)
 NULL

@@ -68,7 +68,9 @@ hyper_array <- function(x, select_var = NULL, ...,
 #' @export
 hyper_slice <- function(x, select_var = NULL, ..., 
                         raw_datavals = FALSE, force = FALSE, drop = TRUE) {
-  warning("hyper_array should be used instead of hyper_slice")
+  if (!isTRUE(getOption("tidync.silent"))) {
+   warning("hyper_array should be used instead of hyper_slice")
+  }
   hyper_array(x = x, select_var = select_var, ..., 
               raw_datavals = raw_datavals, force = force, drop = drop)
 }
@@ -99,8 +101,10 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
       
       select_var <- base::intersect(select_var, variable[["name"]])
       if (length(select_var) < 1) stop("no select_var variables available")
-      warning(sprintf("some select_var variables not found, and ignored:\n %s",
+      if (!isTRUE(getOption("tidync.silent"))) {
+        warning(sprintf("some select_var variables not found, and ignored:\n %s",
                       paste(bad, collapse = ",")))
+      }
     }
     ## todo, make this quosic?
     varnames <- select_var

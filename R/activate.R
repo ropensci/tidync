@@ -144,7 +144,9 @@ active <- function(x) {
 #' @rdname activate
 #' @export
 active.default <- function(x) {
-  warning("determining active status of object not recognized as activatable")
+  if (!isTRUE(getOption("tidync.silent"))) {
+    warning("determining active status of object not recognized as activatable")
+  }
   val <- attr(x, 'active')
 }
 #' @rdname activate
@@ -156,7 +158,9 @@ active.default <- function(x) {
 #' @rdname activate
 #' @export
 `active<-.default` <- function(x, value) {
-  warning("activating as a default, this object not recognized as activatable")
+  if (!isTRUE(getOption("tidync.silent"))) {
+   warning("activating as a default, this object not recognized as activatable")
+  }
   attr(x, 'active') <- value
   x
 }
