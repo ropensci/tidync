@@ -5,8 +5,7 @@
 
 <!-- badges: start -->
 
-[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)
-[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/software-review/issues/174)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
 [![R-CMD-check](https://github.com/ropensci/tidync/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/tidync/actions)
@@ -311,31 +310,31 @@ tidync(filename) %>% activate(grid_identifier)
 ## optionally with only selected variables
 subs %>% hyper_tibble()
 #> # A tibble: 493 × 37
-#>     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_ERR…  TEMP TEMP_QC
-#>    <dbl> <chr>           <dbl> <chr>                         <dbl> <dbl> <chr>  
-#>  1  7.70 1                7.79 1                              2.40  13.2 1      
-#>  2 11.8  1               11.9  1                              2.40  13.2 1      
-#>  3 16.3  1               16.4  1                              2.40  13.2 1      
-#>  4 21.6  1               21.7  1                              2.40  13.2 1      
-#>  5 26.7  1               26.8  1                              2.40  13.2 1      
-#>  6 31.7  1               31.8  1                              2.40  13.2 1      
-#>  7 36.6  1               36.7  1                              2.40  13.2 1      
-#>  8 41.4  1               41.5  1                              2.40  13.2 1      
-#>  9 46.5  1               46.6  1                              2.40  13.2 1      
-#> 10 51.8  1               51.9  1                              2.40  13.2 1      
-#> # … with 483 more rows, and 30 more variables: TEMP_ADJUSTED <dbl>,
-#> #   TEMP_ADJUSTED_QC <chr>, TEMP_ADJUSTED_ERROR <dbl>, PSAL <dbl>,
-#> #   PSAL_QC <chr>, PSAL_ADJUSTED <dbl>, PSAL_ADJUSTED_QC <chr>,
-#> #   PSAL_ADJUSTED_ERROR <dbl>, DOXY <dbl>, DOXY_QC <chr>, DOXY_ADJUSTED <dbl>,
-#> #   DOXY_ADJUSTED_QC <chr>, DOXY_ADJUSTED_ERROR <dbl>, CHLA <dbl>,
-#> #   CHLA_QC <chr>, CHLA_ADJUSTED <dbl>, CHLA_ADJUSTED_QC <chr>,
-#> #   CHLA_ADJUSTED_ERROR <dbl>, BBP700 <dbl>, BBP700_QC <chr>, …
+#>     PRES PRES_QC PRES_AD…¹ PRES_…² PRES_…³  TEMP TEMP_QC TEMP_…⁴ TEMP_…⁵ TEMP_…⁶
+#>    <dbl> <chr>       <dbl> <chr>     <dbl> <dbl> <chr>     <dbl> <chr>     <dbl>
+#>  1  7.70 1            7.79 1          2.40  13.2 1          13.2 1       0.00200
+#>  2 11.8  1           11.9  1          2.40  13.2 1          13.2 1       0.00200
+#>  3 16.3  1           16.4  1          2.40  13.2 1          13.2 1       0.00200
+#>  4 21.6  1           21.7  1          2.40  13.2 1          13.2 1       0.00200
+#>  5 26.7  1           26.8  1          2.40  13.2 1          13.2 1       0.00200
+#>  6 31.7  1           31.8  1          2.40  13.2 1          13.2 1       0.00200
+#>  7 36.6  1           36.7  1          2.40  13.2 1          13.2 1       0.00200
+#>  8 41.4  1           41.5  1          2.40  13.2 1          13.2 1       0.00200
+#>  9 46.5  1           46.6  1          2.40  13.2 1          13.2 1       0.00200
+#> 10 51.8  1           51.9  1          2.40  13.2 1          13.2 1       0.00200
+#> # … with 483 more rows, 27 more variables: PSAL <dbl>, PSAL_QC <chr>,
+#> #   PSAL_ADJUSTED <dbl>, PSAL_ADJUSTED_QC <chr>, PSAL_ADJUSTED_ERROR <dbl>,
+#> #   DOXY <dbl>, DOXY_QC <chr>, DOXY_ADJUSTED <dbl>, DOXY_ADJUSTED_QC <chr>,
+#> #   DOXY_ADJUSTED_ERROR <dbl>, CHLA <dbl>, CHLA_QC <chr>, CHLA_ADJUSTED <dbl>,
+#> #   CHLA_ADJUSTED_QC <chr>, CHLA_ADJUSTED_ERROR <dbl>, BBP700 <dbl>,
+#> #   BBP700_QC <chr>, BBP700_ADJUSTED <dbl>, BBP700_ADJUSTED_QC <chr>,
+#> #   BBP700_ADJUSTED_ERROR <dbl>, NITRATE <dbl>, NITRATE_QC <chr>, …
 subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 #> $mets
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (3): 'PRES', 'PRES_QC', 'PSAL_ADJUSTED'
 #> Dimension (1): N_LEVELS,N_PROF (493)
-#> Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.2/tidync/extdata/argo/MD5903593_001.nc
 #> 
 #> $dims
 #> $dims$N_LEVELS
@@ -410,20 +409,10 @@ frame or raw-array (hyper slice) form.
 tidync(filename) %>% activate("JULD") %>% 
   hyper_filter(N_PROF = N_PROF == 1) %>% 
   hyper_tibble()
-#> # A tibble: 98 × 5
-#>    SCIENTIFIC_CALIB_DATE DATE_TIME N_PARAM N_CALIB N_PROF
-#>    <chr>                     <int>   <int>   <int>  <int>
-#>  1 2                             1       1       1      1
-#>  2 0                             2       1       1      1
-#>  3 1                             3       1       1      1
-#>  4 7                             4       1       1      1
-#>  5 0                             5       1       1      1
-#>  6 4                             6       1       1      1
-#>  7 1                             7       1       1      1
-#>  8 0                             8       1       1      1
-#>  9 1                             9       1       1      1
-#> 10 4                            10       1       1      1
-#> # … with 88 more rows
+#> # A tibble: 1 × 2
+#>     JULD N_PROF
+#>    <dbl>  <int>
+#> 1 22719.      1
 
 
 ## native array form, we'll see a (list of) R arrays with a dimension for 
@@ -432,9 +421,9 @@ tidync(filename) %>% activate("JULD") %>%
   hyper_filter(N_PROF = N_PROF == 1) %>% 
   hyper_array()
 #> Class: tidync_data (list of tidync data arrays)
-#> Variables (1): 'SCIENTIFIC_CALIB_DATE'
-#> Dimension (4): DATE_TIME,N_PARAM,N_CALIB,N_PROF (14, 7, 1, 1)
-#> Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc
+#> Variables (1): 'JULD'
+#> Dimension (1): N_PROF (1)
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.2/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the

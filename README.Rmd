@@ -17,8 +17,7 @@ knitr::opts_chunk$set(
 # tidync
 
 <!-- badges: start -->
-[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/onboarding/issues/174)
-[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing) [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
+[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/software-review/issues/174) [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
 [![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
 [![R-CMD-check](https://github.com/ropensci/tidync/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/tidync/actions)
 <!-- badges: end -->
