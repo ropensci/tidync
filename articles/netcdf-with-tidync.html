@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -79,9 +79,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>NetCDF with tidync</h1>
-                        <h4 data-toc-skip class="author">Michael D. Sumner</h4>
+                        <h4 data-toc-skip class="author">Michael D.
+Sumner</h4>
             
-            <h4 data-toc-skip class="date">2022-09-06</h4>
+            <h4 data-toc-skip class="date">2022-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/tidync/blob/HEAD/vignettes/netcdf-with-tidync.Rmd" class="external-link"><code>vignettes/netcdf-with-tidync.Rmd</code></a></small>
       <div class="hidden name"><code>netcdf-with-tidync.Rmd</code></div>
@@ -90,18 +91,47 @@
 
     
     
-<p>The goal of tidync is to ease exploring the contents of a NetCDF source and to simplify the process of data extraction.</p>
-<p>Array dimension expressions virtually <em>slice</em> (i.e. <em>index</em>) into data arrays with immediate feedback, and ease programming for automating data extraction. No data is read until explicitly requested, and can be pulled directly as an array, or in long-form as a data frame.</p>
-<p>NetCDF is <strong>Network Common Data Form</strong>, a <a href="https://twitter.com/TedHabermann/status/958034585002041344" class="external-link">data model</a> and an <a href="https://en.wikipedia.org/wiki/Application_programming_interface" class="external-link">API</a>.</p>
-<p>This is a very common, and <em>very general</em> way to store and work with scientific array-based data. NetCDF is defined and provided by <a href="https://www.unidata.ucar.edu/software/netcdf/" class="external-link">Unidata</a>.</p>
-<p>Here we introduce traditional concepts of NetCDF, and show examples with built-in files and online sources to demonstrate tidync functionality.</p>
+<p>The goal of tidync is to ease exploring the contents of a NetCDF
+source and to simplify the process of data extraction.</p>
+<p>Array dimension expressions virtually <em>slice</em>
+(i.e. <em>index</em>) into data arrays with immediate feedback, and ease
+programming for automating data extraction. No data is read until
+explicitly requested, and can be pulled directly as an array, or in
+long-form as a data frame.</p>
+<p>NetCDF is <strong>Network Common Data Form</strong>, a <a href="https://twitter.com/TedHabermann/status/958034585002041344" class="external-link">data
+model</a> and an <a href="https://en.wikipedia.org/wiki/Application_programming_interface" class="external-link">API</a>.</p>
+<p>This is a very common, and <em>very general</em> way to store and
+work with scientific array-based data. NetCDF is defined and provided by
+<a href="https://www.unidata.ucar.edu/software/netcdf/" class="external-link">Unidata</a>.</p>
+<p>Here we introduce traditional concepts of NetCDF, and show examples
+with built-in files and online sources to demonstrate tidync
+functionality.</p>
 <div class="section level2">
 <h2 id="netcdf">NetCDF<a class="anchor" aria-label="anchor" href="#netcdf"></a>
 </h2>
-<p>NetCDF is a very widely used file format for storing array-based data as <em>variables</em>. The <strong>space</strong> occupied by a <strong>variable</strong> is defined by its <strong>dimensions</strong> and their metadata. Dimensions are by definition <em>one-dimensional</em> (i.e. an atomic vector in R of length 1 or more), an array with coordinate metadata, units, type and interpretation. The <strong>space</strong> of a variable is defined as one or more of the dimensions in the file. A given variable won’t necessarily use all the available dimensions and no dimensions are mandatory or particularly special.</p>
-<p>Some conventions exist to define usage and minimal standards for metadata for particular file schemas, but these are many and varied, and not always adhered to. Tidync does not provide a data interpretation as it is intended for general use, including by tools that create data formats.</p>
-<p>The R community is not particularly strong with use of NetCDF, though it is common and widely used it pales compared to use in general climate science work, and there the most used tool is the <a href="https://code.mpimet.mpg.de/projects/cdo" class="external-link">CDO Climate Data Operators</a>. In R the most common tools used are ncdf4 and raster (which uses ncdf4).</p>
-<p>Both the RNetCDF and ncdf4 packages provide a traditional summary format, familiar to many NetCDF users as the output of the command line program <a href="https://www.unidata.ucar.edu/software/netcdf/workshops/most-recent/utilities/Ncdump.html" class="external-link"><code>ncdump</code></a>.</p>
+<p>NetCDF is a very widely used file format for storing array-based data
+as <em>variables</em>. The <strong>space</strong> occupied by a
+<strong>variable</strong> is defined by its <strong>dimensions</strong>
+and their metadata. Dimensions are by definition
+<em>one-dimensional</em> (i.e. an atomic vector in R of length 1 or
+more), an array with coordinate metadata, units, type and
+interpretation. The <strong>space</strong> of a variable is defined as
+one or more of the dimensions in the file. A given variable won’t
+necessarily use all the available dimensions and no dimensions are
+mandatory or particularly special.</p>
+<p>Some conventions exist to define usage and minimal standards for
+metadata for particular file schemas, but these are many and varied, and
+not always adhered to. Tidync does not provide a data interpretation as
+it is intended for general use, including by tools that create data
+formats.</p>
+<p>The R community is not particularly strong with use of NetCDF, though
+it is common and widely used it pales compared to use in general climate
+science work, and there the most used tool is the <a href="https://code.mpimet.mpg.de/projects/cdo" class="external-link">CDO Climate Data
+Operators</a>. In R the most common tools used are ncdf4 and raster
+(which uses ncdf4).</p>
+<p>Both the RNetCDF and ncdf4 packages provide a traditional summary
+format, familiar to many NetCDF users as the output of the command line
+program <a href="https://www.unidata.ucar.edu/software/netcdf/workshops/most-recent/utilities/Ncdump.html" class="external-link"><code>ncdump</code></a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ice_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ifremer"</span>, <span class="st">"20171002.nc"</span>, package <span class="op">=</span> <span class="st">"tidync"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mjwoods/RNetCDF" class="external-link">RNetCDF</a></span><span class="op">)</span></span>
@@ -146,18 +176,30 @@
 <span><span class="co">#&gt;      NC_CHAR :platform_id = "F18" ;</span></span>
 <span><span class="co">#&gt;      NC_CHAR :instrument = "SSM/I" ;</span></span>
 <span><span class="co">#&gt; }</span></span></code></pre></div>
-<p>Using <code>ncdump</code> at the command line on a suitable system would yield very similar output to the print above.</p>
+<p>Using <code>ncdump</code> at the command line on a suitable system
+would yield very similar output to the print above.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ncdump</span> <span class="at">-h</span> /path/to/extdata/ifremer/20171002.nc</span></code></pre></div>
-<p>With the ncdf4 package it’s a slightly different approach, but gives the same result.</p>
+<p>With the ncdf4 package it’s a slightly different approach, but gives
+the same result.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">ncdf4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ncdf4/man/nc_open.html" class="external-link">nc_open</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Notice how the listing above is organized by <em>dimension</em> and then by <em>variable</em>. It’s not particularly obvious that some variables are defined within the same set of dimensions as others.</p>
-<p>A NetCDF file is a container for simple array based data structures. There is limited capacity <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> in the formal API for accessing data randomly within a variable, the primary mechanism is to define offset and stride (start and count) hyperslab indexes.</p>
+<p>Notice how the listing above is organized by <em>dimension</em> and
+then by <em>variable</em>. It’s not particularly obvious that some
+variables are defined within the same set of dimensions as others.</p>
+<p>A NetCDF file is a container for simple array based data structures.
+There is limited capacity <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> in the formal API for accessing data
+randomly within a variable, the primary mechanism is to define offset
+and stride (start and count) hyperslab indexes.</p>
 <div class="section level3">
 <h3 id="tidync">tidync<a class="anchor" aria-label="anchor" href="#tidync"></a>
 </h3>
-<p>Tidync aims to ease exploration of the contents of a NetCDF file and provides methods extract arbitrary hyperslabs. These can be used directly in array contexts, or in “long form” database contexts.</p>
-<p>On first contact with the file, the available variables are classified by grid and dimension. The “active” grid is the one that queries may be made against, and may be changed with the <code>activate</code> function.</p>
+<p>Tidync aims to ease exploration of the contents of a NetCDF file and
+provides methods extract arbitrary hyperslabs. These can be used
+directly in array contexts, or in “long form” database contexts.</p>
+<p>On first contact with the file, the available variables are
+classified by grid and dimension. The “active” grid is the one that
+queries may be made against, and may be changed with the
+<code>activate</code> function.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/tidync/" class="external-link">tidync</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span></span>
@@ -176,10 +218,30 @@
 <span><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 2 D1    nj       664       1     664     1   664       1     664 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 3 D2    time       1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204     1     1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204 FALSE TRUE</span></span></code></pre></div>
-<p>Here we see variables are clearly grouped by the <em>grid</em> they exist in, where grid is a specific (and ordered!) set of dimensions. This allows us to see the set of variables that implicitly co-exist, they have the same <em>shape</em>. The first grid “D0,D1,D2” has two variables, <em>concentration</em> and <em>quality_flag</em>, and the second “D2” has only one variable <em>time</em>. There are no general rules here, a file might have any number of dimensions and variables, and any variable might be defined by one or more dimensions.</p>
-<p>In this case the D2 grid has only one variable in its single dimension, and it happens to be a special kind of variable - a “coordinate dimension”, as indicated by the <code>coord_dim</code> flag. In the traditional <code>ncdump</code> summary above it’s easy to see there’s only really one data grid, in <code>ni,nj,time</code> that it holds two variables, and that time is a special coordinate dimension - in contrast neither <code>ni</code> or <code>nj</code> have an explicit 1-dimension variable. When there are many dimensions and/or many variables those patterns are <em>not</em> easy to see.</p>
-<p>A particular grid was chosen by default, this is the “D0,D1,D2” grid composed of 3 dimensions, generally the largest grid will be chosen as that is <em>usually</em> the target we would be after. To choose a different grid we may nominate it by name, or by member variable.</p>
-<p>By name we choose a grid composed of only one dimension, and the summary print makes a distinction based on which dimensions are <em>active</em>.</p>
+<p>Here we see variables are clearly grouped by the <em>grid</em> they
+exist in, where grid is a specific (and ordered!) set of dimensions.
+This allows us to see the set of variables that implicitly co-exist,
+they have the same <em>shape</em>. The first grid “D0,D1,D2” has two
+variables, <em>concentration</em> and <em>quality_flag</em>, and the
+second “D2” has only one variable <em>time</em>. There are no general
+rules here, a file might have any number of dimensions and variables,
+and any variable might be defined by one or more dimensions.</p>
+<p>In this case the D2 grid has only one variable in its single
+dimension, and it happens to be a special kind of variable - a
+“coordinate dimension”, as indicated by the <code>coord_dim</code> flag.
+In the traditional <code>ncdump</code> summary above it’s easy to see
+there’s only really one data grid, in <code>ni,nj,time</code> that it
+holds two variables, and that time is a special coordinate dimension -
+in contrast neither <code>ni</code> or <code>nj</code> have an explicit
+1-dimension variable. When there are many dimensions and/or many
+variables those patterns are <em>not</em> easy to see.</p>
+<p>A particular grid was chosen by default, this is the “D0,D1,D2” grid
+composed of 3 dimensions, generally the largest grid will be chosen as
+that is <em>usually</em> the target we would be after. To choose a
+different grid we may nominate it by name, or by member variable.</p>
+<p>By name we choose a grid composed of only one dimension, and the
+summary print makes a distinction based on which dimensions are
+<em>active</em>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -202,7 +264,9 @@
 <span><span class="co">#&gt;   <span style="font-style: italic;">&lt;chr&gt;</span> <span style="font-style: italic;">&lt;chr&gt;</span>  <span style="font-style: italic;">&lt;dbl&gt;</span> <span style="font-style: italic;">&lt;dbl&gt;</span> <span style="font-style: italic;">&lt;dbl&gt;</span> <span style="font-style: italic;">&lt;lgl&gt;</span> <span style="font-style: italic;">&lt;lgl&gt;</span>     </span></span>
 <span><span class="co">#&gt; 1 D0    ni       632     1   632 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 2 D1    nj       664     1   664 FALSE FALSE</span></span></code></pre></div>
-<p>It is also possible to choose a grid by <em>variable name</em>. If we choose a variable in the default grid, then it’s no different to the first case.</p>
+<p>It is also possible to choose a grid by <em>variable name</em>. If we
+choose a variable in the default grid, then it’s no different to the
+first case.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"time"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -261,9 +325,17 @@
 <span><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 2 D1    nj       664       1     664     1   664       1     664 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 3 D2    time       1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204     1     1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204 FALSE TRUE</span></span></code></pre></div>
-<p>The data variables available on a grid can be expanded out as a single data frame, which all the coordinates copied out - this is not efficient(!) but if we craft our queries sensibly to read only what we need, it’s a very easy way to explore the data in a file.</p>
-<p>The ‘hyper_filter’ function allows specification of expressions to subset a variable based on each dimension’s coordinate values.</p>
-<p>If no expressions are included we are presented with a table containing a row for each dimension, its extent in coordinates and its length. For convenience we also assign the activate form to an R variable, though we could just chain the entire operation without this.</p>
+<p>The data variables available on a grid can be expanded out as a
+single data frame, which all the coordinates copied out - this is not
+efficient(!) but if we craft our queries sensibly to read only what we
+need, it’s a very easy way to explore the data in a file.</p>
+<p>The ‘hyper_filter’ function allows specification of expressions to
+subset a variable based on each dimension’s coordinate values.</p>
+<p>If no expressions are included we are presented with a table
+containing a row for each dimension, its extent in coordinates and its
+length. For convenience we also assign the activate form to an R
+variable, though we could just chain the entire operation without
+this.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">concentration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> </span>
 <span><span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span><span class="op">)</span> </span>
@@ -282,8 +354,13 @@
 <span><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 2 D1    nj       664       1     664     1   664       1     664 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 3 D2    time       1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204     1     1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204 FALSE TRUE</span></span></code></pre></div>
-<p>By specifying inequality expressions we see an <em>implicit</em> subsetting of the array. Everything so far is implicit to delay any file-based computation required to actually interact with the file and read from it.</p>
-<p>Notice that these are “name = expr” paired expressions, because the right hand side may be quite general we need the left hand side name to be assured of the name of the dimension referred to.</p>
+<p>By specifying inequality expressions we see an <em>implicit</em>
+subsetting of the array. Everything so far is implicit to delay any
+file-based computation required to actually interact with the file and
+read from it.</p>
+<p>Notice that these are “name = expr” paired expressions, because the
+right hand side may be quite general we need the left hand side name to
+be assured of the name of the dimension referred to.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>nj <span class="op">=</span> <span class="va">nj</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -301,7 +378,11 @@
 <span><span class="co">#&gt; 1 D0    ni       632       1     632     1   632       1     632 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 2 D1    nj       664       1     664     1    19       1      19 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 3 D2    time       1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204     1     1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204 FALSE TRUE</span></span></code></pre></div>
-<p>We can also use the special internal variable ‘index’, which will test against position in the dimension elements ‘1:length’ rather than the values. It’s not different in this case because ni and nj are just position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’ will work.</p>
+<p>We can also use the special internal variable ‘index’, which will
+test against position in the dimension elements ‘1:length’ rather than
+the values. It’s not different in this case because ni and nj are just
+position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’
+will work.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>ni <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">50</span>, </span>
@@ -326,7 +407,9 @@
 <h3 id="data-extraction">Data extraction<a class="anchor" aria-label="anchor" href="#data-extraction"></a>
 </h3>
 <p>How to use these idioms to extract actual data?</p>
-<p>We can now exercise these variable choice and dimension filters to return actual data, either in by slicing out a “slab” in array-form, or as a data frame.</p>
+<p>We can now exercise these variable choice and dimension filters to
+return actual data, either in by slicing out a “slab” in array-form, or
+as a data frame.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hf</span> <span class="op">&lt;-</span> <span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>ni <span class="op">=</span> <span class="va">index</span> <span class="op">&gt;</span> <span class="fl">150</span>, </span>
@@ -361,7 +444,7 @@
 <span><span class="co">#&gt;   .. ..$ coord_dim: logi TRUE</span></span>
 <span><span class="co">#&gt;   .. ..$ selected : logi TRUE</span></span>
 <span><span class="co">#&gt;  - attr(*, "source")= tibble [1 × 2] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2022-09-06 02:36:49"</span></span>
+<span><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2022-10-27 00:59:33"</span></span>
 <span><span class="co">#&gt;   ..$ source: chr "/home/runner/work/_temp/Library/tidync/extdata/ifremer/20171002.nc"</span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "tidync_data"</span></span>
 <span></span>
@@ -387,7 +470,13 @@
 <div class="section level3">
 <h3 id="interrogating-data-by-dimensions">Interrogating data by dimensions<a class="anchor" aria-label="anchor" href="#interrogating-data-by-dimensions"></a>
 </h3>
-<p>The connection object ‘hf’ is available for determining what is available and how we might cut into it. ‘time’ interestingly is of length 1, so perhaps adds nothing to the information about this otherwise 2D data set. If we were to open this file in <code>ncdf4</code> or <code>RNetCDF</code> and wanted to take a subset of the file out, we would have to specify and <code>start</code> of 1 and a <code>count</code> of ` even though it’s completely redundant.</p>
+<p>The connection object ‘hf’ is available for determining what is
+available and how we might cut into it. ‘time’ interestingly is of
+length 1, so perhaps adds nothing to the information about this
+otherwise 2D data set. If we were to open this file in
+<code>ncdf4</code> or <code>RNetCDF</code> and wanted to take a subset
+of the file out, we would have to specify and <code>start</code> of 1
+and a <code>count</code> of ` even though it’s completely redundant.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hf</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -405,13 +494,23 @@
 <span><span class="co">#&gt; 1 D0    ni       632       1     632   151   482     151     632 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 2 D1    nj       664       1     664    30    71      30     100 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 3 D2    time       1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204     1     1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204 FALSE TRUE</span></span></code></pre></div>
-<p>The ‘start’ and ‘count’ values reported are directly useable by the traditional API tools, and in particular by the functions <code><a href="https://rdrr.io/pkg/ncdf4/man/ncvar_get.html" class="external-link">ncdf4::ncvar_get()</a></code> (<code>varid</code>, <code>start</code>, <code>count</code>), its counterpart in <code><a href="https://rdrr.io/pkg/RNetCDF/man/var.get.nc.html" class="external-link">RNetCDF::var.get.nc()</a></code> and command line tools like CDO.</p>
-<p>But, it’s a pain to have to know the dimension of the variable and specify every slot. Code in the traditional API that looks like this</p>
+<p>The ‘start’ and ‘count’ values reported are directly useable by the
+traditional API tools, and in particular by the functions
+<code><a href="https://rdrr.io/pkg/ncdf4/man/ncvar_get.html" class="external-link">ncdf4::ncvar_get()</a></code> (<code>varid</code>, <code>start</code>,
+<code>count</code>), its counterpart in
+<code><a href="https://rdrr.io/pkg/RNetCDF/man/var.get.nc.html" class="external-link">RNetCDF::var.get.nc()</a></code> and command line tools like CDO.</p>
+<p>But, it’s a pain to have to know the dimension of the variable and
+specify every slot. Code in the traditional API that looks like this</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## WARNING, pseudocode</span></span>
 <span><span class="fu">var_get</span><span class="op">(</span><span class="va">con</span>, <span class="va">variable</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Obviously, it should be reasonable to specify only the count of any dimensions that <em>we don’t want the entirety of</em>. This problem manifests exactly in R arrays generally, we can’t provide information only about the dimensions we want, they have to be specified explicitly - even if we mean <em>all of it</em>.</p>
-<p>It does not matter what we include in the filter query, it can be all, some or none of the available dimensions, in any order.</p>
+<p>Obviously, it should be reasonable to specify only the count of any
+dimensions that <em>we don’t want the entirety of</em>. This problem
+manifests exactly in R arrays generally, we can’t provide information
+only about the dimensions we want, they have to be specified explicitly
+- even if we mean <em>all of it</em>.</p>
+<p>It does not matter what we include in the filter query, it can be
+all, some or none of the available dimensions, in any order.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>nj <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">20</span>, ni <span class="op">=</span> <span class="va">ni</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -446,7 +545,16 @@
 <span><span class="co">#&gt; 1 D0    ni       632       1     632   151   482     151     632 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 2 D1    nj       664       1     664     1    19       1      19 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 3 D2    time       1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204     1     1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204 FALSE TRUE</span></span></code></pre></div>
-<p>The other requirement we have is the ability to automate these task, and so far we have only interacted with the dimensionality information from the print out. For programming, there are functions <code><a href="../reference/hyper_vars.html">hyper_vars()</a></code>, <code><a href="../reference/hyper_vars.html">hyper_dims()</a></code> and <code><a href="../reference/hyper_vars.html">hyper_grids()</a></code> to report on elements in the source. The value of <code><a href="../reference/hyper_vars.html">hyper_vars()</a></code> and <code><a href="../reference/hyper_vars.html">hyper_dims()</a></code> is restricted to the <em>active</em> grid. The function <code><a href="../reference/hyper_vars.html">hyper_grids()</a></code> reports all available grids, with the currently active one indicated. The name of the current grid is also available via <code><a href="../reference/activate.html">active()</a></code>.</p>
+<p>The other requirement we have is the ability to automate these task,
+and so far we have only interacted with the dimensionality information
+from the print out. For programming, there are functions
+<code><a href="../reference/hyper_vars.html">hyper_vars()</a></code>, <code><a href="../reference/hyper_vars.html">hyper_dims()</a></code> and
+<code><a href="../reference/hyper_vars.html">hyper_grids()</a></code> to report on elements in the source. The
+value of <code><a href="../reference/hyper_vars.html">hyper_vars()</a></code> and <code><a href="../reference/hyper_vars.html">hyper_dims()</a></code> is
+restricted to the <em>active</em> grid. The function
+<code><a href="../reference/hyper_vars.html">hyper_grids()</a></code> reports all available grids, with the
+currently active one indicated. The name of the current grid is also
+available via <code><a href="../reference/activate.html">active()</a></code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/hyper_vars.html">hyper_vars</a></span><span class="op">(</span><span class="va">hf</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 6</span></span>
@@ -480,8 +588,21 @@
 <div class="section level3">
 <h3 id="transforms">Transforms<a class="anchor" aria-label="anchor" href="#transforms"></a>
 </h3>
-<p>Under the hood tidync manages the relationship between dimensions and coordinates via <em>transforms</em> tables. This is a 1-dimensional mapping between dimension index and its coordinate value (if there’s no explicit value it is assumed to be equal to the 1-based index). These tables are available via the <code><a href="../reference/hyper_transforms.html">hyper_transforms()</a></code> function.</p>
-<p>Each table has columns <code>&lt;dimension-name&gt;</code>, <code>index</code>, <code>id</code>, <code>name</code>, <code>coord_dim</code> (whether the dimension has explicit coordinates, in the <code>&lt;dimension-name&gt;</code> column), and <code>selected</code>. The <code>selected</code> column records which of the dimension elements is currently requested by a <code>hyper_filter</code> query, and by default is set to <code>TRUE</code>. Expressions in the filter function work by updating this column.</p>
+<p>Under the hood tidync manages the relationship between dimensions and
+coordinates via <em>transforms</em> tables. This is a 1-dimensional
+mapping between dimension index and its coordinate value (if there’s no
+explicit value it is assumed to be equal to the 1-based index). These
+tables are available via the <code><a href="../reference/hyper_transforms.html">hyper_transforms()</a></code>
+function.</p>
+<p>Each table has columns <code>&lt;dimension-name&gt;</code>,
+<code>index</code>, <code>id</code>, <code>name</code>,
+<code>coord_dim</code> (whether the dimension has explicit coordinates,
+in the <code>&lt;dimension-name&gt;</code> column), and
+<code>selected</code>. The <code>selected</code> column records which of
+the dimension elements is currently requested by a
+<code>hyper_filter</code> query, and by default is set to
+<code>TRUE</code>. Expressions in the filter function work by updating
+this column.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/hyper_transforms.html">hyper_transforms</a></span><span class="op">(</span><span class="va">hf</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $ni</span></span>
@@ -526,19 +647,25 @@
 <h3 id="future-improvements">Future improvements<a class="anchor" aria-label="anchor" href="#future-improvements"></a>
 </h3>
 <ul>
-<li>support multiple sources at once for lazy read of a virtual grid</li>
+<li>support multiple sources at once for lazy read of a virtual
+grid</li>
 <li>support groups</li>
 <li>support compound types</li>
-<li>allow a group-by function for a polygon layer, against a pair of dimensions to classify cells</li>
-<li>allow a truly DBI and dplyr level of lazy read, with more filter, select, mutate and collect idioms</li>
+<li>allow a group-by function for a polygon layer, against a pair of
+dimensions to classify cells</li>
+<li>allow a truly DBI and dplyr level of lazy read, with more filter,
+select, mutate and collect idioms</li>
 <li>provide converters to raster format, stars format</li>
 </ul>
 </div>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p>I.e. it’s not possible to query a file for an arbitrary sparse set of values, without constructing a degenerate hyperslab query for each point or reading a hyperslab containing cells not in the set. Do you know different? Please let me know!<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>I.e. it’s not possible to query a file for an arbitrary
+sparse set of values, without constructing a degenerate hyperslab query
+for each point or reading a hyperslab containing cells not in the set.
+Do you know different? Please let me know!<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
