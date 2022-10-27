@@ -330,31 +330,31 @@
 <span><span class="co">## optionally with only selected variables</span></span>
 <span><span class="va">subs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/hyper_tibble.html">hyper_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 493 × 37</span></span>
-<span><span class="co">#&gt;     PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_ERR…  TEMP TEMP_QC</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;                         &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt;  1  7.70 1                7.79 1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt;  2 11.8  1               11.9  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt;  3 16.3  1               16.4  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt;  4 21.6  1               21.7  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt;  5 26.7  1               26.8  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt;  6 31.7  1               31.8  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt;  7 36.6  1               36.7  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt;  8 41.4  1               41.5  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt;  9 46.5  1               46.6  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt; 10 51.8  1               51.9  1                              2.40  13.2 1      </span></span>
-<span><span class="co">#&gt; # … with 483 more rows, and 30 more variables: TEMP_ADJUSTED &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   TEMP_ADJUSTED_QC &lt;chr&gt;, TEMP_ADJUSTED_ERROR &lt;dbl&gt;, PSAL &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   PSAL_QC &lt;chr&gt;, PSAL_ADJUSTED &lt;dbl&gt;, PSAL_ADJUSTED_QC &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   PSAL_ADJUSTED_ERROR &lt;dbl&gt;, DOXY &lt;dbl&gt;, DOXY_QC &lt;chr&gt;, DOXY_ADJUSTED &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   DOXY_ADJUSTED_QC &lt;chr&gt;, DOXY_ADJUSTED_ERROR &lt;dbl&gt;, CHLA &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   CHLA_QC &lt;chr&gt;, CHLA_ADJUSTED &lt;dbl&gt;, CHLA_ADJUSTED_QC &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   CHLA_ADJUSTED_ERROR &lt;dbl&gt;, BBP700 &lt;dbl&gt;, BBP700_QC &lt;chr&gt;, …</span></span>
+<span><span class="co">#&gt;     PRES PRES_QC PRES_AD…¹ PRES_…² PRES_…³  TEMP TEMP_QC TEMP_…⁴ TEMP_…⁵ TEMP_…⁶</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1  7.70 1            7.79 1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt;  2 11.8  1           11.9  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt;  3 16.3  1           16.4  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt;  4 21.6  1           21.7  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt;  5 26.7  1           26.8  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt;  6 31.7  1           31.8  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt;  7 36.6  1           36.7  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt;  8 41.4  1           41.5  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt;  9 46.5  1           46.6  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt; 10 51.8  1           51.9  1          2.40  13.2 1          13.2 1       0.00200</span></span>
+<span><span class="co">#&gt; # … with 483 more rows, 27 more variables: PSAL &lt;dbl&gt;, PSAL_QC &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   PSAL_ADJUSTED &lt;dbl&gt;, PSAL_ADJUSTED_QC &lt;chr&gt;, PSAL_ADJUSTED_ERROR &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   DOXY &lt;dbl&gt;, DOXY_QC &lt;chr&gt;, DOXY_ADJUSTED &lt;dbl&gt;, DOXY_ADJUSTED_QC &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   DOXY_ADJUSTED_ERROR &lt;dbl&gt;, CHLA &lt;dbl&gt;, CHLA_QC &lt;chr&gt;, CHLA_ADJUSTED &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   CHLA_ADJUSTED_QC &lt;chr&gt;, CHLA_ADJUSTED_ERROR &lt;dbl&gt;, BBP700 &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   BBP700_QC &lt;chr&gt;, BBP700_ADJUSTED &lt;dbl&gt;, BBP700_ADJUSTED_QC &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   BBP700_ADJUSTED_ERROR &lt;dbl&gt;, NITRATE &lt;dbl&gt;, NITRATE_QC &lt;chr&gt;, …</span></span>
 <span><span class="va">subs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/hyper_tbl_cube.html">hyper_tbl_cube</a></span><span class="op">(</span>select_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRES"</span>, <span class="st">"PRES_QC"</span>, <span class="st">"PSAL_ADJUSTED"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $mets</span></span>
 <span><span class="co">#&gt; Class: tidync_data (list of tidync data arrays)</span></span>
 <span><span class="co">#&gt; Variables (3): 'PRES', 'PRES_QC', 'PSAL_ADJUSTED'</span></span>
 <span><span class="co">#&gt; Dimension (1): N_LEVELS,N_PROF (493)</span></span>
-<span><span class="co">#&gt; Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc</span></span>
+<span><span class="co">#&gt; Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.2/tidync/extdata/argo/MD5903593_001.nc</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $dims</span></span>
 <span><span class="co">#&gt; $dims$N_LEVELS</span></span>
@@ -412,20 +412,10 @@
 <span><span class="fu"><a href="reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"JULD"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>N_PROF <span class="op">=</span> <span class="va">N_PROF</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/hyper_tibble.html">hyper_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 98 × 5</span></span>
-<span><span class="co">#&gt;    SCIENTIFIC_CALIB_DATE DATE_TIME N_PARAM N_CALIB N_PROF</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;                     &lt;int&gt;   &lt;int&gt;   &lt;int&gt;  &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1 2                             1       1       1      1</span></span>
-<span><span class="co">#&gt;  2 0                             2       1       1      1</span></span>
-<span><span class="co">#&gt;  3 1                             3       1       1      1</span></span>
-<span><span class="co">#&gt;  4 7                             4       1       1      1</span></span>
-<span><span class="co">#&gt;  5 0                             5       1       1      1</span></span>
-<span><span class="co">#&gt;  6 4                             6       1       1      1</span></span>
-<span><span class="co">#&gt;  7 1                             7       1       1      1</span></span>
-<span><span class="co">#&gt;  8 0                             8       1       1      1</span></span>
-<span><span class="co">#&gt;  9 1                             9       1       1      1</span></span>
-<span><span class="co">#&gt; 10 4                            10       1       1      1</span></span>
-<span><span class="co">#&gt; # … with 88 more rows</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 2</span></span>
+<span><span class="co">#&gt;     JULD N_PROF</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt;  &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1 22719.      1</span></span>
 <span></span>
 <span></span>
 <span><span class="co">## native array form, we'll see a (list of) R arrays with a dimension for </span></span>
@@ -434,9 +424,9 @@
 <span>  <span class="fu"><a href="reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>N_PROF <span class="op">=</span> <span class="va">N_PROF</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/hyper_array.html">hyper_array</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Class: tidync_data (list of tidync data arrays)</span></span>
-<span><span class="co">#&gt; Variables (1): 'SCIENTIFIC_CALIB_DATE'</span></span>
-<span><span class="co">#&gt; Dimension (4): DATE_TIME,N_PARAM,N_CALIB,N_PROF (14, 7, 1, 1)</span></span>
-<span><span class="co">#&gt; Source: /usr/local/lib/R/site-library/tidync/extdata/argo/MD5903593_001.nc</span></span></code></pre></div>
+<span><span class="co">#&gt; Variables (1): 'JULD'</span></span>
+<span><span class="co">#&gt; Dimension (1): N_PROF (1)</span></span>
+<span><span class="co">#&gt; Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.2/tidync/extdata/argo/MD5903593_001.nc</span></span></code></pre></div>
 <p>It’s important to not actual request the data extraction until the expressions above would result in an efficient size (don’t try a data frame version of a 20Gb ROMs variable …). Use the interactive modes to determine the likely size of the output you will receive.</p>
 <p>Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each <code>hyper_*</code> function can take the filtering expressions, but it’s not obvious if this is a good idea or not.</p>
 <p>See the vignettes for more:</p>
@@ -520,8 +510,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/ropensci/onboarding/issues/174" class="external-link"><img src="https://badges.ropensci.org/174_status.svg"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
+<li><a href="https://github.com/ropensci/software-review/issues/174" class="external-link"><img src="https://badges.ropensci.org/174_status.svg"></a></li>
 <li><a href="https://cran.r-project.org/package=tidync" class="external-link"><img src="http://www.r-pkg.org/badges/version/tidync" alt="CRAN_Status_Badge"></a></li>
 <li><a href="https://cran.r-project.org/package=tidync" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/tidync" alt="CRAN_Download_Badge"></a></li>
 <li><a href="https://github.com/ropensci/tidync/actions" class="external-link"><img src="https://github.com/ropensci/tidync/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
