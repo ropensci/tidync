@@ -1,3 +1,7 @@
+# tidync dev
+
+* Suppress ncdf4 warnings on open, issue #119. 
+
 # tidync 0.3.0
 
 * Add option to silence all warnings and messages. See #115, suggestion of @markpayneatwork. 

@@ -113,7 +113,8 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   ## naughty  internal function using scope for 
   ##   x, START, COUNT, con, raw_datavals, drop
   get_vara <- function(vara)  {
-    con <- ncdf4::nc_open(x$source$source[1])
+    ## issue #119
+    suppressWarnings(con <- ncdf4::nc_open(x$source$source[1]))
     on.exit(ncdf4::nc_close(con), add =   TRUE)
     ncdf4::ncvar_get(con, vara, 
                      start = START, count = COUNT, 
