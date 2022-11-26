@@ -144,14 +144,22 @@ tidync.character <- function(x, what, ...) {
   if (nrow(out$axis) < 1) return(out)
   if (missing(what)) {
     varg  <- first_numeric_var(out)
-    if (utils::packageVersion("tidyr") > "0.8.3" ) {
-      gg <- tidyr::unnest(out$grid, cols = c(.data$variables))
-      
+    if (utils::packageVersion("tidyr") > "0.8.3") {
+      #
+      # Warning message:
+      #   Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
+      # ℹ Please use `"variables"` instead of `.data$variables`
+      #
+      if(utils::packageVersion("tidyselect") > "1.2.0" ){
+        gg <- tidyr::unnest(out$grid, cols = c("variables"))
+      } else {
+        gg <- tidyr::unnest(out$grid, cols = c(.data$variables))  
+      }
     } else {
       gg <- tidyr::unnest(out$grid)
     }
+    
     what <- gg$grid[match(varg, gg$variable)]
-   
   }
   out <- activate(out, what)
 
@@ -239,11 +247,26 @@ print.tidync <- function(x, ...) {
   } else {
     vargrids <- tidyr::unnest(x$grid)
   }
-  estimatebigtime <- vargrids %>% 
-    dplyr::filter(.data$grid == active(x)) %>% 
-    dplyr::inner_join(x$axis, "variable") %>% 
-    dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
-    distinct(.data$dimension, .data$length)
+  
+  # Warning message:
+  #   In dplyr::inner_join(., x$axis, "variable") :
+  #   Each row in `x` is expected to match at most 1 row in `y`.
+  # ℹ Row 1 of `x` matches multiple rows.
+  # ℹ If multiple matches are expected, set `multiple = "all"` to silence this warning.
+  if (utils::packageVersion("dplyr") > "1.0.10") {
+    estimatebigtime <- vargrids %>% 
+      dplyr::filter(.data$grid == active(x)) %>% 
+      dplyr::inner_join(x$axis, "variable", multiple = "all") %>% 
+      dplyr::inner_join(x$dimension, c("dimension" = "id"), multiple = "all") %>% 
+      dplyr::distinct(.data$dimension, .data$length)
+  } else {
+    estimatebigtime <- vargrids %>% 
+      dplyr::filter(.data$grid == active(x)) %>% 
+      dplyr::inner_join(x$axis, "variable") %>% 
+      dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
+      dplyr::distinct(.data$dimension, .data$length)
+  }
+  
   ## hack to assume always double numeric 
   ## TODO because could be integer after load
   estimatebigtime <- prod(estimatebigtime$length)
