@@ -136,7 +136,8 @@ tidync.character <- function(x, what, ...) {
               axis = meta$axis, 
               grid = meta$grid,
               dimension = meta$dimension, 
-              variable = variable)
+              variable = variable,
+              attribute = meta$attribute)
   out$transforms <- hyper_transforms(out, all = TRUE)
 
   out <- structure(out,           class = "tidync")
