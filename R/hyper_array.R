@@ -74,6 +74,7 @@ hyper_slice <- function(x, select_var = NULL, ...,
   hyper_array(x = x, select_var = select_var, ..., 
               raw_datavals = raw_datavals, force = force, drop = drop)
 }
+
 #' @name hyper_array
 #' @export
 hyper_array.tidync <- function(x, select_var = NULL, ..., 
@@ -112,14 +113,14 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
 
   ## naughty  internal function using scope for 
   ##   x, START, COUNT, con, raw_datavals, drop
-  get_vara <- function(vara)  {
-    ## issue #119
-    suppressWarnings(con <- ncdf4::nc_open(x$source$source[1]))
-    on.exit(ncdf4::nc_close(con), add =   TRUE)
-    ncdf4::ncvar_get(con, vara, 
-                     start = START, count = COUNT, 
-                     raw_datavals = raw_datavals, collapse_degen = drop)
-  }
+  # get_vara <- function(vara)  {
+  #   ## issue #119
+  #   suppressWarnings(con <- ncdf4::nc_open(x$source$source[1]))
+  #   on.exit(ncdf4::nc_close(con), add =   TRUE)
+  #   ncdf4::ncvar_get(con, vara, 
+  #                    start = START, count = COUNT, 
+  #                    raw_datavals = raw_datavals, collapse_degen = drop)
+  # }
   mess <- sprintf("pretty big extraction, (%i*%i values [%s]*%i", 
                   as.integer(prod( COUNT)), length(varnames), 
                   paste( COUNT, collapse = ", "), 
@@ -140,10 +141,26 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
 ##       return(invisible(NULL))
     }
   }
+  
   transforms <- active_axis_transforms(x)
-  datalist <- lapply(varnames, get_vara)
   
+  ## Get dimension names from the transforms. Use "timestamp" instead of "time"
+  dn <- lapply(transforms, function(trans) {
+    ts <- suppressWarnings(trans[["timestamp"]])
+    if (is.null(ts)) trans[[1]][trans$selected] else ts[trans$selected]
+  })
   
+  ## Avoid opening file on disk multiple times for multiple variables
+  con <- suppressWarnings(ncdf4::nc_open(x$source$source[1]))
+  on.exit(ncdf4::nc_close(con), add = TRUE)
+  datalist <- lapply(varnames, function(vara) {
+    d <- ncdf4::ncvar_get(con, vara, 
+                          start = START, count = COUNT, 
+                          raw_datavals = raw_datavals, collapse_degen = drop)
+    dimnames(d) <- dn
+    d
+  })
+
   ## which of the variables for read are NC_CHAR? (they have to be split)
   charvars <- variable$type[match(varnames, variable$name)] == "NC_CHAR"
   if (any(charvars)) {
@@ -159,6 +176,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
             transforms = transforms, 
             source = x$source, class = "tidync_data")
 }
+
 #' @name hyper_array
 #' @export
 hyper_array.character <- function(x,  select_var = NULL, ...,

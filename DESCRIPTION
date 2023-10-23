@@ -29,7 +29,8 @@ Imports:
     RNetCDF (>= 1.9-1),
     rlang,
     tibble,
-    tidyr
+    tidyr,
+    CFtime
 RoxygenNote: 7.2.2
 Suggests: ggplot2,
     knitr,
