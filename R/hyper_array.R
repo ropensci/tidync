@@ -85,7 +85,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   ## hack to get the order of the indices of the dimension
   ordhack <- 1 + as.integer(unlist(strsplit(gsub("D", "", 
                           dplyr::filter(x$grid, .data$grid == active(x)) %>% 
-                                 dplyr::slice(1L) %>% 
+                                # dplyr::slice(1L) %>% THERE'S ONLY EVER ONE ACTIVE GRID
                                  dplyr::pull(.data$grid)), ",")))
   dimension <- x[["dimension"]] %>% dplyr::slice(ordhack)
   ## ensure dimension is in order of the dims in these vars
@@ -111,21 +111,6 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
     varnames <- select_var
   }
 
-  ## naughty  internal function using scope for 
-  ##   x, START, COUNT, con, raw_datavals, drop
-  # get_vara <- function(vara)  {
-  #   ## issue #119
-  #   suppressWarnings(con <- ncdf4::nc_open(x$source$source[1]))
-  #   on.exit(ncdf4::nc_close(con), add =   TRUE)
-  #   ncdf4::ncvar_get(con, vara, 
-  #                    start = START, count = COUNT, 
-  #                    raw_datavals = raw_datavals, collapse_degen = drop)
-  # }
-  mess <- sprintf("pretty big extraction, (%i*%i values [%s]*%i", 
-                  as.integer(prod( COUNT)), length(varnames), 
-                  paste( COUNT, collapse = ", "), 
-                  length(varnames))
-  
   #browser()
   opt <- getOption("tidync.large.data.check")
   if (!isTRUE(opt)) {
@@ -135,6 +120,10 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
         interactive() && !force) {
     message("please confirm data extraction, Y(es) to proceed ... use 'force = TRUE' to avoid size check\n (  see '?hyper_array')")
     
+    mess <- sprintf("pretty big extraction, (%i*%i values [%s]*%i)", 
+                    as.integer(prod( COUNT)), length(varnames), 
+                    paste( COUNT, collapse = ", "), 
+                    length(varnames))
     yes <- utils::askYesNo(mess)
     if (!yes) {
       stop("extraction cancelled by user", call. = FALSE)
@@ -142,36 +131,52 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
     }
   }
   
-  transforms <- active_axis_transforms(x)
-  
-  ## Get dimension names from the transforms. Use "timestamp" instead of "time"
-  dn <- lapply(transforms, function(trans) {
-    ts <- suppressWarnings(trans[["timestamp"]])
-    if (is.null(ts)) trans[[1]][trans$selected] else ts[trans$selected]
-  })
-  
   ## Avoid opening file on disk multiple times for multiple variables
   con <- suppressWarnings(ncdf4::nc_open(x$source$source[1]))
   on.exit(ncdf4::nc_close(con), add = TRUE)
   datalist <- lapply(varnames, function(vara) {
-    d <- ncdf4::ncvar_get(con, vara, 
-                          start = START, count = COUNT, 
-                          raw_datavals = raw_datavals, collapse_degen = drop)
-    dimnames(d) <- dn
-    d
+    ncdf4::ncvar_get(con, vara, start = START, count = COUNT, 
+                     raw_datavals = raw_datavals, collapse_degen = FALSE)
+    })
+
+  ## Get dimension names from the transforms. Use "timestamp" instead of "time"
+  transforms <- active_axis_transforms(x)
+  dn <- lapply(transforms, function(trans) {
+    ts <- suppressWarnings(trans[["timestamp"]])
+    if (is.null(ts)) trans[[1]][trans$selected] else ts[trans$selected]
   })
 
-  ## which of the variables for read are NC_CHAR? (they have to be split)
-  charvars <- variable$type[match(varnames, variable$name)] == "NC_CHAR"
-  if (any(charvars)) {
-    idx <- which(charvars)
-    for (i in seq_along(idx)) {
-      
-      ii <- idx[i]
-      datalist[[ii]] <- array(unlist(strsplit(datalist[[ii]], "")), 
-                              dimension$count)
+  ## If some (but not all) of the variables defined on the grid are NC_CHAR then
+  ## the NC_CHAR variables read here have to be split into characters to
+  ## maintain consistent dimensionality with arrays of other data types
+  ## (disregarding the esoteric possibility that a grid is used both for numeric
+  ## data and for some text application).
+  ## If all variables defined on the grid are NC_CHAR then don't split the read
+  ## variables here but drop the first dimension from dn before applying
+  ## dimnames. This is related to how NC_CHAR data is stored in NetCDF files. 
+  ## The result is the string array as read directly from the file, with reduced
+  ## array dimensions.
+  grid_vars <- unlist(x$grid$variables[which(x$grid$grid == active(x))])
+  var_dt <- x$variable$type[which(x$variable$name %in% grid_vars)]
+  if (all(var_dt == "NC_CHAR")) dn <- dn[-1]
+  else if (any(var_dt == "NC_CHAR")) {
+    char_vars <- variable$type[match(varnames, variable$name)] == "NC_CHAR"
+    if (any(char_vars)) {
+      idx <- which(char_vars)
+      for (i in seq_along(idx)) {
+        ii <- idx[i]
+        datalist[[ii]] <- array(unlist(strsplit(datalist[[ii]], "")),
+                                dimension$count)
+      }
     }
   }
+  
+  ## Apply dimnames
+  datalist <- lapply(datalist, function(d) {dimnames(d) <- dn; d})
+  
+  ## Drop any degenerate dimensions, if requested and needed
+  if (drop && any(lengths(dn) == 1)) datalist <- lapply(datalist, drop)
+  
   structure(datalist, names = varnames, 
             transforms = transforms, 
             source = x$source, class = "tidync_data")
