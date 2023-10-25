@@ -1,5 +1,7 @@
 # tidync dev
 
+* Support for CF time metadata via package CFtime thanks to @pvanlaake, see https://github.com/ropensci/tidync/pull/124
+
 * Suppress ncdf4 warnings on open, issue #119. 
 
 # tidync 0.3.0
