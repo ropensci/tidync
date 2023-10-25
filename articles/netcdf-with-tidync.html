@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Michael D.
 Sumner</h4>
             
-            <h4 data-toc-skip class="date">2022-11-26</h4>
+            <h4 data-toc-skip class="date">2023-10-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/tidync/blob/HEAD/vignettes/netcdf-with-tidync.Rmd" class="external-link"><code>vignettes/netcdf-with-tidync.Rmd</code></a></small>
       <div class="hidden name"><code>netcdf-with-tidync.Rmd</code></div>
@@ -420,7 +420,13 @@ as a data frame.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">arr</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 2</span></span>
 <span><span class="co">#&gt;  $ concentration: int [1:482, 1:71] NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ ni: chr [1:482] "151" "152" "153" "154" ...</span></span>
+<span><span class="co">#&gt;   .. ..$ nj: chr [1:71] "30" "31" "32" "33" ...</span></span>
 <span><span class="co">#&gt;  $ quality_flag : int [1:482, 1:71] 8 8 8 8 8 8 8 8 8 8 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ ni: chr [1:482] "151" "152" "153" "154" ...</span></span>
+<span><span class="co">#&gt;   .. ..$ nj: chr [1:71] "30" "31" "32" "33" ...</span></span>
 <span><span class="co">#&gt;  - attr(*, "transforms")=List of 3</span></span>
 <span><span class="co">#&gt;   ..$ ni  : tibble [632 × 6] (S3: tbl_df/tbl/data.frame)</span></span>
 <span><span class="co">#&gt;   .. ..$ ni       : int [1:632] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
@@ -436,15 +442,16 @@ as a data frame.</p>
 <span><span class="co">#&gt;   .. ..$ name     : chr [1:664] "nj" "nj" "nj" "nj" ...</span></span>
 <span><span class="co">#&gt;   .. ..$ coord_dim: logi [1:664] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
 <span><span class="co">#&gt;   .. ..$ selected : logi [1:664] FALSE FALSE FALSE FALSE FALSE FALSE ...</span></span>
-<span><span class="co">#&gt;   ..$ time: tibble [1 × 6] (S3: tbl_df/tbl/data.frame)</span></span>
+<span><span class="co">#&gt;   ..$ time: tibble [1 × 7] (S3: tbl_df/tbl/data.frame)</span></span>
 <span><span class="co">#&gt;   .. ..$ time     : num 1032204</span></span>
+<span><span class="co">#&gt;   .. ..$ timestamp: chr "2017-10-02T12:00:00"</span></span>
 <span><span class="co">#&gt;   .. ..$ index    : int 1</span></span>
 <span><span class="co">#&gt;   .. ..$ id       : int 2</span></span>
 <span><span class="co">#&gt;   .. ..$ name     : chr "time"</span></span>
 <span><span class="co">#&gt;   .. ..$ coord_dim: logi TRUE</span></span>
 <span><span class="co">#&gt;   .. ..$ selected : logi TRUE</span></span>
 <span><span class="co">#&gt;  - attr(*, "source")= tibble [1 × 2] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2022-11-26 20:01:24"</span></span>
+<span><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2023-10-25 02:28:27"</span></span>
 <span><span class="co">#&gt;   ..$ source: chr "/home/runner/work/_temp/Library/tidync/extdata/ifremer/20171002.nc"</span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "tidync_data"</span></span>
 <span></span>
@@ -465,7 +472,7 @@ as a data frame.</p>
 <span><span class="co">#&gt;  8            64            0</span></span>
 <span><span class="co">#&gt;  9            25            0</span></span>
 <span><span class="co">#&gt; 10            23            0</span></span>
-<span><span class="co">#&gt; # … with 95 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 95 more rows</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="interrogating-data-by-dimensions">Interrogating data by dimensions<a class="anchor" aria-label="anchor" href="#interrogating-data-by-dimensions"></a>
@@ -619,7 +626,7 @@ this column.</p>
 <span><span class="co">#&gt;  8     8     8     0 ni    FALSE     FALSE   </span></span>
 <span><span class="co">#&gt;  9     9     9     0 ni    FALSE     FALSE   </span></span>
 <span><span class="co">#&gt; 10    10    10     0 ni    FALSE     FALSE   </span></span>
-<span><span class="co">#&gt; # … with 622 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 622 more rows</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $nj</span></span>
 <span><span class="co">#&gt; # A tibble: 664 × 6</span></span>
@@ -635,13 +642,13 @@ this column.</p>
 <span><span class="co">#&gt;  8     8     8     1 nj    FALSE     FALSE   </span></span>
 <span><span class="co">#&gt;  9     9     9     1 nj    FALSE     FALSE   </span></span>
 <span><span class="co">#&gt; 10    10    10     1 nj    FALSE     FALSE   </span></span>
-<span><span class="co">#&gt; # … with 654 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 654 more rows</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $time</span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
-<span><span class="co">#&gt;      time index    id name  coord_dim selected</span></span>
-<span><span class="co">#&gt;     <span style="font-style: italic;">&lt;dbl&gt;</span> <span style="font-style: italic;">&lt;int&gt;</span> <span style="font-style: italic;">&lt;int&gt;</span> <span style="font-style: italic;">&lt;chr&gt;</span> <span style="font-style: italic;">&lt;lgl&gt;</span>     <span style="font-style: italic;">&lt;lgl&gt;</span>   </span></span>
-<span><span class="co">#&gt; 1 1<span style="text-decoration: underline;">032</span>204     1     2 time  TRUE      TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 1 × 7</span></span>
+<span><span class="co">#&gt;      time timestamp           index    id name  coord_dim selected</span></span>
+<span><span class="co">#&gt;     <span style="font-style: italic;">&lt;dbl&gt;</span> <span style="font-style: italic;">&lt;chr&gt;</span>               <span style="font-style: italic;">&lt;int&gt;</span> <span style="font-style: italic;">&lt;int&gt;</span> <span style="font-style: italic;">&lt;chr&gt;</span> <span style="font-style: italic;">&lt;lgl&gt;</span>     <span style="font-style: italic;">&lt;lgl&gt;</span>   </span></span>
+<span><span class="co">#&gt; 1 1<span style="text-decoration: underline;">032</span>204 2017-10-02T12:00:00     1     2 time  TRUE      TRUE</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="future-improvements">Future improvements<a class="anchor" aria-label="anchor" href="#future-improvements"></a>
@@ -687,7 +694,7 @@ Do you know different? Please let me know!<a href="#fnref1" class="footnote-back
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
