@@ -137,6 +137,7 @@ tidync.character <- function(x, what, ...) {
               grid = meta$grid,
               dimension = meta$dimension, 
               variable = variable,
+              extended = meta$extended,
               attribute = meta$attribute)
   out$transforms <- hyper_transforms(out, all = TRUE)
 
