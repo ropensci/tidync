@@ -18,7 +18,7 @@
 #' By default all variables in the active grid are returned, use `select_var` to
 #' specify one or more desired variables.
 #'
-#' The transforms are stored as a list of tables in an attribute `transforms``,
+#' The transforms are stored as a list of tables in an attribute `transforms`,
 #' access these with [hyper_transforms()].
 #' @param x NetCDF file, connection object, or [tidync] object
 #' @param drop collapse degenerate dimensions, defaults to `TRUE`
@@ -85,8 +85,8 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   ## hack to get the order of the indices of the dimension
   ordhack <- 1 + as.integer(unlist(strsplit(gsub("D", "", 
                           dplyr::filter(x$grid, .data$grid == active(x)) %>% 
-                                # dplyr::slice(1L) %>% THERE'S ONLY EVER ONE ACTIVE GRID
-                                 dplyr::pull(.data$grid)), ",")))
+                          # dplyr::slice(1L) %>% THERE'S ONLY EVER ONE ACTIVE GRID
+                          dplyr::pull(.data$grid)), ",")))
   dimension <- x[["dimension"]] %>% dplyr::slice(ordhack)
   ## ensure dimension is in order of the dims in these vars
   axis <- x[["axis"]] %>% dplyr::filter(variable %in% varname)
@@ -104,7 +104,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
       if (length(select_var) < 1) stop("no select_var variables available")
       if (!isTRUE(getOption("tidync.silent"))) {
         warning(sprintf("some select_var variables not found, and ignored:\n %s",
-                      paste(bad, collapse = ",")))
+                        paste(bad, collapse = ",")))
       }
     }
     ## todo, make this quosic?
@@ -112,22 +112,17 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   }
 
   #browser()
-  opt <- getOption("tidync.large.data.check")
-  if (!isTRUE(opt)) {
-    opt <- FALSE
-  }
-  if (opt && (prod(dimension[["count"]]) * length(varnames)) * 4 > 1e9 && 
-        interactive() && !force) {
-    message("please confirm data extraction, Y(es) to proceed ... use 'force = TRUE' to avoid size check\n (  see '?hyper_array')")
-    
-    mess <- sprintf("pretty big extraction, (%i*%i values [%s]*%i)", 
-                    as.integer(prod( COUNT)), length(varnames), 
-                    paste( COUNT, collapse = ", "), 
-                    length(varnames))
-    yes <- utils::askYesNo(mess)
-    if (!yes) {
-      stop("extraction cancelled by user", call. = FALSE)
-##       return(invisible(NULL))
+  if (interactive() && !force && prod(COUNT) * length(varnames) * 4 > 1e9) {
+    opt <- getOption("tidync.large.data.check")
+    if (!isTRUE(opt)) opt <- FALSE
+    if (opt) {
+      message("please confirm data extraction, Y(es) to proceed ... use 'force = TRUE' to avoid size check\n (see '?hyper_array')")
+      mess <- sprintf("pretty big extraction, (%1$.0f*%2$i values [%3$s]*%2$i)", 
+                      prod(COUNT), length(varnames), paste(COUNT, collapse = ", "))
+      yes <- utils::askYesNo(mess)
+      if (!yes) {
+        stop("extraction cancelled by user", call. = FALSE)
+      }
     }
   }
   
@@ -137,7 +132,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   datalist <- lapply(varnames, function(vara) {
     ncdf4::ncvar_get(con, vara, start = START, count = COUNT, 
                      raw_datavals = raw_datavals, collapse_degen = FALSE)
-    })
+  })
 
   ## Get dimension names from the transforms. Use "timestamp" instead of "time"
   transforms <- active_axis_transforms(x)
@@ -177,17 +172,15 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   ## Drop any degenerate dimensions, if requested and needed
   if (drop && any(lengths(dn) == 1)) datalist <- lapply(datalist, drop)
   
-  structure(datalist, names = varnames, 
-            transforms = transforms, 
+  structure(datalist, names = varnames, transforms = transforms, 
             source = x$source, class = "tidync_data")
 }
 
 #' @name hyper_array
 #' @export
-hyper_array.character <- function(x,  select_var = NULL, ...,
+hyper_array.character <- function(x, select_var = NULL, ...,
                                   raw_datavals = FALSE, force = FALSE, drop = TRUE) {
   tidync(x) %>% 
-    hyper_filter(...) %>%  
-    hyper_array(select_var = select_var, 
-                raw_datavals = raw_datavals, drop = drop)
+  hyper_filter(...) %>%  
+  hyper_array(select_var = select_var, raw_datavals = raw_datavals, drop = drop)
 }
