@@ -94,7 +94,7 @@ hyper_transforms.default <- function(x, all = FALSE, ...) {
       else calendar <- unlist(dim_atts$value[cal_idx])
       try({
         cft <- CFtime::CFtime(units, calendar, axis[[1]])
-        axis$timestamp = CFtime::CFtimestamp(cft)
+        axis$timestamp = CFtime::as_timestamp(cft)
       }, silent = TRUE)
     }
     
