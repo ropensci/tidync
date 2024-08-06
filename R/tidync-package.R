@@ -1,3 +1,6 @@
+#' @keywords internal
+"_PACKAGE"
+
 #' Tidy tools for NetCDF data.
 #'
 #' Provides easy to use idioms for working with NetCDF data for extraction,
@@ -31,7 +34,6 @@
 #' \code{tidync.silent = FALSE/TRUE} \tab emit warnings,messages or be silent (default `FALSE`) \cr
 #' }
 #' @name tidync-package
-#' @docType package
 #' @examples 
 #' argofile <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
 #' argo <- tidync(argofile)

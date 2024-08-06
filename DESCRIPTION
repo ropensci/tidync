@@ -1,6 +1,6 @@
 Package: tidync
 Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.3.1
+Version: 0.4.0
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
@@ -9,7 +9,8 @@ Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c(
              person("Tim", "Lucas", role = "ctb"), 
              person("Hadley", "Wickham", role = "ctb"), 
              person("Adrian", "Odenweller", role = "ctb"), 
-             person("Patrick", "Van Laake", role = "ctb"))
+             person("Patrick", "Van Laake", role = "ctb"), 
+             person("Fabian", "Bernhard", role = "ctb"))
 Description: Tidy tools for 'NetCDF' data sources. Explore the contents of a 
  'NetCDF' source (file or URL) presented as variables organized by grid with a 
  database-like interface. The hyper_filter() interactive function translates the 
@@ -31,8 +32,8 @@ Imports:
     rlang,
     tibble,
     tidyr,
-    CFtime
-RoxygenNote: 7.2.2
+    CFtime (>= 1.4.0)
+RoxygenNote: 7.3.1
 Suggests: ggplot2,
     knitr,
     rmarkdown,

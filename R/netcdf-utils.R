@@ -1,9 +1,11 @@
 #' @importFrom ncdf4 nc_open nc_close ncvar_get
 #' @importFrom RNetCDF open.nc close.nc var.get.nc
 #' @importFrom purrr safely
+#' @noRd
 nc_get <- function(x, v, test = FALSE, ...) {
   UseMethod("nc_get")
 }
+#' @noRd
 nc_get.character <- function(x, v, test = FALSE, ...) {
   if (!test) {
     con <- RNetCDF::open.nc(x)
@@ -30,11 +32,13 @@ nc_get.character <- function(x, v, test = FALSE, ...) {
   }
   stop(sprintf("no variable found %s", v))
 }
+
+#' @noRd
 nc_get.NetCDF <- function(x, v) {
   RNetCDF::var.get.nc(x, v)
 }
 
-
+#' @noRd
 nc_get.ncdf4 <- function(x, v) {
   ncdf4::ncvar_get(x, v)
 }

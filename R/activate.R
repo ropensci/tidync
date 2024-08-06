@@ -115,6 +115,8 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
 active.tidync <- function(x) {
   attr(x, 'active')
 }
+
+#' @export
 `active<-.tidync` <- function(x, value) {
   #vn <- var_names(x)
   sn <- unique(x$grid$grid)
