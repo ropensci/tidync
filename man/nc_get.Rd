@@ -11,7 +11,7 @@ nc_get(x, v, test = FALSE)
 
 \item{v}{variable name}
 
-\item{test}{if true we make sure the connection can be open}
+\item{test}{if true we make sure the connection can be open, not applied for connections themselves}
 }
 \description{
 This exists so we can (internally) use a file path, uri, or open

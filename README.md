@@ -6,9 +6,10 @@
 <!-- badges: start -->
 
 [![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/software-review/issues/174)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tidync)](https://cran.r-project.org/package=tidync)
-[![CRAN_Download_Badge](http://cranlogs.r-pkg.org/badges/tidync)](https://cran.r-project.org/package=tidync)
-[![R-CMD-check](https://github.com/ropensci/tidync/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/tidync/actions)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/tidync)](https://CRAN.R-project.org/package=tidync)
+
+[![R-CMD-check](https://github.com/ropensci/tidync/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/tidync/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of tidync is to ease exploring the contents of a NetCDF source
@@ -19,11 +20,11 @@ data frame. In contrast to other packages tidync helps reduce the volume
 of code required to discover and read the contents of NetCDF, with
 simple steps:
 
--   Connect and summarize `tidync()`.
--   (optionally) Specify source variables `activate()`.
--   (optionally) Specify array sub-setting (slicing) `hyper_filter()`.
--   Read array data in native form `hyper_array()` or long-form
-    `hyper_tibble()` or bespoke form `hyper_tbl_cube()`.
+- Connect and summarize `tidync()`.
+- (optionally) Specify source variables `activate()`.
+- (optionally) Specify array sub-setting (slicing) `hyper_filter()`.
+- Read array data in native form `hyper_array()` or long-form
+  `hyper_tibble()` or bespoke form `hyper_tbl_cube()`.
 
 NetCDF is **Network Common Data Form** a very common, and very general
 way to store and work with scientific array-based data. NetCDF is
@@ -130,10 +131,11 @@ tidync(file)
 #> 
 #> Dimensions 4 (2 active): 
 #>   
-#>   dim   name  length    min   max start count   dmin  dmax unlim coord_dim 
-#>   <chr> <chr>  <dbl>  <dbl> <dbl> <int> <int>  <dbl> <dbl> <lgl> <lgl>     
-#> 1 D0    lat     2160  -90.0  90.0     1  2160  -90.0  90.0 FALSE TRUE      
-#> 2 D1    lon     4320 -180.  180.      1  4320 -180.  180.  FALSE TRUE      
+#>   dim   name  length      min     max start count     dmin    dmax unlim 
+#>   <chr> <chr>  <dbl>    <dbl>   <dbl> <int> <int>    <dbl>   <dbl> <lgl> 
+#> 1 D0    lat     2160  -89.958  89.958     1  2160  -89.958  89.958 FALSE 
+#> 2 D1    lon     4320 -179.96  179.96      1  4320 -179.96  179.96  FALSE 
+#> # ℹ 1 more variable: coord_dim <lgl> 
 #>   
 #> Inactive dimensions:
 #>   
@@ -206,6 +208,9 @@ tidync(filename)
 #> 10 D11   N_CALIB         1     1     1 FALSE FALSE     
 #> 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
 #> 12 D13   N_VALUES41     41    NA    NA FALSE FALSE
+```
+
+``` r
 
 ## activate a different grid
 grid_identifier <- "D7,D9,D11,D8"
@@ -255,6 +260,9 @@ tidync(filename) %>% activate(grid_identifier)
 #>  8 D10   N_LEVELS      493     1   493 FALSE FALSE     
 #>  9 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
 #> 10 D13   N_VALUES41     41    NA    NA FALSE FALSE
+```
+
+``` r
 
 ## pass named expressions to subset dimension by value or index (step)
 (subs <- tidync(filename) %>% hyper_filter(N_PROF = N_PROF > 1, STRING256 = index > 10))
@@ -305,36 +313,42 @@ tidync(filename) %>% activate(grid_identifier)
 #> 10 D11   N_CALIB         1     1     1 FALSE FALSE     
 #> 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
 #> 12 D13   N_VALUES41     41    NA    NA FALSE FALSE
+```
+
+``` r
 
 ## with the saved filtering from above, choose data frame or tbl_cube output
 ## optionally with only selected variables
 subs %>% hyper_tibble()
-#> # A tibble: 493 × 37
-#>     PRES PRES_QC PRES_AD…¹ PRES_…² PRES_…³  TEMP TEMP_QC TEMP_…⁴ TEMP_…⁵ TEMP_…⁶
-#>    <dbl> <chr>       <dbl> <chr>     <dbl> <dbl> <chr>     <dbl> <chr>     <dbl>
-#>  1  7.70 1            7.79 1          2.40  13.2 1          13.2 1       0.00200
-#>  2 11.8  1           11.9  1          2.40  13.2 1          13.2 1       0.00200
-#>  3 16.3  1           16.4  1          2.40  13.2 1          13.2 1       0.00200
-#>  4 21.6  1           21.7  1          2.40  13.2 1          13.2 1       0.00200
-#>  5 26.7  1           26.8  1          2.40  13.2 1          13.2 1       0.00200
-#>  6 31.7  1           31.8  1          2.40  13.2 1          13.2 1       0.00200
-#>  7 36.6  1           36.7  1          2.40  13.2 1          13.2 1       0.00200
-#>  8 41.4  1           41.5  1          2.40  13.2 1          13.2 1       0.00200
-#>  9 46.5  1           46.6  1          2.40  13.2 1          13.2 1       0.00200
-#> 10 51.8  1           51.9  1          2.40  13.2 1          13.2 1       0.00200
-#> # … with 483 more rows, 27 more variables: PSAL <dbl>, PSAL_QC <chr>,
-#> #   PSAL_ADJUSTED <dbl>, PSAL_ADJUSTED_QC <chr>, PSAL_ADJUSTED_ERROR <dbl>,
-#> #   DOXY <dbl>, DOXY_QC <chr>, DOXY_ADJUSTED <dbl>, DOXY_ADJUSTED_QC <chr>,
-#> #   DOXY_ADJUSTED_ERROR <dbl>, CHLA <dbl>, CHLA_QC <chr>, CHLA_ADJUSTED <dbl>,
-#> #   CHLA_ADJUSTED_QC <chr>, CHLA_ADJUSTED_ERROR <dbl>, BBP700 <dbl>,
-#> #   BBP700_QC <chr>, BBP700_ADJUSTED <dbl>, BBP700_ADJUSTED_QC <chr>,
-#> #   BBP700_ADJUSTED_ERROR <dbl>, NITRATE <dbl>, NITRATE_QC <chr>, …
+#> # A tibble: 493 × 35
+#>       PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_ERROR   TEMP
+#>      <dbl> <chr>           <dbl> <chr>                          <dbl>  <dbl>
+#>  1  7.7000 1              7.7900 1                             2.4000 13.184
+#>  2 11.800  1             11.890  1                             2.4000 13.184
+#>  3 16.300  1             16.390  1                             2.4000 13.184
+#>  4 21.600  1             21.690  1                             2.4000 13.184
+#>  5 26.700  1             26.790  1                             2.4000 13.186
+#>  6 31.700  1             31.790  1                             2.4000 13.186
+#>  7 36.600  1             36.690  1                             2.4000 13.187
+#>  8 41.400  1             41.490  1                             2.4000 13.187
+#>  9 46.5    1             46.590  1                             2.4000 13.187
+#> 10 51.800  1             51.890  1                             2.4000 13.187
+#> # ℹ 483 more rows
+#> # ℹ 29 more variables: TEMP_QC <chr>, TEMP_ADJUSTED <dbl>,
+#> #   TEMP_ADJUSTED_QC <chr>, TEMP_ADJUSTED_ERROR <dbl>, PSAL <dbl>,
+#> #   PSAL_QC <chr>, PSAL_ADJUSTED <dbl>, PSAL_ADJUSTED_QC <chr>,
+#> #   PSAL_ADJUSTED_ERROR <dbl>, DOXY <dbl>, DOXY_QC <chr>, DOXY_ADJUSTED <dbl>,
+#> #   DOXY_ADJUSTED_QC <chr>, DOXY_ADJUSTED_ERROR <dbl>, CHLA <dbl>,
+#> #   CHLA_QC <chr>, CHLA_ADJUSTED <dbl>, CHLA_ADJUSTED_QC <chr>, …
+```
+
+``` r
 subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 #> $mets
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (3): 'PRES', 'PRES_QC', 'PSAL_ADJUSTED'
-#> Dimension (1): N_LEVELS,N_PROF (493)
-#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.2/tidync/extdata/argo/MD5903593_001.nc
+#> Dimension (0): N_LEVELS,N_PROF ()
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.4/tidync/extdata/argo/MD5903593_001.nc
 #> 
 #> $dims
 #> $dims$N_LEVELS
@@ -409,10 +423,13 @@ frame or raw-array (hyper slice) form.
 tidync(filename) %>% activate("JULD") %>% 
   hyper_filter(N_PROF = N_PROF == 1) %>% 
   hyper_tibble()
-#> # A tibble: 1 × 2
-#>     JULD N_PROF
-#>    <dbl>  <int>
-#> 1 22719.      1
+#> # A tibble: 1 × 1
+#>     JULD
+#>    <dbl>
+#> 1 22719.
+```
+
+``` r
 
 
 ## native array form, we'll see a (list of) R arrays with a dimension for 
@@ -422,8 +439,8 @@ tidync(filename) %>% activate("JULD") %>%
   hyper_array()
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (1): 'JULD'
-#> Dimension (1): N_PROF (1)
-#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.2/tidync/extdata/argo/MD5903593_001.nc
+#> Dimension (0): N_PROF ()
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.4/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the
@@ -448,12 +465,12 @@ browseVignettes(package = "tidync")
 Please get in touch if you have specific workflows that `tidync` is not
 providing. There’s a lot of room for improvement!
 
--   we can’t do “grouped filters”” (i.e. polygon-overlay extraction),
-    but it’s in the works
--   compound types are not supported, though see the “rhdf5” branch on
-    Github
--   NetCDF groups are not exposed (groups are like a “files within a
-    file”, analogous to a file system directory)
+- we can’t do “grouped filters”” (i.e. polygon-overlay extraction), but
+  it’s in the works
+- compound types are not supported, though see the “rhdf5” branch on
+  Github
+- NetCDF groups are not exposed (groups are like a “files within a
+  file”, analogous to a file system directory)
 
 I’m interested in lighter and rawer access to the NetCDF library, I’ve
 explored that here and it may or may not be a good idea:
@@ -462,12 +479,12 @@ explored that here and it may or may not be a good idea:
 
 ## Terminology
 
--   **slab**, **hyperslab** - array variable that may be read from a
-    NetCDF
--   **shape**, **grid** - set of dimensions that define variables in
-    NetCDF
--   **activation** - choice of a given grid to apply subsetting and read
-    operations to
+- **slab**, **hyperslab** - array variable that may be read from a
+  NetCDF
+- **shape**, **grid** - set of dimensions that define variables in
+  NetCDF
+- **activation** - choice of a given grid to apply subsetting and read
+  operations to
 
 ------------------------------------------------------------------------
 
