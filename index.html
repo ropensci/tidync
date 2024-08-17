@@ -82,6 +82,7 @@
 </h1></div>
 <!-- badges: start -->
 
+<p><a href="https://github.com/ropensci/tidync/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ropensci/tidync/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
 <p>The goal of tidync is to ease exploring the contents of a NetCDF source and to simplify the process of data extraction.</p>
 <p>When extracting, data can be accessed as array/s, or in long-form as a data frame. In contrast to other packages tidync helps reduce the volume of code required to discover and read the contents of NetCDF, with simple steps:</p>
 <ul>
@@ -156,10 +157,11 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Dimensions 4 (2 active): </span></span>
 <span><span class="co">#&gt;   </span></span>
-<span><span class="co">#&gt;   dim   name  length    min   max start count   dmin  dmax unlim coord_dim </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;     </span></span>
-<span><span class="co">#&gt; 1 D0    lat     2160  -90.0  90.0     1  2160  -90.0  90.0 FALSE TRUE      </span></span>
-<span><span class="co">#&gt; 2 D1    lon     4320 -180.  180.      1  4320 -180.  180.  FALSE TRUE      </span></span>
+<span><span class="co">#&gt;   dim   name  length      min     max start count     dmin    dmax unlim </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; </span></span>
+<span><span class="co">#&gt; 1 D0    lat     2160  -89.958  89.958     1  2160  -89.958  89.958 FALSE </span></span>
+<span><span class="co">#&gt; 2 D1    lon     4320 -179.96  179.96      1  4320 -179.96  179.96  FALSE </span></span>
+<span><span class="co">#&gt; # ℹ 1 more variable: coord_dim &lt;lgl&gt; </span></span>
 <span><span class="co">#&gt;   </span></span>
 <span><span class="co">#&gt; Inactive dimensions:</span></span>
 <span><span class="co">#&gt;   </span></span>
@@ -220,8 +222,9 @@
 <span><span class="co">#&gt;  9 D9    N_PARAM         7     1     7 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 10 D11   N_CALIB         1     1     1 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></span>
-<span><span class="co">#&gt; 12 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></span>
-<span></span>
+<span><span class="co">#&gt; 12 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co">## activate a different grid</span></span>
 <span><span class="va">grid_identifier</span> <span class="op">&lt;-</span> <span class="st">"D7,D9,D11,D8"</span></span>
 <span><span class="fu"><a href="reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/activate.html">activate</a></span><span class="op">(</span><span class="va">grid_identifier</span><span class="op">)</span></span>
@@ -269,8 +272,9 @@
 <span><span class="co">#&gt;  7 D6    STRING64       64     1    64 FALSE FALSE     </span></span>
 <span><span class="co">#&gt;  8 D10   N_LEVELS      493     1   493 FALSE FALSE     </span></span>
 <span><span class="co">#&gt;  9 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></span>
-<span><span class="co">#&gt; 10 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></span>
-<span></span>
+<span><span class="co">#&gt; 10 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co">## pass named expressions to subset dimension by value or index (step)</span></span>
 <span><span class="op">(</span><span class="va">subs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>N_PROF <span class="op">=</span> <span class="va">N_PROF</span> <span class="op">&gt;</span> <span class="fl">1</span>, STRING256 <span class="op">=</span> <span class="va">index</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in hyper_filter.tidync(., N_PROF = N_PROF &gt; 1, STRING256 = index &gt; :</span></span>
@@ -319,37 +323,39 @@
 <span><span class="co">#&gt;  9 D9    N_PARAM         7     1     7 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 10 D11   N_CALIB         1     1     1 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     </span></span>
-<span><span class="co">#&gt; 12 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></span>
-<span></span>
+<span><span class="co">#&gt; 12 D13   N_VALUES41     41    NA    NA FALSE FALSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co">## with the saved filtering from above, choose data frame or tbl_cube output</span></span>
 <span><span class="co">## optionally with only selected variables</span></span>
 <span><span class="va">subs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/hyper_tibble.html">hyper_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 493 × 37</span></span>
-<span><span class="co">#&gt;     PRES PRES_QC PRES_AD…¹ PRES_…² PRES_…³  TEMP TEMP_QC TEMP_…⁴ TEMP_…⁵ TEMP_…⁶</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1  7.70 1            7.79 1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt;  2 11.8  1           11.9  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt;  3 16.3  1           16.4  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt;  4 21.6  1           21.7  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt;  5 26.7  1           26.8  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt;  6 31.7  1           31.8  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt;  7 36.6  1           36.7  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt;  8 41.4  1           41.5  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt;  9 46.5  1           46.6  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt; 10 51.8  1           51.9  1          2.40  13.2 1          13.2 1       0.00200</span></span>
-<span><span class="co">#&gt; # … with 483 more rows, 27 more variables: PSAL &lt;dbl&gt;, PSAL_QC &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   PSAL_ADJUSTED &lt;dbl&gt;, PSAL_ADJUSTED_QC &lt;chr&gt;, PSAL_ADJUSTED_ERROR &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   DOXY &lt;dbl&gt;, DOXY_QC &lt;chr&gt;, DOXY_ADJUSTED &lt;dbl&gt;, DOXY_ADJUSTED_QC &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   DOXY_ADJUSTED_ERROR &lt;dbl&gt;, CHLA &lt;dbl&gt;, CHLA_QC &lt;chr&gt;, CHLA_ADJUSTED &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   CHLA_ADJUSTED_QC &lt;chr&gt;, CHLA_ADJUSTED_ERROR &lt;dbl&gt;, BBP700 &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   BBP700_QC &lt;chr&gt;, BBP700_ADJUSTED &lt;dbl&gt;, BBP700_ADJUSTED_QC &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   BBP700_ADJUSTED_ERROR &lt;dbl&gt;, NITRATE &lt;dbl&gt;, NITRATE_QC &lt;chr&gt;, …</span></span>
-<span><span class="va">subs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/hyper_tbl_cube.html">hyper_tbl_cube</a></span><span class="op">(</span>select_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRES"</span>, <span class="st">"PRES_QC"</span>, <span class="st">"PSAL_ADJUSTED"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 493 × 35</span></span>
+<span><span class="co">#&gt;       PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_ERROR   TEMP</span></span>
+<span><span class="co">#&gt;      &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;                          &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1  7.7000 1              7.7900 1                             2.4000 13.184</span></span>
+<span><span class="co">#&gt;  2 11.800  1             11.890  1                             2.4000 13.184</span></span>
+<span><span class="co">#&gt;  3 16.300  1             16.390  1                             2.4000 13.184</span></span>
+<span><span class="co">#&gt;  4 21.600  1             21.690  1                             2.4000 13.184</span></span>
+<span><span class="co">#&gt;  5 26.700  1             26.790  1                             2.4000 13.186</span></span>
+<span><span class="co">#&gt;  6 31.700  1             31.790  1                             2.4000 13.186</span></span>
+<span><span class="co">#&gt;  7 36.600  1             36.690  1                             2.4000 13.187</span></span>
+<span><span class="co">#&gt;  8 41.400  1             41.490  1                             2.4000 13.187</span></span>
+<span><span class="co">#&gt;  9 46.5    1             46.590  1                             2.4000 13.187</span></span>
+<span><span class="co">#&gt; 10 51.800  1             51.890  1                             2.4000 13.187</span></span>
+<span><span class="co">#&gt; # ℹ 483 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 29 more variables: TEMP_QC &lt;chr&gt;, TEMP_ADJUSTED &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   TEMP_ADJUSTED_QC &lt;chr&gt;, TEMP_ADJUSTED_ERROR &lt;dbl&gt;, PSAL &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   PSAL_QC &lt;chr&gt;, PSAL_ADJUSTED &lt;dbl&gt;, PSAL_ADJUSTED_QC &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   PSAL_ADJUSTED_ERROR &lt;dbl&gt;, DOXY &lt;dbl&gt;, DOXY_QC &lt;chr&gt;, DOXY_ADJUSTED &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   DOXY_ADJUSTED_QC &lt;chr&gt;, DOXY_ADJUSTED_ERROR &lt;dbl&gt;, CHLA &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   CHLA_QC &lt;chr&gt;, CHLA_ADJUSTED &lt;dbl&gt;, CHLA_ADJUSTED_QC &lt;chr&gt;, …</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">subs</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/hyper_tbl_cube.html">hyper_tbl_cube</a></span><span class="op">(</span>select_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PRES"</span>, <span class="st">"PRES_QC"</span>, <span class="st">"PSAL_ADJUSTED"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $mets</span></span>
 <span><span class="co">#&gt; Class: tidync_data (list of tidync data arrays)</span></span>
 <span><span class="co">#&gt; Variables (3): 'PRES', 'PRES_QC', 'PSAL_ADJUSTED'</span></span>
-<span><span class="co">#&gt; Dimension (1): N_LEVELS,N_PROF (493)</span></span>
-<span><span class="co">#&gt; Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.2/tidync/extdata/argo/MD5903593_001.nc</span></span>
+<span><span class="co">#&gt; Dimension (0): N_LEVELS,N_PROF ()</span></span>
+<span><span class="co">#&gt; Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.4/tidync/extdata/argo/MD5903593_001.nc</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $dims</span></span>
 <span><span class="co">#&gt; $dims$N_LEVELS</span></span>
@@ -391,27 +397,28 @@
 <p>A grid is a “virtual table” in the sense of a database source. It’s possible to activate a grid via a variable within it, so all variables are available by default. Grids have identifiers based on which dimensions they are defined with, so use i.e. “D1,D0” and can otherwise be activated by their count identifier (starting at 1). The “D0” is an identifier, it matches the internal 0-based indexing and identity used by NetCDF itself.</p>
 <p>Please note that <code><a href="reference/hyper_filter.html">hyper_filter()</a></code> expressions must be unique, unlike with <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code> we cannot load multiple comparisons into one.</p>
 <p>While dplyr filter can load up multiple comparisons:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">longitude</span> <span class="op">&gt;</span> <span class="fl">100</span>, <span class="va">longitude</span> <span class="op">&lt;</span> <span class="fl">150</span><span class="op">)</span></span></code></pre></div>
 <p>in hyper_filter we must load them into one named expression.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>longitude <span class="op">=</span> <span class="va">longitude</span> <span class="op">&gt;</span> <span class="fl">100</span> <span class="op">&amp;</span> <span class="va">longitude</span> <span class="op">&lt;</span> <span class="fl">150</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="extractive">Extractive<a class="anchor" aria-label="anchor" href="#extractive"></a>
 </h3>
 <p>Use what we learned interactively to extract the data, either in data frame or raw-array (hyper slice) form.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## we'll see a column for the variable activated, and whatever other </span></span>
 <span><span class="co">## variables the grid has</span></span>
 <span><span class="fu"><a href="reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"JULD"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>N_PROF <span class="op">=</span> <span class="va">N_PROF</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/hyper_tibble.html">hyper_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 2</span></span>
-<span><span class="co">#&gt;     JULD N_PROF</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt;  &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1 22719.      1</span></span>
-<span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 1</span></span>
+<span><span class="co">#&gt;     JULD</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 22719.</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span></span>
 <span><span class="co">## native array form, we'll see a (list of) R arrays with a dimension for </span></span>
 <span><span class="co">## each seen by tidync(filename) %&gt;% activate("JULD")</span></span>
@@ -420,12 +427,12 @@
 <span>  <span class="fu"><a href="reference/hyper_array.html">hyper_array</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Class: tidync_data (list of tidync data arrays)</span></span>
 <span><span class="co">#&gt; Variables (1): 'JULD'</span></span>
-<span><span class="co">#&gt; Dimension (1): N_PROF (1)</span></span>
-<span><span class="co">#&gt; Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.2/tidync/extdata/argo/MD5903593_001.nc</span></span></code></pre></div>
+<span><span class="co">#&gt; Dimension (0): N_PROF ()</span></span>
+<span><span class="co">#&gt; Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.4/tidync/extdata/argo/MD5903593_001.nc</span></span></code></pre></div>
 <p>It’s important to not actual request the data extraction until the expressions above would result in an efficient size (don’t try a data frame version of a 20Gb ROMs variable …). Use the interactive modes to determine the likely size of the output you will receive.</p>
 <p>Functions seamlessly build the actual index values required by the NetCDF library. This can be used to debug the process or to define your own tools for the extraction. Currently each <code>hyper_*</code> function can take the filtering expressions, but it’s not obvious if this is a good idea or not.</p>
 <p>See the vignettes for more:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"tidync"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -506,9 +513,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/ropensci/software-review/issues/174" class="external-link"><img src="https://badges.ropensci.org/174_status.svg"></a></li>
-<li><a href="https://cran.r-project.org/package=tidync" class="external-link"><img src="http://www.r-pkg.org/badges/version/tidync" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://cran.r-project.org/package=tidync" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/tidync" alt="CRAN_Download_Badge"></a></li>
-<li><a href="https://github.com/ropensci/tidync/actions" class="external-link"><img src="https://github.com/ropensci/tidync/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://CRAN.R-project.org/package=tidync" class="external-link"><img src="https://www.r-pkg.org/badges/version/tidync" alt="CRAN status"></a></li>
 </ul>
 </div>
 
