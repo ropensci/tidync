@@ -3,8 +3,10 @@
 \docType{package}
 \name{tidync-package}
 \alias{tidync-package}
-\title{Tidy tools for NetCDF data.}
+\title{tidync: A Tidy Approach to 'NetCDF' Data Exploration and Extraction}
 \description{
+Tidy tools for 'NetCDF' data sources. Explore the contents of a 'NetCDF' source (file or URL) presented as variables organized by grid with a database-like interface. The hyper_filter() interactive function translates the filter value or index expressions to array-slicing form. No data is read until explicitly requested, as a data frame or list of arrays via hyper_tibble() or hyper_array().
+
 Provides easy to use idioms for working with NetCDF data for extraction,
 manipulation and visualization. NetCDF is Network Common Data Form
 \url{https://www.unidata.ucar.edu/software/netcdf/}.
@@ -58,3 +60,29 @@ op <- options(tidync.silent = TRUE)
 getOption("tidync.silent")
 options(op)
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://docs.ropensci.org/tidync/}
+  \item Report bugs at \url{https://github.com/ropensci/tidync/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Michael Sumner \email{mdsumner@gmail.com}
+
+Other contributors:
+\itemize{
+  \item Simon Wotherspoon [contributor]
+  \item Tomas Remenyi [contributor]
+  \item Ben Raymond [contributor]
+  \item Jakub Nowosad [contributor]
+  \item Tim Lucas [contributor]
+  \item Hadley Wickham [contributor]
+  \item Adrian Odenweller [contributor]
+  \item Patrick Van Laake [contributor]
+  \item Fabian Bernhard [contributor]
+}
+
+}
+\keyword{internal}
