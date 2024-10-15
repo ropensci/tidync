@@ -59,12 +59,20 @@ hyper_tibble.tidync<- function(x, ..., na.rm = TRUE, force = FALSE) {
   out <- tibble::as_tibble(lapply(slabs, as.vector))
   
   prod_dims <- 1
-  dn <- dimnames(slabs[[1]])
-  nm <- names(dn)
+  trans <- attr(slabs, "transforms")
 
-  for (i in seq_along(nm)) {
-    out[[nm[i]]] <- rep(dn[[i]], each = prod_dims, length.out = total_prod)
-    prod_dims <- prod_dims * length(dn[[i]]) 
+  for (i in seq_along(trans)) {
+    nm <- names(trans)[i]
+    nr <- sum(trans[[i]]$selected)
+    
+    out[[nm]] <- if ("timestamp" %in% colnames(trans[[i]]))
+      rep(dplyr::filter(trans[[nm]], .data$selected)[["timestamp"]],
+          each = prod_dims, length.out = total_prod)
+    else
+      rep(dplyr::filter(trans[[nm]], .data$selected)[[nm]], 
+          each = prod_dims, length.out = total_prod)
+
+    prod_dims <- prod_dims * nr
   }
   if (na.rm) out <- dplyr::filter(out, !all_na)
  out

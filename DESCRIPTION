@@ -26,7 +26,7 @@ Imports:
     forcats,
     magrittr,
     ncdf4,
-    ncmeta (>= 0.2.0),
+    ncmeta (>= 0.3.6),
     purrr,
     RNetCDF (>= 1.9-1),
     rlang,

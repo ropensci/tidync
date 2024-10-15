@@ -52,29 +52,27 @@ active_axis_transforms <- function(x, ...) {
 #' @export
 hyper_transforms.default <- function(x, all = FALSE, ...) {
   if (!all) return(active_axis_transforms(x, ...))
-  grid <- x$grid
-  axis <- x$axis
-  dimension <- x$dimension
-  source <- x$source
-  ## ignore activation, just do all
-  #active_x <- active(x)
-  dims <- axis %>% 
-   # dplyr::filter(.data$grid == active_x) %>% 
-    #dplyr::inner_join(axis, "variable") %>% 
-    dplyr::inner_join(dimension, c("dimension" = "id")) %>% 
+
+  dims <- x$axis %>% 
+    dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
+    dplyr::inner_join(x$extended, c("name", "dimension")) %>% 
     dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
-    dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim)
+    dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim, .data$time)
   
   transforms <- vector("list", nrow(dims))
   names(transforms) <- dims$name
   
-  all_atts <- mutate(x$attribute, low_name = tolower(.data$name))
-  
   for (i in seq_along(transforms)) {
     ll <- list(value = ifelse(rep(dims$coord_dim[i], dims$length[i]), 
-                nc_get(source$source, dims$name[i]), seq_len(dims$length[i])))
+               nc_get(x$source$source, dims$name[i]), seq_len(dims$length[i])))
     axis <- tibble::as_tibble(ll)
-    names(axis)  <- dims$name[i]
+    names(axis) <- dims$name[i]
+    
+    ## Add timestamp for any "time" dimension by taking the CFtime
+    ## instance from the extended attributes
+    ## tidync/issues/54
+    if (!is.na(dims$time[i]))
+      axis$timestamp <- CFtime::CFtimestamp(dims$time[i][[1]])
     
     ## axis might have a column called "i"  
     ## tidync/issues/74
@@ -82,22 +80,6 @@ hyper_transforms.default <- function(x, all = FALSE, ...) {
     dim_name <- dims$name[i]
     dim_coord <- dims$coord_dim[i]
 
-    ## Add timestamp for any "time" dimension. Since not all files have a 
-    ## "calendar" attribute or "axis == "T"", just try to create a CFtime
-    ## instance from the "units" attribute and a "calendar" if present
-    ## tidync/issues/54
-    dim_atts <- all_atts %>% dplyr::filter(.data$variable == dim_name)
-    units <- unlist(dim_atts$value[which(dim_atts$low_name == "units")])
-    if (!(is.null(units))) {
-      cal_idx <- which(dim_atts$low_name == "calendar")
-      if (length(cal_idx) == 0) calendar <- "standard"
-      else calendar <- unlist(dim_atts$value[cal_idx])
-      try({
-        cft <- CFtime::CFtime(units, calendar, axis[[1]])
-        axis$timestamp = CFtime::as_timestamp(cft)
-      }, silent = TRUE)
-    }
-    
     axis <- mutate(axis, 
                    index = row_number(), 
                    id = id_value, 
@@ -105,12 +87,7 @@ hyper_transforms.default <- function(x, all = FALSE, ...) {
                    coord_dim =  dim_coord, 
                    selected = TRUE)
     
-    
     transforms[[i]] <- axis
-
   }
-  
-
   transforms
-  
 }

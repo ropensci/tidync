@@ -78,7 +78,7 @@ string.
 By default all variables in the active grid are returned, use \code{select_var} to
 specify one or more desired variables.
 
-The transforms are stored as a list of tables in an attribute `transforms``,
+The transforms are stored as a list of tables in an attribute \code{transforms},
 access these with \code{\link[=hyper_transforms]{hyper_transforms()}}.
 }
 \examples{

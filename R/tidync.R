@@ -137,6 +137,7 @@ tidync.character <- function(x, what, ...) {
               grid = meta$grid,
               dimension = meta$dimension, 
               variable = variable,
+              extended = meta$extended,
               attribute = meta$attribute)
   out$transforms <- hyper_transforms(out, all = TRUE)
 
@@ -226,10 +227,9 @@ first_numeric_var <- function(x) {
 #' argo %>% hyper_filter(N_LEVELS = index > 300)
 print.tidync <- function(x, ...) {
   ushapes <- dplyr::distinct(x$grid, .data$grid) %>% 
-    dplyr::arrange(desc(nchar(.data$grid)))
+             dplyr::arrange(desc(nchar(.data$grid)))
   nshapes <- nrow(ushapes)
-  cat(sprintf("\nData Source (%i): %s ...\n", 
-              nrow(x$source), 
+  cat(sprintf("\nData Source (%i): %s ...\n", nrow(x$source), 
           paste(utils::head(basename(x$source$source), 2), collapse = ", ")))
   cat(sprintf("\nGrids (%i) <dimension family> : <associated variables> \n\n", 
               nshapes))
@@ -241,13 +241,12 @@ print.tidync <- function(x, ...) {
     return(invisible(NULL))  
   }
   active_sh <- active(x)
-  nms <- if(nrow(ushapes) > 0)  nchar(ushapes$grid) else 0
+  nms <- if(nrow(ushapes) > 0) nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
-  if (utils::packageVersion("tidyr") > "0.8.3" ) {
+  if (utils::packageVersion("tidyr") > "0.8.3")
     vargrids <- tidyr::unnest(x$grid, cols = c(.data$variables))
-  } else {
+  else
     vargrids <- tidyr::unnest(x$grid)
-  }
   
   # Warning message:
   #   In dplyr::inner_join(., x$axis, "variable") :
@@ -289,7 +288,6 @@ print.tidync <- function(x, ...) {
   nms <- names(x$transforms)
   ## handle case where value is character
   for (i in seq_along(x$transforms)) {
-    
     if (!is.numeric(x$transforms[[nms[i]]][[nms[i]]])) {
       x$transforms[[nms[i]]][[nms[i]]] <- NA_integer_
     }
@@ -305,7 +303,6 @@ print.tidync <- function(x, ...) {
 
   filter_ranges <- do.call(rbind, filter_ranges)
   ranges <- do.call(rbind, ranges)
-  
 
   idxnm <- match(names(x$transforms), dims$name)
   dims$dmin <- dims$dmax <- dims$min <- dims$max <- NA_real_
@@ -328,10 +325,9 @@ print.tidync <- function(x, ...) {
                               dplyr::filter(.data$active) %>% 
                               dplyr::mutate(id = NULL, active = NULL), n = Inf)
   dimension_other <- format(alldims %>% dplyr::filter(!.data$active) %>% 
-                              dplyr::select(.data$dim, .data$name,   
-                                            .data$length, .data$min, .data$max,
-                                            
-                                        .data$unlim, .data$coord_dim), n = Inf)
+                            dplyr::select(.data$dim, .data$name, .data$length, 
+                                          .data$min, .data$max, .data$unlim,
+                                          .data$coord_dim), n = Inf)
     
   }
 
@@ -354,5 +350,3 @@ print.tidync <- function(x, ...) {
   }
   invisible(NULL)
 }
-
-
