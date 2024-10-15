@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Michael D.
 Sumner</h4>
             
-            <h4 data-toc-skip class="date">2024-08-17</h4>
+            <h4 data-toc-skip class="date">2024-10-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/tidync/blob/main/vignettes/netcdf-with-tidync.Rmd" class="external-link"><code>vignettes/netcdf-with-tidync.Rmd</code></a></small>
       <div class="hidden name"><code>netcdf-with-tidync.Rmd</code></div>
@@ -202,6 +202,8 @@ queries may be made against, and may be changed with the
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/tidync/" class="external-link">tidync</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in CFtime::CFtimestamp(dims$time[i][[1]]): Function `CFtimestamp()` is</span></span>
+<span><span class="co">#&gt; deprecated. Use `as_timestamp()` instead.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -243,6 +245,8 @@ summary print makes a distinction based on which dimensions are
 <em>active</em>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D2"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in CFtime::CFtimestamp(dims$time[i][[1]]): Function `CFtimestamp()` is</span></span>
+<span><span class="co">#&gt; deprecated. Use `as_timestamp()` instead.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -268,6 +272,8 @@ choose a variable in the default grid, then it’s no different to the
 first case.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"time"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in CFtime::CFtimestamp(dims$time[i][[1]]): Function `CFtimestamp()` is</span></span>
+<span><span class="co">#&gt; deprecated. Use `as_timestamp()` instead.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -291,6 +297,8 @@ first case.</p>
 <span></span>
 <span><span class="co">## choose grid by variable name, which happens to be the default grid here</span></span>
 <span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"quality_flag"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in CFtime::CFtimestamp(dims$time[i][[1]]): Function `CFtimestamp()` is</span></span>
+<span><span class="co">#&gt; deprecated. Use `as_timestamp()` instead.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -309,6 +317,8 @@ first case.</p>
 <span></span>
 <span><span class="co">## same as the default</span></span>
 <span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D0,D1,D2"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in CFtime::CFtimestamp(dims$time[i][[1]]): Function `CFtimestamp()` is</span></span>
+<span><span class="co">#&gt; deprecated. Use `as_timestamp()` instead.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -337,6 +347,8 @@ variable, though we could just chain the entire operation without
 this.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">concentration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; Warning in CFtime::CFtimestamp(dims$time[i][[1]]): Function `CFtimestamp()` is</span></span>
+<span><span class="co">#&gt; deprecated. Use `as_timestamp()` instead.</span></span>
 <span><span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
@@ -450,7 +462,7 @@ as a data frame.</p>
 <span><span class="co">#&gt;   .. ..$ coord_dim: logi TRUE</span></span>
 <span><span class="co">#&gt;   .. ..$ selected : logi TRUE</span></span>
 <span><span class="co">#&gt;  - attr(*, "source")= tibble [1 × 2] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2024-08-17 07:45:25"</span></span>
+<span><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2024-10-15 20:31:47"</span></span>
 <span><span class="co">#&gt;   ..$ source: chr "/home/runner/work/_temp/Library/tidync/extdata/ifremer/20171002.nc"</span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "tidync_data"</span></span>
 <span></span>
@@ -691,7 +703,7 @@ Do you know different? Please let me know!<a href="#fnref1" class="footnote-back
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
