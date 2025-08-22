@@ -72,7 +72,7 @@ hyper_transforms.default <- function(x, all = FALSE, ...) {
     ## instance from the extended attributes
     ## tidync/issues/54
     if (!is.na(dims$time[i]))
-      axis$timestamp <- CFtime::CFtimestamp(dims$time[i][[1]])
+      axis$timestamp <- CFtime::as_timestamp(dims$time[i][[1]])
     
     ## axis might have a column called "i"  
     ## tidync/issues/74
