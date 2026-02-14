@@ -16,12 +16,14 @@
   can be numeric, Date, or POSIXct, and `hyper_filter()` operates on them 
   directly. Ideal for use with file databases such as raadfiles.
 
-* Removed forcats, magrittr, and purrr dependencies. The pipe `%>%` is now 
-  re-exported from dplyr. `purrr::safely()` calls replaced with `tryCatch()`.
+* Removed forcats, magrittr, and purrr dependencies. Switched from `%>%` 
+  to the native R pipe `|>` throughout. `purrr::safely()` calls replaced 
+  with `tryCatch()`.
 
-* Minimum dplyr version bumped to 1.1.0 (for `multiple` argument in joins). 
-  Minimum tidyr version bumped to 1.0.0 (for `cols` argument in `unnest()`). 
-  All version-gating conditionals removed.
+* Minimum R version bumped to 4.1.0 (for native pipe `|>`). Minimum dplyr 
+  version bumped to 1.1.0 (for `multiple` argument in joins). Minimum tidyr 
+  version bumped to 1.0.0 (for `cols` argument in `unnest()`). All 
+  version-gating conditionals removed.
 
 * Removed commented-out `browser()` calls.
 
