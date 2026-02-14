@@ -40,5 +40,11 @@ print.tidync_data <- function(x, ...) {
 #' @name tidync
 #' @export
 tidync.tidync_data <- function(x, what, ...) {
-  tidync(attr(x, "source")$source[1L], what = what, ...)
+  src <- attr(x, "source")
+  cdim <- attr(x, "concat_dim")
+  if (nrow(src) > 1L && !is.null(cdim)) {
+    tidync(src$source, what = what, concat_dim = cdim, ...)
+  } else {
+    tidync(src$source[1L], what = what, ...)
+  }
 }

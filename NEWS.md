@@ -1,5 +1,21 @@
 # tidync dev
 
+* Multi-source support: `tidync()` now accepts a vector of file paths with 
+  `concat_dim` to build a consolidated view across multiple NetCDF sources. 
+  Downstream operations (`hyper_filter`, `hyper_array`, `hyper_tibble`) work 
+  transparently across the collection, opening only the files needed for the 
+  current selection.
+
+* Fast mode for large collections: `tidync(files, concat_dim = "time", fast = TRUE)` 
+  skips full metadata validation of sources 2..N, reading only the concat 
+  dimension coordinate. Mismatches are detected lazily at data-read time.
+
+* Zero file I/O construction: supply coordinate values directly via 
+  `concat_dim = list(name = "time", values = dates)` to avoid opening files 
+  2..N entirely. Only the first source is opened (for the template). Values 
+  can be numeric, Date, or POSIXct, and `hyper_filter()` operates on them 
+  directly. Ideal for use with file databases such as raadfiles.
+
 * Update to CFTime as_timestamp(), thanks to @fabern. 
 
 * Support for CF time metadata via package CFtime thanks to @pvanlaake, see https://github.com/ropensci/tidync/pull/124
@@ -146,6 +162,4 @@ and allowed user-controlled option to avoid this check. Thanks to Alessandro Big
 
 * First working version now has `tidync()`, and `hyper_*()` family of functions. 
 
-* Migrated from ncdump. 
-
-
+* Migrated from ncdump.

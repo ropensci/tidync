@@ -24,6 +24,23 @@
 #' type variables are exploded into single character elements so that dimensions
 #' match the source.
 #'
+#' @section Multi-source: When `x` is a character vector of length > 1 and
+#'   `concat_dim` is specified, tidync builds a consolidated view across all
+#'   sources. The first source is used as a template for grid structure, and
+#'   the `concat_dim` coordinate values are read from each source and
+#'   concatenated. Downstream operations (`hyper_filter`, `hyper_array`, etc.)
+#'   work transparently across the collection.
+#'
+#'   Use `fast = TRUE` for large collections to skip full metadata validation
+#'   of sources 2..N (only the `concat_dim` coordinate is read). Mismatches
+#'   are detected lazily at data-read time.
+#'
+#'   For maximum speed, supply coordinate values directly via the list form
+#'   `concat_dim = list(name = "time", values = <vector>)`. This opens only
+#'   the first source (for the template) and builds the concat transform from
+#'   the supplied values with zero additional file I/O. This is ideal when
+#'   coordinate values are already available from a file database.
+#'
 #' @section Grids: A grid is an instance of a particular set of dimensions,
 #'   which can be shared by more than one variable. This is not the 'rank' of a
 #'   variable (the number of dimensions) since a single data set may have many
@@ -40,11 +57,21 @@
 #'   We haven't yet explored 'HDF5' in detail, so any feedback is appreciated.
 #'   Major use of compound types is made by \url{https://github.com/sosoc/croc}.
 #'
-#' @param x path to a NetCDF file
+#' @param x path to a NetCDF file, or a character vector of paths for
+#'   multi-source access (requires `concat_dim`)
 #' @param ... reserved for arguments to methods, currently ignored
 #' @param what (optional) character name of grid (see `ncmeta::nc_grids`) or
 #'   (bare) name of variable (see `ncmeta::nc_vars`) or index of grid to
 #'   `activate`
+#' @param concat_dim (optional) name of the dimension to concatenate across
+#'   sources, or a list with elements `name` (dimension name) and `values`
+#'   (vector of coordinate values, one per source). The list form avoids
+#'   opening files 2..N entirely — useful when values are already known
+#'   from a file database. Values can be numeric, Date, or POSIXct.
+#' @param fast logical, if `TRUE` skip full metadata validation for sources
+#'   after the first (only reads the `concat_dim` coordinate). Mismatches
+#'   are detected at data-read time. Ignored when `concat_dim$values` is
+#'   supplied.
 #' @export
 tidync <- function(x, what, ...) {
   UseMethod("tidync")
@@ -77,13 +104,52 @@ tidync <- function(x, what, ...) {
 #' ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
 #' ifrnc <- tidync(ifr)
 #' ifrnc %>% hyper_tibble(select_var = "concentration")
+#'
+#' ## multi-source: concatenate files along a dimension
+#' \dontrun{
+#' files <- c("sst_2020_01.nc", "sst_2020_02.nc", "sst_2020_03.nc")
+#' tnc <- tidync(files, concat_dim = "time")
+#' tnc
+#' ## filter and read across all sources transparently
+#' tnc %>% hyper_filter(time = time > 18300) %>% hyper_tibble()
+#'
+#' ## fast mode for large collections (skips full metadata scan)
+#' all_files <- list.files("daily/", pattern = "\\.nc$", full.names = TRUE)
+#' tnc_fast <- tidync(all_files, concat_dim = "time", fast = TRUE)
+#'
+#' ## zero file I/O: supply values from a file database (e.g. raadfiles)
+#' ## only the first file is opened (for the template)
+#' dates <- as.Date(c("2020-01-01", "2020-01-02", "2020-01-03"))
+#' tnc_db <- tidync(files, concat_dim = list(name = "time", values = dates))
+#' ## filter directly on the values you supplied
+#' tnc_db %>% hyper_filter(time = time > as.Date("2020-01-01")) %>% hyper_tibble()
+#' }
 #' @name tidync
 #' @export
 #' @importFrom ncmeta nc_meta
-tidync.character <- function(x, what, ...) {
+tidync.character <- function(x, what, ..., concat_dim = NULL, fast = FALSE) {
   if (length(x) > 1) {
+    if (!is.null(concat_dim)) {
+      # Unpack list form: list(name = "time", values = <vector>)
+      concat_values <- NULL
+      if (is.list(concat_dim)) {
+        if (is.null(concat_dim$name)) {
+          stop("list-form concat_dim must have a 'name' element")
+        }
+        concat_values <- concat_dim$values  # may be NULL
+        concat_dim <- concat_dim$name
+      }
+      if (missing(what)) {
+        return(tidync_multi(x, concat_dim = concat_dim,
+                            concat_values = concat_values,
+                            fast = fast, ...))
+      } else {
+        return(tidync_multi(x, what = what, concat_dim = concat_dim,
+                            concat_values = concat_values,
+                            fast = fast, ...))
+      }
+    }
     if (!isTRUE(getOption("tidync.silent"))) {
-  
       warning("only one source allowed, first supplied chosen")
     }
     x <- x[1L]
@@ -179,6 +245,260 @@ first_numeric_var <- function(x) {
   priorityvar$variable[1L]
 }
 
+## ---- Multi-source constructor and helpers ----
+
+#' Build a tidync object from multiple sources concatenated along one dimension.
+#'
+#' This is an internal constructor called by `tidync.character()` when `x` has
+#' length > 1 and `concat_dim` is specified. It builds a template from the
+#' first source, reads the `concat_dim` coordinate from each source, and
+#' stitches them into a consolidated transforms table.
+#'
+#' @param sources character vector of file paths or URIs
+#' @param what optional grid or variable name to activate
+#' @param concat_dim name of the dimension to concatenate along
+#' @param fast if TRUE, skip full metadata validation of sources 2..N
+#' @param ... passed to `tidync()` for the template
+#' @return tidync object with multi-source transforms
+#' @noRd
+tidync_multi <- function(sources, what, concat_dim, concat_values = NULL,
+                         fast = FALSE, ...) {
+  stopifnot(is.character(sources), length(sources) > 0)
+  stopifnot(is.character(concat_dim), length(concat_dim) == 1L)
+
+  # Build template from first source
+  if (missing(what)) {
+    template <- tidync(sources[1L], ...)
+  } else {
+    template <- tidync(sources[1L], what = what, ...)
+  }
+
+  # Validate concat_dim exists in the template
+  if (!concat_dim %in% names(template$transforms)) {
+    stop(sprintf("concat_dim '%s' not found in source dimensions: %s",
+                 concat_dim,
+                 paste(names(template$transforms), collapse = ", ")))
+  }
+
+  # Source table
+  src_table <- tibble::tibble(
+    source_id = seq_along(sources),
+    source    = sources
+  )
+
+  # Template's concat transform (source 1)
+  t1 <- template$transforms[[concat_dim]]
+
+  if (!is.null(concat_values)) {
+    # ---- Values-supplied path: zero file I/O for sources 2..N ----
+    concat_all <- build_concat_from_values(
+      concat_dim, concat_values, sources, t1
+    )
+  } else {
+    # ---- File-reading path (original) ----
+    concat_all <- build_concat_from_files(
+      concat_dim, sources, t1, template, fast
+    )
+  }
+
+  # Assemble the multi-source object
+  out <- template
+  out$source <- src_table
+  out$transforms[[concat_dim]] <- concat_all
+  out$concat_dim <- concat_dim
+  out$fast_mode <- fast
+
+  # Update the dimension table: concat dim length is now the total
+  cdim_idx <- which(out$dimension$name == concat_dim)
+  out$dimension$length[cdim_idx] <- nrow(concat_all)
+
+  # Re-run update_slices to set start/count from the new transforms
+  out <- update_slices(out)
+
+  out
+}
+
+#' Build concat transform from user-supplied values (zero file I/O).
+#'
+#' Assumes one step per source (length(values) == length(sources)).
+#' The supplied values become the coordinate column that hyper_filter
+#' operates on.
+#'
+#' @param concat_dim dimension name (character)
+#' @param concat_values vector of coordinate values (numeric, Date, POSIXct, ...)
+#' @param sources character vector of file paths
+#' @param t1 template concat transform (from first source)
+#' @return tibble with the consolidated concat transform
+#' @noRd
+build_concat_from_values <- function(concat_dim, concat_values, sources, t1) {
+  n_sources <- length(sources)
+  n_values <- length(concat_values)
+
+  if (n_values != n_sources) {
+    stop(sprintf(
+      paste("length of concat_dim$values (%d) must match number of",
+            "sources (%d) (one value per file)"),
+      n_values, n_sources))
+  }
+
+  # Put the user's values directly in the coordinate column.
+  # This means hyper_filter(time = time > X) works on whatever type
+  # the user supplied (numeric, Date, POSIXct).
+  concat_all <- tibble::tibble(
+    placeholder__ = concat_values,
+    index = seq_len(n_values),
+    local_index = rep(1L, n_values),
+    source_id = seq_len(n_values),
+    id = t1$id[1L],
+    name = concat_dim,
+    coord_dim = t1$coord_dim[1L],
+    selected = TRUE
+  )
+  names(concat_all)[1L] <- concat_dim
+
+  # Add timestamp column if the template has one, or if values are temporal
+  is_temporal <- inherits(concat_values, "POSIXt") ||
+                 inherits(concat_values, "Date")
+
+  if (is_temporal) {
+    concat_all$timestamp <- format(concat_values)
+  } else if ("timestamp" %in% names(t1)) {
+    concat_all$timestamp <- rep(NA_character_, n_values)
+  }
+
+  concat_all
+}
+
+#' Build concat transform by reading coordinate values from files.
+#'
+#' This is the original file-reading path. Opens each source to read
+#' the concat_dim coordinate, optionally validates shared dimensions.
+#'
+#' @param concat_dim dimension name
+#' @param sources file paths
+#' @param t1 template concat transform
+#' @param template tidync object from first source
+#' @param fast skip validation if TRUE
+#' @return tibble with the consolidated concat transform
+#' @noRd
+build_concat_from_files <- function(concat_dim, sources, t1, template, fast) {
+
+  t1$local_index <- t1$index
+  t1$source_id <- 1L
+
+  concat_transforms <- vector("list", length(sources))
+  concat_transforms[[1L]] <- t1
+
+  has_timestamp <- "timestamp" %in% names(t1)
+  concat_has_coords <- t1$coord_dim[1L]
+
+  for (i in seq_along(sources)[-1L]) {
+    meta_i <- NULL
+    if (!fast) {
+      meta_i <- tryCatch(
+        ncmeta::nc_meta(sources[i]),
+        error = function(e) stop(sprintf("failed to read metadata from '%s': %s",
+                                         sources[i], conditionMessage(e)))
+      )
+      validate_against_template(meta_i, template, concat_dim, sources[i])
+    }
+
+    # Read the concat_dim coordinate values (or generate index sequence)
+    if (concat_has_coords) {
+      coord_vals <- nc_get(sources[i], concat_dim)
+    } else {
+      if (!is.null(meta_i)) {
+        n_i <- meta_i$dimension$length[meta_i$dimension$name == concat_dim]
+      } else {
+        n_i <- nc_dim_len(sources[i], concat_dim)
+      }
+      coord_vals <- seq_len(n_i)
+    }
+    n_i <- length(coord_vals)
+
+    ti <- tibble::tibble(
+      placeholder__ = coord_vals,
+      local_index = seq_len(n_i),
+      source_id = i,
+      index = NA_integer_,
+      id = t1$id[1L],
+      name = concat_dim,
+      coord_dim = t1$coord_dim[1L],
+      selected = TRUE
+    )
+    names(ti)[1L] <- concat_dim
+
+    if (has_timestamp) {
+      if (!fast) {
+        ext_i <- meta_i$extended
+        time_rows <- which(ext_i$name == concat_dim)
+        cftime_obj <- NULL
+        if (length(time_rows) > 0L) {
+          candidate <- ext_i$time[[time_rows[1L]]]
+          if (is.environment(candidate) || inherits(candidate, "CFtime")) {
+            cftime_obj <- candidate
+          }
+        }
+        if (!is.null(cftime_obj)) {
+          ti$timestamp <- CFtime::as_timestamp(cftime_obj)
+        } else {
+          ti$timestamp <- rep(NA_character_, n_i)
+        }
+      } else {
+        ti$timestamp <- rep(NA_character_, n_i)
+      }
+    }
+
+    concat_transforms[[i]] <- ti
+  }
+
+  concat_all <- do.call(rbind, concat_transforms)
+  concat_all$index <- seq_len(nrow(concat_all))
+  concat_all
+}
+
+#' Validate a source's metadata against the template
+#'
+#' Checks that shared dimensions have matching lengths and that the active
+#' variables are present.
+#'
+#' @param meta_i ncmeta::nc_meta result for the source being checked
+#' @param template the tidync object built from the first source
+#' @param concat_dim name of the concatenation dimension (excluded from checks)
+#' @param source_label file path for error messages
+#' @noRd
+validate_against_template <- function(meta_i, template, concat_dim, source_label) {
+  # Check shared dimensions have the same length
+  shared_dims <- template$dimension[template$dimension$name != concat_dim, ]
+
+  for (j in seq_len(nrow(shared_dims))) {
+    dname <- shared_dims$name[j]
+    len_template <- shared_dims$length[j]
+    dim_i <- meta_i$dimension
+    len_i <- dim_i$length[dim_i$name == dname]
+
+    if (length(len_i) == 0L) {
+      stop(sprintf("dimension '%s' not found in source '%s'",
+                   dname, source_label))
+    }
+    if (len_i != len_template) {
+      stop(sprintf(
+        "dimension '%s' has length %d in '%s' but %d in template ('%s')",
+        dname, len_i, source_label, len_template,
+        template$source$source[1L]))
+    }
+  }
+
+  # Check that active variables exist
+  template_vars <- template$variable$name[template$variable$active]
+  source_vars <- meta_i$variable$name
+  missing_vars <- setdiff(template_vars, source_vars)
+  if (length(missing_vars) > 0L) {
+    stop(sprintf("variables %s missing from source '%s'",
+                 paste(missing_vars, collapse = ", "), source_label))
+  }
+}
+
 #' Print tidync object
 #'
 #' Provide a summary of variables and dimensions, organized by their 'grid' (or
@@ -231,6 +551,15 @@ print.tidync <- function(x, ...) {
   nshapes <- nrow(ushapes)
   cat(sprintf("\nData Source (%i): %s ...\n", nrow(x$source), 
           paste(utils::head(basename(x$source$source), 2), collapse = ", ")))
+  if (!is.null(x$concat_dim)) {
+    ct <- x$transforms[[x$concat_dim]]
+    n_sel <- sum(ct$selected)
+    n_tot <- nrow(ct)
+    cat(sprintf("Concatenated along '%s' (%i/%i steps, %i source%s%s)\n",
+                x$concat_dim, n_sel, n_tot, nrow(x$source),
+                ifelse(nrow(x$source) > 1, "s", ""),
+                if (isTRUE(x$fast_mode)) ", fast mode" else ""))
+  }
   cat(sprintf("\nGrids (%i) <dimension family> : <associated variables> \n\n", 
               nshapes))
   if (nrow(ushapes) < 1L) {

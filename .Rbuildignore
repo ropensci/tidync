@@ -14,3 +14,4 @@
 ^codemeta\.json$
 ^revdep$
 ^CRAN-SUBMISSION$
+^tidync\.Rproj$

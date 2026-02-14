@@ -127,12 +127,22 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   }
   
   ## Avoid opening file on disk multiple times for multiple variables
-  con <- suppressWarnings(ncdf4::nc_open(x$source$source[1]))
-  on.exit(ncdf4::nc_close(con), add = TRUE)
-  datalist <- lapply(varnames, function(vara) {
-    ncdf4::ncvar_get(con, vara, start = START, count = COUNT, 
-                     raw_datavals = raw_datavals, collapse_degen = FALSE)
-  })
+  ## If concat_dim is set but not part of the active grid, fall through
+  ## to single-source (all sources are identical for shared dimensions)
+  use_multi <- !is.null(x$concat_dim) && x$concat_dim %in% dimension$name
+  if (!use_multi) {
+    ## ---- Single source path (original) ----
+    con <- suppressWarnings(ncdf4::nc_open(x$source$source[1]))
+    on.exit(ncdf4::nc_close(con), add = TRUE)
+    datalist <- lapply(varnames, function(vara) {
+      ncdf4::ncvar_get(con, vara, start = START, count = COUNT, 
+                       raw_datavals = raw_datavals, collapse_degen = FALSE)
+    })
+  } else {
+    ## ---- Multi-source path ----
+    datalist <- read_multi_source(x, varnames, dimension, START, COUNT,
+                                  raw_datavals = raw_datavals)
+  }
 
   ## Get dimension names from the transforms. Use "timestamp" instead of "time"
   transforms <- active_axis_transforms(x)
@@ -173,7 +183,8 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   if (drop && any(lengths(dn) == 1)) datalist <- lapply(datalist, drop)
   
   structure(datalist, names = varnames, transforms = transforms, 
-            source = x$source, class = "tidync_data")
+            source = x$source, concat_dim = x$concat_dim,
+            class = "tidync_data")
 }
 
 #' @name hyper_array
@@ -183,4 +194,148 @@ hyper_array.character <- function(x, select_var = NULL, ...,
   tidync(x) %>% 
   hyper_filter(...) %>%  
   hyper_array(select_var = select_var, raw_datavals = raw_datavals, drop = drop)
+}
+
+## ---- Multi-source reader ----
+
+#' Read data from multiple NetCDF sources and concatenate along one dimension.
+#'
+#' Decomposes the global selection into per-source local slabs, reads each,
+#' and concatenates along the concat dimension.
+#'
+#' @param x tidync object with concat_dim set
+#' @param varnames character vector of variable names to read
+#' @param dimension tibble of dimensions in axis order (from hyper_array)
+#' @param START global start vector
+#' @param COUNT global count vector
+#' @param raw_datavals passed to ncvar_get
+#' @return list of arrays (same structure as single-source path)
+#' @noRd
+read_multi_source <- function(x, varnames, dimension, START, COUNT,
+                              raw_datavals = FALSE) {
+
+  concat_dim <- x$concat_dim
+  concat_trans <- x$transforms[[concat_dim]]
+  selected_trans <- concat_trans[concat_trans$selected, ]
+
+  # Which sources do we actually need?
+  needed_sources <- sort(unique(selected_trans$source_id))
+
+  if (length(needed_sources) == 0L) {
+    stop("no sources selected after filtering")
+  }
+
+  # Which position is the concat dim in the dimension order?
+  concat_pos <- which(dimension$name == concat_dim)
+
+  # Per-source: compute local start/count for the concat dim
+  source_slabs <- lapply(needed_sources, function(sid) {
+    rows <- selected_trans[selected_trans$source_id == sid, ]
+    local_start <- min(rows$local_index)
+    local_end   <- max(rows$local_index)
+    local_count <- local_end - local_start + 1L
+
+    # Build the full start/count vectors for this source
+    # Shared dims keep the global start/count, concat dim gets local
+    s <- START
+    c <- COUNT
+    s[concat_pos] <- local_start
+    c[concat_pos] <- local_count
+
+    src_path <- x$source$source[x$source$source_id == sid]
+
+    list(source_id = sid,
+         source = src_path,
+         start = s, count = c)
+  })
+
+  # Read from each source: open once, validate once, read all variables
+  # Result: list of lists, outer = source, inner = variable
+  per_source <- lapply(source_slabs, function(slab) {
+    con <- suppressWarnings(ncdf4::nc_open(slab$source))
+    on.exit(ncdf4::nc_close(con), add = TRUE)
+
+    # Fast-mode lazy validation (once per source)
+    if (isTRUE(x$fast_mode)) {
+      validate_slab_compat(con, x, concat_dim)
+    }
+
+    # Read all variables from this source
+    lapply(varnames, function(vara) {
+      ncdf4::ncvar_get(con, vara, start = slab$start, count = slab$count,
+                       raw_datavals = raw_datavals, collapse_degen = FALSE)
+    })
+  })
+
+  # Transpose: list-of-sources-of-vars -> list-of-vars-of-sources, then abind
+  datalist <- lapply(seq_along(varnames), function(vi) {
+    arrays <- lapply(per_source, function(src) src[[vi]])
+    abind_along(arrays, along = concat_pos)
+  })
+
+  datalist
+}
+
+#' Concatenate arrays along a specified dimension.
+#'
+#' Minimal implementation to avoid importing the abind package for one function.
+#'
+#' @param arrays list of arrays with identical dimensions except along `along`
+#' @param along integer, the dimension to concatenate along
+#' @return a single array
+#' @noRd
+abind_along <- function(arrays, along) {
+  if (length(arrays) == 1L) return(arrays[[1L]])
+
+  d1 <- dim(arrays[[1L]])
+  ndim <- length(d1)
+
+  total_along <- sum(vapply(arrays, function(a) dim(a)[along], integer(1)))
+  out_dim <- d1
+  out_dim[along] <- total_along
+
+  out <- array(vector(typeof(arrays[[1L]]), 0L), dim = out_dim)
+
+  pos <- 1L
+  for (a in arrays) {
+    n <- dim(a)[along]
+    # Build index list: list(TRUE, TRUE, pos:(pos+n-1), TRUE, ...)
+    idx <- rep(list(TRUE), ndim)
+    idx[[along]] <- seq.int(pos, pos + n - 1L)
+    out <- do.call(`[<-`, c(list(out), idx, list(a)))
+    pos <- pos + n
+  }
+  out
+}
+
+#' Validate that a source's shared dimensions match the template.
+#'
+#' Called at read time when fast_mode = TRUE, since metadata validation
+#' was skipped at construction time. Uses the ncdf4 connection which is
+#' already open.
+#'
+#' @param con ncdf4 connection object
+#' @param x tidync object
+#' @param concat_dim name of the concat dimension (skip this one)
+#' @noRd
+validate_slab_compat <- function(con, x, concat_dim) {
+  shared_dims <- x$dimension[x$dimension$name != concat_dim, ]
+  for (i in seq_len(nrow(shared_dims))) {
+    dname <- shared_dims$name[i]
+    expected_len <- shared_dims$length[i]
+    file_dim <- con$dim[[dname]]
+    if (is.null(file_dim)) {
+      stop(sprintf(
+        paste("fast mode: dimension '%s' not found in '%s'.",
+              "Re-run with fast = FALSE to validate all sources."),
+        dname, con$filename))
+    }
+    if (file_dim$len != expected_len) {
+      stop(sprintf(
+        paste("fast mode: dimension '%s' has length %d in '%s'",
+              "(expected %d from template).",
+              "Re-run with fast = FALSE to validate all sources."),
+        dname, file_dim$len, con$filename, expected_len))
+    }
+  }
 }

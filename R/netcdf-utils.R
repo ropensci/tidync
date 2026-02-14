@@ -54,3 +54,19 @@ nc_get.NetCDF <- function(x, v, test = FALSE) {
 nc_get.ncdf4 <- function(x, v, test = FALSE) {
   ncdf4::ncvar_get(x, v)
 }
+
+#' Read the length of a single dimension from a NetCDF source.
+#'
+#' Used internally by the multi-source constructor in fast mode when
+#' the concat dimension has no coordinate variable (coord_dim = FALSE).
+#'
+#' @param x file path or URI
+#' @param dimname name of the dimension
+#' @return integer, the dimension length
+#' @noRd
+nc_dim_len <- function(x, dimname) {
+  con <- RNetCDF::open.nc(x)
+  on.exit(RNetCDF::close.nc(con), add = TRUE)
+  info <- RNetCDF::dim.inq.nc(con, dimname)
+  info$length
+}

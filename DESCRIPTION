@@ -1,6 +1,6 @@
 Package: tidync
 Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.4.0
+Version: 0.4.0.9001
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
@@ -33,7 +33,7 @@ Imports:
     tibble,
     tidyr,
     CFtime (>= 1.4.0)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: ggplot2,
     knitr,
     rmarkdown,

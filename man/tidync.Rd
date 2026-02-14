@@ -8,18 +8,30 @@
 \usage{
 tidync(x, what, ...)
 
-\method{tidync}{character}(x, what, ...)
+\method{tidync}{character}(x, what, ..., concat_dim = NULL, fast = FALSE)
 
 \method{tidync}{tidync_data}(x, what, ...)
 }
 \arguments{
-\item{x}{path to a NetCDF file}
+\item{x}{path to a NetCDF file, or a character vector of paths for
+multi-source access (requires \code{concat_dim})}
 
 \item{what}{(optional) character name of grid (see \code{ncmeta::nc_grids}) or
 (bare) name of variable (see \code{ncmeta::nc_vars}) or index of grid to
 \code{activate}}
 
 \item{...}{reserved for arguments to methods, currently ignored}
+
+\item{concat_dim}{(optional) name of the dimension to concatenate across
+sources, or a list with elements \code{name} (dimension name) and \code{values}
+(vector of coordinate values, one per source). The list form avoids
+opening files 2..N entirely — useful when values are already known
+from a file database. Values can be numeric, Date, or POSIXct.}
+
+\item{fast}{logical, if \code{TRUE} skip full metadata validation for sources
+after the first (only reads the \code{concat_dim} coordinate). Mismatches
+are detected at data-read time. Ignored when \code{concat_dim$values} is
+supplied.}
 }
 \description{
 Connect to a NetCDF source and allow use of \verb{hyper_*} verbs for slicing with
@@ -47,6 +59,25 @@ NetCDF sources with numeric types are chosen by default, even if existing
 type variables are exploded into single character elements so that dimensions
 match the source.
 }
+\section{Multi-source}{
+ When \code{x} is a character vector of length > 1 and
+\code{concat_dim} is specified, tidync builds a consolidated view across all
+sources. The first source is used as a template for grid structure, and
+the \code{concat_dim} coordinate values are read from each source and
+concatenated. Downstream operations (\code{hyper_filter}, \code{hyper_array}, etc.)
+work transparently across the collection.
+
+Use \code{fast = TRUE} for large collections to skip full metadata validation
+of sources 2..N (only the \code{concat_dim} coordinate is read). Mismatches
+are detected lazily at data-read time.
+
+For maximum speed, supply coordinate values directly via the list form
+\verb{concat_dim = list(name = "time", values = <vector>)}. This opens only
+the first source (for the template) and builds the concat transform from
+the supplied values with zero additional file I/O. This is ideal when
+coordinate values are already available from a file database.
+}
+
 \section{Grids}{
  A grid is an instance of a particular set of dimensions,
 which can be shared by more than one variable. This is not the 'rank' of a
@@ -94,4 +125,24 @@ print(recNum)
 ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
 ifrnc <- tidync(ifr)
 ifrnc \%>\% hyper_tibble(select_var = "concentration")
+
+## multi-source: concatenate files along a dimension
+\dontrun{
+files <- c("sst_2020_01.nc", "sst_2020_02.nc", "sst_2020_03.nc")
+tnc <- tidync(files, concat_dim = "time")
+tnc
+## filter and read across all sources transparently
+tnc \%>\% hyper_filter(time = time > 18300) \%>\% hyper_tibble()
+
+## fast mode for large collections (skips full metadata scan)
+all_files <- list.files("daily/", pattern = "\\\\.nc$", full.names = TRUE)
+tnc_fast <- tidync(all_files, concat_dim = "time", fast = TRUE)
+
+## zero file I/O: supply values from a file database (e.g. raadfiles)
+## only the first file is opened (for the template)
+dates <- as.Date(c("2020-01-01", "2020-01-02", "2020-01-03"))
+tnc_db <- tidync(files, concat_dim = list(name = "time", values = dates))
+## filter directly on the values you supplied
+tnc_db \%>\% hyper_filter(time = time > as.Date("2020-01-01")) \%>\% hyper_tibble()
+}
 }
