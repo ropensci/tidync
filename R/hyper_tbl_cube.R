@@ -54,7 +54,7 @@ hyper_tbl_cube.tidync <- function(x, ..., force = FALSE) {
   dim_names <- active_names |> 
     inner_join(x[["dimension"]] |> 
                  dplyr::filter(active), c("dim" = "id")) |> 
-    dplyr::pull(.data$name)
+    dplyr::pull("name")
   trans <- x[["transforms"]][dim_names]
   lfun <- function(inm) {
     trans[[inm]] |> 

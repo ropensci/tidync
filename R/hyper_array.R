@@ -86,7 +86,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   ordhack <- 1 + as.integer(unlist(strsplit(gsub("D", "", 
                           dplyr::filter(x$grid, .data$grid == active(x)) |> 
                           # dplyr::slice(1L) |> THERE'S ONLY EVER ONE ACTIVE GRID
-                          dplyr::pull(.data$grid)), ",")))
+                          dplyr::pull("grid")), ",")))
   dimension <- x[["dimension"]] |> dplyr::slice(ordhack)
   ## ensure dimension is in order of the dims in these vars
   axis <- x[["axis"]] |> dplyr::filter(variable %in% varname)
@@ -201,7 +201,9 @@ hyper_array.character <- function(x, select_var = NULL, ...,
 #' Read data from multiple NetCDF sources and concatenate along one dimension.
 #'
 #' Decomposes the global selection into per-source local slabs, reads each,
-#' and concatenates along the concat dimension.
+#' and concatenates along the concat dimension.  When mirai daemons are active,
+#' per-source reads run in parallel via [mirai::mirai_map()]; otherwise they
+#' fall back to sequential [lapply()].
 #'
 #' @param x tidync object with concat_dim set
 #' @param varnames character vector of variable names to read
@@ -249,23 +251,19 @@ read_multi_source <- function(x, varnames, dimension, START, COUNT,
          start = s, count = c)
   })
 
-  # Read from each source: open once, validate once, read all variables
-  # Result: list of lists, outer = source, inner = variable
-  per_source <- lapply(source_slabs, function(slab) {
-    con <- suppressWarnings(ncdf4::nc_open(slab$source))
-    on.exit(ncdf4::nc_close(con), add = TRUE)
+  # Build validation spec for fast-mode (simple vectors, no tidync ref)
+  validate <- isTRUE(x$fast_mode)
+  shared_dims <- if (validate) {
+    sd <- x$dimension[x$dimension$name != concat_dim, ]
+    list(names = sd$name, lengths = sd$length)
+  }
 
-    # Fast-mode lazy validation (once per source)
-    if (isTRUE(x$fast_mode)) {
-      validate_slab_compat(con, x, concat_dim)
-    }
-
-    # Read all variables from this source
-    lapply(varnames, function(vara) {
-      ncdf4::ncvar_get(con, vara, start = slab$start, count = slab$count,
-                       raw_datavals = raw_datavals, collapse_degen = FALSE)
-    })
-  })
+  # Read from each source — parallel when mirai daemons are active
+  per_source <- map_slabs(source_slabs,
+                          varnames = varnames,
+                          raw_datavals = raw_datavals,
+                          validate = validate,
+                          shared_dims = shared_dims)
 
   # Transpose: list-of-sources-of-vars -> list-of-vars-of-sources, then abind
   datalist <- lapply(seq_along(varnames), function(vi) {
@@ -275,6 +273,86 @@ read_multi_source <- function(x, varnames, dimension, START, COUNT,
 
   datalist
 }
+
+
+#' Read a single slab from one NetCDF source.
+#'
+#' Self-contained: uses only its arguments plus ncdf4, no tidync objects.
+#' This is the function dispatched to mirai daemons for parallel reads.
+#'
+#' @param slab list with `source` (file path), `start`, `count`
+#' @param varnames character vector of variable names
+#' @param raw_datavals logical
+#' @param validate logical, run dimension validation?
+#' @param shared_dims list with `names` and `lengths` for validation, or NULL
+#' @return list of arrays, one per variable
+#' @noRd
+read_one_slab <- function(slab, varnames, raw_datavals, validate, shared_dims) {
+  con <- suppressWarnings(ncdf4::nc_open(slab$source))
+  on.exit(ncdf4::nc_close(con), add = TRUE)
+
+  # Fast-mode lazy validation
+  if (validate && !is.null(shared_dims)) {
+    for (i in seq_along(shared_dims$names)) {
+      dname <- shared_dims$names[i]
+      expected_len <- shared_dims$lengths[i]
+      file_dim <- con$dim[[dname]]
+      if (is.null(file_dim)) {
+        stop(sprintf(
+          "fast mode: dimension '%s' not found in '%s'. Re-run with fast = FALSE.",
+          dname, con$filename))
+      }
+      if (file_dim$len != expected_len) {
+        stop(sprintf(
+          "fast mode: dimension '%s' has length %d in '%s' (expected %d). Re-run with fast = FALSE.",
+          dname, file_dim$len, con$filename, expected_len))
+      }
+    }
+  }
+
+  lapply(varnames, function(vara) {
+    ncdf4::ncvar_get(con, vara, start = slab$start, count = slab$count,
+                     raw_datavals = raw_datavals, collapse_degen = FALSE)
+  })
+}
+
+
+#' Map read_one_slab over sources, with optional mirai parallelism.
+#'
+#' Uses [mirai::mirai_map()] when daemons are active, [lapply()] otherwise.
+#' The user controls parallelism by calling [mirai::daemons()] before their
+#' tidync workflow.
+#'
+#' @param slabs list of slab specs from read_multi_source
+#' @param varnames,raw_datavals,validate,shared_dims passed to read_one_slab
+#' @return list of results from read_one_slab (one per source)
+#' @noRd
+map_slabs <- function(slabs, varnames, raw_datavals, validate, shared_dims) {
+  if (has_mirai_daemons()) {
+    mirai::mirai_map(slabs, read_one_slab,
+                     .args = list(varnames = varnames,
+                                  raw_datavals = raw_datavals,
+                                  validate = validate,
+                                  shared_dims = shared_dims))[.stop]
+  } else {
+    lapply(slabs, read_one_slab,
+           varnames = varnames,
+           raw_datavals = raw_datavals,
+           validate = validate,
+           shared_dims = shared_dims)
+  }
+}
+
+
+#' Check whether mirai daemons are currently active.
+#'
+#' @return logical
+#' @noRd
+has_mirai_daemons <- function() {
+  if (!requireNamespace("mirai", quietly = TRUE)) return(FALSE)
+  tryCatch(mirai::daemons_set(), error = function(e) FALSE)
+}
+
 
 #' Concatenate arrays along a specified dimension.
 #'
@@ -306,36 +384,4 @@ abind_along <- function(arrays, along) {
     pos <- pos + n
   }
   out
-}
-
-#' Validate that a source's shared dimensions match the template.
-#'
-#' Called at read time when fast_mode = TRUE, since metadata validation
-#' was skipped at construction time. Uses the ncdf4 connection which is
-#' already open.
-#'
-#' @param con ncdf4 connection object
-#' @param x tidync object
-#' @param concat_dim name of the concat dimension (skip this one)
-#' @noRd
-validate_slab_compat <- function(con, x, concat_dim) {
-  shared_dims <- x$dimension[x$dimension$name != concat_dim, ]
-  for (i in seq_len(nrow(shared_dims))) {
-    dname <- shared_dims$name[i]
-    expected_len <- shared_dims$length[i]
-    file_dim <- con$dim[[dname]]
-    if (is.null(file_dim)) {
-      stop(sprintf(
-        paste("fast mode: dimension '%s' not found in '%s'.",
-              "Re-run with fast = FALSE to validate all sources."),
-        dname, con$filename))
-    }
-    if (file_dim$len != expected_len) {
-      stop(sprintf(
-        paste("fast mode: dimension '%s' has length %d in '%s'",
-              "(expected %d from template).",
-              "Re-run with fast = FALSE to validate all sources."),
-        dname, file_dim$len, con$filename, expected_len))
-    }
-  }
 }

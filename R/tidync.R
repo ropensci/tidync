@@ -617,19 +617,19 @@ print.tidync <- function(x, ...) {
   dims_active <- dims$active
   if (nrow(dims) > 0) { 
     alldims <- dims |> dplyr::mutate(dim = paste0("D", .data$id)) |> 
-      dplyr::select(.data$dim, .data$id, .data$name, .data$length, 
-                    .data$min, .data$max, .data$start, .data$count, 
-                    .data$dmin, .data$dmax, .data$active, .data$unlim, 
-                    .data$coord_dim) |> 
+      dplyr::select("dim", "id", "name", "length", 
+                    "min", "max", "start", "count", 
+                    "dmin", "dmax", "active", "unlim", 
+                    "coord_dim") |> 
       dplyr::arrange(desc(.data$active), .data$id)
     
   dimension_active <-  format(alldims |> 
                               dplyr::filter(.data$active) |> 
                               dplyr::mutate(id = NULL, active = NULL), n = Inf)
   dimension_other <- format(alldims |> dplyr::filter(!.data$active) |> 
-                            dplyr::select(.data$dim, .data$name, .data$length, 
-                                          .data$min, .data$max, .data$unlim,
-                                          .data$coord_dim), n = Inf)
+                            dplyr::select("dim", "name", "length", 
+                                          "min", "max", "unlim",
+                                          "coord_dim"), n = Inf)
     
   }
 

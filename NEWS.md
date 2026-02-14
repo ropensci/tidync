@@ -16,6 +16,12 @@
   can be numeric, Date, or POSIXct, and `hyper_filter()` operates on them 
   directly. Ideal for use with file databases such as raadfiles.
 
+* Optional parallel reads for multi-source collections via mirai. When 
+  `mirai::daemons()` are active, per-source file reads in `hyper_array()` 
+  run in parallel via `mirai::mirai_map()`. Falls back to sequential 
+  `lapply()` when mirai is not installed or no daemons are set. The user 
+  controls parallelism externally — tidync never calls `daemons()` itself.
+
 * Removed forcats, magrittr, and purrr dependencies. Switched from `%>%` 
   to the native R pipe `|>` throughout. `purrr::safely()` calls replaced 
   with `tryCatch()`.

@@ -33,6 +33,7 @@ Imports:
 RoxygenNote: 7.3.3
 Suggests: ggplot2,
     knitr,
+    mirai,
     rmarkdown,
     testthat,
     covr,    

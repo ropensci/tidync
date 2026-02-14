@@ -78,7 +78,7 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
     ## this pattern is copied from print
     ## remove $variables because it a list 
     ushapes <- dplyr::distinct(.data$grid |> 
-                                 dplyr::select(-.data$variables)) |> 
+                                 dplyr::select(-"variables")) |> 
       dplyr::arrange(desc(nchar(.data$grid)))
     ## otherwise pick the what-th grid
     stopifnot(what >= 1 && what <= nrow(.data$grid))

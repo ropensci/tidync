@@ -39,7 +39,7 @@ active_axis_transforms <- function(x, ...) {
     dplyr::inner_join(axis, "variable", multiple = "all") |> 
     dplyr::inner_join(dimension, c("dimension" = "id"), multiple = "all") |> 
     dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) |>  
-    dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim)
+    dplyr::select("name", "dimension", "length", "coord_dim")
   x$transforms[dims$name]
 }
 
@@ -53,7 +53,7 @@ hyper_transforms.default <- function(x, all = FALSE, ...) {
     dplyr::inner_join(x$dimension, c("dimension" = "id")) |> 
     dplyr::inner_join(x$extended, c("name", "dimension")) |> 
     dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) |>  
-    dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim, .data$time)
+    dplyr::select("name", "dimension", "length", "coord_dim", "time")
   
   transforms <- vector("list", nrow(dims))
   names(transforms) <- dims$name
