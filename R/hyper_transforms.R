@@ -18,7 +18,7 @@
 #' @examples
 #' l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 #' f <- system.file("extdata", "oceandata", l3file, package = "tidync")
-#' ax <- tidync(f) %>% hyper_transforms()
+#' ax <- tidync(f) |> hyper_transforms()
 #' names(ax)
 #' lapply(ax, dim)
 #'
@@ -30,19 +30,15 @@ hyper_transforms <- function(x, all = FALSE, ...) {
 }
 
 active_axis_transforms <- function(x, ...) {
-  if (utils::packageVersion("tidyr") > "0.8.3" ) {
-    grid <- x$grid %>% tidyr::unnest(cols = c(.data$variables))
-  } else {
-    grid <- x$grid %>% tidyr::unnest()
-  }
+  grid <- x$grid |> tidyr::unnest(cols = "variables")
   axis <- x$axis
   dimension <- x$dimension
   active_x <- active(x)
-  dims <- grid %>% 
-    dplyr::filter(.data$grid == active_x) %>% 
-    dplyr::inner_join(axis, "variable") %>% 
-    dplyr::inner_join(dimension, c("dimension" = "id")) %>% 
-    dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
+  dims <- grid |> 
+    dplyr::filter(.data$grid == active_x) |> 
+    dplyr::inner_join(axis, "variable", multiple = "all") |> 
+    dplyr::inner_join(dimension, c("dimension" = "id"), multiple = "all") |> 
+    dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) |>  
     dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim)
   x$transforms[dims$name]
 }
@@ -53,10 +49,10 @@ active_axis_transforms <- function(x, ...) {
 hyper_transforms.default <- function(x, all = FALSE, ...) {
   if (!all) return(active_axis_transforms(x, ...))
 
-  dims <- x$axis %>% 
-    dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
-    dplyr::inner_join(x$extended, c("name", "dimension")) %>% 
-    dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) %>%  
+  dims <- x$axis |> 
+    dplyr::inner_join(x$dimension, c("dimension" = "id")) |> 
+    dplyr::inner_join(x$extended, c("name", "dimension")) |> 
+    dplyr::distinct(.data$name, .data$dimension,  .keep_all = TRUE) |>  
     dplyr::select(.data$name, .data$dimension, .data$length, .data$coord_dim, .data$time)
   
   transforms <- vector("list", nrow(dims))

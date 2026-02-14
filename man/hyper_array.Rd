@@ -87,18 +87,18 @@ l3file <- system.file("extdata/oceandata", f, package= "tidync")
 
 ## extract a raw list by filtered dimension
 library(dplyr)
-araw1 <- tidync(l3file) \%>\%
+araw1 <- tidync(l3file) |>
  hyper_filter(lat = between(lat, -78, -75.8), 
-              lon = between(lon, 165, 171)) \%>\%
+              lon = between(lon, 165, 171)) |>
  hyper_array()
 
-araw <- tidync(l3file) \%>\% 
+araw <- tidync(l3file) |> 
          hyper_filter(lat = abs(lat) < 10, 
-                     lon = index < 100) \%>\%
+                     lon = index < 100) |>
   hyper_array()
 
 ## hyper_array will pass the expressions to hyper_filter
-braw <- tidync(l3file) \%>\% 
+braw <- tidync(l3file) |> 
   hyper_array(lat = abs(lat) < 10, lon = index < 100)
 
 ## get the transforms tables (the axis coordinates)

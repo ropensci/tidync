@@ -48,7 +48,7 @@ argo <- tidync(argofile)
 print(argo)
 
 ## the print is modified by choosing a new grid or running filters
-argo \%>\% activate("D7,D9,D11,D8")
+argo |> activate("D7,D9,D11,D8")
 
-argo \%>\% hyper_filter(N_LEVELS = index > 300)
+argo |> hyper_filter(N_LEVELS = index > 300)
 }

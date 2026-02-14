@@ -56,11 +56,7 @@ activate <- function(.data, what, ..., select_var = NULL) UseMethod("activate")
 #' @export
 activate.tidync <- function(.data, what, ..., select_var = NULL) {
   if (missing(what)) return(.data)
-  if (utils::packageVersion("tidyr") > "0.8.3" ) {
-   vargrids <- tidyr::unnest(.data$grid, cols = c(.data$variables)) 
-  } else {
-   vargrids <- tidyr::unnest(.data$grid) 
-  }
+  vargrids <- tidyr::unnest(.data$grid, cols = "variables")
    # Try to set what_name to what (in case it's a string)
   what_name <- try(what, silent = T)
   # If it fails, use deparse(substitute(what)) to turn into string
@@ -81,8 +77,8 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
     stop("numeric 'what' is not supported, use grid name or variable name")
     ## this pattern is copied from print
     ## remove $variables because it a list 
-    ushapes <- dplyr::distinct(.data$grid %>% 
-                                 dplyr::select(-.data$variables)) %>% 
+    ushapes <- dplyr::distinct(.data$grid |> 
+                                 dplyr::select(-.data$variables)) |> 
       dplyr::arrange(desc(nchar(.data$grid)))
     ## otherwise pick the what-th grid
     stopifnot(what >= 1 && what <= nrow(.data$grid))
@@ -91,7 +87,7 @@ activate.tidync <- function(.data, what, ..., select_var = NULL) {
   }
   active(.data) <- what
 
-  active_variables <- vargrids %>% dplyr::filter(.data$grid == what) %>% 
+  active_variables <- vargrids |> dplyr::filter(.data$grid == what) |> 
     dplyr::inner_join(.data[["variable"]], c("variable" = "name"))
 
   if (!is.null(select_var)) {

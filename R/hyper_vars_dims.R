@@ -30,9 +30,9 @@
 #' tnc <- tidync(l3file)
 #' hyper_vars(tnc)
 #' hyper_dims(tnc)
-#' hyper_dims(tnc %>% hyper_filter(lat = lat < 20))
+#' hyper_dims(tnc |> hyper_filter(lat = lat < 20))
 hyper_vars <- function(x, ...) {
-  out <- x[["variable"]] %>% dplyr::filter(.data$active) 
+  out <- x[["variable"]] |> dplyr::filter(.data$active) 
   out[["active"]] <- NULL
   out
 }
@@ -45,7 +45,7 @@ hyper_dims <- function(x, ...) {
          length = unlist(lapply(act, nrow)), 
          start = unlist(lapply(act, function(a) which(a$selected)[1])), 
          count  = unlist(lapply(act, function(a) sum(a$selected))))
-  act1 <- x$dimension %>% dplyr::filter(.data$active)
+  act1 <- x$dimension |> dplyr::filter(.data$active)
   act1[c("active", "start", "count")] <- NULL
   dplyr::inner_join(out, act1, c("length", "name"))
 }
@@ -53,6 +53,6 @@ hyper_dims <- function(x, ...) {
 #' @name hyper_vars
 #' @export
 hyper_grids <- function(x, ...) {
-  x$grid[c("grid", "ndims", "nvars")] %>% 
+  x$grid[c("grid", "ndims", "nvars")] |> 
     mutate(active = .data$grid == active(x))
 }

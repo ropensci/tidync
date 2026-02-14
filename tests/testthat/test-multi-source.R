@@ -74,13 +74,13 @@ test_that("multi-source hyper_filter works", {
   tnc <- tidync(files, concat_dim = "time")
 
   # Filter to only the last 2 time steps
-  filtered <- tnc %>% hyper_filter(time = index > 2)
+  filtered <- tnc |> hyper_filter(time = index > 2)
   time_trans <- filtered$transforms[["time"]]
   expect_equal(sum(time_trans$selected), 2L)
   expect_equal(which(time_trans$selected), 3:4)
 
   # Filter on shared dim too
-  filtered2 <- tnc %>% hyper_filter(time = index > 2, lon = lon < 106)
+  filtered2 <- tnc |> hyper_filter(time = index > 2, lon = lon < 106)
   expect_equal(sum(filtered2$transforms[["time"]]$selected), 2L)
   expect_equal(sum(filtered2$transforms[["lon"]]$selected), 3L)
 
@@ -111,8 +111,8 @@ test_that("multi-source hyper_array reads correctly", {
   expect_true(all(arr$sst[,,3] == 3))
 
   # Read with filter — only file 2
-  arr2 <- tnc %>%
-    hyper_filter(time = index == 2) %>%
+  arr2 <- tnc |>
+    hyper_filter(time = index == 2) |>
     hyper_array()
   expect_equal(dim(arr2$sst), c(6, 6))  # degenerate dim dropped
   expect_true(all(arr2$sst == 2))
@@ -162,8 +162,8 @@ test_that("multi-source filter selects only needed sources", {
   tnc <- tidync(files, concat_dim = "time")
 
   # Filter to only the middle file
-  arr <- tnc %>%
-    hyper_filter(time = index == 2) %>%
+  arr <- tnc |>
+    hyper_filter(time = index == 2) |>
     hyper_array()
 
   # Should have read only from file 2
@@ -307,8 +307,8 @@ test_that("multi-step files concatenate correctly", {
   expect_true(all(arr$sst[,,4:5] == 2))
 
   # Filter to span both files
-  arr2 <- tnc %>%
-    hyper_filter(time = index >= 3 & index <= 4) %>%
+  arr2 <- tnc |>
+    hyper_filter(time = index >= 3 & index <= 4) |>
     hyper_array(drop = FALSE)
   expect_equal(dim(arr2$sst), c(6, 6, 2))
   expect_true(all(arr2$sst[,,1] == 1))  # from file 1, step 3
@@ -362,7 +362,7 @@ test_that("values-supplied path with Date works", {
   expect_true("timestamp" %in% names(time_trans))
 
   # Filter on Date values
-  filtered <- tnc %>% hyper_filter(time = time > as.Date("2020-01-15"))
+  filtered <- tnc |> hyper_filter(time = time > as.Date("2020-01-15"))
   expect_equal(sum(filtered$transforms[["time"]]$selected), 2L)
 
   # Read should work
@@ -392,7 +392,7 @@ test_that("values-supplied path with POSIXct works", {
   expect_true("timestamp" %in% names(time_trans))
 
   # Filter on POSIXct
-  filtered <- tnc %>%
+  filtered <- tnc |>
     hyper_filter(time = time > as.POSIXct("2020-01-15", tz = "UTC"))
   expect_equal(sum(filtered$transforms[["time"]]$selected), 2L)
 
@@ -417,7 +417,7 @@ test_that("values-supplied path with numeric works", {
   expect_equal(time_trans$time, vals)
 
   # Filter on numeric values
-  filtered <- tnc %>% hyper_filter(time = time > 150)
+  filtered <- tnc |> hyper_filter(time = time > 150)
   expect_equal(sum(filtered$transforms[["time"]]$selected), 2L)
 
   arr <- hyper_array(filtered, drop = FALSE)

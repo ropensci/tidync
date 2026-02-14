@@ -4,11 +4,11 @@ argofile <- system.file("extdata/argo/MD5903593_001.nc",
 x <- tidync(argofile)
 
 test_that("dimension matchup works", {
-  expect_named(x %>% hyper_tibble(select_var = c("PRES", "PRES_QC")), 
-               c("PRES", "PRES_QC",  "N_LEVELS", "N_PROF")) %>% nrow() %>% 
+  expect_named(x |> hyper_tibble(select_var = c("PRES", "PRES_QC")), 
+               c("PRES", "PRES_QC",  "N_LEVELS", "N_PROF")) |> nrow() |> 
     expect_equal(986L)
   
-  tab <- x %>% hyper_filter(N_LEVELS = N_LEVELS < 20) %>%  
+  tab <- x |> hyper_filter(N_LEVELS = N_LEVELS < 20) |>  
     hyper_tibble(select_var = c("TEMP_ADJUSTED_QC", "NITRATE_ADJUSTED", 
                                 "CHLA_ADJUSTED_ERROR"))
   expect_equal(dim(tab), c(38L, 5L))

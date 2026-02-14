@@ -16,6 +16,15 @@
   can be numeric, Date, or POSIXct, and `hyper_filter()` operates on them 
   directly. Ideal for use with file databases such as raadfiles.
 
+* Removed forcats, magrittr, and purrr dependencies. The pipe `%>%` is now 
+  re-exported from dplyr. `purrr::safely()` calls replaced with `tryCatch()`.
+
+* Minimum dplyr version bumped to 1.1.0 (for `multiple` argument in joins). 
+  Minimum tidyr version bumped to 1.0.0 (for `cols` argument in `unnest()`). 
+  All version-gating conditionals removed.
+
+* Removed commented-out `browser()` calls.
+
 * Update to CFTime as_timestamp(), thanks to @fabern. 
 
 * Support for CF time metadata via package CFtime thanks to @pvanlaake, see https://github.com/ropensci/tidync/pull/124
@@ -162,4 +171,6 @@ and allowed user-controlled option to avoid this check. Thanks to Alessandro Big
 
 * First working version now has `tidync()`, and `hyper_*()` family of functions. 
 
-* Migrated from ncdump.
+* Migrated from ncdump. 
+
+

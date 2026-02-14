@@ -14,7 +14,7 @@
 #' @export
 #' @examples 
 #' argofile <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
-#' argodata <- tidync(argofile) %>% hyper_filter(N_LEVELS = index < 5) %>% 
+#' argodata <- tidync(argofile) |> hyper_filter(N_LEVELS = index < 5) |> 
 #'               hyper_array(select_var = c("TEMP_ADJUSTED", "PRES"))
 #' print(argodata)
 print.tidync_data <- function(x, ...) {
@@ -23,7 +23,7 @@ print.tidync_data <- function(x, ...) {
   dims <- attr(x, "transforms")
   cat(sprintf("Dimension (%i): %s (%s)\n", length(dim(x[[1]])), paste(names(dims), collapse = ","), paste(dim(x[[1]]), collapse = ", ")))
   
-  dims <- lapply(dims, function(d) d %>% dplyr::filter(.data$selected))
+  dims <- lapply(dims, function(d) d |> dplyr::filter(.data$selected))
   nams <- names(dims)
   dims<- do.call(rbind, 
           lapply(nams, function(a) {

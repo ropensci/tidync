@@ -35,7 +35,7 @@ manually, or for development of custom functions.
 \examples{
 l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 f <- system.file("extdata", "oceandata", l3file, package = "tidync")
-ax <- tidync(f) \%>\% hyper_transforms()
+ax <- tidync(f) |> hyper_transforms()
 names(ax)
 lapply(ax, dim)
 

@@ -22,8 +22,6 @@
 #' @param force ignore caveats about large extraction and just do it
 #' @return a `tbl_df`
 #' @export
-#' @importFrom dplyr %>%
-#' @export %>%
 #' @seealso [hyper_array()] and [hyper_tbl_cube()]  which are also delay-breaking 
 #' functions that cause data to be read 
 #' @examples
@@ -34,11 +32,11 @@
 #' library(dplyr)
 #' lapply(hyper_array(f, lat = lat > 0, lon = index > 3000), dim)
 #'
-#'  ht <- hyper_tibble(rnc) %>%
+#'  ht <- hyper_tibble(rnc) |>
 #'  filter(!is.na(chlor_a))
 #' ht
 #' library(ggplot2)
-#' ggplot(ht %>% filter(!is.na(chlor_a)),
+#' ggplot(ht |> filter(!is.na(chlor_a)),
 #' aes(x = lon, y = lat, fill = chlor_a)) + geom_tile()
 hyper_tibble <- function(x, ..., na.rm = TRUE, force = FALSE) {
   UseMethod("hyper_tibble")
@@ -46,7 +44,7 @@ hyper_tibble <- function(x, ..., na.rm = TRUE, force = FALSE) {
 #' @name hyper_tibble
 #' @export
 hyper_tibble.character <- function(x, ..., na.rm = TRUE, force = FALSE) {
-  tidync(x) %>% hyper_filter(...) %>% hyper_tibble(na.rm = na.rm, force = force)
+  tidync(x) |> hyper_filter(...) |> hyper_tibble(na.rm = na.rm, force = force)
 }
 #' @name hyper_tibble
 #' @export

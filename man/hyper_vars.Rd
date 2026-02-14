@@ -47,5 +47,5 @@ l3file <- system.file("extdata/oceandata", f, package= "tidync")
 tnc <- tidync(l3file)
 hyper_vars(tnc)
 hyper_dims(tnc)
-hyper_dims(tnc \%>\% hyper_filter(lat = lat < 20))
+hyper_dims(tnc |> hyper_filter(lat = lat < 20))
 }

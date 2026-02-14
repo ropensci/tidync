@@ -126,20 +126,20 @@ By name we choose a grid composed of only one dimension, and the summary print
 makes a distinction based on which dimensions are *active*.
 
 ```{r activate}
-tidync(ice_file) %>% activate("D2")
+tidync(ice_file) |> activate("D2")
 ```
 
 It is also possible to choose a grid by *variable name*. If we choose a variable in the default
 grid, then it's no different to the first case.
 
 ```{r  NSE-activate}
-tidync(ice_file) %>% activate("time")
+tidync(ice_file) |> activate("time")
 
 ## choose grid by variable name, which happens to be the default grid here
-tidync(ice_file) %>% activate("quality_flag")
+tidync(ice_file) |> activate("quality_flag")
 
 ## same as the default
-tidync(ice_file) %>% activate("D0,D1,D2")
+tidync(ice_file) |> activate("D0,D1,D2")
 ```
 
 The data variables available on a grid can be expanded out as a single data
@@ -156,7 +156,7 @@ entire operation without this.
 
 ```{r}
 concentration <- tidync(ice_file) 
-concentration %>% hyper_filter() 
+concentration |> hyper_filter() 
 ```
 
 
@@ -169,7 +169,7 @@ side may be quite general we need the left hand side name to be assured of the
 name of the dimension referred to.
 
 ```{r}
-concentration %>% hyper_filter(nj = nj < 20)
+concentration |> hyper_filter(nj = nj < 20)
 ```
 
 We can also use the special internal variable 'index', which will test against
@@ -178,7 +178,7 @@ different in this case because ni and nj are just position dimensions anyway.
 The special 'dplyr' adverbs like 'between' will work.
 
 ```{r}
-concentration %>% 
+concentration |> 
   hyper_filter(ni = index < 50, 
                nj = dplyr::between(index, 30, 100))
 ```
@@ -191,18 +191,18 @@ We can now exercise these variable choice and dimension filters to return actual
 data, either in by slicing out a  "slab" in array-form, or as a data frame.
 
 ```{r}
-hf <- concentration %>% 
+hf <- concentration |> 
   hyper_filter(ni = index > 150, 
                nj = dplyr::between(index, 30, 100))
 
 ## as an array
-arr <- hf %>% hyper_array()
+arr <- hf |> hyper_array()
 str(arr)
 
 ## as a data frame
-hf %>% 
-  hyper_tibble() %>% 
-  dplyr::filter(!is.na(concentration)) %>% dplyr::distinct(concentration, quality_flag)
+hf |> 
+  hyper_tibble() |> 
+  dplyr::filter(!is.na(concentration)) |> dplyr::distinct(concentration, quality_flag)
 ```
 
 ## Interrogating data by dimensions
@@ -233,9 +233,9 @@ Obviously, it should be reasonable to specify only the count of any dimensions t
 It does not matter what we include in the filter query, it can be all, some or none of the available dimensions, in any order. 
 
 ```{r dimension-index,eval=TRUE}
-hf %>% hyper_filter(nj = index < 20, ni = ni > 20)
+hf |> hyper_filter(nj = index < 20, ni = ni > 20)
 
-hf %>% hyper_filter(nj = index < 20)
+hf |> hyper_filter(nj = index < 20)
 ```
 
 The other requirement we have is the ability to automate these task, and so far we have only interacted with the dimensionality information from the print out. For programming, there are functions `hyper_vars()`, `hyper_dims()` and `hyper_grids()` to report on elements in the source. The value of `hyper_vars()` and `hyper_dims()` is restricted to the *active* grid. The function `hyper_grids()` reports all available grids, with the currently active one indicated. The name of the current grid is also available via `active()`. 
@@ -246,12 +246,12 @@ hyper_vars(hf)
 hyper_dims(hf)
 
 ## change the active grid
-hf %>% activate("D2") %>% 
+hf |> activate("D2") |> 
   hyper_vars()
 
 active(hf)
 
-hf %>% activate("D2") %>%
+hf |> activate("D2") |>
   active()
 ```
 

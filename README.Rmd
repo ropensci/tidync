@@ -124,15 +124,15 @@ tidync(filename)
 
 ## activate a different grid
 grid_identifier <- "D7,D9,D11,D8"
-tidync(filename) %>% activate(grid_identifier)
+tidync(filename) |> activate(grid_identifier)
 
 ## pass named expressions to subset dimension by value or index (step)
-(subs <- tidync(filename) %>% hyper_filter(N_PROF = N_PROF > 1, STRING256 = index > 10))
+(subs <- tidync(filename) |> hyper_filter(N_PROF = N_PROF > 1, STRING256 = index > 10))
 
 ## with the saved filtering from above, choose data frame or tbl_cube output
 ## optionally with only selected variables
-subs %>% hyper_tibble()
-subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
+subs |> hyper_tibble()
+subs |> hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 ```
 
 
@@ -143,13 +143,13 @@ Please note that `hyper_filter()` expressions must be unique, unlike with `dplyr
 While dplyr filter can load up multiple comparisons: 
 
 ```{r pseudo1, eval=FALSE}
-df %>% dplyr::filter(longitude > 100, longitude < 150)
+df |> dplyr::filter(longitude > 100, longitude < 150)
 ```
 
 in hyper_filter we must load them into one named expression.  
 
 ```{r pseudo2, eval=FALSE}
-tidync(filename) %>% hyper_filter(longitude = longitude > 100 & longitude < 150)
+tidync(filename) |> hyper_filter(longitude = longitude > 100 & longitude < 150)
 ```
 
 
@@ -160,15 +160,15 @@ Use what we learned interactively to extract the data, either in data frame or r
 ```{r extraction, eval=TRUE}
 ## we'll see a column for the variable activated, and whatever other 
 ## variables the grid has
-tidync(filename) %>% activate("JULD") %>% 
-  hyper_filter(N_PROF = N_PROF == 1) %>% 
+tidync(filename) |> activate("JULD") |> 
+  hyper_filter(N_PROF = N_PROF == 1) |> 
   hyper_tibble()
 
 
 ## native array form, we'll see a (list of) R arrays with a dimension for 
-## each seen by tidync(filename) %>% activate("JULD")
-tidync(filename) %>% activate("JULD") %>% 
-  hyper_filter(N_PROF = N_PROF == 1) %>% 
+## each seen by tidync(filename) |> activate("JULD")
+tidync(filename) |> activate("JULD") |> 
+  hyper_filter(N_PROF = N_PROF == 1) |> 
   hyper_array()
 
 ```

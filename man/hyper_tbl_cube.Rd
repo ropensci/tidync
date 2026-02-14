@@ -45,7 +45,7 @@ stored with the tbl cube, derived from the grid
 \examples{
 f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 l3file <- system.file("extdata/oceandata", f, package= "tidync")
-(cube <- hyper_tbl_cube(tidync(l3file) \%>\%
+(cube <- hyper_tbl_cube(tidync(l3file) |>
 activate(chlor_a), lon = lon > 107, lat = abs(lat) < 30))
 ufile <- system.file("extdata", "unidata", "test_hgroups.nc", 
  package = "tidync", mustWork = TRUE)

@@ -114,7 +114,7 @@ print(tnc)
 ## very simple Unidata example file, with one dimension
 \dontrun{
 uf <- system.file("extdata/unidata", "test_hgroups.nc", package = "tidync")
-recNum <- tidync(uf) \%>\% hyper_tibble()
+recNum <- tidync(uf) |> hyper_tibble()
 print(recNum)
 }
 ## a raw grid of Southern Ocean sea ice concentration from IFREMER
@@ -124,7 +124,7 @@ print(recNum)
 ## https://tinyurl.com/ycbchcgn
 ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
 ifrnc <- tidync(ifr)
-ifrnc \%>\% hyper_tibble(select_var = "concentration")
+ifrnc |> hyper_tibble(select_var = "concentration")
 
 ## multi-source: concatenate files along a dimension
 \dontrun{
@@ -132,7 +132,7 @@ files <- c("sst_2020_01.nc", "sst_2020_02.nc", "sst_2020_03.nc")
 tnc <- tidync(files, concat_dim = "time")
 tnc
 ## filter and read across all sources transparently
-tnc \%>\% hyper_filter(time = time > 18300) \%>\% hyper_tibble()
+tnc |> hyper_filter(time = time > 18300) |> hyper_tibble()
 
 ## fast mode for large collections (skips full metadata scan)
 all_files <- list.files("daily/", pattern = "\\\\.nc$", full.names = TRUE)
@@ -143,6 +143,6 @@ tnc_fast <- tidync(all_files, concat_dim = "time", fast = TRUE)
 dates <- as.Date(c("2020-01-01", "2020-01-02", "2020-01-03"))
 tnc_db <- tidync(files, concat_dim = list(name = "time", values = dates))
 ## filter directly on the values you supplied
-tnc_db \%>\% hyper_filter(time = time > as.Date("2020-01-01")) \%>\% hyper_tibble()
+tnc_db |> hyper_filter(time = time > as.Date("2020-01-01")) |> hyper_tibble()
 }
 }

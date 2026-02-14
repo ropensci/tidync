@@ -39,18 +39,18 @@
 #'
 #' ## extract a raw list by filtered dimension
 #' library(dplyr)
-#' araw1 <- tidync(l3file) %>%
+#' araw1 <- tidync(l3file) |>
 #'  hyper_filter(lat = between(lat, -78, -75.8), 
-#'               lon = between(lon, 165, 171)) %>%
+#'               lon = between(lon, 165, 171)) |>
 #'  hyper_array()
 #'
-#' araw <- tidync(l3file) %>% 
+#' araw <- tidync(l3file) |> 
 #'          hyper_filter(lat = abs(lat) < 10, 
-#'                      lon = index < 100) %>%
+#'                      lon = index < 100) |>
 #'   hyper_array()
 #'
 #' ## hyper_array will pass the expressions to hyper_filter
-#' braw <- tidync(l3file) %>% 
+#' braw <- tidync(l3file) |> 
 #'   hyper_array(lat = abs(lat) < 10, lon = index < 100)
 #'
 #' ## get the transforms tables (the axis coordinates)
@@ -80,16 +80,16 @@ hyper_slice <- function(x, select_var = NULL, ...,
 hyper_array.tidync <- function(x, select_var = NULL, ..., 
                           raw_datavals = FALSE, force = FALSE, drop = TRUE) {
   x <- hyper_filter(x, ...) 
-  variable <- x[["variable"]] %>% dplyr::filter(active)
+  variable <- x[["variable"]] |> dplyr::filter(active)
   varname <- unique(variable[["name"]])
   ## hack to get the order of the indices of the dimension
   ordhack <- 1 + as.integer(unlist(strsplit(gsub("D", "", 
-                          dplyr::filter(x$grid, .data$grid == active(x)) %>% 
-                          # dplyr::slice(1L) %>% THERE'S ONLY EVER ONE ACTIVE GRID
+                          dplyr::filter(x$grid, .data$grid == active(x)) |> 
+                          # dplyr::slice(1L) |> THERE'S ONLY EVER ONE ACTIVE GRID
                           dplyr::pull(.data$grid)), ",")))
-  dimension <- x[["dimension"]] %>% dplyr::slice(ordhack)
+  dimension <- x[["dimension"]] |> dplyr::slice(ordhack)
   ## ensure dimension is in order of the dims in these vars
-  axis <- x[["axis"]] %>% dplyr::filter(variable %in% varname)
+  axis <- x[["axis"]] |> dplyr::filter(variable %in% varname)
   ## dimension order must be same as axis
   START <- dimension$start
   COUNT <- dimension$count
@@ -191,8 +191,8 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
 #' @export
 hyper_array.character <- function(x, select_var = NULL, ...,
                                   raw_datavals = FALSE, force = FALSE, drop = TRUE) {
-  tidync(x) %>% 
-  hyper_filter(...) %>%  
+  tidync(x) |> 
+  hyper_filter(...) |>  
   hyper_array(select_var = select_var, raw_datavals = raw_datavals, drop = drop)
 }
 

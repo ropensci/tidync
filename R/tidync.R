@@ -93,7 +93,7 @@ tidync <- function(x, what, ...) {
 #' ## very simple Unidata example file, with one dimension
 #' \dontrun{
 #' uf <- system.file("extdata/unidata", "test_hgroups.nc", package = "tidync")
-#' recNum <- tidync(uf) %>% hyper_tibble()
+#' recNum <- tidync(uf) |> hyper_tibble()
 #' print(recNum)
 #' }
 #' ## a raw grid of Southern Ocean sea ice concentration from IFREMER
@@ -103,7 +103,7 @@ tidync <- function(x, what, ...) {
 #' ## https://tinyurl.com/ycbchcgn
 #' ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
 #' ifrnc <- tidync(ifr)
-#' ifrnc %>% hyper_tibble(select_var = "concentration")
+#' ifrnc |> hyper_tibble(select_var = "concentration")
 #'
 #' ## multi-source: concatenate files along a dimension
 #' \dontrun{
@@ -111,7 +111,7 @@ tidync <- function(x, what, ...) {
 #' tnc <- tidync(files, concat_dim = "time")
 #' tnc
 #' ## filter and read across all sources transparently
-#' tnc %>% hyper_filter(time = time > 18300) %>% hyper_tibble()
+#' tnc |> hyper_filter(time = time > 18300) |> hyper_tibble()
 #'
 #' ## fast mode for large collections (skips full metadata scan)
 #' all_files <- list.files("daily/", pattern = "\\.nc$", full.names = TRUE)
@@ -122,7 +122,7 @@ tidync <- function(x, what, ...) {
 #' dates <- as.Date(c("2020-01-01", "2020-01-02", "2020-01-03"))
 #' tnc_db <- tidync(files, concat_dim = list(name = "time", values = dates))
 #' ## filter directly on the values you supplied
-#' tnc_db %>% hyper_filter(time = time > as.Date("2020-01-01")) %>% hyper_tibble()
+#' tnc_db |> hyper_filter(time = time > as.Date("2020-01-01")) |> hyper_tibble()
 #' }
 #' @name tidync
 #' @export
@@ -162,8 +162,10 @@ tidync.character <- function(x, what, ..., concat_dim = NULL, fast = FALSE) {
                 x))
      }
   }
-  safemeta <- purrr::safely(ncmeta::nc_meta)
-  meta <- safemeta(x)
+  meta <- tryCatch(
+    list(result = ncmeta::nc_meta(x), error = NULL),
+    error = function(e) list(result = NULL, error = e)
+  )
 
   if (is.null(meta$result)) {
     stop(meta$error)
@@ -212,20 +214,7 @@ tidync.character <- function(x, what, ..., concat_dim = NULL, fast = FALSE) {
   if (nrow(out$axis) < 1) return(out)
   if (missing(what)) {
     varg  <- first_numeric_var(out)
-    if (utils::packageVersion("tidyr") > "0.8.3") {
-      #
-      # Warning message:
-      #   Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
-      # ℹ Please use `"variables"` instead of `.data$variables`
-      #
-      if(utils::packageVersion("tidyselect") > "1.2.0" ){
-        gg <- tidyr::unnest(out$grid, cols = c("variables"))
-      } else {
-        gg <- tidyr::unnest(out$grid, cols = c(.data$variables))  
-      }
-    } else {
-      gg <- tidyr::unnest(out$grid)
-    }
+    gg <- tidyr::unnest(out$grid, cols = "variables")
     
     what <- gg$grid[match(varg, gg$variable)]
   }
@@ -235,9 +224,9 @@ tidync.character <- function(x, what, ..., concat_dim = NULL, fast = FALSE) {
 }
 
 first_numeric_var <- function(x) {
-  priorityvar <-   x$axis %>% 
-    dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
-    dplyr::inner_join(x$variable, c("variable" = "name")) %>% 
+  priorityvar <-   x$axis |> 
+    dplyr::inner_join(x$dimension, c("dimension" = "id")) |> 
+    dplyr::inner_join(x$variable, c("variable" = "name")) |> 
       dplyr::arrange(.data$type == "NC_CHAR", -.data$ndims)
   if (nrow(priorityvar) < 1) {
      return(priorityvar$variable[1L])
@@ -533,7 +522,7 @@ validate_against_template <- function(meta_i, template, concat_dim, source_label
 #'
 #' @name print.tidync
 #' @export
-#' @importFrom dplyr %>% arrange distinct inner_join desc
+#' @importFrom dplyr  arrange distinct inner_join desc
 #' @importFrom utils head
 #' @importFrom rlang .data
 #' @examples
@@ -542,11 +531,11 @@ validate_against_template <- function(meta_i, template, concat_dim, source_label
 #' print(argo)
 #' 
 #' ## the print is modified by choosing a new grid or running filters
-#' argo %>% activate("D7,D9,D11,D8")
+#' argo |> activate("D7,D9,D11,D8")
 #' 
-#' argo %>% hyper_filter(N_LEVELS = index > 300)
+#' argo |> hyper_filter(N_LEVELS = index > 300)
 print.tidync <- function(x, ...) {
-  ushapes <- dplyr::distinct(x$grid, .data$grid) %>% 
+  ushapes <- dplyr::distinct(x$grid, .data$grid) |> 
              dplyr::arrange(desc(nchar(.data$grid)))
   nshapes <- nrow(ushapes)
   cat(sprintf("\nData Source (%i): %s ...\n", nrow(x$source), 
@@ -572,29 +561,13 @@ print.tidync <- function(x, ...) {
   active_sh <- active(x)
   nms <- if(nrow(ushapes) > 0) nchar(ushapes$grid) else 0
   longest <- sprintf("[%%i]   %%%is", -max(nms))
-  if (utils::packageVersion("tidyr") > "0.8.3")
-    vargrids <- tidyr::unnest(x$grid, cols = c(.data$variables))
-  else
-    vargrids <- tidyr::unnest(x$grid)
+  vargrids <- tidyr::unnest(x$grid, cols = "variables")
   
-  # Warning message:
-  #   In dplyr::inner_join(., x$axis, "variable") :
-  #   Each row in `x` is expected to match at most 1 row in `y`.
-  # ℹ Row 1 of `x` matches multiple rows.
-  # ℹ If multiple matches are expected, set `multiple = "all"` to silence this warning.
-  if (utils::packageVersion("dplyr") > "1.0.10") {
-    estimatebigtime <- vargrids %>% 
-      dplyr::filter(.data$grid == active(x)) %>% 
-      dplyr::inner_join(x$axis, "variable", multiple = "all") %>% 
-      dplyr::inner_join(x$dimension, c("dimension" = "id"), multiple = "all") %>% 
-      dplyr::distinct(.data$dimension, .data$length)
-  } else {
-    estimatebigtime <- vargrids %>% 
-      dplyr::filter(.data$grid == active(x)) %>% 
-      dplyr::inner_join(x$axis, "variable") %>% 
-      dplyr::inner_join(x$dimension, c("dimension" = "id")) %>% 
-      dplyr::distinct(.data$dimension, .data$length)
-  }
+  estimatebigtime <- vargrids |> 
+    dplyr::filter(.data$grid == active(x)) |> 
+    dplyr::inner_join(x$axis, "variable", multiple = "all") |> 
+    dplyr::inner_join(x$dimension, c("dimension" = "id"), multiple = "all") |> 
+    dplyr::distinct(.data$dimension, .data$length)
   
   ## hack to assume always double numeric 
   ## TODO because could be integer after load
@@ -604,7 +577,7 @@ print.tidync <- function(x, ...) {
     #ii <- ord[ishape]
     cat(sprintf(longest, ishape, ushapes$grid[ishape]), ": ")
     
-    cat(paste((vargrids %>% 
+    cat(paste((vargrids |> 
                  dplyr::inner_join(ushapes[ishape, ], "grid"))$variable, 
               collapse = ", "))
     if ( ushapes$grid[ishape] == active_sh) cat("    **ACTIVE GRID** (", 
@@ -643,17 +616,17 @@ print.tidync <- function(x, ...) {
   dimension_print <- ""
   dims_active <- dims$active
   if (nrow(dims) > 0) { 
-    alldims <- dims %>% dplyr::mutate(dim = paste0("D", .data$id)) %>% 
+    alldims <- dims |> dplyr::mutate(dim = paste0("D", .data$id)) |> 
       dplyr::select(.data$dim, .data$id, .data$name, .data$length, 
                     .data$min, .data$max, .data$start, .data$count, 
                     .data$dmin, .data$dmax, .data$active, .data$unlim, 
-                    .data$coord_dim) %>% 
+                    .data$coord_dim) |> 
       dplyr::arrange(desc(.data$active), .data$id)
     
-  dimension_active <-  format(alldims %>% 
-                              dplyr::filter(.data$active) %>% 
+  dimension_active <-  format(alldims |> 
+                              dplyr::filter(.data$active) |> 
                               dplyr::mutate(id = NULL, active = NULL), n = Inf)
-  dimension_other <- format(alldims %>% dplyr::filter(!.data$active) %>% 
+  dimension_other <- format(alldims |> dplyr::filter(!.data$active) |> 
                             dplyr::select(.data$dim, .data$name, .data$length, 
                                           .data$min, .data$max, .data$unlim,
                                           .data$coord_dim), n = Inf)
@@ -667,7 +640,6 @@ print.tidync <- function(x, ...) {
     cat(sprintf("\nDimensions %i (all active): \n", nrow(dims)))
   }
   
-  #browser()
   dp <- dimension_active[-grep("# A tibble:", dimension_active)]
   cat(" ", "\n")
   for (i in seq_along(dp)) cat(dp[i], "\n")

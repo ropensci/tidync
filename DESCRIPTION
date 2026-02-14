@@ -22,16 +22,13 @@ License: GPL-3
 Encoding: UTF-8
 ByteCompile: true
 Imports:
-    dplyr (>= 0.7.0),
-    forcats,
-    magrittr,
+    dplyr (>= 1.1.0),
     ncdf4,
     ncmeta (>= 0.3.6),
-    purrr,
     RNetCDF (>= 1.9-1),
     rlang,
     tibble,
-    tidyr,
+    tidyr (>= 1.0.0),
     CFtime (>= 1.4.0)
 RoxygenNote: 7.3.3
 Suggests: ggplot2,

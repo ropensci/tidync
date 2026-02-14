@@ -32,22 +32,21 @@
 #' f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
 #' l3file <- system.file("extdata/oceandata", f, package= "tidync")
 #' ## filter by value
-#' tidync(l3file) %>% hyper_filter(lon = lon < 100)
+#' tidync(l3file) |> hyper_filter(lon = lon < 100)
 #' ## filter by index
-#' tidync(l3file) %>% hyper_filter(lon = index < 100)
+#' tidync(l3file) |> hyper_filter(lon = index < 100)
 #'
 #' ## be careful that multiple comparisons must occur in one expression
-#'  tidync(l3file) %>% hyper_filter(lon = lon < 100 & lon > 50)
+#'  tidync(l3file) |> hyper_filter(lon = lon < 100 & lon > 50)
 #' 
 #' ## filter in combination/s
-#' tidync(l3file) %>% hyper_filter(lat = abs(lat) < 10, lon = index < 100)
+#' tidync(l3file) |> hyper_filter(lat = abs(lat) < 10, lon = index < 100)
 hyper_filter <- function(.x, ...) {
   UseMethod("hyper_filter")
 }
 #' @name hyper_filter
 #' @export
-#' @importFrom dplyr %>% mutate 
-#' @importFrom forcats as_factor
+#' @importFrom dplyr mutate 
 #' @importFrom tibble as_tibble
 hyper_filter.tidync <- function(.x, ...) {
   quo_named <- rlang::quos(...)
@@ -92,7 +91,7 @@ out
 
 #' @export
 hyper_filter.character <- function(.x, ...) {
-  tidync(.x) %>% hyper_filter(...) 
+  tidync(.x) |> hyper_filter(...) 
 }
 update_slices <- function(x) {
   transforms <- x[["transforms"]]
