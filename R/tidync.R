@@ -588,18 +588,23 @@ print.tidync <- function(x, ...) {
   }
   dims <- x$dimension
   nms <- names(x$transforms)
-  ## handle case where value is character
+  ## handle case where value is character (or Date/POSIXct from values-supplied)
   for (i in seq_along(x$transforms)) {
-    if (!is.numeric(x$transforms[[nms[i]]][[nms[i]]])) {
-      x$transforms[[nms[i]]][[nms[i]]] <- NA_integer_
+    vals <- x$transforms[[nms[i]]][[nms[i]]]
+    if (!is.numeric(vals)) {
+      x$transforms[[nms[i]]][[nms[i]]] <- suppressWarnings(as.numeric(vals))
     }
   }
+  safe_range <- function(x) {
+    x <- x[is.finite(x)]
+    if (length(x) == 0L) c(NA_real_, NA_real_) else range(x)
+  }
   ranges <- setNames(lapply(nms, function(a) {
-    range(x$transforms[[a]][[a]])
+    safe_range(x$transforms[[a]][[a]])
   }), nms)
   filter_ranges <- setNames(lapply(nms, function(a) {
     tran <- dplyr::filter(x$transforms[[a]], .data$selected) 
-    range(tran[[a]])
+    safe_range(tran[[a]])
   }
   ), nms)
 

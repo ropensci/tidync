@@ -53,7 +53,7 @@ hyper_tibble.tidync<- function(x, ..., na.rm = TRUE, force = FALSE) {
   slabs <- hyper_array(x, ...,  force = force)
   if (na.rm) all_na <- Reduce(`&`, lapply(slabs, 
                                           function(a) is.na(as.vector(a))))
-  total_prod <- prod(dim(slabs[[1]]))
+  total_prod <- length(slabs[[1]])
   out <- tibble::as_tibble(lapply(slabs, as.vector))
   
   prod_dims <- 1

@@ -22,6 +22,14 @@
   `lapply()` when mirai is not installed or no daemons are set. The user 
   controls parallelism externally — tidync never calls `daemons()` itself.
 
+* Fixed `hyper_tibble()` producing constant dimension values when `drop = TRUE`
+  (the default) collapses arrays to bare vectors. `prod(dim(NULL))` returned 1, 
+  causing `rep(..., length.out = 1)` with tibble recycling. Now uses `length()`.
+
+* Fixed print method showing NA for min/max of Date/POSIXct coordinate columns.
+  Non-numeric coordinates are now converted via `as.numeric()` (Date → days since 
+  epoch) rather than replaced with `NA`.
+
 * Removed forcats, magrittr, and purrr dependencies. Switched from `%>%` 
   to the native R pipe `|>` throughout. `purrr::safely()` calls replaced 
   with `tryCatch()`.
