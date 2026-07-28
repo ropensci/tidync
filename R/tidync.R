@@ -128,7 +128,7 @@ tidync <- function(x, what, ...) {
 #' @export
 #' @importFrom ncmeta nc_meta
 tidync.character <- function(x, what, ..., concat_dim = NULL, fast = FALSE) {
-  if (length(x) > 1) {
+  if (length(x) > 1 || !is.null(concat_dim)) {
     if (!is.null(concat_dim)) {
       # Unpack list form: list(name = "time", values = <vector>)
       concat_values <- NULL
@@ -295,7 +295,9 @@ tidync_multi <- function(sources, what, concat_dim, concat_values = NULL,
   out$source <- src_table
   out$transforms[[concat_dim]] <- concat_all
   out$concat_dim <- concat_dim
-  out$fast_mode <- fast
+  ## values-supplied construction skips all metadata scans, so read-time
+  ## validation must be armed just as for fast mode
+  out$fast_mode <- fast || !is.null(concat_values)
 
   # Update the dimension table: concat dim length is now the total
   cdim_idx <- which(out$dimension$name == concat_dim)
@@ -379,6 +381,15 @@ build_concat_from_files <- function(concat_dim, sources, t1, template, fast) {
   concat_transforms[[1L]] <- t1
 
   has_timestamp <- "timestamp" %in% names(t1)
+  ## In fast mode we cannot cheaply build per-source CFtime timestamps, and
+  ## a partially-NA timestamp column poisons hyper_tibble()/dimnames (which
+  ## prefer timestamp over the numeric coordinate). Drop the column so the
+  ## numeric coordinate is used consistently across all sources.
+  if (fast && has_timestamp) {
+    t1$timestamp <- NULL
+    concat_transforms[[1L]] <- t1
+    has_timestamp <- FALSE
+  }
   concat_has_coords <- t1$coord_dim[1L]
 
   for (i in seq_along(sources)[-1L]) {

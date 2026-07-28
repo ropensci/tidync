@@ -42,15 +42,15 @@ The following options are available.
 \examples{
 argofile <- system.file("extdata/argo/MD5903593_001.nc", package = "tidync")
 argo <- tidync(argofile)
-argo >| active()
-argo >| activate("D3,D8") >| hyper_array()
-argo >| hyper_filter(N_LEVELS = index < 4)
-argo >| hyper_tbl_cube()
-argo >| hyper_tibble(select_var = c("TEMP_QC"))
-argo >| hyper_transforms()
-argo >| hyper_vars()
-argo >| hyper_dims()
-argo >| hyper_grids()
+argo |> active()
+argo |> activate("D3,D8") |> hyper_array()
+argo |> hyper_filter(N_LEVELS = index < 4)
+argo |> hyper_tbl_cube()
+argo |> hyper_tibble(select_var = c("TEMP_QC"))
+argo |> hyper_transforms()
+argo |> hyper_vars()
+argo |> hyper_dims()
+argo |> hyper_grids()
 
 ## some global options
 getOption("tidync.large.data.check")
@@ -70,6 +70,11 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Michael Sumner \email{mdsumner@gmail.com}
+
+Authors:
+\itemize{
+  \item Michael Sumner \email{mdsumner@gmail.com}
+}
 
 Other contributors:
 \itemize{

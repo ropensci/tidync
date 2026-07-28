@@ -15,3 +15,5 @@
 ^revdep$
 ^CRAN-SUBMISSION$
 ^tidync\.Rproj$
+^\.positai$
+^\.claude$

@@ -17,8 +17,8 @@ Provide a summary of variables and dimensions, organized by their 'grid' (or
 'count' summaries for each dimension in the active grid.
 }
 \details{
-See \link[=tidync]{tidync} for detail about the object, and
-\link[=hyper_vars]{hyper_vars} for programmatic access to the active grid's
+See \link{tidync} for detail about the object, and
+\link{hyper_vars} for programmatic access to the active grid's
 variable and dimension information.
 
 The print summary is organized in two sections, the first is available grids

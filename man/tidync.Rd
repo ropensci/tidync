@@ -44,7 +44,7 @@ The print method for tidync includes a lot of information about which
 variables exist on which dimensions, and if any slicing (\code{\link[=hyper_filter]{hyper_filter()}})
 operations have occurred these are summarized as 'start' and 'count'
 modifications relative to the dimension lengths. See \link[=print.tidync]{print}
-for these details, and \link[=hyper_vars]{hyper_vars} for programmatic access to
+for these details, and \link{hyper_vars} for programmatic access to
 this information
 
 Many NetCDF forms are supported and tidync tries to reduce the interpretation

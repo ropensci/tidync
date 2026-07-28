@@ -246,19 +246,24 @@ read_multi_source <- function(x, varnames, dimension, START, COUNT,
 
     src_path <- x$source$source[x$source$source_id == sid]
 
+    ## total steps this source is believed to hold on the concat dim
+    ## (used for read-time validation in fast/values mode)
+    n_local_total <- sum(concat_trans$source_id == sid)
+
     list(source_id = sid,
          source = src_path,
-         start = s, count = c)
+         start = s, count = c,
+         concat_len = n_local_total)
   })
 
   # Build validation spec for fast-mode (simple vectors, no tidync ref)
   validate <- isTRUE(x$fast_mode)
   shared_dims <- if (validate) {
     sd <- x$dimension[x$dimension$name != concat_dim, ]
-    list(names = sd$name, lengths = sd$length)
+    list(names = sd$name, lengths = sd$length, concat_dim = concat_dim)
   }
 
-  # Read from each source — parallel when mirai daemons are active
+  # Read from each source - parallel when mirai daemons are active
   per_source <- map_slabs(source_slabs,
                           varnames = varnames,
                           raw_datavals = raw_datavals,
@@ -308,6 +313,21 @@ read_one_slab <- function(slab, varnames, raw_datavals, validate, shared_dims) {
           dname, file_dim$len, con$filename, expected_len))
       }
     }
+    ## the concat dimension itself: the file must hold exactly the number of
+    ## steps this source contributes, otherwise the consolidated view is a
+    ## silent subset (e.g. values-supplied construction against multi-step
+    ## files)
+    cdname <- shared_dims$concat_dim
+    if (!is.null(cdname) && !is.null(slab$concat_len)) {
+      cdim <- con$dim[[cdname]]
+      if (!is.null(cdim) && cdim$len != slab$concat_len) {
+        stop(sprintf(
+          paste("fast mode: concat dimension '%s' has length %d in '%s' but",
+                "this source contributes %d step(s) to the consolidated view.",
+                "Re-run with fast = FALSE, or supply one value per step."),
+          cdname, cdim$len, con$filename, slab$concat_len))
+      }
+    }
   }
 
   lapply(varnames, function(vara) {
@@ -329,11 +349,12 @@ read_one_slab <- function(slab, varnames, raw_datavals, validate, shared_dims) {
 #' @noRd
 map_slabs <- function(slabs, varnames, raw_datavals, validate, shared_dims) {
   if (has_mirai_daemons()) {
-    mirai::mirai_map(slabs, read_one_slab,
-                     .args = list(varnames = varnames,
-                                  raw_datavals = raw_datavals,
-                                  validate = validate,
-                                  shared_dims = shared_dims))[.stop]
+    mm <- mirai::mirai_map(slabs, read_one_slab,
+                           .args = list(varnames = varnames,
+                                        raw_datavals = raw_datavals,
+                                        validate = validate,
+                                        shared_dims = shared_dims))
+    mirai::collect_mirai(mm, options = ".stop")
   } else {
     lapply(slabs, read_one_slab,
            varnames = varnames,
