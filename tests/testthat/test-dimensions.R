@@ -12,7 +12,7 @@ test_that("dimension matchup works", {
     hyper_tibble(select_var = c("TEMP_ADJUSTED_QC", "NITRATE_ADJUSTED", 
                                 "CHLA_ADJUSTED_ERROR"))
   expect_equal(dim(tab), c(38L, 5L))
-  expect_equal(purrr::map_chr(tab, typeof), c(TEMP_ADJUSTED_QC = "character",
+  expect_equal(vapply(tab, typeof, FUN.VALUE=""), c(TEMP_ADJUSTED_QC = "character",
                                               NITRATE_ADJUSTED = "double",
                                               CHLA_ADJUSTED_ERROR = "double",
                                               N_LEVELS = "integer",
