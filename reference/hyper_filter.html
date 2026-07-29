@@ -21,7 +21,7 @@ use."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathja
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@ values along that dimension.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="st">"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span></span></span>
 <span class="r-in"><span><span class="va">l3file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/oceandata"</span>, <span class="va">f</span>, package<span class="op">=</span> <span class="st">"tidync"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co">## filter by value</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="tidync.html">tidync</a></span><span class="op">(</span><span class="va">l3file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">hyper_filter</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="tidync.html">tidync</a></span><span class="op">(</span><span class="va">l3file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">hyper_filter</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -139,7 +139,7 @@ values along that dimension.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> D2    rgb                3     1     3 FALSE FALSE     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> D3    eightbitcolor    256     1   256 FALSE FALSE     </span>
 <span class="r-in"><span><span class="co">## filter by index</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="tidync.html">tidync</a></span><span class="op">(</span><span class="va">l3file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">hyper_filter</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="tidync.html">tidync</a></span><span class="op">(</span><span class="va">l3file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">hyper_filter</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -165,7 +165,7 @@ values along that dimension.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> D3    eightbitcolor    256     1   256 FALSE FALSE     </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## be careful that multiple comparisons must occur in one expression</span></span></span>
-<span class="r-in"><span> <span class="fu"><a href="tidync.html">tidync</a></span><span class="op">(</span><span class="va">l3file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">hyper_filter</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span> <span class="op">&lt;</span> <span class="fl">100</span> <span class="op">&amp;</span> <span class="va">lon</span> <span class="op">&gt;</span> <span class="fl">50</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="tidync.html">tidync</a></span><span class="op">(</span><span class="va">l3file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">hyper_filter</span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span> <span class="op">&lt;</span> <span class="fl">100</span> <span class="op">&amp;</span> <span class="va">lon</span> <span class="op">&gt;</span> <span class="fl">50</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -191,7 +191,7 @@ values along that dimension.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> D3    eightbitcolor    256     1   256 FALSE FALSE     </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## filter in combination/s</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="tidync.html">tidync</a></span><span class="op">(</span><span class="va">l3file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">hyper_filter</span><span class="op">(</span>lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">lat</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">10</span>, lon <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="tidync.html">tidync</a></span><span class="op">(</span><span class="va">l3file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">hyper_filter</span><span class="op">(</span>lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">lat</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">10</span>, lon <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data Source (1): S20080012008031.L3m_MO_CHL_chlor_a_9km.nc ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -229,7 +229,7 @@ values along that dimension.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

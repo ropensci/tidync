@@ -18,7 +18,7 @@ NetCDF connection (ncdf4 or RNetCDF) in a simpler way."><!-- mathjax --><script 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
@@ -84,12 +84,24 @@ NetCDF connection (ncdf4 or RNetCDF) in a simpler way.</p>
 <dd><p>if true we make sure the connection can be open, not applied for connections themselves</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>array of values for the requested variable</p>
+    </div>
     <div id="details">
     <h2>Details</h2>
     <p>This function just reads the whole array. It is equivalent to the
 angstroms package function 'rawdata(x, varname)'.</p>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">l3file</span> <span class="op">&lt;-</span> <span class="st">"S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"</span></span></span>
+<span class="r-in"><span><span class="va">fpath</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"oceandata"</span>, <span class="va">l3file</span>,</span></span>
+<span class="r-in"><span>package <span class="op">=</span> <span class="st">"tidync"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">lat</span> <span class="op">&lt;-</span> <span class="fu">nc_get</span><span class="op">(</span><span class="va">fpath</span>, <span class="st">"lat"</span><span class="op">)</span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -102,7 +114,7 @@ angstroms package function 'rawdata(x, varname)'.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

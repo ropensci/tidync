@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Michael D.
 Sumner</h4>
             
-            <h4 data-toc-skip class="date">2025-08-23</h4>
+            <h4 data-toc-skip class="date">2026-07-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci/tidync/blob/main/vignettes/netcdf-with-tidync.Rmd" class="external-link"><code>vignettes/netcdf-with-tidync.Rmd</code></a></small>
       <div class="hidden name"><code>netcdf-with-tidync.Rmd</code></div>
@@ -101,7 +101,7 @@ long-form as a data frame.</p>
 model</a> and an <a href="https://en.wikipedia.org/wiki/Application_programming_interface" class="external-link">API</a>.</p>
 <p>This is a very common, and <em>very general</em> way to store and
 work with scientific array-based data. NetCDF is defined and provided by
-<a href="https://www.unidata.ucar.edu/software/netcdf/" class="external-link">Unidata</a>.</p>
+<a href="https://www.unidata.ucar.edu/software/netcdf" class="external-link">Unidata</a>.</p>
 <p>Here we introduce traditional concepts of NetCDF, and show examples
 with built-in files and online sources to demonstrate tidync
 functionality.</p>
@@ -130,7 +130,7 @@ Operators</a>. In R the most common tools used are ncdf4 and raster
 (which uses ncdf4).</p>
 <p>Both the RNetCDF and ncdf4 packages provide a traditional summary
 format, familiar to many NetCDF users as the output of the command line
-program <a href="https://www.unidata.ucar.edu/software/netcdf/workshops/most-recent/utilities/Ncdump.html" class="external-link"><code>ncdump</code></a>.</p>
+program <a href="https://docs.unidata.ucar.edu/nug/current/netcdf_utilities_guide.html" class="external-link"><code>ncdump</code></a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ice_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ifremer"</span>, <span class="st">"20171002.nc"</span>, package <span class="op">=</span> <span class="st">"tidync"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mjwoods/RNetCDF" class="external-link">RNetCDF</a></span><span class="op">)</span></span>
@@ -242,7 +242,7 @@ different grid we may nominate it by name, or by member variable.</p>
 summary print makes a distinction based on which dimensions are
 <em>active</em>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D2"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -267,7 +267,7 @@ summary print makes a distinction based on which dimensions are
 choose a variable in the default grid, then it’s no different to the
 first case.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"time"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"time"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -290,7 +290,7 @@ first case.</p>
 <span><span class="co">#&gt; 2 D1    nj       664     1   664 FALSE FALSE</span></span>
 <span></span>
 <span><span class="co">## choose grid by variable name, which happens to be the default grid here</span></span>
-<span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"quality_flag"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"quality_flag"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -308,7 +308,7 @@ first case.</p>
 <span><span class="co">#&gt; 3 D2    time       1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204     1     1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204 FALSE TRUE</span></span>
 <span></span>
 <span><span class="co">## same as the default</span></span>
-<span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D0,D1,D2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D0,D1,D2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -337,7 +337,7 @@ variable, though we could just chain the entire operation without
 this.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">concentration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidync.html">tidync</a></span><span class="op">(</span><span class="va">ice_file</span><span class="op">)</span> </span>
-<span><span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="va">concentration</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -361,7 +361,7 @@ read from it.</p>
 right hand side may be quite general we need the left hand side name to
 be assured of the name of the dimension referred to.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>nj <span class="op">=</span> <span class="va">nj</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">concentration</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>nj <span class="op">=</span> <span class="va">nj</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -383,7 +383,7 @@ the values. It’s not different in this case because ni and nj are just
 position dimensions anyway. The special ‘dplyr’ adverbs like ‘between’
 will work.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">concentration</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>ni <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">50</span>, </span>
 <span>               nj <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="va">index</span>, <span class="fl">30</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -410,12 +410,12 @@ will work.</p>
 return actual data, either in by slicing out a “slab” in array-form, or
 as a data frame.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hf</span> <span class="op">&lt;-</span> <span class="va">concentration</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">hf</span> <span class="op">&lt;-</span> <span class="va">concentration</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>ni <span class="op">=</span> <span class="va">index</span> <span class="op">&gt;</span> <span class="fl">150</span>, </span>
 <span>               nj <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="va">index</span>, <span class="fl">30</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## as an array</span></span>
-<span><span class="va">arr</span> <span class="op">&lt;-</span> <span class="va">hf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_array.html">hyper_array</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">arr</span> <span class="op">&lt;-</span> <span class="va">hf</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/hyper_array.html">hyper_array</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">arr</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 2</span></span>
 <span><span class="co">#&gt;  $ concentration: int [1:482, 1:71] NA NA NA NA NA NA NA NA NA NA ...</span></span>
@@ -450,14 +450,14 @@ as a data frame.</p>
 <span><span class="co">#&gt;   .. ..$ coord_dim: logi TRUE</span></span>
 <span><span class="co">#&gt;   .. ..$ selected : logi TRUE</span></span>
 <span><span class="co">#&gt;  - attr(*, "source")= tibble [1 × 2] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2025-08-23 10:39:15"</span></span>
+<span><span class="co">#&gt;   ..$ access: POSIXct[1:1], format: "2026-07-29 12:09:28"</span></span>
 <span><span class="co">#&gt;   ..$ source: chr "/home/runner/work/_temp/Library/tidync/extdata/ifremer/20171002.nc"</span></span>
 <span><span class="co">#&gt;  - attr(*, "class")= chr "tidync_data"</span></span>
 <span></span>
 <span><span class="co">## as a data frame</span></span>
-<span><span class="va">hf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/hyper_tibble.html">hyper_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">concentration</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">concentration</span>, <span class="va">quality_flag</span><span class="op">)</span></span>
+<span><span class="va">hf</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/hyper_tibble.html">hyper_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">concentration</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">concentration</span>, <span class="va">quality_flag</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 105 × 2</span></span>
 <span><span class="co">#&gt;    concentration quality_flag</span></span>
 <span><span class="co">#&gt;            <span style="font-style: italic;">&lt;int&gt;</span>        <span style="font-style: italic;">&lt;int&gt;</span></span></span>
@@ -518,7 +518,7 @@ only about the dimensions we want, they have to be specified explicitly
 <p>It does not matter what we include in the filter query, it can be
 all, some or none of the available dimensions, in any order.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>nj <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">20</span>, ni <span class="op">=</span> <span class="va">ni</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">hf</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>nj <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">20</span>, ni <span class="op">=</span> <span class="va">ni</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -535,7 +535,7 @@ all, some or none of the available dimensions, in any order.</p>
 <span><span class="co">#&gt; 2 D1    nj       664       1     664     1    19       1      19 FALSE FALSE     </span></span>
 <span><span class="co">#&gt; 3 D2    time       1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204     1     1 1<span style="text-decoration: underline;">032</span>204 1<span style="text-decoration: underline;">032</span>204 FALSE TRUE</span></span>
 <span></span>
-<span><span class="va">hf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>nj <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="va">hf</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/hyper_filter.html">hyper_filter</a></span><span class="op">(</span>nj <span class="op">=</span> <span class="va">index</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Data Source (1): 20171002.nc ...</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -577,7 +577,7 @@ available via <code><a href="../reference/activate.html">active()</a></code>.</p
 <span><span class="co">#&gt; 3 time       1     1     1     2 FALSE TRUE</span></span>
 <span></span>
 <span><span class="co">## change the active grid</span></span>
-<span><span class="va">hf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D2"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">hf</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D2"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/hyper_vars.html">hyper_vars</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;      id name  type   ndims natts dim_coord</span></span>
@@ -587,7 +587,7 @@ available via <code><a href="../reference/activate.html">active()</a></code>.</p
 <span><span class="fu"><a href="../reference/activate.html">active</a></span><span class="op">(</span><span class="va">hf</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "D0,D1,D2"</span></span>
 <span></span>
-<span><span class="va">hf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D2"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">hf</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/activate.html">activate</a></span><span class="op">(</span><span class="st">"D2"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/activate.html">active</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "D2"</span></span></code></pre></div>
 </div>
@@ -691,7 +691,7 @@ Do you know different? Please let me know!<a href="#fnref1" class="footnote-back
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer>

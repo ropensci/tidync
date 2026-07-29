@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidync</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5.0</span>
       </span>
     </div>
 
@@ -57,6 +57,42 @@
       <small>Source: <a href="https://github.com/ropensci/tidync/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.5.0" id="tidync-050">tidync 0.5.0<a class="anchor" aria-label="anchor" href="#tidync-050"></a></h2>
+<p>This release adds multi-source support, request of (<a href="https://github.com/ropensci/tidync/issues/131" class="external-link">#131</a>): a tidync object can now present a consolidated lazy view across a collection of NetCDF sources, extending the filter-then-read model unchanged from one file to many.</p>
+<div class="section level3">
+<h3 id="multi-source-collections-0-5-0">Multi-source collections<a class="anchor" aria-label="anchor" href="#multi-source-collections-0-5-0"></a></h3>
+<ul><li><p><code><a href="../reference/tidync.html">tidync()</a></code> now accepts a vector of file paths together with a <code>concat_dim</code> argument, building a consolidated view across sources along that dimension (typically time). Downstream operations (<code><a href="../reference/hyper_filter.html">hyper_filter()</a></code>, <code><a href="../reference/hyper_array.html">hyper_array()</a></code>, <code><a href="../reference/hyper_tibble.html">hyper_tibble()</a></code>, <code><a href="../reference/hyper_tbl_cube.html">hyper_tbl_cube()</a></code>) work transparently across the collection, and only the files needed for the current selection are opened at read time. A single file with <code>concat_dim</code> is a valid degenerate collection.</p></li>
+<li><p>Fast mode for large collections: <code>tidync(files, concat_dim = "time", fast = TRUE)</code> skips full metadata scans of sources 2..N, reading only the concat dimension coordinate from each file. Validation is deferred to data-read time, where dimension mismatches are reported with the offending file named. In fast mode the time coordinate is presented numerically (no timestamp column), since per-source calendar metadata is not read; use the default full mode for CFtime timestamps.</p></li>
+<li><p>Zero file I/O construction: supply coordinate values directly with <code>concat_dim = list(name = "time", values = dates)</code> and only the first source is opened (as the template). Values can be numeric, Date, or POSIXct, and <code><a href="../reference/hyper_filter.html">hyper_filter()</a></code> operates on them directly. This is aimed at file-database workflows (for example raadfiles) where per-file coordinates are already known. This construction assumes one step per source; files holding more steps on the concat dimension are detected at read time and reported as an error rather than silently subset.</p></li>
+<li><p>Read-time validation is armed automatically for fast mode and for values-supplied construction: shared dimensions and the per-source concat dimension length are checked against the consolidated view as each file is opened, with clear errors naming the file.</p></li>
+<li><p>Optional parallel reads via mirai: when <code><a href="https://mirai.r-lib.org/reference/daemons.html" class="external-link">mirai::daemons()</a></code> are active, per-source reads in <code><a href="../reference/hyper_array.html">hyper_array()</a></code> run in parallel with <code><a href="https://mirai.r-lib.org/reference/mirai_map.html" class="external-link">mirai::mirai_map()</a></code>, falling back to sequential reads when mirai is not installed or no daemons are set. Parallelism is entirely under user control; tidync never starts daemons itself. Errors raised during parallel reads (including validation failures) propagate normally.</p></li>
+<li><p>Sources are kept in the order supplied; the consolidated <code>index</code> on the concat dimension is file order. Value-based filters work regardless of ordering, but supply sources in coordinate order for a monotonic view.</p></li>
+<li><p><code><a href="../reference/tidync.html">tidync()</a></code> on a <code>tidync_data</code> object (round-trip) preserves the source table and <code>concat_dim</code>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="known-limitations-0-5-0">Known limitations<a class="anchor" aria-label="anchor" href="#known-limitations-0-5-0"></a></h3>
+<ul><li>Non-contiguous selections <em>within</em> a single source still read a bounding slab and are not supported at <code><a href="../reference/hyper_array.html">hyper_array()</a></code> time, consistent with single-source behaviour. Non-contiguous selections that span whole sources (for example dropping intermediate files) are supported and read only the files required.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixes-0-5-0">Fixes<a class="anchor" aria-label="anchor" href="#fixes-0-5-0"></a></h3>
+<ul><li><p>Fixed <code><a href="../reference/hyper_tibble.html">hyper_tibble()</a></code> producing constant dimension values when <code>drop = TRUE</code> (the default) collapses arrays to bare vectors; expansion is now based on <code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code> rather than <code>prod(dim())</code>.</p></li>
+<li><p>Fixed the print method showing NA for min/max of Date/POSIXct coordinate columns; non-numeric coordinates are now converted with <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code> (Date as days since epoch) rather than replaced with NA.</p></li>
+<li><p>Repaired mangled pipe operators in the package overview help examples.</p></li>
+<li><p>Removed commented-out <code><a href="https://rdrr.io/r/base/browser.html" class="external-link">browser()</a></code> calls.</p></li>
+<li><p>Update to CFTime as_timestamp(), thanks to <a href="https://github.com/fabern" class="external-link">@fabern</a>.</p></li>
+<li><p>Support for CF time metadata via package CFtime thanks to <a href="https://github.com/pvanlaake" class="external-link">@pvanlaake</a>, see <a href="https://github.com/ropensci/tidync/pull/124" class="external-link uri">https://github.com/ropensci/tidync/pull/124</a></p></li>
+<li><p>Suppress ncdf4 warnings on open, issue <a href="https://github.com/ropensci/tidync/issues/119" class="external-link">#119</a>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="dependencies-and-internals-0-5-0">Dependencies and internals<a class="anchor" aria-label="anchor" href="#dependencies-and-internals-0-5-0"></a></h3>
+<ul><li><p>Minimum R version is now 4.1.0 (native pipe <code>|&gt;</code>). Removed forcats, magrittr, and purrr dependencies; <code>%&gt;%</code> replaced with <code>|&gt;</code> throughout and <code><a href="https://purrr.tidyverse.org/reference/safely.html" class="external-link">purrr::safely()</a></code> replaced with <code><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch()</a></code>.</p></li>
+<li><p>ncmeta (&gt;= 0.5.0) is now required, for extended (CFtime) metadata and for correct handling of sources with no variables (such as compound-type L3 bin files), which errored uninformatively with earlier ncmeta under current dplyr.</p></li>
+<li><p>Minimum dplyr version is 1.1.0 (<code>multiple</code> argument in joins) and minimum tidyr version is 1.0.0 (<code>cols</code> argument in <code>unnest()</code>); all version-gating conditionals removed.</p></li>
+<li><p>mirai added to Suggests.</p></li>
+<li><p><code>print.tidync</code> now returns its input invisibly, as always claimed.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.0" id="tidync-030">tidync 0.3.0<small>2022-10-27</small><a class="anchor" aria-label="anchor" href="#tidync-030"></a></h2>
 <ul><li>Add option to silence all warnings and messages. See <a href="https://github.com/ropensci/tidync/issues/115" class="external-link">#115</a>, suggestion of <a href="https://github.com/markpayneatwork" class="external-link">@markpayneatwork</a>.</li>
@@ -132,7 +168,7 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.1" id="tidync-001">tidync 0.0.1<a class="anchor" aria-label="anchor" href="#tidync-001"></a></h2>
 <ul><li><p>Now imports ncdump &gt; 0.0.3.</p></li>
-<li><p>Installed external example data from <a href="https://www.unidata.ucar.edu/software/netcdf/examples/files.html" class="external-link">Unidata website</a></p></li>
+<li><p>Installed external example data from <a href="https://www.unidata.ucar.edu/software/netcdf" class="external-link">Unidata website</a></p></li>
 <li><p>First working version now has <code><a href="../reference/tidync.html">tidync()</a></code>, and <code>hyper_*()</code> family of functions.</p></li>
 <li><p>Migrated from ncdump.</p></li>
 </ul></div>
@@ -150,7 +186,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>
