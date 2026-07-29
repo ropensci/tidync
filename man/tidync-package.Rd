@@ -3,13 +3,13 @@
 \docType{package}
 \name{tidync-package}
 \alias{tidync-package}
-\title{tidync: A Tidy Approach to 'NetCDF' Data Exploration and Extraction}
+\title{tidync: Tidy Approach to 'NetCDF' Data Exploration and Extraction}
 \description{
 Tidy tools for 'NetCDF' data sources. Explore the contents of a 'NetCDF' source (file or URL) presented as variables organized by grid with a database-like interface. The hyper_filter() interactive function translates the filter value or index expressions to array-slicing form. No data is read until explicitly requested, as a data frame or list of arrays via hyper_tibble() or hyper_array().
 
 Provides easy to use idioms for working with NetCDF data for extraction,
 manipulation and visualization. NetCDF is Network Common Data Form
-\url{https://www.unidata.ucar.edu/software/netcdf/}.
+\url{https://www.unidata.ucar.edu/software/netcdf}.
 }
 \details{
 See \code{\link[=print.tidync]{print.tidync()}} for details on the printed version of a tidync object.
@@ -69,11 +69,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Michael Sumner \email{mdsumner@gmail.com}
+\strong{Maintainer}: Michael Sumner \email{mdsumner@gmail.com} [copyright holder]
 
 Authors:
 \itemize{
-  \item Michael Sumner \email{mdsumner@gmail.com}
+  \item Michael Sumner \email{mdsumner@gmail.com} [copyright holder]
 }
 
 Other contributors:

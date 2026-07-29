@@ -1,43 +1,75 @@
-# tidync dev
+# tidync 0.5.0
 
-* Multi-source support: `tidync()` now accepts a vector of file paths with 
-  `concat_dim` to build a consolidated view across multiple NetCDF sources. 
-  Downstream operations (`hyper_filter`, `hyper_array`, `hyper_tibble`) work 
-  transparently across the collection, opening only the files needed for the 
-  current selection.
+This release adds multi-source support, request of (#131): a tidync object can now present a consolidated
+lazy view across a collection of NetCDF sources, extending the
+filter-then-read model unchanged from one file to many.
 
-* Fast mode for large collections: `tidync(files, concat_dim = "time", fast = TRUE)` 
-  skips full metadata validation of sources 2..N, reading only the concat 
-  dimension coordinate. Mismatches are detected lazily at data-read time.
+## Multi-source collections
 
-* Zero file I/O construction: supply coordinate values directly via 
-  `concat_dim = list(name = "time", values = dates)` to avoid opening files 
-  2..N entirely. Only the first source is opened (for the template). Values 
-  can be numeric, Date, or POSIXct, and `hyper_filter()` operates on them 
-  directly. Ideal for use with file databases such as raadfiles.
+* `tidync()` now accepts a vector of file paths together with a
+  `concat_dim` argument, building a consolidated view across sources along
+  that dimension (typically time). Downstream operations (`hyper_filter()`,
+  `hyper_array()`, `hyper_tibble()`, `hyper_tbl_cube()`) work transparently
+  across the collection, and only the files needed for the current
+  selection are opened at read time. A single file with `concat_dim` is a
+  valid degenerate collection.
 
-* Optional parallel reads for multi-source collections via mirai. When 
-  `mirai::daemons()` are active, per-source file reads in `hyper_array()` 
-  run in parallel via `mirai::mirai_map()`. Falls back to sequential 
-  `lapply()` when mirai is not installed or no daemons are set. The user 
-  controls parallelism externally — tidync never calls `daemons()` itself.
+* Fast mode for large collections:
+  `tidync(files, concat_dim = "time", fast = TRUE)` skips full metadata
+  scans of sources 2..N, reading only the concat dimension coordinate from
+  each file. Validation is deferred to data-read time, where dimension
+  mismatches are reported with the offending file named. In fast mode the
+  time coordinate is presented numerically (no timestamp column), since
+  per-source calendar metadata is not read; use the default full mode for
+  CFtime timestamps.
 
-* Fixed `hyper_tibble()` producing constant dimension values when `drop = TRUE`
-  (the default) collapses arrays to bare vectors. `prod(dim(NULL))` returned 1, 
-  causing `rep(..., length.out = 1)` with tibble recycling. Now uses `length()`.
+* Zero file I/O construction: supply coordinate values directly with
+  `concat_dim = list(name = "time", values = dates)` and only the first
+  source is opened (as the template). Values can be numeric, Date, or
+  POSIXct, and `hyper_filter()` operates on them directly. This is aimed
+  at file-database workflows (for example raadfiles) where per-file
+  coordinates are already known. This construction assumes one step per
+  source; files holding more steps on the concat dimension are detected at
+  read time and reported as an error rather than silently subset.
 
-* Fixed print method showing NA for min/max of Date/POSIXct coordinate columns.
-  Non-numeric coordinates are now converted via `as.numeric()` (Date → days since 
-  epoch) rather than replaced with `NA`.
+* Read-time validation is armed automatically for fast mode and for
+  values-supplied construction: shared dimensions and the per-source
+  concat dimension length are checked against the consolidated view as
+  each file is opened, with clear errors naming the file.
 
-* Removed forcats, magrittr, and purrr dependencies. Switched from `%>%` 
-  to the native R pipe `|>` throughout. `purrr::safely()` calls replaced 
-  with `tryCatch()`.
+* Optional parallel reads via mirai: when `mirai::daemons()` are active,
+  per-source reads in `hyper_array()` run in parallel with
+  `mirai::mirai_map()`, falling back to sequential reads when mirai is not
+  installed or no daemons are set. Parallelism is entirely under user
+  control; tidync never starts daemons itself. Errors raised during
+  parallel reads (including validation failures) propagate normally.
 
-* Minimum R version bumped to 4.1.0 (for native pipe `|>`). Minimum dplyr 
-  version bumped to 1.1.0 (for `multiple` argument in joins). Minimum tidyr 
-  version bumped to 1.0.0 (for `cols` argument in `unnest()`). All 
-  version-gating conditionals removed.
+* Sources are kept in the order supplied; the consolidated `index` on the
+  concat dimension is file order. Value-based filters work regardless of
+  ordering, but supply sources in coordinate order for a monotonic view.
+
+* `tidync()` on a `tidync_data` object (round-trip) preserves the source
+  table and `concat_dim`.
+
+## Known limitations
+
+* Non-contiguous selections *within* a single source still read a
+  bounding slab and are not supported at `hyper_array()` time, consistent
+  with single-source behaviour. Non-contiguous selections that span whole
+  sources (for example dropping intermediate files) are supported and read
+  only the files required.
+
+## Fixes
+
+* Fixed `hyper_tibble()` producing constant dimension values when
+  `drop = TRUE` (the default) collapses arrays to bare vectors;
+  expansion is now based on `length()` rather than `prod(dim())`.
+
+* Fixed the print method showing NA for min/max of Date/POSIXct
+  coordinate columns; non-numeric coordinates are now converted with
+  `as.numeric()` (Date as days since epoch) rather than replaced with NA.
+
+* Repaired mangled pipe operators in the package overview help examples.
 
 * Removed commented-out `browser()` calls.
 
@@ -46,6 +78,27 @@
 * Support for CF time metadata via package CFtime thanks to @pvanlaake, see https://github.com/ropensci/tidync/pull/124
 
 * Suppress ncdf4 warnings on open, issue #119. 
+
+
+## Dependencies and internals
+
+* Minimum R version is now 4.1.0 (native pipe `|>`). Removed forcats,
+  magrittr, and purrr dependencies; `%>%` replaced with `|>` throughout
+  and `purrr::safely()` replaced with `tryCatch()`.
+
+* ncmeta (>= 0.5.0) is now required, for extended (CFtime) metadata and
+  for correct handling of sources with no variables (such as compound-type
+  L3 bin files), which errored uninformatively with earlier ncmeta under
+  current dplyr.
+
+* Minimum dplyr version is 1.1.0 (`multiple` argument in joins) and
+  minimum tidyr version is 1.0.0 (`cols` argument in `unnest()`); all
+  version-gating conditionals removed.
+
+* mirai added to Suggests.
+
+* `print.tidync` now returns its input invisibly, as always claimed. 
+
 
 # tidync 0.3.0
 
@@ -183,7 +236,7 @@ and allowed user-controlled option to avoid this check. Thanks to Alessandro Big
 
 * Now imports ncdump > 0.0.3. 
 
-* Installed external example data from [Unidata website](https://www.unidata.ucar.edu/software/netcdf/examples/files.html)
+* Installed external example data from [Unidata website](https://www.unidata.ucar.edu/software/netcdf)
 
 * First working version now has `tidync()`, and `hyper_*()` family of functions. 
 

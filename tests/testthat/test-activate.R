@@ -35,7 +35,7 @@
   expect_error(activate(tnc, 0))
 
   
-  expect_error(activate(tnc, .xyzzy_no_such_tidync_var), "not found")
+  expect_error(activate(tnc, .xyzzy_no_such_tidync_var), "Activate grids by name")
   snarfleglobber <-   "snarfleglobber "
   expect_error(activate(tnc, snarfleglobber), "Activate grids by name")
   

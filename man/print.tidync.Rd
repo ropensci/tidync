@@ -11,6 +11,9 @@
 
 \item{...}{reserved}
 }
+\value{
+the input object invisibly
+}
 \description{
 Provide a summary of variables and dimensions, organized by their 'grid' (or
 'shape') and with a summary of any slicing operations provided as 'start' and

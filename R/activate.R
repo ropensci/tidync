@@ -57,10 +57,14 @@ activate <- function(.data, what, ..., select_var = NULL) UseMethod("activate")
 activate.tidync <- function(.data, what, ..., select_var = NULL) {
   if (missing(what)) return(.data)
   vargrids <- tidyr::unnest(.data$grid, cols = "variables")
-   # Try to set what_name to what (in case it's a string)
-  what_name <- try(what, silent = T)
-  # If it fails, use deparse(substitute(what)) to turn into string
-  if (inherits(what_name, "try-error")) what_name <- deparse(substitute(what))
+  # Try to set what_name to what (in case it's a string)
+  what_name <- try(what, silent = TRUE)
+  # If it fails, use deparse(substitute(what)) to turn into string;
+  # also reassign what to avoid re-forcing the failed promise later
+  if (inherits(what_name, "try-error")) {
+    what_name <- deparse(substitute(what))
+    what <- what_name
+  }
   
   if (what_name %in% vargrids$variable) {
     ## use the variable to find the grid

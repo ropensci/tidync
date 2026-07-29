@@ -25,6 +25,7 @@ test_that("files and bad files are handled", {
   expect_warning(try(tidync(l3file[c(1, 1)])), 
                  "only one source allowed, first supplied chosen")
   tfile <- tempfile()
+  on.exit(unlink(tfile), add = TRUE)
   nothingfile <- RNetCDF::create.nc(tfile)
   RNetCDF::close.nc(nothingfile)
   

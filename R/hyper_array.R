@@ -28,6 +28,8 @@
 #'   applied or not
 #' @param force ignore caveats about large extraction and just do it
 #'
+#' @return a named list of arrays classed as `tidync_data`, one element per
+#'   variable, with dimension coordinates stored in the `transforms` attribute
 #' @export
 #' @aliases tidync_data
 #' @seealso [print.tidync_data] for a description of the print summary, 

@@ -17,9 +17,8 @@ knitr::opts_chunk$set(
 # tidync
 
 <!-- badges: start -->
-[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/software-review/issues/174) 
+[![Peer Reviewed](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/software-review/issues/174) 
 [![CRAN status](https://www.r-pkg.org/badges/version/tidync)](https://CRAN.R-project.org/package=tidync)
-
 [![R-CMD-check](https://github.com/ropensci/tidync/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/tidync/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -35,7 +34,7 @@ In contrast to other packages tidync helps reduce the volume of code required to
 * Read array data in native form `hyper_array()` or long-form `hyper_tibble()` or bespoke form `hyper_tbl_cube()`. 
 
 NetCDF is **Network Common Data Form** a very common, and very general way to store and work with 
-scientific array-based data. NetCDF is defined and provided by [Unidata](https://www.unidata.ucar.edu/software/netcdf/). R has (independent) support for NetCDF via the [ncdf4](https://CRAN.R-project.org/package=ncdf4), [rhdf5](https://bioconductor.org/packages/release/bioc/html/rhdf5.html), [RNetCDF](https://CRAN.R-project.org/package=RNetCDF), [rgdal](https://CRAN.R-project.org/package=rgdal), [sf](https://CRAN.R-project.org/package=sf) and [vapour](https://CRAN.R-project.org/package=vapour) packages. 
+scientific array-based data. NetCDF is defined and provided by [Unidata](https://www.unidata.ucar.edu/software/netcdf). R has (independent) support for NetCDF via the [ncdf4](https://CRAN.R-project.org/package=ncdf4), [rhdf5](https://bioconductor.org/packages/release/bioc/html/rhdf5.html), [RNetCDF](https://CRAN.R-project.org/package=RNetCDF), [rgdal](https://CRAN.R-project.org/package=rgdal), [sf](https://CRAN.R-project.org/package=sf) and [vapour](https://CRAN.R-project.org/package=vapour) packages. 
 
 This project uses RNetCDF for the primary access to the NetCDF library, as well as the ncdf4 package in some cases. The wrapper provided by [ncmeta](https://CRAN.R-project.org/package=ncmeta) over RNetCDF is used to obtain information about data sources. 
 

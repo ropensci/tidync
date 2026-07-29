@@ -10,9 +10,15 @@
 #' @param v variable name
 #' @param test if true we make sure the connection can be open, not applied for connections themselves
 #'
+#' @return array of values for the requested variable
 #' @importFrom ncdf4 nc_open nc_close ncvar_get
 #' @importFrom RNetCDF open.nc close.nc var.get.nc
 #' @export
+#' @examples
+#' l3file <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
+#' fpath <- system.file("extdata", "oceandata", l3file,
+#' package = "tidync")
+#' lat <- nc_get(fpath, "lat")
 nc_get <- function(x, v, test = FALSE) {
   UseMethod("nc_get")
 }

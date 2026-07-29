@@ -1,7 +1,7 @@
 Package: tidync
-Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.4.0.9004
-Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
+Title: Tidy Approach to 'NetCDF' Data Exploration and Extraction
+Version: 0.5.0
+Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre", "cph")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
              person("Ben", "Raymond", role = "ctb"), 
@@ -43,3 +43,4 @@ URL: https://docs.ropensci.org/tidync/
 BugReports: https://github.com/ropensci/tidync/issues
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0
+Remotes: hypertidy/ncmeta

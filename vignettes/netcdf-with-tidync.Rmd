@@ -31,7 +31,7 @@ NetCDF is **Network Common Data Form**, a [data model][not-a-format] and an
 
 This is a very common, and *very general* way to store and work with scientific
 array-based data. NetCDF is defined and provided by
-[Unidata](https://www.unidata.ucar.edu/software/netcdf/).
+[Unidata](https://www.unidata.ucar.edu/software/netcdf).
 
 Here we introduce traditional concepts of NetCDF, and show examples with
 built-in files and online sources to demonstrate tidync functionality.
@@ -54,7 +54,7 @@ tools used are ncdf4 and raster (which uses ncdf4).
 
 Both the RNetCDF and ncdf4 packages provide a traditional summary format,
 familiar to many NetCDF users as the output of the command line program
-[`ncdump`](https://www.unidata.ucar.edu/software/netcdf/workshops/most-recent/utilities/Ncdump.html).
+[`ncdump`](https://docs.unidata.ucar.edu/nug/current/netcdf_utilities_guide.html).
 
 
 ```{r}

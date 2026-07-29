@@ -5,10 +5,10 @@
 
 <!-- badges: start -->
 
-[![](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/software-review/issues/174)
+[![Peer
+Reviewed](https://badges.ropensci.org/174_status.svg)](https://github.com/ropensci/software-review/issues/174)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/tidync)](https://CRAN.R-project.org/package=tidync)
-
 [![R-CMD-check](https://github.com/ropensci/tidync/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/tidync/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -29,7 +29,7 @@ simple steps:
 NetCDF is **Network Common Data Form** a very common, and very general
 way to store and work with scientific array-based data. NetCDF is
 defined and provided by
-[Unidata](https://www.unidata.ucar.edu/software/netcdf/). R has
+[Unidata](https://www.unidata.ucar.edu/software/netcdf). R has
 (independent) support for NetCDF via the
 [ncdf4](https://CRAN.R-project.org/package=ncdf4),
 [rhdf5](https://bioconductor.org/packages/release/bioc/html/rhdf5.html),
@@ -208,13 +208,10 @@ tidync(filename)
 #> 10 D11   N_CALIB         1     1     1 FALSE FALSE     
 #> 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
 #> 12 D13   N_VALUES41     41    NA    NA FALSE FALSE
-```
-
-``` r
 
 ## activate a different grid
 grid_identifier <- "D7,D9,D11,D8"
-tidync(filename) %>% activate(grid_identifier)
+tidync(filename) |> activate(grid_identifier)
 #> 
 #> Data Source (1): MD5903593_001.nc ...
 #> 
@@ -260,14 +257,11 @@ tidync(filename) %>% activate(grid_identifier)
 #>  8 D10   N_LEVELS      493     1   493 FALSE FALSE     
 #>  9 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
 #> 10 D13   N_VALUES41     41    NA    NA FALSE FALSE
-```
-
-``` r
 
 ## pass named expressions to subset dimension by value or index (step)
-(subs <- tidync(filename) %>% hyper_filter(N_PROF = N_PROF > 1, STRING256 = index > 10))
-#> Warning in hyper_filter.tidync(., N_PROF = N_PROF > 1, STRING256 = index > :
-#> 'STRING256' not found in active grid, ignoring
+(subs <- tidync(filename) |> hyper_filter(N_PROF = N_PROF > 1, STRING256 = index > 10))
+#> Warning in hyper_filter.tidync(tidync(filename), N_PROF = N_PROF > 1, STRING256
+#> = index > : 'STRING256' not found in active grid, ignoring
 #> 
 #> Data Source (1): MD5903593_001.nc ...
 #> 
@@ -313,14 +307,11 @@ tidync(filename) %>% activate(grid_identifier)
 #> 10 D11   N_CALIB         1     1     1 FALSE FALSE     
 #> 11 D12   N_HISTORY       0    NA    NA TRUE  FALSE     
 #> 12 D13   N_VALUES41     41    NA    NA FALSE FALSE
-```
-
-``` r
 
 ## with the saved filtering from above, choose data frame or tbl_cube output
 ## optionally with only selected variables
-subs %>% hyper_tibble()
-#> # A tibble: 493 × 35
+subs |> hyper_tibble()
+#> # A tibble: 493 × 37
 #>       PRES PRES_QC PRES_ADJUSTED PRES_ADJUSTED_QC PRES_ADJUSTED_ERROR   TEMP
 #>      <dbl> <chr>           <dbl> <chr>                          <dbl>  <dbl>
 #>  1  7.7000 1              7.7900 1                             2.4000 13.184
@@ -334,21 +325,18 @@ subs %>% hyper_tibble()
 #>  9 46.5    1             46.590  1                             2.4000 13.187
 #> 10 51.800  1             51.890  1                             2.4000 13.187
 #> # ℹ 483 more rows
-#> # ℹ 29 more variables: TEMP_QC <chr>, TEMP_ADJUSTED <dbl>,
+#> # ℹ 31 more variables: TEMP_QC <chr>, TEMP_ADJUSTED <dbl>,
 #> #   TEMP_ADJUSTED_QC <chr>, TEMP_ADJUSTED_ERROR <dbl>, PSAL <dbl>,
 #> #   PSAL_QC <chr>, PSAL_ADJUSTED <dbl>, PSAL_ADJUSTED_QC <chr>,
 #> #   PSAL_ADJUSTED_ERROR <dbl>, DOXY <dbl>, DOXY_QC <chr>, DOXY_ADJUSTED <dbl>,
 #> #   DOXY_ADJUSTED_QC <chr>, DOXY_ADJUSTED_ERROR <dbl>, CHLA <dbl>,
 #> #   CHLA_QC <chr>, CHLA_ADJUSTED <dbl>, CHLA_ADJUSTED_QC <chr>, …
-```
-
-``` r
-subs %>% hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
+subs |> hyper_tbl_cube(select_var = c("PRES", "PRES_QC", "PSAL_ADJUSTED"))
 #> $mets
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (3): 'PRES', 'PRES_QC', 'PSAL_ADJUSTED'
 #> Dimension (0): N_LEVELS,N_PROF ()
-#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.4/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.6/tidync/extdata/argo/MD5903593_001.nc
 #> 
 #> $dims
 #> $dims$N_LEVELS
@@ -403,13 +391,13 @@ with `dplyr::filter()` we cannot load multiple comparisons into one.
 While dplyr filter can load up multiple comparisons:
 
 ``` r
-df %>% dplyr::filter(longitude > 100, longitude < 150)
+df |> dplyr::filter(longitude > 100, longitude < 150)
 ```
 
 in hyper_filter we must load them into one named expression.
 
 ``` r
-tidync(filename) %>% hyper_filter(longitude = longitude > 100 & longitude < 150)
+tidync(filename) |> hyper_filter(longitude = longitude > 100 & longitude < 150)
 ```
 
 ### Extractive
@@ -420,27 +408,24 @@ frame or raw-array (hyper slice) form.
 ``` r
 ## we'll see a column for the variable activated, and whatever other 
 ## variables the grid has
-tidync(filename) %>% activate("JULD") %>% 
-  hyper_filter(N_PROF = N_PROF == 1) %>% 
+tidync(filename) |> activate("JULD") |> 
+  hyper_filter(N_PROF = N_PROF == 1) |> 
   hyper_tibble()
-#> # A tibble: 1 × 1
-#>     JULD
-#>    <dbl>
-#> 1 22719.
-```
-
-``` r
+#> # A tibble: 1 × 2
+#>     JULD N_PROF
+#>    <dbl>  <int>
+#> 1 22719.      1
 
 
 ## native array form, we'll see a (list of) R arrays with a dimension for 
-## each seen by tidync(filename) %>% activate("JULD")
-tidync(filename) %>% activate("JULD") %>% 
-  hyper_filter(N_PROF = N_PROF == 1) %>% 
+## each seen by tidync(filename) |> activate("JULD")
+tidync(filename) |> activate("JULD") |> 
+  hyper_filter(N_PROF = N_PROF == 1) |> 
   hyper_array()
 #> Class: tidync_data (list of tidync data arrays)
 #> Variables (1): 'JULD'
 #> Dimension (0): N_PROF ()
-#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.4/tidync/extdata/argo/MD5903593_001.nc
+#> Source: /perm_storage/home/mdsumner/R/x86_64-pc-linux-gnu-library/4.6/tidync/extdata/argo/MD5903593_001.nc
 ```
 
 It’s important to not actual request the data extraction until the

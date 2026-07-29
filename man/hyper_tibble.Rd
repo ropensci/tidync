@@ -52,12 +52,14 @@ hyper_filter(rnc)
 library(dplyr)
 lapply(hyper_array(f, lat = lat > 0, lon = index > 3000), dim)
 
- ht <- hyper_tibble(rnc) |>
- filter(!is.na(chlor_a))
+ht <- hyper_tibble(rnc) |>
+filter(!is.na(chlor_a))
 ht
-library(ggplot2)
-ggplot(ht |> filter(!is.na(chlor_a)),
-aes(x = lon, y = lat, fill = chlor_a)) + geom_tile()
+if (requireNamespace("ggplot2")) {
+ library(ggplot2)
+ ggplot(ht |> filter(!is.na(chlor_a)),
+ aes(x = lon, y = lat, fill = chlor_a)) + geom_tile()
+}
 }
 \seealso{
 \code{\link[=hyper_array]{hyper_array()}} and \code{\link[=hyper_tbl_cube]{hyper_tbl_cube()}}  which are also delay-breaking

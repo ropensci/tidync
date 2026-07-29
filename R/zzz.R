@@ -11,3 +11,8 @@ tidync_default_options <- function() {
   
   invisible()
 }
+
+.onUnload <- function(libpath) {
+  op <- names(tidync_default_options())
+  options(setNames(vector("list", length(op)), op))
+}

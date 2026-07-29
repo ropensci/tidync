@@ -58,6 +58,10 @@ applied or not}
 
 \item{drop}{collapse degenerate dimensions, defaults to \code{TRUE}}
 }
+\value{
+a named list of arrays classed as \code{tidync_data}, one element per
+variable, with dimension coordinates stored in the \code{transforms} attribute
+}
 \description{
 Extract the raw array data as a list of  one or more arrays. This can be the
 entire variable/s or after dimension-slicing using \code{\link[=hyper_filter]{hyper_filter()}}

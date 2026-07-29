@@ -72,6 +72,7 @@
 #'   after the first (only reads the `concat_dim` coordinate). Mismatches
 #'   are detected at data-read time. Ignored when `concat_dim$values` is
 #'   supplied.
+#' @return a `tidync` object
 #' @export
 tidync <- function(x, what, ...) {
   UseMethod("tidync")
@@ -99,8 +100,7 @@ tidync <- function(x, what, ...) {
 #' ## a raw grid of Southern Ocean sea ice concentration from IFREMER
 #' ## it is 12.5km resolution passive microwave concentration values
 #' ## on a polar stereographic grid, on 2 October 2017, displaying the 
-#' ## "hole in the ice" made famous here:
-#' ## https://tinyurl.com/ycbchcgn
+#' ## "hole in the ice"
 #' ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
 #' ifrnc <- tidync(ifr)
 #' ifrnc |> hyper_tibble(select_var = "concentration")
@@ -531,6 +531,7 @@ validate_against_template <- function(meta_i, template, concat_dim, source_label
 #'
 #' @param ... reserved
 #'
+#' @return the input object invisibly
 #' @name print.tidync
 #' @export
 #' @importFrom dplyr  arrange distinct inner_join desc
@@ -665,5 +666,5 @@ print.tidync <- function(x, ...) {
   cat(" ", "\n")
   for (i in seq_along(dp2)) cat(dp2[i], "\n")
   }
-  invisible(NULL)
+  invisible(x)
 }

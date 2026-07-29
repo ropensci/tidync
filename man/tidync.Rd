@@ -33,6 +33,9 @@ after the first (only reads the \code{concat_dim} coordinate). Mismatches
 are detected at data-read time. Ignored when \code{concat_dim$values} is
 supplied.}
 }
+\value{
+a \code{tidync} object
+}
 \description{
 Connect to a NetCDF source and allow use of \verb{hyper_*} verbs for slicing with
 \code{\link[=hyper_filter]{hyper_filter()}}, extracting data with \code{\link[=hyper_array]{hyper_array()}} and  [hyper_tibble()
@@ -120,8 +123,7 @@ print(recNum)
 ## a raw grid of Southern Ocean sea ice concentration from IFREMER
 ## it is 12.5km resolution passive microwave concentration values
 ## on a polar stereographic grid, on 2 October 2017, displaying the 
-## "hole in the ice" made famous here:
-## https://tinyurl.com/ycbchcgn
+## "hole in the ice"
 ifr <- system.file("extdata/ifremer", "20171002.nc", package = "tidync")
 ifrnc <- tidync(ifr)
 ifrnc |> hyper_tibble(select_var = "concentration")

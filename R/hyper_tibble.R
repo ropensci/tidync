@@ -32,12 +32,14 @@
 #' library(dplyr)
 #' lapply(hyper_array(f, lat = lat > 0, lon = index > 3000), dim)
 #'
-#'  ht <- hyper_tibble(rnc) |>
-#'  filter(!is.na(chlor_a))
+#' ht <- hyper_tibble(rnc) |>
+#' filter(!is.na(chlor_a))
 #' ht
-#' library(ggplot2)
-#' ggplot(ht |> filter(!is.na(chlor_a)),
-#' aes(x = lon, y = lat, fill = chlor_a)) + geom_tile()
+#' if (requireNamespace("ggplot2")) {
+#'  library(ggplot2)
+#'  ggplot(ht |> filter(!is.na(chlor_a)),
+#'  aes(x = lon, y = lat, fill = chlor_a)) + geom_tile()
+#' }
 hyper_tibble <- function(x, ..., na.rm = TRUE, force = FALSE) {
   UseMethod("hyper_tibble")
 }
