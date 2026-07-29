@@ -82,8 +82,8 @@ test_that("expanded tibble order is sane",
                                                select_var = c("BBP700", "NITRATE")), 
                                    "tidync_data")  
             expect_named(ar2, c("BBP700", "NITRATE"))
-            expect_equal(dim(ar2[[1]]), c(493))
-        
+            expect_null(dim(ar2[[1]]))
+            expect_length(ar2[[1]], 493L)
             expect_equal(attr(ar2, "transforms")$N_LEVELS$N_LEVELS, 
                          1:493)
             expect_true(all(attr(ar2, "transforms")$N_LEVELS$N_LEVELS))

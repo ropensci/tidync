@@ -1,6 +1,6 @@
 Package: tidync
 Title: A Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.4.0.9002
+Version: 0.4.0.9003
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
@@ -24,7 +24,7 @@ ByteCompile: true
 Imports:
     dplyr (>= 1.1.0),
     ncdf4,
-    ncmeta (>= 0.4.0),
+    ncmeta (>= 0.5.0),
     RNetCDF (>= 1.9-1),
     rlang,
     tibble,
