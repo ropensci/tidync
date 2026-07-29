@@ -9,7 +9,7 @@ Tidy tools for 'NetCDF' data sources. Explore the contents of a 'NetCDF' source 
 
 Provides easy to use idioms for working with NetCDF data for extraction,
 manipulation and visualization. NetCDF is Network Common Data Form
-\url{https://www.unidata.ucar.edu/software/netcdf}.
+\url{https://www.unidata.ucar.edu/software/netcdf/}.
 }
 \details{
 See \code{\link[=print.tidync]{print.tidync()}} for details on the printed version of a tidync object.
