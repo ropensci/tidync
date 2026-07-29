@@ -43,4 +43,3 @@ URL: https://docs.ropensci.org/tidync/
 BugReports: https://github.com/ropensci/tidync/issues
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0
-Remotes: hypertidy/ncmeta
