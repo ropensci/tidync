@@ -1,7 +1,7 @@
-## tidync 0.4.0
+## tidync 0.5.0
 
-Resubmit 0.4.0, very sorry:  stray file in first attempt. 
+Feature release 0.5.0, thanks! 
 
 ## Reverse dependencies
 
-cft and heatwaveR both pass check with this version. 
+All reverse dependencies pass check with this release. 

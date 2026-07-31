@@ -17,3 +17,4 @@
 ^tidync\.Rproj$
 ^\.positai$
 ^\.claude$
+^tests/testthat/_snaps$
