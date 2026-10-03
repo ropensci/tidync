@@ -1,6 +1,6 @@
 Package: tidync
 Title: Tidy Approach to 'NetCDF' Data Exploration and Extraction
-Version: 0.5.0
+Version: 0.5.0.9000
 Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre", "cph")), 
              person("Simon", "Wotherspoon", role = "ctb"), 
              person("Tomas", "Remenyi", role = "ctb"), 
@@ -30,7 +30,8 @@ Imports:
     tibble,
     tidyr (>= 1.0.0),
     CFtime (>= 1.4.0)
-Suggests: ggplot2,
+Suggests: altarr,
+    ggplot2,
     knitr,
     mirai,
     rmarkdown,
@@ -40,6 +41,7 @@ Suggests: ggplot2,
 SystemRequirements: netcdf udunits-2
 Roxygen: list(markdown = TRUE)
 URL: https://docs.ropensci.org/tidync/
+Remotes: hypertidy/altarr
 BugReports: https://github.com/ropensci/tidync/issues
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0

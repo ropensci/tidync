@@ -14,7 +14,8 @@ hyper_array(
   ...,
   raw_datavals = FALSE,
   force = FALSE,
-  drop = TRUE
+  drop = TRUE,
+  lazy = FALSE
 )
 
 hyper_slice(
@@ -23,7 +24,8 @@ hyper_slice(
   ...,
   raw_datavals = FALSE,
   force = FALSE,
-  drop = TRUE
+  drop = TRUE,
+  lazy = FALSE
 )
 
 \method{hyper_array}{tidync}(
@@ -32,7 +34,8 @@ hyper_slice(
   ...,
   raw_datavals = FALSE,
   force = FALSE,
-  drop = TRUE
+  drop = TRUE,
+  lazy = FALSE
 )
 
 \method{hyper_array}{character}(
@@ -41,7 +44,8 @@ hyper_slice(
   ...,
   raw_datavals = FALSE,
   force = FALSE,
-  drop = TRUE
+  drop = TRUE,
+  lazy = FALSE
 )
 }
 \arguments{
@@ -57,6 +61,11 @@ applied or not}
 \item{force}{ignore caveats about large extraction and just do it}
 
 \item{drop}{collapse degenerate dimensions, defaults to \code{TRUE}}
+
+\item{lazy}{if \code{TRUE}, read nothing now: each array is a lazy 'altarr'
+array (an ordinary double or integer array as far as R is concerned)
+whose values are read from the source chunk by chunk when R asks for
+them. Requires the 'altarr' package. See Details.}
 }
 \value{
 a named list of arrays classed as \code{tidync_data}, one element per
@@ -84,6 +93,24 @@ specify one or more desired variables.
 
 The transforms are stored as a list of tables in an attribute \code{transforms},
 access these with \code{\link[=hyper_transforms]{hyper_transforms()}}.
+
+With \code{lazy = TRUE} no data is read and the large-extraction check is
+skipped. Each array has the same dim and dimnames as the eager result,
+but is an ALTREP vector from the 'altarr' package
+(\url{https://github.com/hypertidy/altarr}): values come from the source in
+chunks, only when base R asks for them, and are cached. The chunk shape
+is the variable's NetCDF chunking when it has one (aligned to the start
+of the selection), otherwise blocks of about
+\code{getOption("tidync.lazy.chunk_values", 2^20)} values split along the
+slowest-varying dimensions. Point extraction with \code{a[cbind(i, j, k)]},
+\code{a[i]}, \code{sum()}, \code{mean()}, \code{min()} and \code{max()} read only the chunks they
+need, in one batch; use \code{\link[altarr:altarr_extract]{altarr::altarr_extract()}} for a rectangular
+subset in one batch (\code{a[i, j, k]} works but reads chunk by chunk).
+Arithmetic and printing materialize the array. Each batch opens each
+source once; for a multi-source (\code{concat_dim}) view the sources in a
+batch are read in parallel when 'mirai' daemons are set. Saving a lazy
+array with \code{\link[=saveRDS]{saveRDS()}} stores the recipe (source path, selection and chunk
+shape), not the values. Character variables are not supported.
 }
 \examples{
 f <- "S20080012008031.L3m_MO_CHL_chlor_a_9km.nc"
@@ -110,6 +137,15 @@ lapply(attr(braw, "transforms"),
    function(x) nrow(dplyr::filter(x, selected)))
 ## the selected axis coordinates should match in order and in size
 lapply(braw, dim)
+
+## lazy arrays: nothing is read until values are needed
+if (requireNamespace("altarr", quietly = TRUE)) {
+  lz <- tidync(l3file) |> hyper_array(lazy = TRUE)
+  chl <- lz$chlor_a
+  dim(chl)                         ## no data read
+  chl[cbind(c(1, 2000), c(1, 1000))] ## reads two chunks
+  altarr::altarr_stats(chl)[c("fetch_calls", "chunks_fetched")]
+}
 }
 \seealso{
 \link{print.tidync_data} for a description of the print summary,
