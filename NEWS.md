@@ -1,3 +1,17 @@
+# tidync (development version)
+
+* `hyper_array()` gains `lazy = TRUE`, returning lazy arrays from the
+  'altarr' package (Suggests, <https://github.com/hypertidy/altarr>): each
+  array has the usual dim and dimnames but no data is read until base R
+  asks for values, which are then read chunk by chunk (following the
+  variable's NetCDF chunking where it has one) and cached. Point
+  extraction (`a[cbind(i, j, k)]`), `a[i]`, `sum()`, `mean()`, `min()` and
+  `max()` read only the chunks they touch, in one batch per call, and
+  `altarr::altarr_extract()` does the same for rectangular subsets. Works
+  for multi-source (`concat_dim`) views, including chunks that span files,
+  with per-batch parallel reads when 'mirai' daemons are set. A lazy array
+  saved with `saveRDS()` stores its recipe, not its values.
+
 # tidync 0.5.0
 
 This release adds multi-source support, request of (#131): a tidync object can now present a consolidated

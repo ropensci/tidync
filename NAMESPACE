@@ -36,20 +36,26 @@ export(hyper_transforms)
 export(hyper_vars)
 export(nc_get)
 export(tidync)
-importFrom(RNetCDF,close.nc)
-importFrom(RNetCDF,open.nc)
-importFrom(RNetCDF,var.get.nc)
-importFrom(dplyr,arrange)
-importFrom(dplyr,desc)
-importFrom(dplyr,distinct)
-importFrom(dplyr,group_by)
-importFrom(dplyr,inner_join)
-importFrom(dplyr,mutate)
-importFrom(dplyr,row_number)
-importFrom(dplyr,summarize)
-importFrom(ncdf4,nc_close)
-importFrom(ncdf4,nc_open)
-importFrom(ncdf4,ncvar_get)
+importFrom(RNetCDF,
+  close.nc,
+  open.nc,
+  var.get.nc
+)
+importFrom(dplyr,
+  arrange,
+  desc,
+  distinct,
+  group_by,
+  inner_join,
+  mutate,
+  row_number,
+  summarize
+)
+importFrom(ncdf4,
+  nc_close,
+  nc_open,
+  ncvar_get
+)
 importFrom(ncmeta,nc_meta)
 importFrom(rlang,.data)
 importFrom(stats,setNames)

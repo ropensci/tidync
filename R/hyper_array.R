@@ -20,6 +20,24 @@
 #'
 #' The transforms are stored as a list of tables in an attribute `transforms`,
 #' access these with [hyper_transforms()].
+#'
+#' With `lazy = TRUE` no data is read and the large-extraction check is
+#' skipped. Each array has the same dim and dimnames as the eager result,
+#' but is an ALTREP vector from the 'altarr' package
+#' (<https://github.com/hypertidy/altarr>): values come from the source in
+#' chunks, only when base R asks for them, and are cached. The chunk shape
+#' is the variable's NetCDF chunking when it has one (aligned to the start
+#' of the selection), otherwise blocks of about
+#' `getOption("tidync.lazy.chunk_values", 2^20)` values split along the
+#' slowest-varying dimensions. Point extraction with `a[cbind(i, j, k)]`,
+#' `a[i]`, `sum()`, `mean()`, `min()` and `max()` read only the chunks they
+#' need, in one batch; use [altarr::altarr_extract()] for a rectangular
+#' subset in one batch (`a[i, j, k]` works but reads chunk by chunk).
+#' Arithmetic and printing materialize the array. Each batch opens each
+#' source once; for a multi-source (`concat_dim`) view the sources in a
+#' batch are read in parallel when 'mirai' daemons are set. Saving a lazy
+#' array with [saveRDS()] stores the recipe (source path, selection and chunk
+#' shape), not the values. Character variables are not supported.
 #' @param x NetCDF file, connection object, or [tidync] object
 #' @param drop collapse degenerate dimensions, defaults to `TRUE`
 #' @param ... passed to [hyper_filter()]
@@ -27,6 +45,10 @@
 #' @param raw_datavals logical to control whether scaling in the NetCDF is
 #'   applied or not
 #' @param force ignore caveats about large extraction and just do it
+#' @param lazy if `TRUE`, read nothing now: each array is a lazy 'altarr'
+#'   array (an ordinary double or integer array as far as R is concerned)
+#'   whose values are read from the source chunk by chunk when R asks for
+#'   them. Requires the 'altarr' package. See Details.
 #'
 #' @return a named list of arrays classed as `tidync_data`, one element per
 #'   variable, with dimension coordinates stored in the `transforms` attribute
@@ -60,8 +82,18 @@
 #'    function(x) nrow(dplyr::filter(x, selected)))
 #' ## the selected axis coordinates should match in order and in size
 #' lapply(braw, dim)
+#'
+#' ## lazy arrays: nothing is read until values are needed
+#' if (requireNamespace("altarr", quietly = TRUE)) {
+#'   lz <- tidync(l3file) |> hyper_array(lazy = TRUE)
+#'   chl <- lz$chlor_a
+#'   dim(chl)                         ## no data read
+#'   chl[cbind(c(1, 2000), c(1, 1000))] ## reads two chunks
+#'   altarr::altarr_stats(chl)[c("fetch_calls", "chunks_fetched")]
+#' }
 hyper_array <- function(x, select_var = NULL, ..., 
-                        raw_datavals = FALSE, force = FALSE, drop = TRUE) {
+                        raw_datavals = FALSE, force = FALSE, drop = TRUE,
+                        lazy = FALSE) {
   UseMethod("hyper_array")
 }
 
@@ -69,18 +101,21 @@ hyper_array <- function(x, select_var = NULL, ...,
 #' @name hyper_array
 #' @export
 hyper_slice <- function(x, select_var = NULL, ..., 
-                        raw_datavals = FALSE, force = FALSE, drop = TRUE) {
+                        raw_datavals = FALSE, force = FALSE, drop = TRUE,
+                        lazy = FALSE) {
   if (!isTRUE(getOption("tidync.silent"))) {
    warning("hyper_array should be used instead of hyper_slice")
   }
   hyper_array(x = x, select_var = select_var, ..., 
-              raw_datavals = raw_datavals, force = force, drop = drop)
+              raw_datavals = raw_datavals, force = force, drop = drop,
+              lazy = lazy)
 }
 
 #' @name hyper_array
 #' @export
 hyper_array.tidync <- function(x, select_var = NULL, ..., 
-                          raw_datavals = FALSE, force = FALSE, drop = TRUE) {
+                          raw_datavals = FALSE, force = FALSE, drop = TRUE,
+                          lazy = FALSE) {
   x <- hyper_filter(x, ...) 
   variable <- x[["variable"]] |> dplyr::filter(active)
   varname <- unique(variable[["name"]])
@@ -113,6 +148,20 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
     varnames <- select_var
   }
 
+  use_multi <- !is.null(x$concat_dim) && x$concat_dim %in% dimension$name
+
+  ## Lazy: nothing is read until base R asks for values
+  if (lazy) {
+    transforms <- active_axis_transforms(x)
+    dn <- lazy_dimnames(transforms)
+    datalist <- lazy_datalist(x, varnames, dimension, START, COUNT,
+                              raw_datavals = raw_datavals, dn = dn,
+                              drop = drop, use_multi = use_multi)
+    return(structure(datalist, names = varnames, transforms = transforms,
+                     source = x$source, concat_dim = x$concat_dim,
+                     class = "tidync_data"))
+  }
+
   #browser()
   if (interactive() && !force && prod(COUNT) * length(varnames) * 4 > 1e9) {
     opt <- getOption("tidync.large.data.check")
@@ -131,7 +180,6 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
   ## Avoid opening file on disk multiple times for multiple variables
   ## If concat_dim is set but not part of the active grid, fall through
   ## to single-source (all sources are identical for shared dimensions)
-  use_multi <- !is.null(x$concat_dim) && x$concat_dim %in% dimension$name
   if (!use_multi) {
     ## ---- Single source path (original) ----
     con <- suppressWarnings(ncdf4::nc_open(x$source$source[1]))
@@ -148,10 +196,7 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
 
   ## Get dimension names from the transforms. Use "timestamp" instead of "time"
   transforms <- active_axis_transforms(x)
-  dn <- lapply(transforms, function(trans) {
-    ts <- suppressWarnings(trans[["timestamp"]])
-    if (is.null(ts)) trans[[1]][trans$selected] else ts[trans$selected]
-  })
+  dn <- lazy_dimnames(transforms)
 
   ## If some (but not all) of the variables defined on the grid are NC_CHAR then
   ## the NC_CHAR variables read here have to be split into characters to
@@ -192,10 +237,20 @@ hyper_array.tidync <- function(x, select_var = NULL, ...,
 #' @name hyper_array
 #' @export
 hyper_array.character <- function(x, select_var = NULL, ...,
-                                  raw_datavals = FALSE, force = FALSE, drop = TRUE) {
+                                  raw_datavals = FALSE, force = FALSE, drop = TRUE,
+                                  lazy = FALSE) {
   tidync(x) |> 
   hyper_filter(...) |>  
-  hyper_array(select_var = select_var, raw_datavals = raw_datavals, drop = drop)
+  hyper_array(select_var = select_var, raw_datavals = raw_datavals, drop = drop,
+              lazy = lazy)
+}
+
+## dimension names from the transforms, "timestamp" in place of "time"
+lazy_dimnames <- function(transforms) {
+  lapply(transforms, function(trans) {
+    ts <- suppressWarnings(trans[["timestamp"]])
+    if (is.null(ts)) trans[[1]][trans$selected] else ts[trans$selected]
+  })
 }
 
 ## ---- Multi-source reader ----
