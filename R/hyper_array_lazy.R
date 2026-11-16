@@ -118,6 +118,13 @@ lazy_value_type <- function(con, var, START, COUNT, concat, raw_datavals) {
 #' per-index source paths of a multi-source view) and a few integer vectors,
 #' so a lazy array can be saved with saveRDS() and read in a new session.
 #'
+#' The closure is kept free of source references, which under load_all() or
+#' keep.source.pkgs = TRUE point at the whole source file and would bloat
+#' each saved array ~50x: its body is built with as.function() from plain
+#' language rather than a `function` literal, and its environment is a fresh
+#' one holding plain values, not this call's frame, whose (forced) argument
+#' promises keep the caller's code, bytecode with srcrefs once JIT-compiled.
+#'
 #' @param source path or URL of the (single) source
 #' @param varname variable name
 #' @param start,count the selection, 1-based, in R (ncdf4) order
@@ -129,31 +136,46 @@ lazy_value_type <- function(con, var, START, COUNT, concat, raw_datavals) {
 #' @noRd
 nc_chunk_fetch <- function(source, varname, start, count, chunk, keep,
                            raw_datavals, concat = NULL) {
-  force(source); force(varname); force(start); force(count); force(chunk)
-  force(keep); force(raw_datavals); force(concat)
-  function(chunks) {
-    chunks <- matrix(as.integer(chunks), ncol = sum(keep))
-    pieces <- vector("list", nrow(chunks))
-    slabs <- list()
-    for (r in seq_len(nrow(chunks))) {
-      cc <- integer(length(count))
-      cc[keep] <- chunks[r, ]
-      off <- cc * chunk
-      n <- pmin(chunk, count - off)
-      runs <- if (is.null(concat)) {
-        list(list(source = source, start = start + off, count = n))
-      } else {
-        concat_runs(concat, start, off, n)
-      }
-      pieces[[r]] <- length(slabs) + seq_along(runs)
-      slabs <- c(slabs, runs)
+  env <- list2env(list(source = source, varname = varname, start = start,
+                       count = count, chunk = chunk, keep = keep,
+                       raw_datavals = raw_datavals, concat = concat),
+                  parent = topenv())
+  as.function(alist(chunks = ,
+                    nc_chunk_read(chunks, source, varname, start, count,
+                                  chunk, keep, raw_datavals, concat)),
+              envir = env)
+}
+
+#' Read chunks for a fetch function made by nc_chunk_fetch()
+#'
+#' @param chunks matrix (or vector) of 0-based chunk indices, one row per
+#'   chunk, over the array's (kept) dimensions
+#' @inheritParams nc_chunk_fetch
+#' @return list of chunk values, one per row of `chunks`
+#' @noRd
+nc_chunk_read <- function(chunks, source, varname, start, count, chunk, keep,
+                          raw_datavals, concat) {
+  chunks <- matrix(as.integer(chunks), ncol = sum(keep))
+  pieces <- vector("list", nrow(chunks))
+  slabs <- list()
+  for (r in seq_len(nrow(chunks))) {
+    cc <- integer(length(count))
+    cc[keep] <- chunks[r, ]
+    off <- cc * chunk
+    n <- pmin(chunk, count - off)
+    runs <- if (is.null(concat)) {
+      list(list(source = source, start = start + off, count = n))
+    } else {
+      concat_runs(concat, start, off, n)
     }
-    vals <- read_lazy_slabs(slabs, varname, raw_datavals)
-    lapply(pieces, function(i) {
-      if (length(i) == 1L) return(as.vector(vals[[i]]))
-      as.vector(abind_along(vals[i], along = concat$pos))
-    })
+    pieces[[r]] <- length(slabs) + seq_along(runs)
+    slabs <- c(slabs, runs)
   }
+  vals <- read_lazy_slabs(slabs, varname, raw_datavals)
+  lapply(pieces, function(i) {
+    if (length(i) == 1L) return(as.vector(vals[[i]]))
+    as.vector(abind_along(vals[i], along = concat$pos))
+  })
 }
 
 #' Split one chunk of a multi-source view into per-source slabs
